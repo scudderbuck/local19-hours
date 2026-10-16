@@ -105,10 +105,10 @@ const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman
    status: "direct" = name matches a code in the PMA occupation-code list; "inferred" = code is my best guess, check against your pay stub; "none" = no confident match (rate left for you); "user" = class stated by the user, no code.
    Rates autofill from the class (see RATES). Old PMA-list entries stay under "Other (PMA list)" in JOBS below. */
 const SEATTLE_JOBS=[
-["Stevedore","","","none","No single PMA code; enter code/rate yourself"],
+["Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned"],
 ["Sling man","0006","Basic","direct","0006 Frontman/Slingman"],
 ["Lasher","0009","Basic","direct","0009 Lasher"],
-["Extra Stevedore","","","none","No single PMA code; enter code/rate yourself"],
+["Extra Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned"],
 ["Bull","0029","","inferred","Code 0029 Lift Truck Operator is a guess. PMA group Skill 1; rate NOT prefilled - set class to \"Skill 1\" once confirmed"],
 ["Semi","0036","","inferred","Code 0036 Tractor-Semi-Dock. PMA group Skill 1; rate NOT prefilled until confirmed"],
 ["Top pick","0061","","inferred","Code 0061 Top Handler. PMA group Skill 3; rate NOT prefilled until confirmed"],
