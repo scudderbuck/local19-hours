@@ -41,6 +41,8 @@ label .mut{font-weight:400}
 .stat b{display:block;font-size:24px;line-height:1.2}.stat span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
 .stat.pri{background:var(--pri);border-color:var(--pri);color:var(--prifg)}.stat.pri span{color:inherit;opacity:.85}
 .hide{display:none}
+#upW button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--pri)}
+.badge{display:inline-block;font-size:11px;font-weight:600;border:1px solid var(--bd);border-radius:8px;padding:0 6px;margin-left:4px;color:var(--mut)}
 table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-align:right;white-space:nowrap}
 .chk{display:flex;align-items:center;gap:8px}.chk input{width:28px;min-height:28px}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9}
@@ -57,6 +59,8 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <input id="pierC" class="hide" placeholder="Custom pier / terminal" style="margin-top:8px">
 <label for="job">Job</label><select id="job"></select>
 <input id="jobC" class="hide" placeholder="Custom code / job name" style="margin-top:8px">
+<div id="upW" class="hide"><label>Up slot <span class="mut">(optional; no effect on pay/hours)</span></label>
+<div class="row"><button type="button" id="up1" data-up="first" aria-pressed="false">First up (AM)</button><button type="button" id="up2" data-up="second" aria-pressed="false">Second up (PM)</button></div></div>
 <div class="row"><div><label for="shift">Shift</label><select id="shift"><option>1st</option><option>2nd</option><option>3rd</option></select></div>
 <div><label for="hrs">Hours</label><input type="number" id="hrs" step="0.25" min="0" max="48" inputmode="decimal"></div></div>
 <p style="margin:8px 0 0"><button type="button" id="xt" class="link" aria-expanded="false">More details ▾</button></p>
@@ -164,12 +168,16 @@ function summarize(list){const t={hours:0,ot:0,pay:0,anyPay:false,travel:0,miles
 const r2=x=>(Math.round(x*100)/100).toString();
 const money=x=>"$"+x.toFixed(2);
 function weekEntries(all,ws){const we=addDays(ws,6);return all.filter(e=>e.date>=ws&&e.date<=we).sort((a,b)=>a.date<b.date||(a.date===b.date&&a.shift>b.shift)?-1:1);}
+const UP_JOBS=["Sling man","Stevedore","Extra Stevedore","Crane op"];
+function upApplies(job){return UP_JOBS.includes(job);}
+function upLabel(v){return v==="first"?"First up (AM)":v==="second"?"Second up (PM)":"";}
 function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekEntries(all,ws),t=summarize(list),we=addDays(ws,6);
  const L=["ILWU Local 19 – Hours, week of "+ws+" to "+we,""];
  if(!list.length)L.push("No shifts logged.");
  for(const e of list){const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][parseDate(e.date).getDay()];
   let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";
   s+=" – "+[e.pier,e.employer,e.vessel,jobLabel(e.job)].filter(Boolean).join(", ");
+  if(upApplies(e.job)&&upLabel(e.upSlot))s+=" ["+upLabel(e.upSlot)+"]";
   const p=nopay?null:entryPay(e);if(p!=null)s+=" – "+money(p);L.push(s);}
  if(list.length){L.push("","Total hours: "+r2(t.hours),"OT hours: "+r2(t.ot));
   if(t.travel)L.push("Travel hours: "+r2(t.travel));if(t.miles)L.push("Mileage: "+r2(t.miles));
@@ -178,11 +186,11 @@ function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekE
   L.push("By job:");for(const k in t.byJob){const b=t.byJob[k];L.push("  "+k+": "+r2(b.hours)+"h"+(b.ot?" (OT "+r2(b.ot)+")":"")+(b.anyPay&&!nopay?" "+money(b.pay):""));}}
  return L.join("\n");}
 function csvCell(v){v=v==null?"":String(v);if(/^[=+\-@\t\r]/.test(v)&&isNaN(Number(v)))v="'"+v;return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
-const CSV_COLS=["date","shift","pier","employer","vessel","job","jobCode","jobName","start","end","hours","ot","rate","otRate","travel","miles","note"];
+const CSV_COLS=["date","shift","pier","employer","vessel","job","jobCode","jobName","start","end","hours","ot","rate","otRate","travel","miles","note","upSlot"];
 function toCSV(all){const rows=[CSV_COLS.join(",")];for(const e of [...all].sort((a,b)=>a.date<b.date?-1:1))
- rows.push(CSV_COLS.map(c=>csvCell(c==="jobCode"?jobCode(e.job):c==="jobName"?(seattleJob(e.job)?e.job:jobLabel(e.job).replace(/^\S+\s/,"")):c==="ot"?effOT(e):e[c])).join(","));return rows.join("\r\n");}
+ rows.push(CSV_COLS.map(c=>csvCell(c==="jobCode"?jobCode(e.job):c==="jobName"?(seattleJob(e.job)?e.job:jobLabel(e.job).replace(/^\S+\s/,"")):c==="ot"?effOT(e):c==="upSlot"?(upApplies(e.job)&&(e.upSlot==="first"||e.upSlot==="second")?e.upSlot:""):e[c])).join(","));return rows.join("\r\n");}
 function validImport(o){const arr=Array.isArray(o)?o:o&&Array.isArray(o.entries)?o.entries:null;if(!arr)return null;
- return arr.filter(e=>e&&typeof e==="object"&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||"")).map(e=>({...e,id:String(e.id||uid())}));}
+ return arr.filter(e=>e&&typeof e==="object"&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||"")).map(e=>({...e,id:String(e.id||uid()),upSlot:e.upSlot==="first"||e.upSlot==="second"?e.upSlot:""}));}
 function mergeEntries(cur,inc){const m=new Map(cur.map(e=>[e.id,e]));for(const e of inc)m.set(e.id,e);return [...m.values()];}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
@@ -210,6 +218,11 @@ $("rate").oninput=$("otrate").oninput=()=>{rateDirty=true;};
 $("tier").onchange=()=>{try{localStorage.setItem(tierKey,$("tier").value);}catch(e){}applyDefaults();};
 $("shift").onchange=applyDefaults;
 $("job").onchange=()=>{$("jobC").classList.toggle("hide",$("job").value!=="__c");applyDefaults();};
+let upSlot="";
+function setUp(v){upSlot=v||"";$("up1").setAttribute("aria-pressed",upSlot==="first");$("up2").setAttribute("aria-pressed",upSlot==="second");}
+function upShow(){const a=upApplies($("job").value);$("upW").classList.toggle("hide",!a);if(!a)setUp("");}
+$("up1").onclick=$("up2").onclick=ev=>{const v=ev.currentTarget.dataset.up;setUp(upSlot===v?"":v);};
+$("job").addEventListener("change",upShow);
 function setX(o){$("extras").classList.toggle("hide",!o);$("xt").setAttribute("aria-expanded",o);$("xt").textContent="More details "+(o?"▴":"▾");}
 $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
 function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value);
@@ -217,7 +230,7 @@ function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").va
 function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null)$("hrs").value=h;otHint();}
 $("st").onchange=$("en").onchange=autoHrs;
 $("hrs").oninput=$("ot").oninput=otHint;$("shift").addEventListener("change",otHint);
-function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setX(false);
+function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setUp("");upShow();setX(false);
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
  try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
  rateDirty=false;applyDefaults();}
@@ -228,7 +241,7 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  let hours=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);
  if(hours==null||hours<=0){alert("Enter start/end times or hours.");return;}
  const otManual=$("ot").value.trim()!=="";const ot=otManual?num($("ot").value):autoOT(hours,$("shift").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
- const e={id:editId||uid(),date:$("date").value,pier,employer:$("emp").value.trim(),vessel:$("ves").value.trim(),job,shift:$("shift").value,
+ const e={id:editId||uid(),date:$("date").value,pier,employer:$("emp").value.trim(),vessel:$("ves").value.trim(),job,shift:$("shift").value,upSlot:upApplies(job)?upSlot:"",
   start:$("st").value,end:$("en").value,hours,ot,otManual,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
  save();localStorage.setItem(lastKey,JSON.stringify({rate:e.rate,otRate:e.otRate}));
@@ -238,6 +251,7 @@ function editEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;show("add
  if(PIERS.includes(e.pier)||!e.pier){$("pier").value=e.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=e.pier;$("pierC").classList.remove("hide");}
  const known=[...$("job").options].some(o=>o.value===e.job&&e.job);
  if(known||!e.job){$("job").value=e.job||"";$("jobC").classList.add("hide");}else{$("job").value="__c";$("jobC").value=e.job;$("jobC").classList.remove("hide");}
+ setUp(e.upSlot);upShow();setUp(upApplies(e.job)?e.upSlot:"");
  $("emp").value=e.employer||"";$("ves").value=e.vessel||"";$("shift").value=e.shift;$("st").value=e.start||"";$("en").value=e.end||"";
  rateDirty=true;$("hrs").value=e.hours;$("ot").value=(e.otManual!=null?e.otManual:num(e.ot)>0)?e.ot:"";$("rate").value=e.rate||"";$("otrate").value=e.otRate||"";$("trv").value=e.travel||"";$("mi").value=e.miles||"";$("note").value=e.note||"";
  setX(!!(e.travel||e.miles||e.note||e.employer||e.vessel||e.start||e.end||(e.otManual!=null?e.otManual:num(e.ot)>0)));otHint();
@@ -248,7 +262,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${t.anyPay?money(t.pay).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">Travel ${r2(t.travel)}h · ${r2(t.miles)} mi</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
  <div class="row" style="margin-bottom:12px"><button class="p" id="sh">Share week</button><button id="tw">This week</button></div>
- ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}</div></div>
+ ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
  $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};
@@ -274,5 +288,5 @@ document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel};
 </script></body></html>
