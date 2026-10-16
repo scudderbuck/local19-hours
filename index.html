@@ -63,7 +63,8 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <div id="extras" class="hide">
 <div class="row"><div><label for="st">Start</label><input type="time" id="st"></div><div><label for="en">End</label><input type="time" id="en"></div></div>
 <div class="mut" style="margin-top:4px">Hours fill in automatically from start/end.</div>
-<label for="ot">OT hours</label><input type="number" id="ot" step="0.25" min="0" max="48" inputmode="decimal" value="0">
+<label for="ot">OT hours</label><input type="number" id="ot" step="0.25" min="0" max="48" inputmode="decimal" placeholder="auto">
+<div class="mut" id="othint" style="margin-top:4px"></div>
 <label for="emp">Employer / company</label><input id="emp" list="empl" placeholder="e.g. SSA, Matson">
 <datalist id="empl"></datalist>
 <label for="ves">Vessel</label><input id="ves">
@@ -112,6 +113,10 @@ function defaultRates(code,shift,tier){const g=jobClass(code);const si={"1st":0,
 const OT_RATIO=s=>s==="1st"||!s?1.5:1.125; /* OT / own-shift ST: 1.5/1.0, 1.5/1.3333, 1.8/1.6 (Contract 4.142) */
 function jobLabel(code){for(const g in JOBS)for(const [c,n] of JOBS[g])if(c===code)return c+" "+n;return code||"";}
 function toMin(t){if(!/^\d{1,2}:\d{2}$/.test(t||""))return null;const [h,m]=t.split(":").map(Number);return h*60+m;}
+const OT_THRESH=s=>s==="3rd"?5:8; /* OT starts after 8h (1st/2nd) or 5h (3rd) */
+function autoOT(hours,shift){return Math.round(Math.max(0,num(hours)-OT_THRESH(shift))*100)/100;}
+/* typed/stored override wins; legacy entries (no flag) with OT>0 are treated as manual */
+function effOT(e){const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
 function calcHours(s,e){const a=toMin(s),b=toMin(e);if(a==null||b==null)return null;let d=b-a;if(d<=0)d+=1440;return Math.round(d/60*100)/100;}
 function parseDate(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
 function fmtDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -119,15 +124,15 @@ function weekStart(s){const d=parseDate(s);d.setDate(d.getDate()-((d.getDay()+1)
 function addDays(s,n){const d=parseDate(s);d.setDate(d.getDate()+n);return fmtDate(d);}
 function num(x){const n=parseFloat(x);return isFinite(n)?n:0;}
 function entryPay(e){const r=e.rate==null||e.rate===""?null:num(e.rate);if(r==null)return null;
- const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);const reg=Math.max(0,num(e.hours)-num(e.ot));
- return Math.round((reg*r+num(e.ot)*o)*100)/100;}
+ const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);const ot=effOT(e),reg=Math.max(0,num(e.hours)-ot);
+ return Math.round((reg*r+ot*o)*100)/100;}
 /* hours = total paid hours incl. OT; OT is the portion of hours that is overtime */
 function summarize(list){const t={hours:0,ot:0,pay:0,anyPay:false,travel:0,miles:0,byPier:{},byJob:{},count:list.length};
- for(const e of list){t.hours+=num(e.hours);t.ot+=num(e.ot);t.travel+=num(e.travel);t.miles+=num(e.miles);
+ for(const e of list){t.hours+=num(e.hours);t.ot+=effOT(e);t.travel+=num(e.travel);t.miles+=num(e.miles);
   const p=entryPay(e);if(p!=null){t.pay+=p;t.anyPay=true;}
   const bp=t.byPier[e.pier||"?"]=t.byPier[e.pier||"?"]||{hours:0,ot:0,pay:0,anyPay:false};
   const jk=jobLabel(e.job)||"?";const bj=t.byJob[jk]=t.byJob[jk]||{hours:0,ot:0,pay:0,anyPay:false};
-  for(const b of [bp,bj]){b.hours+=num(e.hours);b.ot+=num(e.ot);if(p!=null){b.pay+=p;b.anyPay=true;}}}
+  for(const b of [bp,bj]){b.hours+=num(e.hours);b.ot+=effOT(e);if(p!=null){b.pay+=p;b.anyPay=true;}}}
  return t;}
 const r2=x=>(Math.round(x*100)/100).toString();
 const money=x=>"$"+x.toFixed(2);
@@ -136,7 +141,7 @@ function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekE
  const L=["ILWU Local 19 – Hours, week of "+ws+" to "+we,""];
  if(!list.length)L.push("No shifts logged.");
  for(const e of list){const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][parseDate(e.date).getDay()];
-  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(num(e.ot))s+=" (OT "+r2(num(e.ot))+")";
+  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";
   s+=" – "+[e.pier,e.employer,e.vessel,jobLabel(e.job)].filter(Boolean).join(", ");
   const p=nopay?null:entryPay(e);if(p!=null)s+=" – "+money(p);L.push(s);}
  if(list.length){L.push("","Total hours: "+r2(t.hours),"OT hours: "+r2(t.ot));
@@ -148,7 +153,7 @@ function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekE
 function csvCell(v){v=v==null?"":String(v);if(/^[=+\-@\t\r]/.test(v)&&isNaN(Number(v)))v="'"+v;return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 const CSV_COLS=["date","shift","pier","employer","vessel","job","jobName","start","end","hours","ot","rate","otRate","travel","miles","note"];
 function toCSV(all){const rows=[CSV_COLS.join(",")];for(const e of [...all].sort((a,b)=>a.date<b.date?-1:1))
- rows.push(CSV_COLS.map(c=>csvCell(c==="jobName"?jobLabel(e.job).replace(/^\S+\s/,""):e[c])).join(","));return rows.join("\r\n");}
+ rows.push(CSV_COLS.map(c=>csvCell(c==="jobName"?jobLabel(e.job).replace(/^\S+\s/,""):c==="ot"?effOT(e):e[c])).join(","));return rows.join("\r\n");}
 function validImport(o){const arr=Array.isArray(o)?o:o&&Array.isArray(o.entries)?o.entries:null;if(!arr)return null;
  return arr.filter(e=>e&&typeof e==="object"&&/^\d{4}-\d{2}-\d{2}$/.test(e.date||"")).map(e=>({...e,id:String(e.id||uid())}));}
 function mergeEntries(cur,inc){const m=new Map(cur.map(e=>[e.id,e]));for(const e of inc)m.set(e.id,e);return [...m.values()];}
@@ -179,9 +184,12 @@ $("shift").onchange=applyDefaults;
 $("job").onchange=()=>{$("jobC").classList.toggle("hide",$("job").value!=="__c");applyDefaults();};
 function setX(o){$("extras").classList.toggle("hide",!o);$("xt").setAttribute("aria-expanded",o);$("xt").textContent="More details "+(o?"▴":"▾");}
 $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
-function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null)$("hrs").value=h;}
+function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value);
+ $("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
+function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null)$("hrs").value=h;otHint();}
 $("st").onchange=$("en").onchange=autoHrs;
-function resetForm(){$("f").reset();editId=null;setToday();$("ot").value=0;$("pierC").classList.add("hide");$("jobC").classList.add("hide");setX(false);
+$("hrs").oninput=$("ot").oninput=otHint;$("shift").addEventListener("change",otHint);
+function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setX(false);
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
  try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
  rateDirty=false;applyDefaults();}
@@ -191,9 +199,9 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  const job=$("job").value==="__c"?$("jobC").value.trim():$("job").value;
  let hours=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);
  if(hours==null||hours<=0){alert("Enter start/end times or hours.");return;}
- const ot=num($("ot").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
+ const otManual=$("ot").value.trim()!=="";const ot=otManual?num($("ot").value):autoOT(hours,$("shift").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
  const e={id:editId||uid(),date:$("date").value,pier,employer:$("emp").value.trim(),vessel:$("ves").value.trim(),job,shift:$("shift").value,
-  start:$("st").value,end:$("en").value,hours,ot,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
+  start:$("st").value,end:$("en").value,hours,ot,otManual,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
  save();localStorage.setItem(lastKey,JSON.stringify({rate:e.rate,otRate:e.otRate}));
  wk=weekStart(e.date);refreshEmp();resetForm();show("week");};
@@ -203,8 +211,8 @@ function editEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;show("add
  const known=[...$("job").options].some(o=>o.value===e.job&&e.job);
  if(known||!e.job){$("job").value=e.job||"";$("jobC").classList.add("hide");}else{$("job").value="__c";$("jobC").value=e.job;$("jobC").classList.remove("hide");}
  $("emp").value=e.employer||"";$("ves").value=e.vessel||"";$("shift").value=e.shift;$("st").value=e.start||"";$("en").value=e.end||"";
- rateDirty=true;$("hrs").value=e.hours;$("ot").value=e.ot||0;$("rate").value=e.rate||"";$("otrate").value=e.otRate||"";$("trv").value=e.travel||"";$("mi").value=e.miles||"";$("note").value=e.note||"";
- setX(!!(e.travel||e.miles||e.note||e.employer||e.vessel||e.start||e.end||num(e.ot)));
+ rateDirty=true;$("hrs").value=e.hours;$("ot").value=(e.otManual!=null?e.otManual:num(e.ot)>0)?e.ot:"";$("rate").value=e.rate||"";$("otrate").value=e.otRate||"";$("trv").value=e.travel||"";$("mi").value=e.miles||"";$("note").value=e.note||"";
+ setX(!!(e.travel||e.miles||e.note||e.employer||e.vessel||e.start||e.end||(e.otManual!=null?e.otManual:num(e.ot)>0)));otHint();
  $("ftitle").textContent="Edit shift";$("save").textContent="Update shift";$("cancel").classList.remove("hide");scrollTo(0,0);}
 function renderWeek(){const list=weekEntries(entries,wk),t=summarize(list),we=addDays(wk,6);
  const grp=o=>Object.keys(o).map(k=>`<tr><td>${esc(k)}</td><td>${r2(o[k].hours)}h${o[k].ot?` (OT ${r2(o[k].ot)})`:""}${o[k].anyPay?" "+money(o[k].pay):""}</td></tr>`).join("");
@@ -212,7 +220,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${t.anyPay?money(t.pay).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">Travel ${r2(t.travel)}h · ${r2(t.miles)} mi</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
  <div class="row" style="margin-bottom:12px"><button class="p" id="sh">Share week</button><button id="tw">This week</button></div>
- ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${num(e.ot)?` (OT ${r2(num(e.ot))})`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}</div></div>
+ ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
  $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};
@@ -238,5 +246,5 @@ document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,jobLabel,weekEntries,JOBS};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS};
 </script></body></html>
