@@ -28,6 +28,7 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--pri);outli
 label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:14px 0 4px}
 label .mut{font-weight:400}
 .row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
+.dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
 .tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
 .tabs button{flex:1;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
@@ -54,7 +55,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <section id="v-add">
 <form id="f" class="card" autocomplete="off">
 <h3 id="ftitle">Add shift</h3>
-<label for="date">Date</label><input type="date" id="date" required>
+<label for="date">Date</label><div class="row dategrp"><button type="button" id="dprev" aria-label="Previous day">◀</button><input type="date" id="date" required min="2000-01-01" max="2099-12-31"><button type="button" id="dnext" aria-label="Next day">▶</button><button type="button" id="dtoday" class="p">Today</button></div>
 <label for="pier">Pier</label><select id="pier"></select>
 <input id="pierC" class="hide" placeholder="Custom pier / terminal" style="margin-top:8px">
 <label for="job">Job</label><select id="job"></select>
@@ -205,6 +206,14 @@ $("pier").innerHTML=PIERS.map(p=>`<option>${p}</option>`).join("")+'<option valu
 $("job").innerHTML='<option value="">— select job —</option><optgroup label="Seattle jobs">'+SEATTLE_JOBS.map(([n,c])=>`<option value="${n}">${n}${c?" · "+c:""}</option>`).join("")+'</optgroup><option value="__c">Custom…</option><optgroup label="Other (PMA list)">'+Object.keys(JOBS).map(g=>JOBS[g].map(([c,n])=>`<option value="${c}">${c} ${n} (${g})</option>`).join("")).join("")+'</optgroup>';
 const lastKey="l19hours.last";
 function setToday(){$("date").value=fmtDate(new Date());}
+function shiftDate(n){const v=$("date").value;$("date").value=/^\d{4}-\d{2}-\d{2}$/.test(v)?addDays(v,n):fmtDate(new Date());$("date").dispatchEvent(new Event("change",{bubbles:true}));}
+function openPicker(){const d=$("date");try{if(d.showPicker)d.showPicker();}catch(e){}}
+{let lastOpen=0;const d=$("date");
+ d.addEventListener("pointerdown",()=>{lastOpen=Date.now();});
+ d.addEventListener("click",openPicker);
+ d.addEventListener("focus",()=>{if(Date.now()-lastOpen>800)openPicker();});}
+$("dprev").onclick=()=>shiftDate(-1);$("dnext").onclick=()=>shiftDate(1);
+$("dtoday").onclick=()=>{setToday();$("date").dispatchEvent(new Event("change",{bubbles:true}));};
 function refreshEmp(){$("empl").innerHTML=[...new Set(entries.map(e=>e.employer).filter(Boolean))].map(x=>`<option value="${esc(x)}">`).join("");}
 $("pier").onchange=()=>$("pierC").classList.toggle("hide",$("pier").value!=="__c");
 const tierKey="l19hours.tier";let rateDirty=false;
