@@ -94,8 +94,15 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <p id="msg" class="mut"></p>
 <button class="d" id="wipe" style="width:100%">Delete all data</button></div>
 </section>
+<section id="v-ships" class="hide">
+<div class="card"><h3 style="margin-top:0">Ships coming</h3>
+<div id="shSum"></div><p id="shUp" class="mut"></p>
+<div class="row"><button id="shRef">Refresh</button></div></div>
+<div id="shList"></div>
+<div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. Source: Northwest Seaport Alliance Vessel Schedule Forecast. Seattle container terminals only (T5, T18); T91 is cruise, no container calls.</p></div>
+</section>
 </main>
-<nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="week">Week</button><button data-v="data">Backup</button></nav>
+<nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="week">Week</button><button data-v="data">Backup</button></nav>
 <script>
 "use strict";
 /* ===== core logic (pure, tested in node) ===== */
@@ -196,6 +203,17 @@ function mergeEntries(cur,inc){const m=new Map(cur.map(e=>[e.id,e]));for(const e
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
 /* ===== UI ===== */
+// ---- Ships coming (vessels.json is refreshed by a scheduled GitHub Action) ----
+const SHIP_TERMS=["T5","T18"],SHIP_KEY="l19ships.v1";
+const shDay=s=>String(s||"").slice(0,10);
+function shipsOnDay(v,term,day){return v.filter(x=>x.terminal===term&&shDay(x.eta)<=day&&day<=shDay(x.etd));}
+function shipSummary(v,today,terms){terms=terms||SHIP_TERMS;const tm=addDays(today,1);
+ return terms.map(t=>{const a=shipsOnDay(v,t,today).length,b=shipsOnDay(v,t,tm).length,p=n=>n+(n===1?" ship":" ships");return t+": "+p(a)+" today, "+b+" tomorrow";});}
+function shipGroups(v,today){const up=v.filter(x=>shDay(x.etd)>=today&&SHIP_TERMS.includes(x.terminal)).sort((a,b)=>a.eta<b.eta?-1:a.eta>b.eta?1:0),g=[];
+ for(const x of up){const k=shDay(x.eta)<today?"In port now (arrived earlier)":shDay(x.eta);let r=g.find(q=>q.key===k);if(!r){r={key:k,items:[]};g.push(r);}r.items.push(x);}
+ return g;}
+function shFmt(s){if(!s)return"?";const[d,t]=s.split("T");return d.slice(5).replace("-","/")+" "+(t||"");}
+function shDate(k){if(!/^\d{4}-/.test(k))return k;const d=parseDate(k);return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]+" "+k.slice(5).replace("-","/");}
 if(typeof document!=="undefined"){
 const $=id=>document.getElementById(id),KEY="l19hours.v1";
 let entries=[];try{entries=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
@@ -291,11 +309,29 @@ $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{const i
  if(!inc)throw 0;entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();$("msg").textContent="All data deleted.";}};
-function show(v){for(const x of["add","week","data"])$("v-"+x).classList.toggle("hide",x!==v);
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();}
+function show(v){for(const x of["add","ships","week","data"])$("v-"+x).classList.toggle("hide",x!==v);
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="ships")loadShips();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();show(b.dataset.v);});
+let shipData=null,shipStale=false;
+function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
+ if(!shipData){sum.innerHTML='<p class="mut">Ship schedule unavailable right now (offline or not published yet). Try Refresh.</p>';list.innerHTML="";up.textContent="";return;}
+ const today=fmtDate(new Date()),v=shipData.vessels||[];
+ sum.innerHTML=shipSummary(v,today).map(x=>`<div><b>${esc(x)}</b></div>`).join("");
+ let u="";if(shipData.updated){const d=new Date(shipData.updated);u="Schedule last updated: "+(isNaN(d)?esc(shipData.updated):d.toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}));
+  if(!isNaN(d)&&Date.now()-d>12*3600e3)u+=" (more than 12 hours old)";}
+ if(shipStale)u+=" · showing saved copy, couldn't reach the server";
+ up.textContent=u;
+ const g=shipGroups(v,today);
+ list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span><div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';}
+async function loadShips(){
+ try{const r=await fetch("vessels.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json();if(!j||!Array.isArray(j.vessels))throw 0;
+  shipData=j;shipStale=false;try{localStorage.setItem(SHIP_KEY,JSON.stringify(j));}catch(e){}}
+ catch(e){try{const c=JSON.parse(localStorage.getItem(SHIP_KEY));if(c&&Array.isArray(c.vessels)){shipData=c;shipStale=true;}}catch(_){}}
+ renderShips();}
+$("shRef").onclick=loadShips;
+
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,shipsOnDay,shipSummary,shipGroups};
 </script></body></html>

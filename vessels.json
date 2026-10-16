@@ -1,0 +1,216 @@
+{
+ "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
+ "timezone": "America/Los_Angeles",
+ "updated": "2026-10-16T14:45:04-07:00",
+ "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls).",
+ "vessels": [
+  {
+   "vessel": "MSC BOSTON",
+   "service": "Ad Hoc",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-13T08:00",
+   "etd": "2026-10-14T18:00"
+  },
+  {
+   "vessel": "CMA CGM BYBLOS",
+   "service": "Ad Hoc",
+   "terminal": "T18",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-15T14:00",
+   "etd": "2026-10-17T17:00"
+  },
+  {
+   "vessel": "CAPE TAINARO",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-16T06:00",
+   "etd": "2026-10-17T04:00"
+  },
+  {
+   "vessel": "OOCL NEW YORK",
+   "service": "PNW1",
+   "terminal": "T18",
+   "agent": "Inchcape",
+   "eta": "2026-10-17T05:00",
+   "etd": "2026-10-18T04:00"
+  },
+  {
+   "vessel": "CMA CGM ALMAVIVA",
+   "service": "CPNW",
+   "terminal": "T18",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-17T13:00",
+   "etd": "2026-10-19T19:00"
+  },
+  {
+   "vessel": "XIN YING KOU",
+   "service": "CPV",
+   "terminal": "T18",
+   "agent": "COSCO SHIPPING LINES",
+   "eta": "2026-10-18T05:00",
+   "etd": "2026-10-19T05:00"
+  },
+  {
+   "vessel": "EXPRESS ROME",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-18T06:00",
+   "etd": "2026-10-19T18:00"
+  },
+  {
+   "vessel": "SM QINGDAO",
+   "service": "",
+   "terminal": "T18",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-19T15:00",
+   "etd": "2026-10-20T04:00"
+  },
+  {
+   "vessel": "MSC DENISSE X",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-20T16:00",
+   "etd": "2026-10-22T18:00"
+  },
+  {
+   "vessel": "MSC FLORA",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-10-22T07:00",
+   "etd": "2026-10-23T04:00"
+  },
+  {
+   "vessel": "WESTWOOD RAINIER",
+   "service": "EB Service 1",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-10-22T22:16",
+   "etd": "2026-10-23T23:16"
+  },
+  {
+   "vessel": "OOCL SAN FRANCISCO",
+   "service": "PNW1",
+   "terminal": "T18",
+   "agent": "Inchcape",
+   "eta": "2026-10-23T06:00",
+   "etd": "2026-10-24T04:00"
+  },
+  {
+   "vessel": "SM PORTLAND",
+   "service": "",
+   "terminal": "T18",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-24T15:00",
+   "etd": "2026-10-25T04:00"
+  },
+  {
+   "vessel": "CMA CGM FORT JAMES",
+   "service": "CPNW",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-10-25T05:15",
+   "etd": "2026-10-29T14:15"
+  },
+  {
+   "vessel": "COSCO VENICE",
+   "service": "CPV",
+   "terminal": "T18",
+   "agent": "COSCO SHIPPING LINES",
+   "eta": "2026-10-26T05:00",
+   "etd": "2026-10-27T04:00"
+  },
+  {
+   "vessel": "MSC IVANA",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-10-26T05:15",
+   "etd": "2026-10-28T05:15"
+  },
+  {
+   "vessel": "CMA CGM DUTCH HARBOR",
+   "service": "Oceania",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-10-29T15:33",
+   "etd": "2026-10-31T03:33"
+  },
+  {
+   "vessel": "MSC NITYA B",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-10-30T00:05",
+   "etd": "2026-10-30T21:05"
+  },
+  {
+   "vessel": "NADI CHIEF",
+   "service": "EB Service 2",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-10-30T01:22",
+   "etd": "2026-10-31T02:22"
+  },
+  {
+   "vessel": "MSC SOLA",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-10-31T04:00",
+   "etd": "2026-11-02T03:00"
+  },
+  {
+   "vessel": "CYPRESS",
+   "service": "CPNW",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-01T04:00",
+   "etd": "2026-11-02T13:00"
+  },
+  {
+   "vessel": "SM TIANJIN",
+   "service": "",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-01T17:00",
+   "etd": "2026-11-02T20:00"
+  },
+  {
+   "vessel": "MSC YUKTA X",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-11-04T18:00",
+   "etd": "2026-11-06T18:00"
+  },
+  {
+   "vessel": "MSC SABRINA",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-11-05T07:00",
+   "etd": "2026-11-06T04:00"
+  },
+  {
+   "vessel": "WESTWOOD COLUMBIA",
+   "service": "EB Service 1",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-06T01:21",
+   "etd": "2026-11-06T14:21"
+  },
+  {
+   "vessel": "SM MUMBAI",
+   "service": "",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-06T09:00",
+   "etd": "2026-11-07T12:00"
+  }
+ ]
+}
