@@ -1,0 +1,26 @@
+name: Refresh vessels.json
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: vessels
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pymupdf
+      - run: python scripts/fetch_vessels.py vessels.json
+      - name: Commit if changed
+        run: |
+          git config user.name "vessels-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add vessels.json
+          git diff --cached --quiet || (git commit -m "Update vessels.json" && git push)
