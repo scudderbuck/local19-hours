@@ -120,7 +120,10 @@ const SEATTLE_JOBS=[
 ["Millwright","","","none","No matching PMA code; enter yourself"],
 ["UT man","0037","","inferred","Code 0037 Utility Lift Driver (guess). PMA group Skill 1; rate NOT prefilled"],
 ["Heavy bull","0055","","inferred","Code 0055 Lift Truck-Heavy (guess). PMA group Skill 2; rate NOT prefilled"],
-["Porter","","","none","No matching PMA code; enter yourself"]];
+["Porter","","","none","No matching PMA code; enter yourself"],
+["Lokey","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
+["Switch","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
+["Deckman","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"]];
 function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||null;}
 /* Default pay rates: ILWU-PMA Pacific Coast Longshore Contract Document 2022-2028, Wage Schedule 2026/2027
    (eff. 8:00 a.m. Jul 4 2026 - Jul 3 2027), "No Cargo Penalty" table, printed p.161 (PDF p.170). Arrays = [1st ST, 2nd ST, 3rd ST, OT 1st, OT 2nd, OT 3rd].
