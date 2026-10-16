@@ -102,7 +102,7 @@ const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman
 "Foreman":[["0128","30% Foreman W/B Ship"],["0129","30% Foreman W/B Dock"],["0136","30% Foreman Guarantee"],["0138","30% Foreman (Elevated) Ship"],["0139","30% Foreman (Elevated) Dock"],["0140","30% Foreman (Steady) Ship"],["0141","30% Foreman (Steady) Dock"],["0142","30% Foreman (Steady From...)"],["0143","30% Foreman (Steady From...)"],["0180","CFS Foreman Day Shift"]]};
 /* ===== SEATTLE JOB LIST (main dropdown) — EDIT HERE =====
    [name shown, PMA code ("" = none), rate class ("Basic"|"Skill 1"|"Skill 2"|"Skill 3"|"" = NO default rate; only set when confirmed - user says there are only 3 pay scales, so mapping to PMA classes is not assumed), status, note]
-   status: "direct" = name matches a code in the PMA occupation-code list; "inferred" = code is my best guess, check against your pay stub; "none" = no confident match (rate left for you).
+   status: "direct" = name matches a code in the PMA occupation-code list; "inferred" = code is my best guess, check against your pay stub; "none" = no confident match (rate left for you); "user" = class stated by the user, no code.
    Rates autofill from the class (see RATES). Old PMA-list entries stay under "Other (PMA list)" in JOBS below. */
 const SEATTLE_JOBS=[
 ["Stevedore","","","none","No single PMA code; enter code/rate yourself"],
@@ -121,6 +121,7 @@ const SEATTLE_JOBS=[
 ["UT man","0037","","inferred","Code 0037 Utility Lift Driver (guess). PMA group Skill 1; rate NOT prefilled"],
 ["Heavy bull","0055","","inferred","Code 0055 Lift Truck-Heavy (guess). PMA group Skill 2; rate NOT prefilled"],
 ["Porter","","","none","No matching PMA code; enter yourself"],
+["Trucker","","Basic","user","User-stated Basic (non-skilled); no PMA code assigned; rate from Basic schedule"],
 ["Lokey","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Switch","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Deckman","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"]];
