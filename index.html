@@ -55,7 +55,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 #lv .sc{flex:1;overflow:auto;touch-action:pan-x pan-y pinch-zoom;-webkit-overflow-scrolling:touch}
 #lv .sc img{display:block;width:100%;height:auto;max-width:none}
 #lv .bar{display:flex;flex-wrap:wrap;gap:6px;padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:#111}
-#lv .bar button{flex:1 1 30%;color:#fff;background:#222;border-color:#444}#lv .bar button.d{color:#ff8a80}
+#lv .bar button{flex:1 1 22%;color:#fff;background:#222;border-color:#444}#lv .bar button.d{color:#ff8a80}
 #lv .cap{padding:8px;font-size:14px;background:#111}
 </style></head><body>
 <header>Local 19 Hours</header>
@@ -115,7 +115,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <script>
 "use strict";
 /* ===== core logic (pure, tested in node) ===== */
-const PIERS=["Pier 5","Pier 18","Pier 86 (Louis Dreyfus)","Pier 91"];
+const PIERS=["Pier 5","Pier 18","Pier 86 (Louis Dreyfus)","Pier 91","Pier 66 (Port of America)","Pier 46 (PCMC)","Pier 104 (Jones)"];
 const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman"],["0006","Frontman/Slingman"],["0007","Holdman"],["0008","Jitney Driver"],["0009","Lasher"],["0012","Car Man"],["0150","CFS Utility Man"],["0011","PMA Training (L/S)"]],
 "Skill 1":[["0023","Button Pusher"],["0025","Combo Lift/Jitney"],["0026","Crane Chaser"],["0028","Hatch Tender"],["0029","Lift Truck Operator"],["0031","Rail Car Pusher"],["0033","Skilled Holdman"],["0036","Tractor-Semi-Dock"],["0037","Utility Lift Driver"],["0038","Winch Driver"],["0052","Gang Boss"],["0054","Hatch Boss Tender"],["0003","Boatman"],["0030","Payloader Operator"],["0070","Bulldozer/Caterpillar"],["0071","D.O.T. Truck Driver"]],
 "Skill 2":[["0055","Lift Truck-Heavy"],["0085","Crane Mobile"],["0087","Crane Shipboard"],["0088","Crane Whirley"],["0053","Payloader Over 15 Tons"],["0057","Utility Lift Driver - Work"],["0058","Utility Lift Driver - Guarantee"],["0080","Bulkloader Operator"],["0086","Crane Sheer Leg / Stiff Leg"],["0091","Excavator/Coverhoist"],["0092","Log Loader - Snapper"],["0094","Loci Operator"]],
@@ -233,6 +233,7 @@ const LETTER_KEEP_DAYS=30;
 function letterKey(vessel,eta){return String(vessel||"").trim().toUpperCase().replace(/\s+/g," ")+"|"+shDay(eta);}
 function letterExpired(etd,today,days){const d=shDay(etd);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;return addDays(d,days==null?LETTER_KEEP_DAYS:days)<today;}
 function letterLabel(iso){const d=new Date(iso);return isNaN(d)?"":"Letter · "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]+" "+d.getDate();}
+function letterTitle(vs,eta){return (String(vs||"Ship letter").trim()+" "+(eta||"")).trim();}
 function fitSize(w,h,max){max=max||1600;return w>max?{w:max,h:Math.round(h*max/w)}:{w:w,h:h};}
 function shFmt(s){if(!s)return"?";const[d,t]=s.split("T");return d.slice(5).replace("-","/")+" "+(t||"");}
 function shDate(k){if(!/^\d{4}-/.test(k))return k;const d=parseDate(k);return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]+" "+k.slice(5).replace("-","/");}
@@ -393,14 +394,20 @@ lfile.onchange=async()=>{const fs=[...lfile.files],c=lctx;lfile.value="";if(!fs.
  await refreshLetters();if(lv.open)viewer(c.k,c.vs,c.eta,c.etd,lv.i);};
 function pick(c){lctx=c;lfile.click();}
 const lv={open:false,i:0,url:null};
+function letterFile(blob,vs,eta,n){const ext=(blob.type||"").includes("png")?"png":(blob.type||"").includes("webp")?"webp":"jpg";const nm=(letterTitle(vs,eta).replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"_")||"letter")+(n?"_"+n:"")+"."+ext;return new File([blob],nm,{type:blob.type||"image/jpeg"});}
+function dlFiles(fs){fs.forEach((f,i)=>setTimeout(()=>{const u=URL.createObjectURL(f),a=document.createElement("a");a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);},i*400));}
+async function shareLetters(blobs,vs,eta){const fs=blobs.map((b,i)=>letterFile(b,vs,eta,blobs.length>1?i+1:0)),title=letterTitle(vs,eta);
+ try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:fs})){await navigator.share({files:fs,title});return;}}catch(e){if(e&&e.name==="AbortError")return;}
+ dlFiles(fs);}
 async function viewer(k,vs,eta,etd,i){let a;try{a=await lByKey(k);}catch(e){return;}
  const old=$("lv");if(old)old.remove();if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}
  if(!a.length){lv.open=false;return;}
  lv.open=true;i=Math.max(0,Math.min(i==null?a.length-1:i,a.length-1));lv.i=i;const r=a[i];lv.url=URL.createObjectURL(r.blob);
  const d=document.createElement("div");d.id="lv";d.setAttribute("role","dialog");
- d.innerHTML=`<div class="cap">${esc(vs)} · ETA ${esc(eta)} · ${esc(letterLabel(r.added))} (${i+1}/${a.length})</div><div class="sc"><img id="lvimg" alt="Letter photo" src="${lv.url}"></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
+ d.innerHTML=`<div class="cap">${esc(vs)} · ETA ${esc(eta)} · ${esc(letterLabel(r.added))} (${i+1}/${a.length})</div><div class="sc"><img id="lvimg" alt="Letter photo" src="${lv.url}"></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvs">Share</button>${a.length>1?'<button type="button" id="lvsa">Share all</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
  document.body.appendChild(d);const c={k,vs,eta,etd};
  $("lvc").onclick=()=>{d.remove();lv.open=false;if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}refreshLetters();};
+ $("lvs").onclick=()=>shareLetters([r.blob],vs,eta);if(a.length>1)$("lvsa").onclick=()=>shareLetters(a.map(x=>x.blob),vs,eta);
  $("lva").onclick=()=>pick(c);$("lvr").onclick=()=>pick({...c,replaceId:r.id});
  $("lvd").onclick=async()=>{if(!confirm("Delete this letter photo?"))return;try{await lDel(r.id);}catch(e){}await refreshLetters();viewer(k,vs,eta,etd,Math.max(0,i-1));};
  if(a.length>1){$("lvp").onclick=()=>viewer(k,vs,eta,etd,(i+a.length-1)%a.length);$("lvn").onclick=()=>viewer(k,vs,eta,etd,(i+1)%a.length);}}
@@ -413,5 +420,5 @@ cleanLetters();
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
 </script></body></html>
