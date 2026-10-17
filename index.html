@@ -36,7 +36,7 @@ label .mut{font-weight:400}
 .dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
 .tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
-.tabs button{flex:1;font-size:1rem;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
+.tabs button{flex:1;min-width:0;padding:0 2px;font-size:1rem;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
 .tabs button.on{color:var(--acc);font-weight:700;box-shadow:inset 0 3px var(--acc)}
 .ent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--bd)}
 .ent:first-child{border-top:0;padding-top:0}.ent:last-child{padding-bottom:0}
@@ -49,6 +49,16 @@ button,input,select{font-size:1rem}
 .stat b{display:block;font-size:1.5rem;line-height:1.2}.stat span{font-size:.875rem;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
 .stat.pri{background:var(--pri);border-color:var(--pri);color:var(--prifg)}.stat.pri span{color:inherit}
 .hide{display:none}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.seg button{padding:0 4px;font-weight:600}
+.seg button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
+.mh{position:sticky;top:0;z-index:2;background:var(--pri);color:var(--prifg);font-weight:700;font-size:1.0625rem;padding:10px 14px;border-radius:10px;margin:14px 0 8px;display:flex;justify-content:space-between;gap:8px}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;margin:10px 2px 4px;font-weight:700}
+.dh .tot{font-weight:700;color:var(--fg)}.dh button.link{font-size:.9375rem;min-width:44px}
+.he{display:block;width:100%;text-align:left;min-height:56px;padding:10px 12px;margin-bottom:6px;border-radius:var(--r);background:var(--card);border:1px solid var(--bd);color:var(--fg)}
+.he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}
+.jump{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.big{font-size:1.5rem;font-weight:700}
+
 #upW button[aria-pressed=true],#tsz button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
 .badge{display:inline-block;font-size:.875rem;font-weight:600;border:1px solid var(--bd);border-radius:8px;padding:0 8px;margin-left:4px;color:var(--mut)}
 table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-align:right;white-space:nowrap}
@@ -101,6 +111,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 </form>
 </section>
 <section id="v-week" class="hide"></section>
+<section id="v-hist" class="hide"></section>
 <section id="v-data" class="hide">
 <div class="card"><h3>Text size</h3><div class="row" id="tsz"><button type="button" data-ts="normal" aria-pressed="false">Normal</button><button type="button" data-ts="large" aria-pressed="false">Large</button><button type="button" data-ts="xl" aria-pressed="false">Extra large</button></div></div>
 <div class="card"><h3>Backup</h3>
@@ -120,7 +131,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. Source: Northwest Seaport Alliance Vessel Schedule Forecast. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). Seattle container terminals only (T5, T18); T91 is cruise, no container calls.</p></div>
 </section>
 </main>
-<nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="week">Week</button><button data-v="data">Backup</button></nav>
+<nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="week">Week</button><button data-v="hist">History</button><button data-v="data">Backup</button></nav>
 <script>
 "use strict";
 /* ===== core logic (pure, tested in node) ===== */
@@ -205,6 +216,31 @@ function summarize(list){const t={hours:0,ot:0,pay:0,anyPay:false,travel:0,miles
 const r2=x=>(Math.round(x*100)/100).toString();
 const money=x=>"$"+x.toFixed(2);
 function weekEntries(all,ws){const we=addDays(ws,6);return all.filter(e=>e.date>=ws&&e.date<=we).sort((a,b)=>a.date<b.date||(a.date===b.date&&a.shift>b.shift)?-1:1);}
+/* ===== period totals (week Sat-Fri / month / quarter / year, calendar) ===== */
+const p2=n=>String(n).padStart(2,"0");
+function periodRange(kind,s){const d=parseDate(s),y=d.getFullYear(),m=d.getMonth();let a,b;
+ if(kind==="week"){a=weekStart(s);b=addDays(a,6);}
+ else if(kind==="month"){a=fmtDate(new Date(y,m,1));b=fmtDate(new Date(y,m+1,0));}
+ else if(kind==="quarter"){const q=Math.floor(m/3);a=fmtDate(new Date(y,q*3,1));b=fmtDate(new Date(y,q*3+3,0));}
+ else{a=y+"-01-01";b=y+"-12-31";}
+ return {kind,start:a,end:b};}
+function shiftPeriod(kind,s,n){const a=periodRange(kind,s).start,d=parseDate(a);
+ if(kind==="week")return addDays(a,7*n);
+ if(kind==="month")return fmtDate(new Date(d.getFullYear(),d.getMonth()+n,1));
+ if(kind==="quarter")return fmtDate(new Date(d.getFullYear(),d.getMonth()+3*n,1));
+ return fmtDate(new Date(d.getFullYear()+n,0,1));}
+const MON=["January","February","March","April","May","June","July","August","September","October","November","December"],WD=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function periodLabel(kind,s){const r=periodRange(kind,s),d=parseDate(r.start);
+ if(kind==="week")return r.start.slice(5)+" → "+r.end.slice(5)+" · "+r.end.slice(0,4);
+ if(kind==="month")return MON[d.getMonth()]+" "+d.getFullYear();
+ if(kind==="quarter")return "Q"+(Math.floor(d.getMonth()/3)+1)+" "+d.getFullYear();
+ return String(d.getFullYear());}
+function periodEntries(all,kind,s){const r=periodRange(kind,s);return all.filter(e=>e.date>=r.start&&e.date<=r.end);}
+function periodTotals(all,kind,s){const l=periodEntries(all,kind,s),t=summarize(l);
+ t.straight=Math.round((t.hours-t.ot)*100)/100;t.days=new Set(l.map(e=>e.date)).size;return t;}
+function histGroups(all){const m=new Map();
+ for(const e of [...all].sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(a.shift<b.shift?1:a.shift>b.shift?-1:0))){if(!m.has(e.date))m.set(e.date,[]);m.get(e.date).push(e);}
+ const out=[];for(const [date,items] of m)out.push({date,items,hours:items.reduce((x,e)=>x+num(e.hours),0)});return out;}
 const UP_JOBS=["Sling man","Stevedore","Extra Stevedore","Crane op"];
 function upApplies(job){return UP_JOBS.includes(job);}
 function upLabel(v){return v==="first"?"First up (AM)":v==="second"?"Second up (PM)":"";}
@@ -255,11 +291,12 @@ const $=id=>document.getElementById(id),KEY="l19hours.v1";
 let entries=[];try{entries=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(entries));
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let editId=null,wk=weekStart(fmtDate(new Date()));
+let editId=null,selDate=null,retTo="week",hk="week",ha=weekStart(fmtDate(new Date())),hidePay=false;try{hidePay=localStorage.getItem("l19.hidepay")==="1"}catch(e){}
+let wk=weekStart(fmtDate(new Date()));
 $("pier").innerHTML=PIERS.map(p=>`<option>${p}</option>`).join("")+'<option value="__c">Custom…</option>';
 $("job").innerHTML='<option value="">— select job —</option><optgroup label="Seattle jobs">'+SEATTLE_JOBS.map(([n,c])=>`<option value="${n}">${n}${c?" · "+c:""}</option>`).join("")+'</optgroup><option value="__c">Custom…</option><optgroup label="Other (PMA list)">'+Object.keys(JOBS).map(g=>JOBS[g].map(([c,n])=>`<option value="${c}">${c} ${n} (${g})</option>`).join("")).join("")+'</optgroup>';
 const lastKey="l19hours.last";
-function setToday(){$("date").value=fmtDate(new Date());}
+function setToday(){$("date").value=selDate||fmtDate(new Date());}
 function shiftDate(n){const v=$("date").value;$("date").value=/^\d{4}-\d{2}-\d{2}$/.test(v)?addDays(v,n):fmtDate(new Date());$("date").dispatchEvent(new Event("change",{bubbles:true}));}
 function openPicker(){const d=$("date");try{if(d.showPicker)d.showPicker();}catch(e){}}
 {let lastOpen=0;const d=$("date");
@@ -267,7 +304,7 @@ function openPicker(){const d=$("date");try{if(d.showPicker)d.showPicker();}catc
  d.addEventListener("click",openPicker);
  d.addEventListener("focus",()=>{if(Date.now()-lastOpen>800)openPicker();});}
 $("dprev").onclick=()=>shiftDate(-1);$("dnext").onclick=()=>shiftDate(1);
-$("dtoday").onclick=()=>{setToday();$("date").dispatchEvent(new Event("change",{bubbles:true}));};
+$("dtoday").onclick=()=>{$("date").value=fmtDate(new Date());$("date").dispatchEvent(new Event("change",{bubbles:true}));};
 function refreshEmp(){$("empl").innerHTML=[...new Set(entries.map(e=>e.employer).filter(Boolean))].map(x=>`<option value="${esc(x)}">`).join("");}
 $("pier").onchange=()=>$("pierC").classList.toggle("hide",$("pier").value!=="__c");
 const tierKey="l19hours.tier";let rateDirty=false;
@@ -299,7 +336,7 @@ function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHi
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
  try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
  rateDirty=false;applyDefaults();}
-$("cancel").onclick=resetForm;
+$("cancel").onclick=()=>{resetForm();show(retTo);retTo="week";};
 $("f").onsubmit=ev=>{ev.preventDefault();
  const pier=$("pier").value==="__c"?$("pierC").value.trim():$("pier").value;
  const job=$("job").value==="__c"?$("jobC").value.trim():$("job").value;
@@ -310,8 +347,8 @@ $("f").onsubmit=ev=>{ev.preventDefault();
   start:$("st").value,end:$("en").value,hours,ot,otManual,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
  save();localStorage.setItem(lastKey,JSON.stringify({rate:e.rate,otRate:e.otRate}));
- wk=weekStart(e.date);refreshEmp();resetForm();show("week");};
-function editEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;show("add");editId=id;
+ wk=weekStart(e.date);selDate=null;refreshEmp();resetForm();if(retTo==="hist"){ha=e.date;}show(retTo);retTo="week";};
+function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";show("add");editId=id;
  $("date").value=e.date;
  if(PIERS.includes(e.pier)||!e.pier){$("pier").value=e.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=e.pier;$("pierC").classList.remove("hide");}
  const known=[...$("job").options].some(o=>o.value===e.job&&e.job);
@@ -347,9 +384,40 @@ $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{const i
  if(!inc)throw 0;entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();$("msg").textContent="All data deleted.";}};
-function show(v){for(const x of["add","ships","week","data"])$("v-"+x).classList.toggle("hide",x!==v);
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="ships")loadShips();}
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();show(b.dataset.v);});
+function show(v){for(const x of["add","ships","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
+function addOn(d){selDate=d;resetForm();retTo="hist";show("add");}
+function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
+ return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${esc([e.pier,e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}</div></button>`;}
+function openEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;const o=document.createElement("div");o.className="sheet";
+ o.innerHTML=`<div><h3>${esc(shDate(e.date))} · ${esc(jobLabel(e.job)||"Shift")}</h3><div class="mut">${r2(num(e.hours))}h · ${esc(e.shift)} · ${esc(e.pier||"")}</div><button class="p" data-m="e">Edit</button><button class="d" data-m="d">Delete</button><button data-m="x">Cancel</button></div>`;
+ o.onclick=ev=>{const m=ev.target.dataset&&ev.target.dataset.m;if(ev.target!==o&&!m)return;o.remove();
+  if(m==="e")editEntry(id,"hist");if(m==="d"&&confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==id);save();renderHist();}};document.body.appendChild(o);}
+function jumpTo(d){const g=histGroups(entries);const t=g.find(x=>x.date<=d)||g[g.length-1];if(!t)return;selDate=d;
+ const el=document.getElementById("d-"+t.date);if(el){el.scrollIntoView({block:"start"});scrollBy(0,-60);}}
+function renderHist(){const kinds=[["week","Week"],["month","Month"],["quarter","Quarter"],["year","Year"]];
+ const r=periodRange(hk,ha),t=periodTotals(entries,hk,ha),pay=t.anyPay&&!hidePay;
+ const grp=o=>Object.keys(o).sort((a,b)=>o[b].hours-o[a].hours).map(k=>`<tr><td>${esc(k)}</td><td>${r2(o[k].hours)}h${o[k].anyPay&&!hidePay?" "+money(o[k].pay):""}</td></tr>`).join("");
+ const groups=histGroups(entries);let list="",mk="";
+ for(const g of groups){const m=g.date.slice(0,7);if(m!==mk){mk=m;const mh=entries.filter(e=>e.date.slice(0,7)===m).reduce((x,e)=>x+num(e.hours),0);list+=`<div class="mh" id="m-${m}"><span>${MON[+m.slice(5)-1]} ${m.slice(0,4)}</span><span>${r2(mh)}h</span></div>`;}
+  list+=`<div class="dh" id="d-${g.date}"><span>${WD[parseDate(g.date).getDay()].slice(0,3)} ${g.date.slice(5).replace("-","/")}/${g.date.slice(2,4)} <span class="tot">· ${r2(g.hours)}h</span></span><button type="button" class="link" data-a="${g.date}">＋ Add</button></div>`+g.items.map(entRow).join("");}
+ $("v-hist").innerHTML=`<div class="card"><div class="seg" id="hk">${kinds.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${k===hk}">${l}</button>`).join("")}</div></div>
+ <div class="card nav"><button id="hp" aria-label="Previous ${hk}">◀</button><div class="t">${periodLabel(hk,ha)}<div class="mut">${hk==="week"?"Sat–Fri pay week":r.start+" to "+r.end}</div></div><button id="hn" aria-label="Next ${hk}">▶</button></div>
+ <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.straight)}/${r2(t.ot)}</b><span>Straight/OT</span></div><div class="stat"><b>${t.days}</b><span>Days</span></div></div>
+ <div class="card"><div class="row" style="align-items:center"><div><span class="mut">Total pay est.</span><div class="big">${hidePay?"Hidden":pay?money(t.pay):"–"}</div></div><button type="button" id="hpay" aria-pressed="${hidePay}">${hidePay?"Show pay":"Hours only (no pay)"}</button></div>
+ ${t.count?`<h4>By job</h4><table>${grp(t.byJob)}</table><h4>By pier</h4><table>${grp(t.byPier)}</table>`:'<p class="mut" style="margin:8px 0 0">No shifts in this period.</p>'}</div>
+ <div class="card"><h3>Jump to</h3><div class="jump"><div><label for="jm" style="margin-top:0">Month</label><input type="month" id="jm"></div><div><label for="jd" style="margin-top:0">Date</label><input type="date" id="jd"></div></div><div class="row" style="margin-top:8px"><button type="button" id="jt">Today</button><button type="button" id="jn" class="p">＋ Add shift</button></div></div>
+ ${groups.length?list:'<div class="card mut">No saved shifts yet. Tap Add to log your first one.</div>'}`;
+ document.querySelectorAll("#hk button").forEach(b=>b.onclick=()=>{hk=b.dataset.k;renderHist();});
+ $("hp").onclick=()=>{ha=shiftPeriod(hk,ha,-1);renderHist();};$("hn").onclick=()=>{ha=shiftPeriod(hk,ha,1);renderHist();};
+ $("hpay").onclick=()=>{hidePay=!hidePay;try{localStorage.setItem("l19.hidepay",hidePay?"1":"0")}catch(e){}renderHist();};
+ $("jm").onchange=()=>{if(/^\d{4}-\d{2}$/.test($("jm").value)){const v=$("jm").value;jumpTo(fmtDate(new Date(+v.slice(0,4),+v.slice(5),0)));}};
+ $("jd").onchange=()=>{if($("jd").value)jumpTo($("jd").value);};
+ $("jt").onclick=()=>{ha=fmtDate(new Date());renderHist();scrollTo(0,0);};
+ $("jn").onclick=()=>addOn($("jd").value||null);
+ document.querySelectorAll("#v-hist [data-h]").forEach(b=>b.onclick=()=>openEntry(b.dataset.h));
+ document.querySelectorAll("#v-hist [data-a]").forEach(b=>b.onclick=()=>addOn(b.dataset.a));}
 let shipData=null,shipStale=false;
 function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
  if(!shipData){sum.innerHTML='<p class="mut">Ship schedule unavailable right now (offline or not published yet). Try Refresh.</p>';list.innerHTML="";up.textContent="";return;}
@@ -435,7 +503,7 @@ cleanLetters();
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
