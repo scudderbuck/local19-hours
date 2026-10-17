@@ -99,7 +99,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <div id="shSum"></div><p id="shUp" class="mut"></p>
 <div class="row"><button id="shRef">Refresh</button></div></div>
 <div id="shList"></div>
-<div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. Source: Northwest Seaport Alliance Vessel Schedule Forecast. "Track" opens MarineTraffic in a new tab; live position there shows delays (free positions can lag). Seattle container terminals only (T5, T18); T91 is cruise, no container calls.</p></div>
+<div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. Source: Northwest Seaport Alliance Vessel Schedule Forecast. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). Seattle container terminals only (T5, T18); T91 is cruise, no container calls.</p></div>
 </section>
 </main>
 <nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="week">Week</button><button data-v="data">Backup</button></nav>
@@ -211,7 +211,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 
 /* ===== UI ===== */
 // ---- Ships coming (vessels.json is refreshed by a scheduled GitHub Action) ----
-function trackUrl(n){return "https://www.marinetraffic.com/en/ais/index/search/all?keyword="+encodeURIComponent(n||"");}
+function trackUrl(n){return "https://www.vesselfinder.com/vessels?name="+encodeURIComponent(n||"");}
 const SHIP_TERMS=["T5","T18"],SHIP_KEY="l19ships.v1";
 const shDay=s=>String(s||"").slice(0,10);
 function shipsOnDay(v,term,day){return v.filter(x=>x.terminal===term&&shDay(x.eta)<=day&&day<=shDay(x.etd));}
