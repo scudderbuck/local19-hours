@@ -49,6 +49,14 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9}
 .sheet>div{background:var(--card);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom));display:grid;gap:8px}
 .sheet h3{margin:0 0 4px}
+.ltr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}.ltr button{min-height:44px;padding:0 12px;font-size:14px}
+.ltr .th{display:flex;align-items:center;gap:6px;padding:0 8px 0 4px}.ltr .th img{width:36px;height:36px;object-fit:cover;border-radius:6px}
+#lv{position:fixed;inset:0;background:#000;z-index:20;display:flex;flex-direction:column;color:#fff}
+#lv .sc{flex:1;overflow:auto;touch-action:pan-x pan-y pinch-zoom;-webkit-overflow-scrolling:touch}
+#lv .sc img{display:block;width:100%;height:auto;max-width:none}
+#lv .bar{display:flex;flex-wrap:wrap;gap:6px;padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:#111}
+#lv .bar button{flex:1 1 30%;color:#fff;background:#222;border-color:#444}#lv .bar button.d{color:#ff8a80}
+#lv .cap{padding:8px;font-size:14px;background:#111}
 </style></head><body>
 <header>Local 19 Hours</header>
 <main>
@@ -88,6 +96,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <section id="v-data" class="hide">
 <div class="card"><h3>Backup</h3>
 <p class="mut">Data lives only on this device (localStorage). Export a backup now and then.</p>
+<p class="mut"><b>Note:</b> Ship letter photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup.</p>
 <div class="row"><button id="exj" class="p">Export JSON</button><button id="exc">Export CSV</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
 <div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing (uncheck to replace all)</span></div>
@@ -97,7 +106,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <section id="v-ships" class="hide">
 <div class="card"><h3 style="margin-top:0">Ships coming</h3>
 <div id="shSum"></div><p id="shUp" class="mut"></p>
-<div class="row"><button id="shRef">Refresh</button></div></div>
+<div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Letter photos stay on this device only (private, offline). Auto-removed 30 days after the ship's ETD.</p></div>
 <div id="shList"></div>
 <div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. Source: Northwest Seaport Alliance Vessel Schedule Forecast. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). Seattle container terminals only (T5, T18); T91 is cruise, no container calls.</p></div>
 </section>
@@ -220,6 +229,11 @@ function shipSummary(v,today,terms){terms=terms||SHIP_TERMS;const tm=addDays(tod
 function shipGroups(v,today){const up=v.filter(x=>shDay(x.etd)>=today&&SHIP_TERMS.includes(x.terminal)).sort((a,b)=>a.eta<b.eta?-1:a.eta>b.eta?1:0),g=[];
  for(const x of up){const k=shDay(x.eta)<today?"In port now (arrived earlier)":shDay(x.eta);let r=g.find(q=>q.key===k);if(!r){r={key:k,items:[]};g.push(r);}r.items.push(x);}
  return g;}
+const LETTER_KEEP_DAYS=30;
+function letterKey(vessel,eta){return String(vessel||"").trim().toUpperCase().replace(/\s+/g," ")+"|"+shDay(eta);}
+function letterExpired(etd,today,days){const d=shDay(etd);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;return addDays(d,days==null?LETTER_KEEP_DAYS:days)<today;}
+function letterLabel(iso){const d=new Date(iso);return isNaN(d)?"":"Letter · "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]+" "+d.getDate();}
+function fitSize(w,h,max){max=max||1600;return w>max?{w:max,h:Math.round(h*max/w)}:{w:w,h:h};}
 function shFmt(s){if(!s)return"?";const[d,t]=s.split("T");return d.slice(5).replace("-","/")+" "+(t||"");}
 function shDate(k){if(!/^\d{4}-/.test(k))return k;const d=parseDate(k);return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]+" "+k.slice(5).replace("-","/");}
 if(typeof document!=="undefined"){
@@ -330,16 +344,74 @@ function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
  if(shipStale)u+=" · showing saved copy, couldn't reach the server";
  up.textContent=u;
  const g=shipGroups(v,today);
- list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span> <a class="trk" href="${esc(trackUrl(x.vessel,x.imo))}" target="_blank" rel="noopener" style="font-size:12px">Track ↗</a><div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';}
+ const _h=g.length;list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span> <a class="trk" href="${esc(trackUrl(x.vessel,x.imo))}" target="_blank" rel="noopener" style="font-size:12px">Track ↗</a><div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div><div class="ltr" data-k="${esc(letterKey(x.vessel,x.eta))}" data-vs="${esc(x.vessel)}" data-eta="${esc(shDay(x.eta))}" data-etd="${esc(shDay(x.etd))}"><button type="button" class="la">📷 Add letter</button><span class="lt"></span></div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';
+ if(_h)refreshLetters();}
 async function loadShips(){
  try{const r=await fetch("vessels.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json();if(!j||!Array.isArray(j.vessels))throw 0;
   shipData=j;shipStale=false;try{localStorage.setItem(SHIP_KEY,JSON.stringify(j));}catch(e){}}
  catch(e){try{const c=JSON.parse(localStorage.getItem(SHIP_KEY));if(c&&Array.isArray(c.vessels)){shipData=c;shipStale=true;}}catch(_){}}
  renderShips();}
 $("shRef").onclick=loadShips;
+/* ===== Ship letters: photos stored in IndexedDB only (private, offline, not in JSON backup) ===== */
+let ldb=null,ldbOk=true;
+function openLdb(){if(ldb)return ldb;ldb=new Promise((res,rej)=>{try{if(!window.indexedDB)throw 0;const r=indexedDB.open("l19letters",1);
+ r.onupgradeneeded=()=>{const s=r.result.createObjectStore("letters",{keyPath:"id"});s.createIndex("k","k");};
+ r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onblocked=()=>rej(0);}catch(e){rej(e);}});
+ ldb.catch(()=>{ldbOk=false;});return ldb;}
+function lreq(mode,fn){return openLdb().then(db=>new Promise((res,rej)=>{const t=db.transaction("letters",mode),st=t.objectStore("letters");let out;
+ const r=fn(st);if(r)r.onsuccess=()=>{out=r.result;};t.oncomplete=()=>res(out);t.onerror=t.onabort=()=>rej(t.error);}));}
+const lAll=()=>lreq("readonly",s=>s.getAll());
+const lByKey=k=>lreq("readonly",s=>s.index("k").getAll(k)).then(a=>(a||[]).sort((x,y)=>x.added<y.added?-1:1));
+const lPut=r=>lreq("readwrite",s=>s.put(r));
+const lDel=id=>lreq("readwrite",s=>s.delete(id));
+function downsize(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();
+ im.onload=()=>{try{const z=fitSize(im.naturalWidth,im.naturalHeight,1600),c=document.createElement("canvas");c.width=z.w;c.height=z.h;
+  const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,z.w,z.h);x.drawImage(im,0,0,z.w,z.h);URL.revokeObjectURL(u);
+  c.toBlob(b=>b?res(b):rej(new Error("encode")),"image/jpeg",0.8);}catch(e){rej(e);}};
+ im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("Not a readable image"));};im.src=u;});}
+async function cleanLetters(){try{const today=fmtDate(new Date()),a=await lAll();let n=0;for(const r of a||[])if(letterExpired(r.etd,today)){await lDel(r.id);n++;}return n;}catch(e){return 0;}}
+async function refreshLetters(){
+ document.querySelectorAll("#shList .ltr").forEach(el=>{el.querySelector(".la").disabled=false;});
+ if(!ldbOk)return markNoDb();
+ let all;try{all=await lAll();}catch(e){return markNoDb();}
+ const by={};for(const r of all||[])(by[r.k]=by[r.k]||[]).push(r);
+ document.querySelectorAll("#shList .ltr").forEach(el=>{const a=(by[el.dataset.k]||[]).sort((x,y)=>x.added<y.added?-1:1),t=el.querySelector(".lt");
+  el.querySelector(".la").textContent=a.length?"＋ Add another":"📷 Add letter";
+  if(!a.length){t.innerHTML="";return;}
+  const last=a[a.length-1],url=URL.createObjectURL(last.blob);
+  t.innerHTML=`<button type="button" class="th lo" aria-label="Open letter photos"><img alt="" src="${url}"><span>${esc(letterLabel(last.added))}${a.length>1?" · ×"+a.length:""}</span></button>`;});
+ }
+function markNoDb(){document.querySelectorAll("#shList .ltr").forEach(el=>{el.querySelector(".la").disabled=true;el.querySelector(".lt").innerHTML='<span class="mut">Letter photos unavailable (private storage not supported in this browser).</span>';});}
+const lfile=document.createElement("input");lfile.type="file";lfile.accept="image/*";lfile.multiple=true;lfile.id="lfile";lfile.className="hide";document.body.appendChild(lfile);
+let lctx=null;
+lfile.onchange=async()=>{const fs=[...lfile.files],c=lctx;lfile.value="";if(!fs.length||!c)return;
+ try{let rep=c.replaceId;
+  for(const f of fs){const b=await downsize(f);
+   await lPut({id:rep||uid(),k:c.k,vessel:c.vs,eta:c.eta,etd:c.etd,added:new Date().toISOString(),blob:b});rep=null;}
+  if(c.replaceId)await lDel(c.replaceId).catch(()=>{});
+ }catch(e){alert("Couldn't save letter photo: "+(e&&e.message||"storage unavailable"));}
+ await refreshLetters();if(lv.open)viewer(c.k,c.vs,c.eta,c.etd,lv.i);};
+function pick(c){lctx=c;lfile.click();}
+const lv={open:false,i:0,url:null};
+async function viewer(k,vs,eta,etd,i){let a;try{a=await lByKey(k);}catch(e){return;}
+ const old=$("lv");if(old)old.remove();if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}
+ if(!a.length){lv.open=false;return;}
+ lv.open=true;i=Math.max(0,Math.min(i==null?a.length-1:i,a.length-1));lv.i=i;const r=a[i];lv.url=URL.createObjectURL(r.blob);
+ const d=document.createElement("div");d.id="lv";d.setAttribute("role","dialog");
+ d.innerHTML=`<div class="cap">${esc(vs)} · ETA ${esc(eta)} · ${esc(letterLabel(r.added))} (${i+1}/${a.length})</div><div class="sc"><img id="lvimg" alt="Letter photo" src="${lv.url}"></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
+ document.body.appendChild(d);const c={k,vs,eta,etd};
+ $("lvc").onclick=()=>{d.remove();lv.open=false;if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}refreshLetters();};
+ $("lva").onclick=()=>pick(c);$("lvr").onclick=()=>pick({...c,replaceId:r.id});
+ $("lvd").onclick=async()=>{if(!confirm("Delete this letter photo?"))return;try{await lDel(r.id);}catch(e){}await refreshLetters();viewer(k,vs,eta,etd,Math.max(0,i-1));};
+ if(a.length>1){$("lvp").onclick=()=>viewer(k,vs,eta,etd,(i+a.length-1)%a.length);$("lvn").onclick=()=>viewer(k,vs,eta,etd,(i+1)%a.length);}}
+$("shList").addEventListener("click",e=>{const el=e.target.closest(".ltr");if(!el)return;const c={k:el.dataset.k,vs:el.dataset.vs,eta:el.dataset.eta,etd:el.dataset.etd};
+ if(e.target.closest(".la"))pick(c);else if(e.target.closest(".lo"))viewer(c.k,c.vs,c.eta,c.etd);});
+$("clrL").onclick=async()=>{const n=await cleanLetters();$("clrM").textContent=ldbOk?"Removed "+n+" old letter photo"+(n===1?"":"s")+" (more than "+LETTER_KEEP_DAYS+" days after ship departure).":"Letter storage unavailable.";refreshLetters();};
+cleanLetters();
+
 
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,shipsOnDay,shipSummary,shipGroups,trackUrl};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
 </script></body></html>
