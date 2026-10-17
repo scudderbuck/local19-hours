@@ -78,6 +78,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <div class="mut" style="margin-top:4px">Hours fill in automatically from start/end.</div>
 <label for="ot">OT hours</label><input type="number" id="ot" step="0.25" min="0" max="48" inputmode="decimal" placeholder="auto">
 <div class="mut" id="othint" style="margin-top:4px"></div>
+<div class="mut" id="guarhint" style="margin-top:2px"></div>
 <label for="emp">Employer / company</label><input id="emp" list="empl" placeholder="e.g. SSA, Matson">
 <datalist id="empl"></datalist>
 <label for="ves">Vessel</label><input id="ves">
@@ -178,8 +179,12 @@ function fmtDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2
 function weekStart(s){const d=parseDate(s);d.setDate(d.getDate()-((d.getDay()+1)%7));return fmtDate(d);} // Saturday
 function addDays(s,n){const d=parseDate(s);d.setDate(d.getDate()+n);return fmtDate(d);}
 function num(x){const n=parseFloat(x);return isFinite(n)?n:0;}
+/* Basic-class jobs: minimum PAID hours (8 on 1st/2nd, 5 on 3rd). Skill 1/2/3: none. Hours stay as worked; only pay uses the guarantee. */
+function guarMin(e){return e&&jobClass(e.job)==="Basic"?OT_THRESH(e.shift):0;}
+function paidHours(e){return Math.max(num(e.hours),guarMin(e));}
+function guarNote(e){const m=guarMin(e);return m&&num(e.hours)<m?"guarantee: paid "+m+"h":"";}
 function entryPay(e){const r=e.rate==null||e.rate===""?null:num(e.rate);if(r==null)return null;
- const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);const ot=effOT(e),reg=Math.max(0,num(e.hours)-ot);
+ const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
  return Math.round((reg*r+ot*o)*100)/100;}
 /* hours = total paid hours incl. OT; OT is the portion of hours that is overtime */
 function summarize(list){const t={hours:0,ot:0,pay:0,anyPay:false,travel:0,miles:0,byPier:{},byJob:{},count:list.length};
@@ -276,10 +281,12 @@ $("job").addEventListener("change",upShow);
 function setX(o){$("extras").classList.toggle("hide",!o);$("xt").setAttribute("aria-expanded",o);$("xt").textContent="More details "+(o?"▴":"▾");}
 $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
 function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value);
- $("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
+ guarHint();$("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
+function guarHint(){const el=$("guarhint");if(!el)return;const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const n=guarNote({job:$("job").value==="__c"?$("jobC").value:$("job").value,shift:$("shift").value,hours:h==null?0:h});el.textContent=h==null||h===0?"":n;}
 function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null)$("hrs").value=h;otHint();}
 $("st").onchange=$("en").onchange=autoHrs;
 $("hrs").oninput=$("ot").oninput=otHint;$("shift").addEventListener("change",otHint);
+["hrs","shift","job","jobC","st","en"].forEach(i=>$(i).addEventListener("input",guarHint));["shift","job"].forEach(i=>$(i).addEventListener("change",guarHint));
 function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setUp("");upShow();setX(false);
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
  try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
@@ -312,7 +319,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${t.anyPay?money(t.pay).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">Travel ${r2(t.travel)}h · ${r2(t.miles)} mi</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
  <div class="row" style="margin-bottom:12px"><button class="p" id="sh">Share week</button><button id="tw">This week</button></div>
- ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
+ ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
  $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};
@@ -420,5 +427,5 @@ cleanLetters();
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
 </script></body></html>
