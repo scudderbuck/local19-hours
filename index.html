@@ -101,6 +101,18 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 #setup h2{margin:0 0 6px;font-size:1.375rem}#setup .tierbox{margin-top:10px;padding:10px 12px;border:2px solid var(--acc);border-radius:var(--r);font-weight:600;min-height:44px}
 #setup .row button{flex:1}
 .sheet input[type=date]{width:100%}
+textarea{font:inherit;font-size:1rem;color:var(--fg);width:100%;min-height:96px;padding:8px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);resize:vertical}
+textarea:focus{outline:3px solid var(--acc);outline-offset:1px}
+a.bt{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:6px 14px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--acc);font-weight:600;font-size:1rem;text-decoration:none}
+a.bt.p{background:var(--pri);color:var(--prifg);border-color:var(--acc)}
+a.bt.off{background:var(--card);color:var(--mut);border:1px dashed var(--mut);pointer-events:none;cursor:not-allowed}
+a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+.qgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.nd{border-top:1px solid var(--bd);padding:12px 0}.nd:first-of-type{border-top:0;padding-top:0}.nd:last-child{padding-bottom:0}
+.nd .nh{font-weight:700}.nd pre{white-space:pre-wrap;word-break:break-word;font:inherit;font-size:1rem;margin:4px 0 0}
+.nd .nl{font-size:.875rem;font-weight:600;color:var(--mut);margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
+.nd .nb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.nd .nb button{min-height:44px;padding:0 14px}
+.nd .nb .th{display:flex;align-items:center;gap:6px;padding:0 8px 0 4px}.nd .nb .th img{width:36px;height:36px;object-fit:cover;border-radius:6px}
 </style></head><body>
 <header>ILWU LIFE</header>
 <main>
@@ -146,7 +158,8 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <div class="card"><h3>Backup</h3>
 <p id="lastBk" class="mut"></p>
 <p class="mut">Data lives only on this device (localStorage). Back up now and then. The backup also includes your pay stub checks and starting hours.</p>
-<p class="mut"><b>Note:</b> Ship letter photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup.</p>
+<p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup. Today's needs notes (text) and your dispatch number are included.</p>
+<label for="dpNum2">Dispatch number <span class="mut">(same as on the Ships tab)</span></label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number">
 <div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
 <div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing (uncheck to replace all)</span></div>
@@ -184,6 +197,30 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <p id="remM" class="mut" aria-live="polite"></p></div>
 </section>
 <section id="v-ships" class="hide">
+<div class="card"><h3 style="margin-top:0">Dispatch quick links</h3>
+<label for="dpNum" style="margin-top:0">Dispatch number <span class="mut">(you enter it; saved on this device only)</span></label>
+<input id="dpNum" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number" aria-describedby="dpNote">
+<div class="qgrid">
+<a id="dpCall" class="bt p off" href="#" aria-disabled="true">📞 Call dispatch (enter number above)</a>
+<a class="bt p" href="tel:+12066237461" id="hallCall">📞 Local 19 hall: 206-623-7461</a>
+<a class="bt" href="https://docs.nwseaportalliance.com/Vessel/Schedule.pdf" target="_blank" rel="noopener">NWSA vessel schedule (PDF) ↗</a>
+<a class="bt" href="https://www.ilwu23.org" target="_blank" rel="noopener">Local 23 Tacoma ↗</a>
+<a class="bt" href="https://ilwu21.org" target="_blank" rel="noopener">ILWU Local 21 ↗</a>
+</div>
+<p id="dpNote" class="mut" style="margin-bottom:0">Needs and gang allocation aren't published online, so call dispatch and log them below. Hall number from ilwu.org/contact/ilwu-local-unions-2.</p></div>
+<div class="card"><h3 style="margin-top:0" id="ndT">Today's needs</h3>
+<form id="ndF" autocomplete="off">
+<label for="ndD" style="margin-top:0">Date</label><input type="date" id="ndD" required>
+<label for="ndS">Shift</label><select id="ndS"><option>1st</option><option>2nd</option><option>3rd</option></select>
+<label for="ndP">Port</label><select id="ndP"><option>Seattle</option><option>Tacoma</option><option>Everett</option><option>Olympia</option><option>Longview</option><option>Vancouver WA</option><option>Aberdeen</option><option>Port Angeles</option><option>Other</option></select>
+<label for="ndT2">Pier / terminal <span class="mut">(optional)</span></label><input id="ndT2" maxlength="80" placeholder="e.g. T5, Pier 91">
+<label for="ndO">Out-of-port needs</label><textarea id="ndO" maxlength="2000"></textarea>
+<label for="ndG">Gang allocation</label><textarea id="ndG" maxlength="2000"></textarea>
+<div class="ltr" style="margin-top:10px"><button type="button" id="ndPh">📷 Add photo (optional)</button><span id="ndPt"></span></div>
+<div class="row" style="margin-top:12px"><button type="submit" class="p" id="ndSv">Save note</button><button type="button" id="ndCx" class="hide">Cancel edit</button></div>
+<p id="ndM" class="mut" aria-live="polite"></p>
+</form></div>
+<div id="ndL"></div>
 <div class="card"><h3 style="margin-top:0">Ships coming</h3>
 <div id="shSum"></div><p id="shUp" class="mut"></p>
 <div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Letter photos stay on this device only (private, offline). Auto-removed 30 days after the ship's ETD.</p></div>
@@ -409,6 +446,15 @@ const LETTER_KEEP_DAYS=30;
 function letterKey(vessel,eta){return String(vessel||"").trim().toUpperCase().replace(/\s+/g," ")+"|"+shDay(eta);}
 function letterExpired(etd,today,days){const d=shDay(etd);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;return addDays(d,days==null?LETTER_KEEP_DAYS:days)<today;}
 function letterLabel(iso){const d=new Date(iso);return isNaN(d)?"":"Letter · "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]+" "+d.getDate();}
+const NEED_PORTS=["Seattle","Tacoma","Everett","Olympia","Longview","Vancouver WA","Aberdeen","Port Angeles","Other"],NEED_SHIFTS=["1st","2nd","3rd"];
+function telHref(s){s=String(s||"").trim();const d=s.replace(/\D/g,"");if(d.length<7||d.length>15)return"";return"tel:"+(s.charAt(0)==="+"?"+":"")+d;}
+function cleanPhone(s){return String(s||"").replace(/[^\d+\-().\s]/g,"").trim().slice(0,30);}
+function needDateLong(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d||""))return String(d||"");const x=new Date(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10));return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][x.getDay()]+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][x.getMonth()]+" "+x.getDate()+", "+x.getFullYear();}
+function needText(n){const t=x=>String(x||"").trim();return["Local 19 – Today's needs","Date: "+needDateLong(n.date),"Shift: "+t(n.shift),"Port: "+t(n.port)+(t(n.pier)?" ("+t(n.pier)+")":""),"","Out-of-port needs:",t(n.out)||"(none logged)","","Gang allocation:",t(n.gang)||"(none logged)"].join("\n");}
+function needsClean(a){const o=[],seen=new Set();for(const n of Array.isArray(a)?a:[]){if(!n||typeof n!=="object"||!/^\d{4}-\d{2}-\d{2}$/.test(n.date||""))continue;const id=String(n.id||"").slice(0,40);if(!id||seen.has(id))continue;seen.add(id);
+ o.push({id,date:n.date,shift:NEED_SHIFTS.includes(n.shift)?n.shift:"1st",port:NEED_PORTS.includes(n.port)?n.port:"Other",pier:String(n.pier||"").slice(0,80),out:String(n.out||"").slice(0,2000),gang:String(n.gang||"").slice(0,2000),created:String(n.created||"").slice(0,30)});}return o;}
+function needsMerge(cur,inc){const m=new Map(needsClean(cur).map(n=>[n.id,n]));needsClean(inc).forEach(n=>m.set(n.id,n));return[...m.values()];}
+function needsGroups(a){const g={};for(const n of needsClean(a))(g[n.date]=g[n.date]||[]).push(n);return Object.keys(g).sort().reverse().map(k=>({key:k,items:g[k].sort((x,y)=>(y.created||"")>(x.created||"")?1:-1)}));}
 function letterTitle(vs,eta){return (String(vs||"Ship letter").trim()+" "+(eta||"")).trim();}
 function fitSize(w,h,max){max=max||1600;return w>max?{w:max,h:Math.round(h*max/w)}:{w:w,h:h};}
 function shFmt(s){if(!s)return"?";const[d,t]=s.split("T");return d.slice(5).replace("-","/")+" "+(t||"");}
@@ -509,9 +555,9 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==b.dataset.x);save();renderWeek();}});}
 function download(name,type,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
 $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0="";try{txt0=await f.text();const inc=validImport(JSON.parse(txt0));
- if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
+ if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
-$("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");$("msg").textContent="All data deleted.";}};
+$("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");renderNeeds();$("msg").textContent="All data deleted.";}};
 function show(v){curV=v;for(const x of["add","ships","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
@@ -634,6 +680,7 @@ function downsize(file){return new Promise((res,rej)=>{const u=URL.createObjectU
  im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("Not a readable image"));};im.src=u;});}
 async function cleanLetters(){try{const today=fmtDate(new Date()),a=await lAll();let n=0;for(const r of a||[])if(letterExpired(r.etd,today)){await lDel(r.id);n++;}return n;}catch(e){return 0;}}
 async function refreshLetters(){
+ if(typeof refreshNeedPics==="function")refreshNeedPics();
  document.querySelectorAll("#shList .ltr").forEach(el=>{el.querySelector(".la").disabled=false;});
  if(!ldbOk)return markNoDb();
  let all;try{all=await lAll();}catch(e){return markNoDb();}
@@ -678,11 +725,13 @@ $("shList").addEventListener("click",e=>{const el=e.target.closest(".ltr");if(!e
 $("clrL").onclick=async()=>{const n=await cleanLetters();$("clrM").textContent=ldbOk?"Removed "+n+" old letter photo"+(n===1?"":"s")+" (more than "+LETTER_KEEP_DAYS+" days after ship departure).":"Letter storage unavailable.";refreshLetters();};
 cleanLetters();
 
+
 /* ===== v30 features: UI ===== */
 const LS=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v;}catch(e){return d;}};
 const LSset=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
 const lsJson=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}};
 let curV="add";
+const DSP="l19.dispatch",NDK="l19.needs";
 const BK="l19.lastBackup",BKS="l19.bkSnooze",STB="l19.stubs",STH="l19.startHrs",PINK="l19.pin",SUD="l19.setupDone",TMODE="l19.tierMode",DPIER="l19.defPier",DJOB="l19.defJob",REM="l19.rem",REMS="l19.remSnooze";
 const todayS=()=>fmtDate(new Date());
 const fmtN=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
@@ -693,9 +742,50 @@ async function shareFile(name,type,text){const f=new File([text],name,{type});
 /* --- 1. backup reminder + export --- */
 function setLastBackup(){LSset(BK,new Date().toISOString());renderBanners();renderLastBk();}
 function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b>"+esc(backupAgo(LS(BK,""),todayS()))+"</b>";}
-async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,"")},null,1));
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),dispatch:cleanPhone(LS(DSP,""))},null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
+
+/* ===== Dispatch links + Today's needs notes (text in localStorage + JSON backup; photos in IndexedDB, not in backup) ===== */
+function needsList(){return needsClean(lsJson(NDK,[]));}
+function renderDispatch(){const v=cleanPhone(LS(DSP,"")),h=telHref(v),a=$("dpCall");
+ for(const id of["dpNum","dpNum2"]){const e=$(id);if(e&&document.activeElement!==e)e.value=v;}
+ a.classList.toggle("off",!h);a.setAttribute("aria-disabled",h?"false":"true");a.href=h||"#";
+ a.textContent=h?"📞 Call dispatch: "+v:"📞 Call dispatch (enter number above)";}
+function setDispatch(v){LSset(DSP,cleanPhone(v));renderDispatch();}
+for(const id of["dpNum","dpNum2"]){$(id).oninput=()=>{const v=$(id).value;LSset(DSP,cleanPhone(v));const h=telHref(cleanPhone(v)),a=$("dpCall");a.classList.toggle("off",!h);a.setAttribute("aria-disabled",h?"false":"true");a.href=h||"#";a.textContent=h?"📞 Call dispatch: "+cleanPhone(v):"📞 Call dispatch (enter number above)";const o=$(id==="dpNum"?"dpNum2":"dpNum");o.value=v;};$(id).onblur=()=>renderDispatch();}
+$("dpCall").onclick=e=>{if($("dpCall").classList.contains("off"))e.preventDefault();};
+let ndEdit=null,ndPend=null;
+const ndKey=id=>"need|"+id;
+function ndCtx(){return{k:ndKey(ndPend),vs:"Needs "+($("ndP").value||""),eta:$("ndD").value,etd:""};}
+function ndReset(){if(ndPend&&!needsList().some(n=>n.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});
+ ndEdit=null;ndPend=uid();$("ndD").value=todayS();$("ndS").value="1st";$("ndP").value="Seattle";$("ndT2").value="";$("ndO").value="";$("ndG").value="";
+ $("ndT").textContent="Today's needs";$("ndSv").textContent="Save note";$("ndCx").classList.add("hide");$("ndPt").innerHTML="";}
+async function ndPics(){let all=[];if(ldbOk){try{all=await lAll()||[];}catch(e){}}const by={};for(const r of all)if(String(r.k).startsWith("need|"))(by[r.k]=by[r.k]||[]).push(r);return by;}
+async function refreshNeedPics(){const by=await ndPics();
+ const fill=(el,id)=>{const a=(by[ndKey(id)]||[]).sort((x,y)=>x.added<y.added?-1:1);if(!a.length){el.innerHTML="";return;}const url=URL.createObjectURL(a[a.length-1].blob);
+  el.innerHTML=`<button type="button" class="th" data-pic="${esc(id)}" aria-label="Open photos"><img alt="" src="${url}"><span>Photo${a.length>1?" · ×"+a.length:""}</span></button>`;};
+ document.querySelectorAll("#ndL .npic").forEach(el=>fill(el,el.dataset.id));const f=$("ndPt");if(f&&ndPend)fill(f,ndPend);}
+function renderNeeds(){const g=needsGroups(needsList()),L=$("ndL");
+ L.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(needDateLong(r.key))}</h4>${r.items.map(n=>`<div class="nd"><div class="nh">${esc(n.shift)} shift · ${esc(n.port)}${n.pier?" · "+esc(n.pier):""}</div><div class="nl">Out-of-port needs</div><pre>${esc(n.out||"—")}</pre><div class="nl">Gang allocation</div><pre>${esc(n.gang||"—")}</pre><div class="nb"><button type="button" class="p" data-a="share" data-id="${esc(n.id)}">Share</button><button type="button" data-a="edit" data-id="${esc(n.id)}">Edit</button><button type="button" class="d" data-a="del" data-id="${esc(n.id)}">Delete</button><span class="npic" data-id="${esc(n.id)}"></span></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No needs logged yet. Call dispatch, then save what you hear above.</div>';
+ refreshNeedPics();}
+async function shareNeed(n){const text=needText(n),m=$("ndM");
+ try{if(navigator.share){await navigator.share({title:"Local 19 – Today's needs",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
+ let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
+ if(!ok){try{const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();}catch(e){}}
+ m.textContent=ok?"Sharing isn't available here, so the note was copied to your clipboard.":"Couldn't share or copy. Select the text in the note and copy it manually.";}
+$("ndF").onsubmit=e=>{e.preventDefault();const d=$("ndD").value;if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){$("ndM").textContent="Pick a date.";return;}
+ const list=needsList(),old=ndEdit&&list.find(n=>n.id===ndEdit),n={id:ndEdit||ndPend,date:d,shift:$("ndS").value,port:$("ndP").value,pier:$("ndT2").value.trim(),out:$("ndO").value.trim(),gang:$("ndG").value.trim(),created:old?old.created:new Date().toISOString()};
+ LSset(NDK,JSON.stringify(needsMerge(list,[n])));const ed=!!old;ndPend=null;ndReset();renderNeeds();$("ndM").textContent=ed?"Note updated.":"Note saved.";};
+$("ndCx").onclick=()=>{ndReset();$("ndM").textContent="";};
+$("ndPh").onclick=()=>{if(!ldbOk){$("ndM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pick(ndCtx());};
+$("ndL").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.pic){const id=b.dataset.pic,n=needsList().find(x=>x.id===id);if(n)viewer(ndKey(id),"Needs "+n.port,n.date,"");return;}
+ const id=b.dataset.id,n=needsList().find(x=>x.id===id);if(!n)return;
+ if(b.dataset.a==="share")shareNeed(n);
+ else if(b.dataset.a==="edit"){if(ndPend&&ndPend!==id&&!needsList().some(x=>x.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});ndEdit=id;ndPend=id;$("ndD").value=n.date;$("ndS").value=n.shift;$("ndP").value=n.port;$("ndT2").value=n.pier;$("ndO").value=n.out;$("ndG").value=n.gang;$("ndT").textContent="Edit needs note";$("ndSv").textContent="Update note";$("ndCx").classList.remove("hide");$("ndM").textContent="";refreshNeedPics();$("ndT").scrollIntoView({block:"start"});}
+ else if(b.dataset.a==="del"&&confirm("Delete this needs note?")){LSset(NDK,JSON.stringify(needsList().filter(x=>x.id!==id)));try{(await lByKey(ndKey(id))).forEach(r=>lDel(r.id));}catch(_){}if(ndEdit===id)ndReset();renderNeeds();}});
+ndReset();renderNeeds();renderDispatch();
 /* --- banners (backup + shift reminder) --- */
 function remCfg(){const c=lsJson(REM,{});return {on:!!c.on,time:/^\d{2}:\d{2}$/.test(c.time||"")?c.time:"18:00"};}
 function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=todayS();
@@ -851,7 +941,7 @@ if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;
  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)upBanner();});
  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
