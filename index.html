@@ -11,53 +11,59 @@
 <meta name="apple-mobile-web-app-title" content="ILWU LIFE">
 <title>ILWU LIFE</title>
 <style>
-:root{--bg:#f3f5f8;--card:#fff;--fg:#14202e;--mut:#5b6b7d;--pri:#00214e;--prifg:#fff;--bd:#d5dde6;--dan:#b3261e;--r:12px;--s:12px}
-@media(prefers-color-scheme:dark){:root{--bg:#10151c;--card:#1a222c;--fg:#e8eef5;--mut:#9aabbd;--pri:#00214e;--prifg:#05121f;--bd:#33414f;--dan:#ff6b61}}
+:root{--bg:#f3f5f8;--card:#fff;--fg:#14202e;--mut:#5b6b7d;--pri:#00214e;--prifg:#fff;--acc:#00214e;--bd:#d5dde6;--dan:#b3261e;--r:12px;--s:12px}
+@media(prefers-color-scheme:dark){:root{--bg:#10151c;--card:#1a222c;--fg:#e8eef5;--mut:#9aabbd;--pri:#00214e;--prifg:#fff;--acc:#ffd23f;--bd:#4a5b6d;--dan:#ff8a80}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:90px}
-header{background:var(--pri);color:var(--prifg);padding:14px 16px;padding-top:max(14px,env(safe-area-inset-top));font-weight:700;font-size:18px}
+html{font-size:16px}html[data-ts=large]{font-size:19px}html[data-ts=xl]{font-size:22px}
+::placeholder{color:var(--mut);opacity:1}
+button:disabled,input:disabled,select:disabled{opacity:1;color:var(--mut);background:var(--bd);cursor:not-allowed}
+button.p:disabled{background:#3b4a63;color:#fff;border-color:#3b4a63}
+body{margin:0;background:var(--bg);color:var(--fg);font:1rem/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:90px}
+header{background:var(--pri);color:var(--prifg);padding:14px 16px;padding-top:max(14px,env(safe-area-inset-top));font-weight:700;font-size:1.25rem}
 main{max-width:560px;margin:0 auto;padding:var(--s)}
-h3,h4{margin:0 0 8px;font-size:16px}h4{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-top:16px}
+h3,h4{margin:0 0 8px;font-size:1.125rem}h4{font-size:.875rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-top:16px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:var(--s)}
 button,input,select{font:inherit;color:var(--fg)}
 button{min-height:48px;padding:0 16px;border-radius:10px;border:1px solid var(--bd);background:var(--card);cursor:pointer}
-button.p{background:var(--pri);color:var(--prifg);border-color:var(--pri);font-weight:600}
+button.p{background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600}
 button.d{color:var(--dan)}
-button.link{border:0;background:none;color:var(--pri);font-weight:600;padding:0;min-height:44px}
+button.link{border:0;background:none;color:var(--acc);font-weight:600;padding:0;min-height:44px}
 input,select{width:100%;min-height:48px;padding:6px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
-input:focus,select:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
-label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:14px 0 4px}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+label{display:block;font-size:.9375rem;font-weight:600;color:var(--mut);margin:14px 0 4px}
 label .mut{font-weight:400}
 .row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
 .dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
 .tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
-.tabs button{flex:1;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
-.tabs button.on{color:var(--pri);font-weight:700;box-shadow:inset 0 3px var(--pri)}
+.tabs button{flex:1;font-size:1rem;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
+.tabs button.on{color:var(--acc);font-weight:700;box-shadow:inset 0 3px var(--acc)}
 .ent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--bd)}
 .ent:first-child{border-top:0;padding-top:0}.ent:last-child{padding-bottom:0}
 .ent .acts{display:flex;gap:6px}.ent .acts button{min-width:44px;min-height:44px;padding:0}
-.mut{color:var(--mut);font-size:14px}
+button,input,select{font-size:1rem}
+#tsz button{font-size:1rem}
+.mut{color:var(--mut);font-size:.875rem}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:var(--s)}
 .stat{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center}
-.stat b{display:block;font-size:24px;line-height:1.2}.stat span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
-.stat.pri{background:var(--pri);border-color:var(--pri);color:var(--prifg)}.stat.pri span{color:inherit;opacity:.85}
+.stat b{display:block;font-size:1.5rem;line-height:1.2}.stat span{font-size:.875rem;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.stat.pri{background:var(--pri);border-color:var(--pri);color:var(--prifg)}.stat.pri span{color:inherit}
 .hide{display:none}
-#upW button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--pri)}
-.badge{display:inline-block;font-size:11px;font-weight:600;border:1px solid var(--bd);border-radius:8px;padding:0 6px;margin-left:4px;color:var(--mut)}
+#upW button[aria-pressed=true],#tsz button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
+.badge{display:inline-block;font-size:.875rem;font-weight:600;border:1px solid var(--bd);border-radius:8px;padding:0 8px;margin-left:4px;color:var(--mut)}
 table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-align:right;white-space:nowrap}
-.chk{display:flex;align-items:center;gap:8px}.chk input{width:28px;min-height:28px}
+.chk{display:flex;align-items:center;gap:8px}.chk{min-height:44px}.chk input{width:28px;min-height:28px}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9}
 .sheet>div{background:var(--card);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom));display:grid;gap:8px}
 .sheet h3{margin:0 0 4px}
-.ltr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}.ltr button{min-height:44px;padding:0 12px;font-size:14px}
+.ltr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}.ltr button{min-height:44px;padding:0 12px;font-size:1rem}
 .ltr .th{display:flex;align-items:center;gap:6px;padding:0 8px 0 4px}.ltr .th img{width:36px;height:36px;object-fit:cover;border-radius:6px}
 #lv{position:fixed;inset:0;background:#000;z-index:20;display:flex;flex-direction:column;color:#fff}
 #lv .sc{flex:1;overflow:auto;touch-action:pan-x pan-y pinch-zoom;-webkit-overflow-scrolling:touch}
 #lv .sc img{display:block;width:100%;height:auto;max-width:none}
 #lv .bar{display:flex;flex-wrap:wrap;gap:6px;padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:#111}
 #lv .bar button{flex:1 1 22%;color:#fff;background:#222;border-color:#444}#lv .bar button.d{color:#ff8a80}
-#lv .cap{padding:8px;font-size:14px;background:#111}
+#lv .cap{padding:8px;font-size:.875rem;background:#111}
 </style></head><body>
 <header>ILWU LIFE</header>
 <main>
@@ -96,6 +102,7 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 </section>
 <section id="v-week" class="hide"></section>
 <section id="v-data" class="hide">
+<div class="card"><h3>Text size</h3><div class="row" id="tsz"><button type="button" data-ts="normal" aria-pressed="false">Normal</button><button type="button" data-ts="large" aria-pressed="false">Large</button><button type="button" data-ts="xl" aria-pressed="false">Extra large</button></div></div>
 <div class="card"><h3>Backup</h3>
 <p class="mut">Data lives only on this device (localStorage). Export a backup now and then.</p>
 <p class="mut"><b>Note:</b> Ship letter photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup.</p>
@@ -353,7 +360,7 @@ function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
  if(shipStale)u+=" · showing saved copy, couldn't reach the server";
  up.textContent=u;
  const g=shipGroups(v,today);
- const _h=g.length;list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span> <a class="trk" href="${esc(trackUrl(x.vessel,x.imo))}" target="_blank" rel="noopener" style="font-size:12px">Track ↗</a><div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div><div class="ltr" data-k="${esc(letterKey(x.vessel,x.eta))}" data-vs="${esc(x.vessel)}" data-eta="${esc(shDay(x.eta))}" data-etd="${esc(shDay(x.etd))}"><button type="button" class="la">📷 Add letter</button><span class="lt"></span></div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';
+ const _h=g.length;list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span> <a class="trk" href="${esc(trackUrl(x.vessel,x.imo))}" target="_blank" rel="noopener" style="font-size:.875rem;color:var(--acc)">Track ↗</a><div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div><div class="ltr" data-k="${esc(letterKey(x.vessel,x.eta))}" data-vs="${esc(x.vessel)}" data-eta="${esc(shDay(x.eta))}" data-etd="${esc(shDay(x.etd))}"><button type="button" class="la">📷 Add letter</button><span class="lt"></span></div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';
  if(_h)refreshLetters();}
 async function loadShips(){
  try{const r=await fetch("vessels.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json();if(!j||!Array.isArray(j.vessels))throw 0;
@@ -429,4 +436,7 @@ resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
 if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
+if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
+var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
+document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
 </script></body></html>
