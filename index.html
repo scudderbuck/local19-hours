@@ -83,12 +83,21 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 #lv .bar{display:flex;flex-wrap:wrap;gap:6px;padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:#111}
 #lv .bar button{flex:1 1 22%;color:#fff;background:#222;border-color:#444}#lv .bar button.d{color:#ff8a80}
 #lv .cap{padding:8px;font-size:.875rem;background:#111}
+.ban{background:var(--card);border:2px solid var(--acc);border-radius:var(--r);padding:12px 16px;margin-bottom:var(--s)}
+.pg{height:14px;border-radius:7px;background:var(--bd);border:1px solid var(--mut);overflow:hidden;margin:8px 0}.pg>i{display:block;height:100%;background:var(--acc)}
+#qp{margin-top:0}#qp button{text-align:left}
+#lock{position:fixed;inset:0;background:var(--bg);color:var(--fg);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}
+#lock .lk{width:100%;max-width:340px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;text-align:center}
+#lock label{text-align:left}
+.sheet input[type=date]{width:100%}
 </style></head><body>
 <header>ILWU LIFE</header>
 <main>
+<div id="banners"></div>
 <section id="v-add">
 <form id="f" class="card" autocomplete="off">
 <h3 id="ftitle">Add shift</h3>
+<div id="qpW" class="hide"><label style="margin-top:0">Recent <span class="mut">(tap to fill pier, job, shift)</span></label><div class="ltr" id="qp"></div><button type="button" id="rep" style="width:100%;margin-top:8px">↻ Repeat last shift…</button></div>
 <label for="date">Date</label><div class="row dategrp"><button type="button" id="dprev" aria-label="Previous day">◀</button><input type="date" id="date" required min="2000-01-01" max="2099-12-31"><button type="button" id="dnext" aria-label="Next day">▶</button><button type="button" id="dtoday" class="p">Today</button></div>
 <label for="pier">Pier</label><select id="pier"></select>
 <input id="pierC" class="hide" placeholder="Custom pier / terminal" style="margin-top:8px">
@@ -124,13 +133,38 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <section id="v-data" class="hide">
 <div class="card"><h3>Text size</h3><div class="row" id="tsz"><button type="button" data-ts="normal" aria-pressed="false">Normal</button><button type="button" data-ts="large" aria-pressed="false">Large</button><button type="button" data-ts="xl" aria-pressed="false">Extra large</button></div></div>
 <div class="card"><h3>Backup</h3>
-<p class="mut">Data lives only on this device (localStorage). Export a backup now and then.</p>
+<p id="lastBk" class="mut"></p>
+<p class="mut">Data lives only on this device (localStorage). Back up now and then. The backup also includes your pay stub checks and starting hours.</p>
 <p class="mut"><b>Note:</b> Ship letter photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup.</p>
-<div class="row"><button id="exj" class="p">Export JSON</button><button id="exc">Export CSV</button></div>
+<div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
 <div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing (uncheck to replace all)</span></div>
 <p id="msg" class="mut"></p>
 <button class="d" id="wipe" style="width:100%">Delete all data</button></div>
+<div class="card"><h3>Export to CSV</h3>
+<label for="cxk" style="margin-top:0">Period</label><select id="cxk"><option value="week">Week (Sat–Fri)</option><option value="month">Month</option><option value="quarter">Quarter</option><option value="year">Year</option><option value="all">All entries</option></select>
+<label for="cxd">Period containing date</label><input type="date" id="cxd">
+<div class="chk" style="margin-top:12px"><input type="checkbox" id="cxn"><span>Hours only (no pay)</span></div>
+<p id="cxi" class="mut" aria-live="polite"></p>
+<div class="row"><button id="cxs" class="p">Share / save CSV</button><button id="cxe">Excel-friendly CSV</button></div>
+<p class="mut">Excel-friendly adds a byte-order mark so Excel opens accents correctly. Sharing uses your phone's share sheet; otherwise the file downloads.</p>
+<p id="cxm" class="mut" aria-live="polite"></p></div>
+<div class="card"><h3>Hours milestones</h3>
+<label for="sth" style="margin-top:0">Starting hours <span class="mut">(hours worked before you began logging here)</span></label><input type="number" id="sth" step="0.25" min="0" inputmode="decimal" placeholder="0">
+<p id="sthm" class="mut" aria-live="polite">Added to your logged hours for the 1,001 / 2,001 / 4,001 progress on the Week and History tabs.</p></div>
+<div class="card"><h3>PIN lock</h3>
+<p id="pinSt" class="mut" style="font-weight:700"></p>
+<p class="mut"><b>Convenience lock only – not encryption.</b> It keeps casual snoopers out when your phone is unlocked. Your data on this device is not encrypted. Only a salted hash of the PIN is stored. If you forget it, the only way back in is to erase all app data (offered on the lock screen).</p>
+<div><label for="pinCur">Current PIN</label><input id="pinCur" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off"></div>
+<label for="pinNew">New 4-digit PIN</label><input id="pinNew" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
+<label for="pinNew2">Repeat new PIN</label><input id="pinNew2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
+<div class="row" style="margin-top:12px"><button id="pinSet" class="p">Set PIN</button><button id="pinRm" class="d hide">Remove PIN</button></div>
+<p id="pinM" class="mut" aria-live="polite"></p></div>
+<div class="card"><h3>Shift reminder</h3>
+<div class="chk"><input type="checkbox" id="remOn"><span>Remind me to log hours (off by default)</span></div>
+<label for="remT">After typical shift end</label><input type="time" id="remT" value="18:00">
+<p class="mut"><b>How it works, honestly:</b> if you haven't logged a shift for today or yesterday, a banner shows when you open the app. A phone notification is best-effort only: this app has no server, so it can't wake your phone. On iPhone, web apps can show notifications only when added to the Home Screen (iOS 16.4+), and even then only while the app is open or recently active. Android is similar. Don't rely on it; the banner on open is the dependable part.</p>
+<p id="remM" class="mut" aria-live="polite"></p></div>
 </section>
 <section id="v-ships" class="hide">
 <div class="card"><h3 style="margin-top:0">Ships coming</h3>
@@ -284,6 +318,54 @@ function validImport(o){const arr=Array.isArray(o)?o:o&&Array.isArray(o.entries)
 function mergeEntries(cur,inc){const m=new Map(cur.map(e=>[e.id,e]));for(const e of inc)m.set(e.id,e);return [...m.values()];}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
+/* ===== v30 features: pure logic (tested in node) ===== */
+const rd2=x=>Math.round(x*100)/100;
+function daysBetween(a,b){return Math.round((parseDate(b)-parseDate(a))/864e5);}
+/* Backup reminder: due if never backed up (and there is data), >30 days ago, or a new calendar month began and the last backup is >=7 days old */
+function backupDue(last,today,hasData){if(!hasData)return false;if(!last)return true;const l=String(last).slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(l))return true;
+ const d=daysBetween(l,today);return d>30||(l.slice(0,7)!==today.slice(0,7)&&d>=7);}
+function backupAgo(last,today){if(!last)return "never";const l=String(last).slice(0,10),d=daysBetween(l,today);return l+" ("+(d<=0?"today":d===1?"yesterday":d+" days ago")+")";}
+/* Pay stub check: stub totals vs logged week (Sat-Fri). noPay => compare hours only. */
+function stubCompare(all,ws,gh,gp,opts){const noPay=!!(opts&&opts.noPay),t=summarize(weekEntries(all,ws)),logH=rd2(t.hours),dH=rd2(num(gh)-logH);
+ const hasPay=!noPay&&gp!=null&&gp!==""&&isFinite(parseFloat(gp)),logP=t.anyPay?rd2(t.pay):null,dP=hasPay&&logP!=null?rd2(num(gp)-logP):null;
+ const hOk=Math.abs(dH)<0.01,pOk=dP!=null&&Math.abs(dP)<=0.5;
+ const hm=hOk?"hours agree ("+r2(logH)+")":dH<0?"stub is short "+r2(-dH)+" hrs":"stub shows "+r2(dH)+" more hrs than your log";
+ let pm="";if(hasPay){pm=logP==null?"no pay estimate in your log to compare":pOk?"pay agrees (within $0.50)":dP<0?"stub is short "+money(-dP):"stub is "+money(dP)+" over your log";}
+ const status=(!hOk&&dH<0)||(dP!=null&&!pOk&&dP<0)?"short":(!hOk||(dP!=null&&!pOk))?"over":"match";
+ const head=status==="match"?"Matches your log: ":status==="short"?"Short: ":"Different: ";
+ return {logHours:logH,logPay:logP,dHours:dH,dPay:dP,status,msg:head+hm+(pm?"; "+pm:"")+"."};}
+/* Hours milestones (rate steps at 1,001 / 2,001 / 4,001 total hours) */
+const MILESTONES=[1001,2001,4001];
+function milestones(all,start){const total=rd2(num(start)+all.reduce((x,e)=>x+num(e.hours),0));let prev=0;
+ const tiers=MILESTONES.map(at=>{const rem=Math.max(0,rd2(at-total)),t={at,reached:total>=at,remaining:rem,pct:Math.max(0,Math.min(100,Math.round((total-prev)/(at-prev)*100)))};prev=at;return t;});
+ return {total,tiers,next:tiers.find(t=>!t.reached)||null};}
+/* Recent / frequent pier+job+shift combos: most recent first, then most frequent */
+function topCombos(all,n){n=n||6;const m=new Map();
+ for(const e of all){if(!e.job&&!e.pier)continue;const k=[e.pier||"",e.job||"",e.shift||""].join("|"),c=m.get(k)||{pier:e.pier||"",job:e.job||"",shift:e.shift||"1st",count:0,last:""};c.count++;if(e.date>=c.last)c.last=e.date;m.set(k,c);}
+ const a=[...m.values()];if(!a.length)return [];const rec=a.reduce((x,y)=>y.last>x.last?y:x);
+ const rest=a.filter(c=>c!==rec).sort((x,y)=>y.count-x.count||(y.last<x.last?-1:y.last>x.last?1:0));return [rec,...rest].slice(0,n);}
+function lastShift(all){let b=null;for(const e of all)if(!b||e.date>b.date||(e.date===b.date&&e.shift>=b.shift))b=e;return b;}
+function repeatDefaultDate(e,today){return e&&e.date<today?today:addDays(e?e.date:today,1);}
+function repeatCopy(e,date,id){const c={...e,id:id||uid(),date};return c;}
+/* CSV export for a period or everything; noPay drops rate columns; excel adds a UTF-8 BOM */
+function csvForExport(all,kind,s,opts){opts=opts||{};const list=kind==="all"?all:periodEntries(all,kind,s),label=kind==="all"?"all":periodRange(kind,s).start+(kind==="week"?"_to_"+periodRange(kind,s).end:"_"+kind);
+ let text=toCSV(list);if(opts.noPay){const cols=CSV_COLS.filter(c=>c!=="rate"&&c!=="otRate"),ix=CSV_COLS.map((c,i)=>cols.includes(c)?i:-1).filter(i=>i>=0);
+  const parse=t=>{const rows=[];let r=[],f="",q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}else if(ch==='"')q=true;else if(ch===","){r.push(f);f="";}else if(ch==="\r"){}else if(ch==="\n"){r.push(f);rows.push(r);r=[];f="";}else f+=ch;}r.push(f);rows.push(r);return rows;};
+  text=parse(text).map(r=>ix.map(i=>csvCell(r[i])).join(",")).join("\r\n");}
+ return {count:list.length,label,name:"local19-hours-"+label+(opts.noPay?"-hours-only":"")+".csv",text:(opts.excel?"\uFEFF":"")+text};}
+/* PIN: only a salted SHA-256 hash is stored. Convenience lock, not encryption. */
+const validPin=p=>/^\d{4}$/.test(String(p||""));
+function genSalt(){const a=new Uint8Array(16);globalThis.crypto.getRandomValues(a);return [...a].map(b=>b.toString(16).padStart(2,"0")).join("");}
+async function hashPin(pin,salt){const d=new TextEncoder().encode(salt+":"+pin),h=await globalThis.crypto.subtle.digest("SHA-256",d);return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");}
+async function verifyPin(pin,salt,hash){if(!validPin(pin)||!salt||!hash)return false;return (await hashPin(pin,salt))===hash;}
+function shouldLock(hiddenAt,now,pinSet,ms){return !!pinSet&&hiddenAt!=null&&now-hiddenAt>(ms==null?60000:ms);}
+/* Shift reminder: cfg {on,time:"HH:MM" typical shift end}. After that time look at today+yesterday; before it, yesterday+day before. */
+function reminderStatus(all,now,cfg){if(!cfg||!cfg.on)return {show:false};const today=fmtDate(now),mn=toMin(cfg.time||"18:00"),cur=now.getHours()*60+now.getMinutes(),after=cur>=(mn==null?1080:mn);
+ const days=after?[today,addDays(today,-1)]:[addDays(today,-1),addDays(today,-2)];
+ if(all.some(e=>days.includes(e.date)))return {show:false};
+ return {show:true,days,msg:after?"No hours logged for today or yesterday yet.":"No hours logged for yesterday yet."};}
+function msUntil(time,now){const m=toMin(time||"18:00");const t=new Date(now);t.setHours(Math.floor(m/60),m%60,0,0);if(t<=now)t.setDate(t.getDate()+1);return t-now;}
+
 /* ===== UI ===== */
 // ---- Ships coming (vessels.json is refreshed by a scheduled GitHub Action) ----
 function trackUrl(n,imo){return /^\d{7}$/.test(imo||"")?"https://www.vesselfinder.com/vessels/details/"+imo:"https://www.vesselfinder.com/vessels?name="+encodeURIComponent(n||"");}
@@ -306,7 +388,7 @@ function shDate(k){if(!/^\d{4}-/.test(k))return k;const d=parseDate(k);return["S
 if(typeof document!=="undefined"){
 const $=id=>document.getElementById(id),KEY="l19hours.v1";
 let entries=[];try{entries=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
-const save=()=>localStorage.setItem(KEY,JSON.stringify(entries));
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(entries));if(typeof renderBanners==='function')renderBanners();};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let editId=null,selDate=null,retTo="week",hk="week",hv="list",cm=fmtDate(new Date()).slice(0,7),cd=null,sf={q:"",from:"",to:""},pendJump=null,ha=weekStart(fmtDate(new Date())),hidePay=false;try{hidePay=localStorage.getItem("l19.hidepay")==="1"}catch(e){}
 let wk=weekStart(fmtDate(new Date()));
@@ -352,7 +434,7 @@ $("hrs").oninput=$("ot").oninput=otHint;$("shift").addEventListener("change",otH
 function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setUp("");upShow();setX(false);
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
  try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
- rateDirty=false;applyDefaults();}
+ rateDirty=false;applyDefaults();refreshQuick();}
 $("cancel").onclick=()=>{resetForm();show(retTo);retTo="week";};
 $("f").onsubmit=ev=>{ev.preventDefault();
  const pier=$("pier").value==="__c"?$("pierC").value.trim():$("pier").value;
@@ -365,7 +447,7 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
  save();localStorage.setItem(lastKey,JSON.stringify({rate:e.rate,otRate:e.otRate}));
  wk=weekStart(e.date);selDate=null;refreshEmp();resetForm();if(retTo==="hist"){ha=e.date;}show(retTo);retTo="week";};
-function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";show("add");editId=id;
+function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";show("add");editId=id;$("qpW").classList.add("hide");
  $("date").value=e.date;
  if(PIERS.includes(e.pier)||!e.pier){$("pier").value=e.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=e.pier;$("pierC").classList.remove("hide");}
  const known=[...$("job").options].some(o=>o.value===e.job&&e.job);
@@ -395,22 +477,20 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  document.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>editEntry(b.dataset.e));
  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==b.dataset.x);save();renderWeek();}});}
 function download(name,type,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
-$("exj").onclick=()=>download("local19-backup-"+fmtDate(new Date())+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries},null,1));
-$("exc").onclick=()=>download("local19-hours-"+fmtDate(new Date())+".csv","text/csv",toCSV(entries));
-$("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{const inc=validImport(JSON.parse(await f.text()));
- if(!inc)throw 0;entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
+$("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0="";try{txt0=await f.text();const inc=validImport(JSON.parse(txt0));
+ if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
-$("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();$("msg").textContent="All data deleted.";}};
-function show(v){for(const x of["add","ships","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
+$("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");$("msg").textContent="All data deleted.";}};
+function show(v){curV=v;for(const x of["add","ships","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
 function addOn(d){selDate=d;resetForm();retTo="hist";show("add");}
 function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
  return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${esc([e.pier,e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}</div></button>`;}
 function openEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;const o=document.createElement("div");o.className="sheet";
- o.innerHTML=`<div><h3>${esc(shDate(e.date))} · ${esc(jobLabel(e.job)||"Shift")}</h3><div class="mut">${r2(num(e.hours))}h · ${esc(e.shift)} · ${esc(e.pier||"")}</div><button class="p" data-m="e">Edit</button><button class="d" data-m="d">Delete</button><button data-m="x">Cancel</button></div>`;
+ o.innerHTML=`<div><h3>${esc(shDate(e.date))} · ${esc(jobLabel(e.job)||"Shift")}</h3><div class="mut">${r2(num(e.hours))}h · ${esc(e.shift)} · ${esc(e.pier||"")}</div><button class="p" data-m="e">Edit</button><button data-m="r">↻ Repeat on another date…</button><button class="d" data-m="d">Delete</button><button data-m="x">Cancel</button></div>`;
  o.onclick=ev=>{const m=ev.target.dataset&&ev.target.dataset.m;if(ev.target!==o&&!m)return;o.remove();
-  if(m==="e")editEntry(id,"hist");if(m==="d"&&confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==id);save();renderHist();}};document.body.appendChild(o);}
+  if(m==="e")editEntry(id,"hist");if(m==="r")repeatSheet(e);if(m==="d"&&confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==id);save();renderHist();}};document.body.appendChild(o);}
 function jumpTo(d){const g=histGroups(entries);const t=g.find(x=>x.date<=d)||g[g.length-1];if(!t)return;selDate=d;
  const el=document.getElementById("d-"+t.date);if(el){el.scrollIntoView({block:"start"});scrollBy(0,-60);}}
 function searchCard(){return `<div class="card"><label for="hq" style="margin-top:0">Search shifts</label><input type="search" id="hq" placeholder="Job, pier, ship or notes" value="${esc(sf.q)}" autocomplete="off"><div class="sq"><div><label for="hf">From</label><input type="date" id="hf" value="${esc(sf.from)}"></div><div><label for="ht">To</label><input type="date" id="ht" value="${esc(sf.to)}"></div><button type="button" class="full" id="hx">Clear search</button></div></div>`;}
@@ -539,11 +619,141 @@ $("shList").addEventListener("click",e=>{const el=e.target.closest(".ltr");if(!e
 $("clrL").onclick=async()=>{const n=await cleanLetters();$("clrM").textContent=ldbOk?"Removed "+n+" old letter photo"+(n===1?"":"s")+" (more than "+LETTER_KEEP_DAYS+" days after ship departure).":"Letter storage unavailable.";refreshLetters();};
 cleanLetters();
 
+/* ===== v30 features: UI ===== */
+const LS=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v;}catch(e){return d;}};
+const LSset=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
+const lsJson=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}};
+let curV="add";
+const BK="l19.lastBackup",BKS="l19.bkSnooze",STB="l19.stubs",STH="l19.startHrs",PINK="l19.pin",REM="l19.rem",REMS="l19.remSnooze";
+const todayS=()=>fmtDate(new Date());
+const fmtN=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+/* --- share / download helper --- */
+async function shareFile(name,type,text){const f=new File([text],name,{type});
+ try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return "shared";}}catch(e){if(e&&e.name==="AbortError")return "cancel";}
+ download(name,type,text);return "downloaded";}
+/* --- 1. backup reminder + export --- */
+function setLastBackup(){LSset(BK,new Date().toISOString());renderBanners();renderLastBk();}
+function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b>"+esc(backupAgo(LS(BK,""),todayS()))+"</b>";}
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0"))},null,1));
+ if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
+$("exj").onclick=doBackup;
+/* --- banners (backup + shift reminder) --- */
+function remCfg(){const c=lsJson(REM,{});return {on:!!c.on,time:/^\d{2}:\d{2}$/.test(c.time||"")?c.time:"18:00"};}
+function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=todayS();
+ if(backupDue(LS(BK,""),t,entries.length>0)&&LS(BKS,"")<t){h+=`<div class="ban" role="status"><b>Time to back up your hours</b><div class="mut" style="margin:4px 0 10px">Last backup: ${esc(backupAgo(LS(BK,""),t))}. Your data lives only on this phone.</div><div class="row"><button type="button" class="p" id="bkNow">Back up now</button><button type="button" id="bkLater">Later</button></div></div>`;}
+ const rs=reminderStatus(entries,new Date(),remCfg());
+ if(rs.show&&LS(REMS,"")!==t){h+=`<div class="ban" role="status"><b>Log your hours</b><div class="mut" style="margin:4px 0 10px">${esc(rs.msg)}</div><div class="row"><button type="button" class="p" id="remGo">Add a shift</button><button type="button" id="remX">Dismiss</button></div></div>`;}
+ b.innerHTML=h;
+ if($("bkNow"))$("bkNow").onclick=doBackup;
+ if($("bkLater"))$("bkLater").onclick=()=>{LSset(BKS,addDays(todayS(),3));renderBanners();};
+ if($("remGo"))$("remGo").onclick=()=>{LSset(REMS,todayS());renderBanners();if(editId)resetForm();retTo="week";show("add");};
+ if($("remX"))$("remX").onclick=()=>{LSset(REMS,todayS());renderBanners();};}
+/* --- 2. pay stub check (Week tab) --- */
+function renderStub(box){const stubs=lsJson(STB,[]),cur=stubs.find(s=>s.week===wk)||{},we=addDays(wk,6);
+ const row=s=>{const c=stubCompare(entries,s.week,s.hours,s.pay,{noPay:hidePay});return `<div class="ent"><div><b>${s.week.slice(5)} → ${addDays(s.week,6).slice(5)}</b> · stub ${r2(num(s.hours))}h${!hidePay&&s.pay!==""&&s.pay!=null?" · "+money(num(s.pay)):""}<div class="mut">${esc(c.msg)}</div></div><div class="acts"><button data-sx="${esc(s.week)}" class="d" aria-label="Delete stub check ${esc(s.week)}">🗑</button></div></div>`;};
+ const past=[...stubs].sort((a,b)=>a.week<b.week?1:-1);
+ box.innerHTML=`<div class="card"><h3>Pay stub check</h3><p class="mut" style="margin:0 0 4px">Week ${wk.slice(5)} → ${we.slice(5)} (Sat–Fri, the week shown above). Enter the totals printed on your stub.</p>
+ <label for="sth_h">Gross hours on stub</label><input type="number" id="sth_h" step="0.01" min="0" inputmode="decimal" value="${cur.hours!=null?esc(cur.hours):""}">
+ ${hidePay?'<p class="mut" id="sthn">Hours only mode is on, so pay is not compared.</p>':`<label for="sth_p">Gross pay on stub ($)</label><input type="number" id="sth_p" step="0.01" min="0" inputmode="decimal" value="${cur.pay!=null?esc(cur.pay):""}">`}
+ <div class="row" style="margin-top:12px"><button type="button" class="p" id="sthGo">Check and save</button></div>
+ <div id="sthRes" class="mut" aria-live="polite" style="margin-top:10px;color:var(--fg);font-weight:600"></div>
+ ${hidePay?"":'<p class="mut" style="margin:8px 0 0">Your log\'s pay is an estimate from the rates you entered, so small differences are normal.</p>'}</div>
+ ${past.length?`<div class="card"><h3>Past stub checks</h3>${past.map(row).join("")}</div>`:""}`;
+ $("sthGo").onclick=()=>{const gh=$("sth_h").value,gp=$("sth_p")?$("sth_p").value:(cur.pay!=null?cur.pay:"");
+  if(gh===""||!(parseFloat(gh)>=0)){$("sthRes").textContent="Enter the gross hours from your stub.";return;}
+  const c=stubCompare(entries,wk,gh,gp,{noPay:hidePay});const a=lsJson(STB,[]).filter(s=>s.week!==wk);a.push({id:uid(),week:wk,hours:gh,pay:gp,added:new Date().toISOString()});LSset(STB,JSON.stringify(a));
+  renderStub(box);$("sthRes").textContent=c.msg;};
+ box.querySelectorAll("[data-sx]").forEach(b=>b.onclick=()=>{if(confirm("Delete this stub check?")){LSset(STB,JSON.stringify(lsJson(STB,[]).filter(s=>s.week!==b.dataset.sx)));renderStub(box);}});}
+{const _rw=renderWeek;renderWeek=function(){_rw();const st=$("v-week").querySelector(".stats");if(st)st.insertAdjacentHTML("afterend",milestoneCard());const sb=document.createElement("div");sb.id="stubBox";$("v-week").appendChild(sb);renderStub(sb);};}
+/* --- 4. milestones --- */
+function milestoneCard(){const m=milestones(entries,LS(STH,"0")),st=num(LS(STH,"0"));
+ const rows=m.tiers.map(t=>`<tr><td>${fmtN(t.at)} hrs</td><td>${t.reached?"✓ reached":fmtN(t.remaining)+" to go"}</td></tr>`).join("");
+ const n=m.next;
+ return `<div class="card" id="mile"><h4 style="margin-top:0">Hours toward rate steps</h4><div><span class="big">${fmtN(m.total)}</span> <span class="mut">total hrs${st?" (incl. "+fmtN(st)+" starting hrs)":""}</span></div>
+ ${n?`<div class="pg" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${n.pct}" aria-label="Progress to ${fmtN(n.at)} hours"><i style="width:${n.pct}%"></i></div><div style="font-weight:600">${fmtN(n.remaining)} hrs to ${fmtN(n.at)} – your rate steps up there.</div>`:'<div style="font-weight:600;margin-top:6px">Past 4,001 hrs – you are at the top rate tier.</div>'}
+ <table style="margin-top:6px">${rows}</table><div class="mut" style="margin-top:4px">Counts all hours logged here plus your starting hours (Backup tab). Set the Rate tier on a shift yourself; it is not changed automatically.</div></div>`;}
+{const _rh=renderHist;renderHist=function(){_rh();if(hv==="list"){const st=$("v-hist").querySelector(".stats");if(st)st.insertAdjacentHTML("afterend",milestoneCard());}};}
+/* --- 3. quick-pick combos --- */
+function refreshQuick(){const c=topCombos(entries,6),w=$("qpW");if(!w)return;w.classList.toggle("hide",!entries.length||!!editId);
+ $("qp").innerHTML=c.map((x,i)=>`<button type="button" data-q="${i}">${esc([x.pier,jobLabel(x.job)||x.job,x.shift].filter(Boolean).join(" · "))}</button>`).join("");
+ $("qp").querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>fillCombo(c[+b.dataset.q]));}
+function fillCombo(x){if(!x)return;
+ if(PIERS.includes(x.pier)||!x.pier){$("pier").value=x.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=x.pier;$("pierC").classList.remove("hide");}
+ const known=[...$("job").options].some(o=>o.value===x.job&&x.job);
+ if(known||!x.job){$("job").value=x.job||"";$("jobC").classList.add("hide");}else{$("job").value="__c";$("jobC").value=x.job;$("jobC").classList.remove("hide");}
+ $("shift").value=x.shift||"1st";setUp("");upShow();rateDirty=false;applyDefaults();otHint();guarHint();$("hrs").focus();}
+/* --- 5. repeat shift --- */
+function repeatSheet(e){if(!e)return;const o=document.createElement("div");o.className="sheet";const def=repeatDefaultDate(e,todayS());
+ o.innerHTML=`<div role="dialog" aria-label="Repeat shift"><h3>Repeat shift</h3><div class="mut">${esc(jobLabel(e.job)||"Shift")} · ${esc(e.pier||"")} · ${esc(e.shift)} · ${r2(num(e.hours))}h</div><label for="rpd" style="margin-top:6px">Copy to date</label><input type="date" id="rpd" value="${def}" min="2000-01-01" max="2099-12-31"><div class="mut" id="rpn" aria-live="polite"></div><button class="p" data-m="ok">Repeat shift</button><button data-m="x">Cancel</button></div>`;
+ const note=()=>{const d=o.querySelector("#rpd").value;o.querySelector("#rpn").textContent=entries.some(x=>x.date===d&&x.job===e.job&&x.pier===e.pier&&x.shift===e.shift)?"A matching shift already exists on that date; this adds another.":"";};
+ o.onclick=ev=>{const m=ev.target.dataset&&ev.target.dataset.m;if(ev.target!==o&&!m)return;
+  if(m==="ok"){const d=o.querySelector("#rpd").value;if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){o.querySelector("#rpn").textContent="Pick a date.";return;}
+   entries.push(repeatCopy(e,d));save();refreshEmp();wk=weekStart(d);ha=d;o.remove();if(editId)resetForm();show(curV==="hist"?"hist":"week");return;}
+  o.remove();};
+ o.addEventListener("input",note);document.body.appendChild(o);note();}
+$("rep").onclick=()=>repeatSheet(lastShift(entries));
+/* --- 6. CSV export --- */
+function csvOpts(){return {noPay:$("cxn").checked};}
+async function doCsv(excel){const k=$("cxk").value,d=$("cxd").value||todayS(),r=csvForExport(entries,k,d,{...csvOpts(),excel});
+ if(!r.count){$("cxm").textContent="No shifts in that period – nothing to export.";return;}
+ const s=await shareFile(r.name,"text/csv",r.text);$("cxm").textContent=s==="cancel"?"Cancelled.":(s==="shared"?"Shared ":"Downloaded ")+r.count+" shifts"+(excel?" (Excel-friendly CSV).":".");}
+function cxInfo(){const k=$("cxk").value,d=$("cxd").value||todayS(),r=csvForExport(entries,k,d,{});$("cxi").textContent=r.count+" shift"+(r.count===1?"":"s")+" · "+(k==="all"?"all entries":periodLabel(k,d));}
+$("cxd").value=todayS();$("cxn").checked=hidePay;
+["cxk","cxd","cxn"].forEach(i=>$(i).addEventListener("change",cxInfo));$("cxk").addEventListener("change",()=>$("cxd").disabled=$("cxk").value==="all");
+$("cxs").onclick=()=>doCsv(false);$("cxe").onclick=()=>doCsv(true);
+/* --- 4b. starting hours setting --- */
+$("sth").value=LS(STH,"0")==="0"?"":LS(STH,"");$("sth").onchange=()=>{const v=Math.max(0,num($("sth").value));LSset(STH,String(v));$("sth").value=v?v:"";$("sthm").textContent="Saved: "+fmtN(v)+" starting hours.";};
+/* --- 7. PIN lock --- */
+function pinCfg(){const o=lsJson(PINK,null);return o&&o.salt&&o.hash?o:null;}
+const subtleOk=()=>!!(globalThis.crypto&&globalThis.crypto.subtle);
+function eraseAll(){try{Object.keys(localStorage).filter(k=>k.indexOf("l19")===0).forEach(k=>localStorage.removeItem(k));}catch(e){}
+ try{indexedDB.deleteDatabase("l19letters");}catch(e){}location.reload();}
+let lockFails=0,lockWait=0;
+function setInert(on){["main","nav.tabs","header"].forEach(s=>{const el=document.querySelector(s);if(el){if(on)el.setAttribute("inert","");else el.removeAttribute("inert");el.setAttribute("aria-hidden",String(on));}});}
+function lockNow(){if(!pinCfg()||$("lock"))return;const d=document.createElement("div");d.id="lock";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-label","App locked");
+ d.innerHTML=`<div class="lk"><div class="big" style="margin-bottom:8px">ILWU LIFE is locked</div><label for="lpin" style="margin-top:0">Enter your 4-digit PIN</label><input id="lpin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" style="text-align:center;font-size:1.5rem;letter-spacing:.5em"><div id="lmsg" class="mut" aria-live="polite" style="min-height:1.4em;margin-top:6px"></div><button type="button" class="p" id="lgo" style="width:100%;margin-top:8px">Unlock</button><button type="button" class="link" id="lforgot" style="margin-top:10px">Forgot PIN?</button></div>`;
+ document.body.appendChild(d);setInert(true);
+ const msg=t=>{$("lmsg").textContent=t;};
+ async function tryU(){const c=pinCfg();if(!c){d.remove();setInert(false);return;}if(Date.now()<lockWait){msg("Too many tries. Wait a few seconds.");return;}
+  const p=$("lpin").value;if(!validPin(p)){msg("Enter 4 digits.");return;}
+  let ok=false;try{ok=await verifyPin(p,c.salt,c.hash);}catch(e){}
+  if(ok){lockFails=0;d.remove();setInert(false);renderBanners();}else{lockFails++;if(lockFails>=3)lockWait=Date.now()+5000*(lockFails-2);$("lpin").value="";msg("Wrong PIN.");$("lpin").focus();}}
+ $("lgo").onclick=tryU;$("lpin").oninput=()=>{$("lpin").value=$("lpin").value.replace(/\D/g,"");if($("lpin").value.length===4)tryU();};
+ $("lpin").onkeydown=e=>{if(e.key==="Enter")tryU();};
+ $("lforgot").onclick=()=>{if(confirm("Forgot PIN? The only way in is to ERASE ALL DATA on this device (shifts, pay stub checks, settings, ship letter photos). This cannot be undone unless you have a backup file.")&&confirm("Really erase everything and remove the PIN?"))eraseAll();};
+ setTimeout(()=>{try{$("lpin").focus();}catch(e){}},50);}
+function renderPin(){const on=!!pinCfg();$("pinSt").textContent=on?"PIN lock is ON.":"PIN lock is OFF.";$("pinCur").parentElement.classList.toggle("hide",!on);$("pinRm").classList.toggle("hide",!on);$("pinSet").textContent=on?"Change PIN":"Set PIN";}
+$("pinSet").onclick=async()=>{const m=$("pinM"),c=pinCfg(),n=$("pinNew").value,n2=$("pinNew2").value;
+ if(!subtleOk()){m.textContent="This browser can't hash a PIN securely (needs a secure https page).";return;}
+ if(c&&!(await verifyPin($("pinCur").value,c.salt,c.hash))){m.textContent="Current PIN is wrong.";return;}
+ if(!validPin(n)){m.textContent="New PIN must be exactly 4 digits.";return;}if(n!==n2){m.textContent="The two new PINs don't match.";return;}
+ const salt=genSalt();LSset(PINK,JSON.stringify({salt,hash:await hashPin(n,salt)}));["pinCur","pinNew","pinNew2"].forEach(i=>$(i).value="");m.textContent="PIN saved. The app will lock when opened and after 1+ minute in the background.";renderPin();};
+$("pinRm").onclick=async()=>{const m=$("pinM"),c=pinCfg();if(!c)return;if(!(await verifyPin($("pinCur").value,c.salt,c.hash))){m.textContent="Enter your current PIN to remove it.";return;}
+ try{localStorage.removeItem(PINK);}catch(e){}["pinCur","pinNew","pinNew2"].forEach(i=>$(i).value="");m.textContent="PIN removed.";renderPin();};
+["pinCur","pinNew","pinNew2"].forEach(i=>$(i).addEventListener("input",()=>{$(i).value=$(i).value.replace(/\D/g,"");}));
+let hiddenAt=null;
+/* --- 8. shift reminder --- */
+let remTimer=null;
+function scheduleRem(){clearTimeout(remTimer);const c=remCfg();if(!c.on)return;remTimer=setTimeout(()=>{fireRem();scheduleRem();},Math.min(msUntil(c.time,new Date())+1000,2147000000));}
+function fireRem(){renderBanners();const rs=reminderStatus(entries,new Date(),remCfg());if(!rs.show||LS(REMS,"")===todayS())return;
+ try{if("Notification" in window&&Notification.permission==="granted"){const t="Log your hours",o={body:rs.msg,tag:"l19rem"};
+  if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(r=>r&&r.showNotification?r.showNotification(t,o):new Notification(t,o)).catch(()=>{});else new Notification(t,o);}}catch(e){}}
+function renderRem(){const c=remCfg();$("remOn").checked=c.on;$("remT").value=c.time;$("remT").disabled=!c.on;}
+function saveRem(){LSset(REM,JSON.stringify({on:$("remOn").checked,time:$("remT").value||"18:00"}));renderRem();renderBanners();scheduleRem();}
+$("remOn").onchange=async()=>{saveRem();const m=$("remM");if(!$("remOn").checked){m.textContent="Reminder off.";return;}
+ if(!("Notification" in window)){m.textContent="This browser has no notification support. You'll still see a banner when you open the app.";return;}
+ let p=Notification.permission;if(p==="default"){try{p=await Notification.requestPermission();}catch(e){}}
+ m.textContent=p==="granted"?"Reminder on. A notification can appear only while the app is open or recently active; the banner on open is the dependable part.":"Notifications aren't allowed, so you'll only see the in-app banner when you open the app.";};
+$("remT").onchange=saveRem;
+/* --- wiring --- */
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();}else{if(shouldLock(hiddenAt,Date.now(),!!pinCfg()))lockNow();hiddenAt=null;renderBanners();scheduleRem();}});
+renderLastBk();renderPin();renderRem();cxInfo();
+lockNow();renderBanners();scheduleRem();
 
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
