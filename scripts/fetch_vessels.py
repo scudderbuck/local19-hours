@@ -2,7 +2,7 @@
 """Download the NWSA Vessel Schedule Forecast PDF and write a compact vessels.json
 with the Seattle terminal calls (T5, T18, plus any other Seattle terminal listed).
 Requires: pip install pymupdf.  Usage: fetch_vessels.py [out.json] [local.pdf]"""
-import json, re, sys, urllib.request, datetime as dt
+import json, os, re, sys, time, urllib.parse, urllib.request, datetime as dt
 from zoneinfo import ZoneInfo
 import pymupdf
 
@@ -63,6 +63,53 @@ def parse(pdf_bytes):
                          "eta": iso(eta[0], eta[1]), "etd": iso(etd[0], etd[1])})
     return rows, updated
 
+VF = "https://www.vesselfinder.com/vessels?name="
+VF_UA = "Mozilla/5.0 (compatible; local19-hours-vessel-fetch/1.0; +https://github.com/scudderbuck/local19-hours)"
+ROW = re.compile(r'href="/vessels/details/(\d{7})".*?class="slna">([^<]*)<', re.S)
+
+def norm(n):
+    return re.sub(r"[^A-Z0-9]", "", n.upper())
+
+def parse_imo(html, name):
+    """First exact (normalised) name match among search results, else None."""
+    for imo, nm in ROW.findall(html):
+        if norm(nm.replace("&amp;", "&")) == norm(name):
+            return imo
+    return None
+
+def lookup_imo(name):
+    req = urllib.request.Request(VF + urllib.parse.quote(name), headers={"User-Agent": VF_UA})
+    return parse_imo(urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "replace"), name)
+
+def resolve_ids(rows, cache_path, delay=2.5, lookup=lookup_imo):
+    """Attach 'imo' to rows. Cache maps NAME -> {imo, checked}. Hits are permanent;
+    misses are retried after 7 days; errors are never cached. Never raises."""
+    try:
+        cache = json.load(open(cache_path))
+    except Exception:
+        cache = {}
+    today = dt.date.today()
+    first = True
+    for r in rows:
+        key = r["vessel"].upper().strip()
+        c = cache.get(key)
+        if c and (c.get("imo") or (today - dt.date.fromisoformat(c["checked"])).days < 7):
+            imo = c.get("imo")
+        else:
+            if not first: time.sleep(delay)
+            first = False
+            try:
+                imo = lookup(r["vessel"])
+                cache[key] = {"imo": imo, "checked": today.isoformat()}
+            except Exception as e:
+                print("imo lookup failed for %s: %s" % (r["vessel"], e), file=sys.stderr)
+                imo = None
+        if imo: r["imo"] = imo
+    try:
+        json.dump(cache, open(cache_path, "w"), indent=1, sort_keys=True)
+    except Exception as e:
+        print("cache write failed:", e, file=sys.stderr)
+
 def main():
     out = sys.argv[1] if len(sys.argv) > 1 else "vessels.json"
     if len(sys.argv) > 2:
@@ -74,6 +121,7 @@ def main():
     if not rows or not updated:
         sys.exit("parse produced no Seattle rows / no timestamp - leaving %s untouched" % out)
     rows.sort(key=lambda r: (r["eta"], r["terminal"]))
+    resolve_ids(rows, os.path.join(os.path.dirname(os.path.abspath(out)), "vessel_ids.json"))
     for r in rows:
         r["terminal"] = {"T5": "T5", "T18": "T18"}.get(r["terminal"], r["terminal"])
     payload = {"source": URL, "timezone": "America/Los_Angeles", "updated": updated,

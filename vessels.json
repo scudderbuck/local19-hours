@@ -10,7 +10,8 @@
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-10-13T08:00",
-   "etd": "2026-10-14T18:00"
+   "etd": "2026-10-14T18:00",
+   "imo": "9979010"
   },
   {
    "vessel": "CMA CGM BYBLOS",
@@ -18,7 +19,8 @@
    "terminal": "T18",
    "agent": "Norton Lilly International",
    "eta": "2026-10-15T14:00",
-   "etd": "2026-10-17T17:00"
+   "etd": "2026-10-17T17:00",
+   "imo": "9977725"
   },
   {
    "vessel": "CAPE TAINARO",
@@ -26,7 +28,8 @@
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-10-16T06:00",
-   "etd": "2026-10-17T04:00"
+   "etd": "2026-10-17T04:00",
+   "imo": "9706205"
   },
   {
    "vessel": "OOCL NEW YORK",
@@ -34,7 +37,8 @@
    "terminal": "T18",
    "agent": "Inchcape",
    "eta": "2026-10-17T05:00",
-   "etd": "2026-10-18T04:00"
+   "etd": "2026-10-18T04:00",
+   "imo": "9198109"
   },
   {
    "vessel": "CMA CGM ALMAVIVA",
@@ -42,7 +46,8 @@
    "terminal": "T18",
    "agent": "Norton Lilly International",
    "eta": "2026-10-17T13:00",
-   "etd": "2026-10-19T19:00"
+   "etd": "2026-10-19T19:00",
+   "imo": "9450648"
   },
   {
    "vessel": "XIN YING KOU",
@@ -50,7 +55,8 @@
    "terminal": "T18",
    "agent": "COSCO SHIPPING LINES",
    "eta": "2026-10-18T05:00",
-   "etd": "2026-10-19T05:00"
+   "etd": "2026-10-19T05:00",
+   "imo": "9312585"
   },
   {
    "vessel": "EXPRESS ROME",
@@ -58,7 +64,8 @@
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-10-18T06:00",
-   "etd": "2026-10-19T18:00"
+   "etd": "2026-10-19T18:00",
+   "imo": "9484936"
   },
   {
    "vessel": "SM QINGDAO",
@@ -66,7 +73,8 @@
    "terminal": "T18",
    "agent": "Norton Lilly International",
    "eta": "2026-10-19T15:00",
-   "etd": "2026-10-20T04:00"
+   "etd": "2026-10-20T04:00",
+   "imo": "9395939"
   },
   {
    "vessel": "MSC DENISSE X",
@@ -74,7 +82,8 @@
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-10-20T16:00",
-   "etd": "2026-10-22T18:00"
+   "etd": "2026-10-22T18:00",
+   "imo": "9219795"
   },
   {
    "vessel": "MSC FLORA",
@@ -82,7 +91,8 @@
    "terminal": "T5",
    "agent": "",
    "eta": "2026-10-22T07:00",
-   "etd": "2026-10-23T04:00"
+   "etd": "2026-10-23T04:00",
+   "imo": "9978937"
   },
   {
    "vessel": "WESTWOOD RAINIER",
@@ -90,7 +100,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-10-22T22:16",
-   "etd": "2026-10-23T23:16"
+   "etd": "2026-10-23T23:16",
+   "imo": "9226035"
   },
   {
    "vessel": "OOCL SAN FRANCISCO",
@@ -98,7 +109,8 @@
    "terminal": "T18",
    "agent": "Inchcape",
    "eta": "2026-10-23T06:00",
-   "etd": "2026-10-24T04:00"
+   "etd": "2026-10-24T04:00",
+   "imo": "9199268"
   },
   {
    "vessel": "SM PORTLAND",
@@ -106,7 +118,8 @@
    "terminal": "T18",
    "agent": "Norton Lilly International",
    "eta": "2026-10-24T15:00",
-   "etd": "2026-10-25T04:00"
+   "etd": "2026-10-25T04:00",
+   "imo": "9409027"
   },
   {
    "vessel": "CMA CGM FORT JAMES",
@@ -114,7 +127,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-10-25T05:15",
-   "etd": "2026-10-29T14:15"
+   "etd": "2026-10-29T14:15",
+   "imo": "9966764"
   },
   {
    "vessel": "COSCO VENICE",
@@ -122,7 +136,8 @@
    "terminal": "T18",
    "agent": "COSCO SHIPPING LINES",
    "eta": "2026-10-26T05:00",
-   "etd": "2026-10-27T04:00"
+   "etd": "2026-10-27T04:00",
+   "imo": "9484405"
   },
   {
    "vessel": "MSC IVANA",
@@ -130,7 +145,8 @@
    "terminal": "T5",
    "agent": "",
    "eta": "2026-10-26T05:15",
-   "etd": "2026-10-28T05:15"
+   "etd": "2026-10-28T05:15",
+   "imo": "9398371"
   },
   {
    "vessel": "CMA CGM DUTCH HARBOR",
@@ -138,7 +154,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-10-29T15:33",
-   "etd": "2026-10-31T03:33"
+   "etd": "2026-10-31T03:33",
+   "imo": "9389409"
   },
   {
    "vessel": "MSC NITYA B",
@@ -146,7 +163,8 @@
    "terminal": "T5",
    "agent": "",
    "eta": "2026-10-30T00:05",
-   "etd": "2026-10-30T21:05"
+   "etd": "2026-10-30T21:05",
+   "imo": "9778117"
   },
   {
    "vessel": "NADI CHIEF",
@@ -154,7 +172,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-10-30T01:22",
-   "etd": "2026-10-31T02:22"
+   "etd": "2026-10-31T02:22",
+   "imo": "9861885"
   },
   {
    "vessel": "MSC SOLA",
@@ -162,7 +181,8 @@
    "terminal": "T5",
    "agent": "",
    "eta": "2026-10-31T04:00",
-   "etd": "2026-11-02T03:00"
+   "etd": "2026-11-02T03:00",
+   "imo": "9401104"
   },
   {
    "vessel": "CYPRESS",
@@ -170,7 +190,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-11-01T04:00",
-   "etd": "2026-11-02T13:00"
+   "etd": "2026-11-02T13:00",
+   "imo": "9461477"
   },
   {
    "vessel": "SM TIANJIN",
@@ -178,7 +199,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-11-01T17:00",
-   "etd": "2026-11-02T20:00"
+   "etd": "2026-11-02T20:00",
+   "imo": "9464704"
   },
   {
    "vessel": "MSC YUKTA X",
@@ -186,7 +208,8 @@
    "terminal": "T5",
    "agent": "",
    "eta": "2026-11-04T18:00",
-   "etd": "2026-11-06T18:00"
+   "etd": "2026-11-06T18:00",
+   "imo": "9146467"
   },
   {
    "vessel": "MSC SABRINA",
@@ -194,7 +217,8 @@
    "terminal": "T5",
    "agent": "",
    "eta": "2026-11-05T07:00",
-   "etd": "2026-11-06T04:00"
+   "etd": "2026-11-06T04:00",
+   "imo": "9979022"
   },
   {
    "vessel": "WESTWOOD COLUMBIA",
@@ -202,7 +226,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-11-06T01:21",
-   "etd": "2026-11-06T14:21"
+   "etd": "2026-11-06T14:21",
+   "imo": "9226047"
   },
   {
    "vessel": "SM MUMBAI",
@@ -210,7 +235,8 @@
    "terminal": "T18",
    "agent": "",
    "eta": "2026-11-06T09:00",
-   "etd": "2026-11-07T12:00"
+   "etd": "2026-11-07T12:00",
+   "imo": "9401051"
   }
  ]
 }

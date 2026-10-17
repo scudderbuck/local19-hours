@@ -22,5 +22,5 @@ jobs:
         run: |
           git config user.name "vessels-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add vessels.json
+          git add vessels.json vessel_ids.json
           git diff --cached --quiet || (git commit -m "Update vessels.json" && git push)
