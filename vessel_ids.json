@@ -19,6 +19,10 @@
   "checked": "2026-10-16",
   "imo": "9966764"
  },
+ "COSCO SANTOS": {
+  "checked": "2026-10-17",
+  "imo": "9484376"
+ },
  "COSCO VENICE": {
   "checked": "2026-10-16",
   "imo": "9484405"
@@ -31,6 +35,14 @@
   "checked": "2026-10-16",
   "imo": "9484936"
  },
+ "LAUTOKA CHIEF": {
+  "checked": "2026-10-17",
+  "imo": "9868431"
+ },
+ "LOTUS A": {
+  "checked": "2026-10-17",
+  "imo": "9461465"
+ },
  "MSC BOSTON": {
   "checked": "2026-10-16",
   "imo": "9979010"
@@ -39,9 +51,17 @@
   "checked": "2026-10-16",
   "imo": "9219795"
  },
+ "MSC DESIREE": {
+  "checked": "2026-10-17",
+  "imo": "9745665"
+ },
  "MSC FLORA": {
   "checked": "2026-10-16",
   "imo": "9978937"
+ },
+ "MSC HORTENSE": {
+  "checked": "2026-10-17",
+  "imo": "9978951"
  },
  "MSC IVANA": {
   "checked": "2026-10-16",
@@ -71,9 +91,17 @@
   "checked": "2026-10-16",
   "imo": "9198109"
  },
+ "OOCL OAKLAND": {
+  "checked": "2026-10-17",
+  "imo": "9367190"
+ },
  "OOCL SAN FRANCISCO": {
   "checked": "2026-10-16",
   "imo": "9199268"
+ },
+ "OOCL SEATTLE": {
+  "checked": "2026-10-17",
+  "imo": "9984431"
  },
  "SM MUMBAI": {
   "checked": "2026-10-16",
@@ -102,5 +130,9 @@
  "XIN YING KOU": {
   "checked": "2026-10-16",
   "imo": "9312585"
+ },
+ "XIN ZHAN JIANG": {
+  "checked": "2026-10-17",
+  "imo": "9378814"
  }
 }

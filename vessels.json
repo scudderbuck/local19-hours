@@ -1,18 +1,9 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-16T23:45:04-07:00",
+ "updated": "2026-10-17T01:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls).",
  "vessels": [
-  {
-   "vessel": "MSC BOSTON",
-   "service": "Ad Hoc",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-13T08:00",
-   "etd": "2026-10-14T18:00",
-   "imo": "9979010"
-  },
   {
    "vessel": "CMA CGM BYBLOS",
    "service": "Ad Hoc",
@@ -21,15 +12,6 @@
    "eta": "2026-10-15T14:00",
    "etd": "2026-10-17T17:00",
    "imo": "9977725"
-  },
-  {
-   "vessel": "CAPE TAINARO",
-   "service": "CLX",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-16T06:00",
-   "etd": "2026-10-17T04:00",
-   "imo": "9706205"
   },
   {
    "vessel": "OOCL NEW YORK",
@@ -237,6 +219,78 @@
    "eta": "2026-11-06T09:00",
    "etd": "2026-11-07T12:00",
    "imo": "9401051"
+  },
+  {
+   "vessel": "OOCL SEATTLE",
+   "service": "PNW1",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-06T21:00",
+   "etd": "2026-11-08T06:00",
+   "imo": "9984431"
+  },
+  {
+   "vessel": "COSCO SANTOS",
+   "service": "CPV",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-07T00:00",
+   "etd": "2026-11-08T00:00",
+   "imo": "9484376"
+  },
+  {
+   "vessel": "LOTUS A",
+   "service": "CPNW",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-07T16:00",
+   "etd": "2026-11-09T01:00",
+   "imo": "9461465"
+  },
+  {
+   "vessel": "MSC DESIREE",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-11-11T18:00",
+   "etd": "2026-11-13T18:00",
+   "imo": "9745665"
+  },
+  {
+   "vessel": "LAUTOKA CHIEF",
+   "service": "EB Service 2",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-12T10:21",
+   "etd": "2026-11-13T11:21",
+   "imo": "9868431"
+  },
+  {
+   "vessel": "MSC HORTENSE",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-11-12T17:01",
+   "etd": "2026-11-13T14:01",
+   "imo": "9978951"
+  },
+  {
+   "vessel": "OOCL OAKLAND",
+   "service": "PNW1",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-12T19:00",
+   "etd": "2026-11-14T04:00",
+   "imo": "9367190"
+  },
+  {
+   "vessel": "XIN ZHAN JIANG",
+   "service": "CPV",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-13T02:00",
+   "etd": "2026-11-14T07:00",
+   "imo": "9378814"
   }
  ]
 }
