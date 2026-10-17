@@ -56,6 +56,15 @@ button,input,select{font-size:1rem}
 .dh .tot{font-weight:700;color:var(--fg)}.dh button.link{font-size:.9375rem;min-width:44px}
 .he{display:block;width:100%;text-align:left;min-height:56px;padding:10px 12px;margin-bottom:6px;border-radius:var(--r);background:var(--card);border:1px solid var(--bd);color:var(--fg)}
 .he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}
+.vt{display:grid;grid-template-columns:1fr 1fr;gap:6px}.vt button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal .wdh{font-size:.875rem;font-weight:700;color:var(--mut);text-align:center;padding:4px 0}
+.cal button.cd{min-height:48px;min-width:0;padding:2px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:.9375rem;line-height:1.15;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px}
+.cal button.cd.out{opacity:.6;background:transparent}.cal button.cd small{font-size:.875rem;font-weight:700}
+.cal button.cd .dot{width:7px;height:7px;border-radius:50%;background:var(--acc);display:inline-block;margin-right:3px;border:1px solid var(--fg)}
+.cal button.cd.today{border:2px solid var(--acc);font-weight:700;box-shadow:inset 0 0 0 1px var(--fg)}
+.cal button.cd.sel{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.cal button.cd.sel .dot{background:var(--prifg);border-color:var(--prifg)}
+.cj{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sq{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sq .full{grid-column:1/3}
 .jump{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .big{font-size:1.5rem;font-weight:700}
 
@@ -241,6 +250,14 @@ function periodTotals(all,kind,s){const l=periodEntries(all,kind,s),t=summarize(
 function histGroups(all){const m=new Map();
  for(const e of [...all].sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(a.shift<b.shift?1:a.shift>b.shift?-1:0))){if(!m.has(e.date))m.set(e.date,[]);m.get(e.date).push(e);}
  const out=[];for(const [date,items] of m)out.push({date,items,hours:items.reduce((x,e)=>x+num(e.hours),0)});return out;}
+function monthGrid(y,m){const first=new Date(y,m,1),lead=(first.getDay()+1)%7,start=new Date(y,m,1-lead),dim=new Date(y,m+1,0).getDate(),n=Math.ceil((lead+dim)/7),weeks=[];
+ for(let w=0;w<n;w++){const row=[];for(let i=0;i<7;i++){const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+w*7+i);row.push({date:fmtDate(d),day:d.getDate(),inMonth:d.getMonth()===m&&d.getFullYear()===y});}weeks.push(row);}return weeks;}
+function dayTotals(all){const o={};for(const e of all){const t=o[e.date]||(o[e.date]={hours:0,count:0});t.hours+=num(e.hours);t.count++;}return o;}
+function searchEntries(all,f){f=f||{};const q=String(f.q||"").trim().toLowerCase(),words=q?q.split(/\s+/):[];
+ return all.filter(e=>{if(f.from&&e.date<f.from)return false;if(f.to&&e.date>f.to)return false;
+  const hay=[e.job,jobLabel(e.job),e.pier,e.vessel,e.employer,e.note,e.shift].join(" ").toLowerCase();return words.every(w=>hay.includes(w));})
+ .sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(a.shift<b.shift?1:a.shift>b.shift?-1:0));}
+function searchActive(f){return !!(f&&(String(f.q||"").trim()||f.from||f.to));}
 const UP_JOBS=["Sling man","Stevedore","Extra Stevedore","Crane op"];
 function upApplies(job){return UP_JOBS.includes(job);}
 function upLabel(v){return v==="first"?"First up (AM)":v==="second"?"Second up (PM)":"";}
@@ -291,7 +308,7 @@ const $=id=>document.getElementById(id),KEY="l19hours.v1";
 let entries=[];try{entries=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(entries));
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let editId=null,selDate=null,retTo="week",hk="week",ha=weekStart(fmtDate(new Date())),hidePay=false;try{hidePay=localStorage.getItem("l19.hidepay")==="1"}catch(e){}
+let editId=null,selDate=null,retTo="week",hk="week",hv="list",cm=fmtDate(new Date()).slice(0,7),cd=null,sf={q:"",from:"",to:""},pendJump=null,ha=weekStart(fmtDate(new Date())),hidePay=false;try{hidePay=localStorage.getItem("l19.hidepay")==="1"}catch(e){}
 let wk=weekStart(fmtDate(new Date()));
 $("pier").innerHTML=PIERS.map(p=>`<option>${p}</option>`).join("")+'<option value="__c">Custom…</option>';
 $("job").innerHTML='<option value="">— select job —</option><optgroup label="Seattle jobs">'+SEATTLE_JOBS.map(([n,c])=>`<option value="${n}">${n}${c?" · "+c:""}</option>`).join("")+'</optgroup><option value="__c">Custom…</option><optgroup label="Other (PMA list)">'+Object.keys(JOBS).map(g=>JOBS[g].map(([c,n])=>`<option value="${c}">${c} ${n} (${g})</option>`).join("")).join("")+'</optgroup>';
@@ -396,19 +413,42 @@ function openEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;const o=d
   if(m==="e")editEntry(id,"hist");if(m==="d"&&confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==id);save();renderHist();}};document.body.appendChild(o);}
 function jumpTo(d){const g=histGroups(entries);const t=g.find(x=>x.date<=d)||g[g.length-1];if(!t)return;selDate=d;
  const el=document.getElementById("d-"+t.date);if(el){el.scrollIntoView({block:"start"});scrollBy(0,-60);}}
+function searchCard(){return `<div class="card"><label for="hq" style="margin-top:0">Search shifts</label><input type="search" id="hq" placeholder="Job, pier, ship or notes" value="${esc(sf.q)}" autocomplete="off"><div class="sq"><div><label for="hf">From</label><input type="date" id="hf" value="${esc(sf.from)}"></div><div><label for="ht">To</label><input type="date" id="ht" value="${esc(sf.to)}"></div><button type="button" class="full" id="hx">Clear search</button></div></div>`;}
+function searchResults(){if(!searchActive(sf))return "";const l=searchEntries(entries,sf),t=summarize(l),pay=t.anyPay&&!hidePay;
+ return `<div class="card" aria-live="polite"><h3 style="margin-top:0">${l.length} match${l.length===1?"":"es"}</h3><div class="mut">${r2(t.hours)}h total${hidePay?"":" · pay est. "+(pay?money(t.pay):"–")}</div></div>`+l.map(e=>`<div class="mut" style="margin:6px 2px 2px;font-weight:700">${esc(shDate(e.date))}</div>`+entRow(e)).join("");}
+function calView(){const y=+cm.slice(0,4),mo=+cm.slice(5)-1,wk=monthGrid(y,mo),dt=dayTotals(entries),today=fmtDate(new Date());
+ const head=["Sat","Sun","Mon","Tue","Wed","Thu","Fri"].map(d=>`<div class="wdh" aria-hidden="true">${d}</div>`).join("");
+ const cells=wk.map(r=>r.map(c=>{const t=dt[c.date];return `<button type="button" class="cd${c.inMonth?"":" out"}${c.date===today?" today":""}${c.date===cd?" sel":""}" data-cd="${c.date}" aria-pressed="${c.date===cd}" aria-label="${esc(shDate(c.date))}${c.date===today?", today":""}${t?", "+r2(t.hours)+" hours":""}"><span>${c.day}</span>${t?`<small><span class="dot"></span>${r2(t.hours)}</small>`:""}</button>`}).join("")).join("");
+ const mt=entries.filter(e=>e.date.slice(0,7)===cm).reduce((x,e)=>x+num(e.hours),0);
+ let det="";if(cd){const l=entries.filter(e=>e.date===cd).sort((a,b)=>a.shift<b.shift?1:-1);
+  det=`<div class="card"><div class="row" style="align-items:center"><h3 style="margin:0">${esc(shDate(cd))}${l.length?" · "+r2(l.reduce((x,e)=>x+num(e.hours),0))+"h":""}</h3><button type="button" class="p" id="cadd">＋ Add</button></div>${l.length?"":'<p class="mut" style="margin:8px 0 0">No shifts this day.</p>'}</div>`+l.map(entRow).join("")+(l.length?`<div class="card"><button type="button" id="cgo">Show in list</button></div>`:"");}
+ return `<div class="card nav"><button id="cp" aria-label="Previous month">◀</button><div class="t">${MON[mo]} ${y}<div class="mut">${r2(mt)}h this month</div></div><button id="cn" aria-label="Next month">▶</button></div>
+ <div class="card"><div class="cal">${head}${cells}</div><div class="cj" style="margin-top:10px"><div><label for="cjm" style="margin-top:0">Jump to month</label><input type="month" id="cjm" value="${cm}"></div><button type="button" id="cto" style="align-self:end">Today</button></div></div>${det}`;}
+function upSR(){const el=$("hsr");if(el){el.innerHTML=searchResults();el.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>openEntry(b.dataset.h));}}
 function renderHist(){const kinds=[["week","Week"],["month","Month"],["quarter","Quarter"],["year","Year"]];
  const r=periodRange(hk,ha),t=periodTotals(entries,hk,ha),pay=t.anyPay&&!hidePay;
  const grp=o=>Object.keys(o).sort((a,b)=>o[b].hours-o[a].hours).map(k=>`<tr><td>${esc(k)}</td><td>${r2(o[k].hours)}h${o[k].anyPay&&!hidePay?" "+money(o[k].pay):""}</td></tr>`).join("");
  const groups=histGroups(entries);let list="",mk="";
  for(const g of groups){const m=g.date.slice(0,7);if(m!==mk){mk=m;const mh=entries.filter(e=>e.date.slice(0,7)===m).reduce((x,e)=>x+num(e.hours),0);list+=`<div class="mh" id="m-${m}"><span>${MON[+m.slice(5)-1]} ${m.slice(0,4)}</span><span>${r2(mh)}h</span></div>`;}
   list+=`<div class="dh" id="d-${g.date}"><span>${WD[parseDate(g.date).getDay()].slice(0,3)} ${g.date.slice(5).replace("-","/")}/${g.date.slice(2,4)} <span class="tot">· ${r2(g.hours)}h</span></span><button type="button" class="link" data-a="${g.date}">＋ Add</button></div>`+g.items.map(entRow).join("");}
- $("v-hist").innerHTML=`<div class="card"><div class="seg" id="hk">${kinds.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${k===hk}">${l}</button>`).join("")}</div></div>
+ $("v-hist").innerHTML=`<div class="card"><div class="vt" id="hv"><button type="button" data-hv="list" aria-pressed="${hv==="list"}">☰ List</button><button type="button" data-hv="cal" aria-pressed="${hv==="cal"}">📅 Calendar</button></div></div>${searchCard()}<div id="hsr">${searchResults()}</div>${hv==="cal"?calView():`<div class="card"><div class="seg" id="hk">${kinds.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${k===hk}">${l}</button>`).join("")}</div></div>
  <div class="card nav"><button id="hp" aria-label="Previous ${hk}">◀</button><div class="t">${periodLabel(hk,ha)}<div class="mut">${hk==="week"?"Sat–Fri pay week":r.start+" to "+r.end}</div></div><button id="hn" aria-label="Next ${hk}">▶</button></div>
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.straight)}/${r2(t.ot)}</b><span>Straight/OT</span></div><div class="stat"><b>${t.days}</b><span>Days</span></div></div>
  <div class="card"><div class="row" style="align-items:center"><div><span class="mut">Total pay est.</span><div class="big">${hidePay?"Hidden":pay?money(t.pay):"–"}</div></div><button type="button" id="hpay" aria-pressed="${hidePay}">${hidePay?"Show pay":"Hours only (no pay)"}</button></div>
  ${t.count?`<h4>By job</h4><table>${grp(t.byJob)}</table><h4>By pier</h4><table>${grp(t.byPier)}</table>`:'<p class="mut" style="margin:8px 0 0">No shifts in this period.</p>'}</div>
  <div class="card"><h3>Jump to</h3><div class="jump"><div><label for="jm" style="margin-top:0">Month</label><input type="month" id="jm"></div><div><label for="jd" style="margin-top:0">Date</label><input type="date" id="jd"></div></div><div class="row" style="margin-top:8px"><button type="button" id="jt">Today</button><button type="button" id="jn" class="p">＋ Add shift</button></div></div>
- ${groups.length?list:'<div class="card mut">No saved shifts yet. Tap Add to log your first one.</div>'}`;
+ ${groups.length?list:'<div class="card mut">No saved shifts yet. Tap Add to log your first one.</div>'}`}`;
+ wireHist();}
+function wireHist(){
+ document.querySelectorAll("#hv button").forEach(b=>b.onclick=()=>{hv=b.dataset.hv;if(hv==="cal"){cm=(cd||ha||fmtDate(new Date())).slice(0,7);}renderHist();if(hv==="list"&&pendJump){const d=pendJump;pendJump=null;jumpTo(d);}});
+ $("hq").oninput=()=>{sf.q=$("hq").value;upSR();};$("hf").onchange=()=>{sf.from=$("hf").value;upSR();};$("ht").onchange=()=>{sf.to=$("ht").value;upSR();};
+ $("hx").onclick=()=>{sf={q:"",from:"",to:""};renderHist();};
+ document.querySelectorAll("#hsr [data-h]").forEach(b=>b.onclick=()=>openEntry(b.dataset.h));
+ if(hv==="cal"){document.querySelectorAll("[data-cd]").forEach(b=>b.onclick=()=>{cd=b.dataset.cd;ha=cd;pendJump=cd;selDate=cd;cm=cd.slice(0,7);renderHist();const x=$("cadd");if(x)x.scrollIntoView({block:"nearest"});});
+  $("cp").onclick=()=>{cm=fmtDate(new Date(+cm.slice(0,4),+cm.slice(5)-2,1)).slice(0,7);renderHist();};$("cn").onclick=()=>{cm=fmtDate(new Date(+cm.slice(0,4),+cm.slice(5),1)).slice(0,7);renderHist();};
+  $("cjm").onchange=()=>{if(/^\d{4}-\d{2}$/.test($("cjm").value)){cm=$("cjm").value;cd=null;renderHist();}};$("cto").onclick=()=>{const t=fmtDate(new Date());cm=t.slice(0,7);cd=t;ha=t;pendJump=t;renderHist();};
+  if($("cadd"))$("cadd").onclick=()=>addOn(cd);if($("cgo"))$("cgo").onclick=()=>{hv="list";renderHist();jumpTo(cd);};return;}
+
  document.querySelectorAll("#hk button").forEach(b=>b.onclick=()=>{hk=b.dataset.k;renderHist();});
  $("hp").onclick=()=>{ha=shiftPeriod(hk,ha,-1);renderHist();};$("hn").onclick=()=>{ha=shiftPeriod(hk,ha,1);renderHist();};
  $("hpay").onclick=()=>{hidePay=!hidePay;try{localStorage.setItem("l19.hidepay",hidePay?"1":"0")}catch(e){}renderHist();};
@@ -503,7 +543,7 @@ cleanLetters();
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
