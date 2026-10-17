@@ -159,7 +159,7 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 <p id="lastBk" class="mut"></p>
 <p class="mut">Data lives only on this device (localStorage). Back up now and then. The backup also includes your pay stub checks and starting hours.</p>
 <p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup. Today's needs notes (text) and your dispatch number are included.</p>
-<label for="dpNum2">Dispatch number <span class="mut">(same as on the Ships tab)</span></label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number">
+<label for="dpNum2">Dispatch number <span class="mut">(same as on the Ships tab)</span></label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Default: 1-800-275-4598">
 <div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
 <div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing (uncheck to replace all)</span></div>
@@ -198,16 +198,16 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 </section>
 <section id="v-ships" class="hide">
 <div class="card"><h3 style="margin-top:0">Dispatch quick links</h3>
-<label for="dpNum" style="margin-top:0">Dispatch number <span class="mut">(you enter it; saved on this device only)</span></label>
-<input id="dpNum" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number" aria-describedby="dpNote">
+<label for="dpNum" style="margin-top:0">Your dispatch number <span class="mut">(optional override; saved on this device only)</span></label>
+<input id="dpNum" type="tel" inputmode="tel" autocomplete="off" placeholder="Default: 1-800-275-4598" aria-describedby="dpNote">
 <div class="qgrid">
-<a id="dpCall" class="bt p off" href="#" aria-disabled="true">📞 Call dispatch (enter number above)</a>
+<a id="dpCall" class="bt p" href="tel:+18002754598">📞 Dispatch (1-800-ASK-ILWU)</a>
 <a class="bt p" href="tel:+12066237461" id="hallCall">📞 Local 19 hall: 206-623-7461</a>
 <a class="bt" href="https://docs.nwseaportalliance.com/Vessel/Schedule.pdf" target="_blank" rel="noopener">NWSA vessel schedule (PDF) ↗</a>
 <a class="bt" href="https://www.ilwu23.org" target="_blank" rel="noopener">Local 23 Tacoma ↗</a>
 <a class="bt" href="https://ilwu21.org" target="_blank" rel="noopener">ILWU Local 21 ↗</a>
 </div>
-<p id="dpNote" class="mut" style="margin-bottom:0">Needs and gang allocation aren't published online, so call dispatch and log them below. Hall number from ilwu.org/contact/ilwu-local-unions-2.</p></div>
+<p id="dpNote" class="mut" style="margin-bottom:0">Needs and gang allocation aren't published online, so call dispatch and log them below. Hall number from ilwu.org/contact/ilwu-local-unions-2. The dispatch button uses 1-800-ASK-ILWU (1-800-275-4598, as provided by you) unless you enter your own number above.</p></div>
 <div class="card"><h3 style="margin-top:0" id="ndT">Today's needs</h3>
 <form id="ndF" autocomplete="off">
 <label for="ndD" style="margin-top:0">Date</label><input type="date" id="ndD" required>
@@ -731,7 +731,7 @@ const LS=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v;}catch(e
 const LSset=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
 const lsJson=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}};
 let curV="add";
-const DSP="l19.dispatch",NDK="l19.needs";
+const DEF_DISPATCH_TEL="tel:+18002754598",DSP="l19.dispatch",NDK="l19.needs";
 const BK="l19.lastBackup",BKS="l19.bkSnooze",STB="l19.stubs",STH="l19.startHrs",PINK="l19.pin",SUD="l19.setupDone",TMODE="l19.tierMode",DPIER="l19.defPier",DJOB="l19.defJob",REM="l19.rem",REMS="l19.remSnooze";
 const todayS=()=>fmtDate(new Date());
 const fmtN=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
@@ -750,11 +750,8 @@ $("exj").onclick=doBackup;
 function needsList(){return needsClean(lsJson(NDK,[]));}
 function renderDispatch(){const v=cleanPhone(LS(DSP,"")),h=telHref(v),a=$("dpCall");
  for(const id of["dpNum","dpNum2"]){const e=$(id);if(e&&document.activeElement!==e)e.value=v;}
- a.classList.toggle("off",!h);a.setAttribute("aria-disabled",h?"false":"true");a.href=h||"#";
- a.textContent=h?"📞 Call dispatch: "+v:"📞 Call dispatch (enter number above)";}
-function setDispatch(v){LSset(DSP,cleanPhone(v));renderDispatch();}
-for(const id of["dpNum","dpNum2"]){$(id).oninput=()=>{const v=$(id).value;LSset(DSP,cleanPhone(v));const h=telHref(cleanPhone(v)),a=$("dpCall");a.classList.toggle("off",!h);a.setAttribute("aria-disabled",h?"false":"true");a.href=h||"#";a.textContent=h?"📞 Call dispatch: "+cleanPhone(v):"📞 Call dispatch (enter number above)";const o=$(id==="dpNum"?"dpNum2":"dpNum");o.value=v;};$(id).onblur=()=>renderDispatch();}
-$("dpCall").onclick=e=>{if($("dpCall").classList.contains("off"))e.preventDefault();};
+ a.href=h||DEF_DISPATCH_TEL;a.textContent=h?"📞 Call dispatch: "+v:"📞 Dispatch (1-800-ASK-ILWU)";}
+for(const id of["dpNum","dpNum2"]){$(id).oninput=()=>{const v=$(id).value;LSset(DSP,cleanPhone(v));renderDispatch();$(id==="dpNum"?"dpNum2":"dpNum").value=v;};$(id).onblur=()=>renderDispatch();}
 let ndEdit=null,ndPend=null;
 const ndKey=id=>"need|"+id;
 function ndCtx(){return{k:ndKey(ndPend),vs:"Needs "+($("ndP").value||""),eta:$("ndD").value,etd:""};}
