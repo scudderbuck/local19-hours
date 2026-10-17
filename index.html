@@ -137,23 +137,24 @@ const SEATTLE_JOBS=[
 ["Lokey","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Switch","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Deckman","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
-["Supervisor","","","none","Ex-Local 52 job, now under Local 19; code/rate/scale to be supplied"],
-["Chief","","","none","Ex-Local 52 job, now under Local 19; code/rate/scale to be supplied"],
-["Yard planner","","","none","Ex-Local 52 job, now under Local 19; code/rate/scale to be supplied"],
-["Checker","","","none","Ex-Local 52 job, now under Local 19; code/rate/scale to be supplied"],
-["EC (Exception clerk)","","","none","Ex-Local 52 job, now under Local 19; code/rate/scale to be supplied"],
-["Supercargo","","","none","Ex-Local 52 job, now under Local 19; code/rate/scale to be supplied"]];
+["Supervisor","","Clerk Supervisor","inferred","Ex-Local 52 job. Clerk Supervisor skill rate (PCCCD 4.32). Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
+["Chief","","Chief/Supercargo (30%)","inferred","Ex-Local 52 job. Chief Supervisor & Supercargo skill rate (PCCCD 4.33). Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
+["Yard planner","","Chief/Supercargo (30%)","inferred","Ex-Local 52 job. Planning-Yard 30% code, paid at Chief/Supercargo skill rate (PCCCD 4.36). Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
+["Checker","","Basic","inferred","Ex-Local 52 job. INFERRED as Basic clerk (no separate Checker class in PCCCD). Same rates as Basic schedule; Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
+["EC (Exception clerk)","","Chief/Supercargo (30%)","user","User-stated EC is a 30% job (Automation Clerk, PCCCD 1.255) = Chief/Supercargo skill rate. Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
+["Supercargo","","Chief/Supercargo (30%)","inferred","Ex-Local 52 job. Chief Supervisor & Supercargo skill rate (PCCCD 4.33). Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."]];
 function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||null;}
 /* Default pay rates: ILWU-PMA Pacific Coast Longshore Contract Document 2022-2028, Wage Schedule 2026/2027
    (eff. 8:00 a.m. Jul 4 2026 - Jul 3 2027), "No Cargo Penalty" table, printed p.161 (PDF p.170). Arrays = [1st ST, 2nd ST, 3rd ST, OT 1st, OT 2nd, OT 3rd].
    Tiers = accumulated work-experience hours (Contract 4.131). Foreman: no 2026-27 figure in the contract/PMA report -> blank (enter your own). */
 const RATES_YEAR="2026-27 (eff. Jul 4 2026)";
 const TIERS=[["4001+","4,001+ hrs (full rate)"],["2001-4000","2,001–4,000 hrs"],["1001-2000","1,001–2,000 hrs"],["0-1000","0–1,000 hrs"]];
-const RATES={"Basic":{"4001+":[58.85,78.47,94.16,88.28,88.28,105.93],"2001-4000":[45.4,60.53,72.64,68.1,68.1,81.72],"1001-2000":[43.4,57.87,69.44,65.1,65.1,78.12],"0-1000":[42.4,56.53,67.84,63.6,63.6,76.32]},"Skill 1":{"4001+":[61.25,81.67,98.0,91.88,91.88,110.25],"2001-4000":[47.8,63.73,76.48,71.7,71.7,86.04],"1001-2000":[45.8,61.07,73.28,68.7,68.7,82.44],"0-1000":[44.8,59.73,71.68,67.2,67.2,80.64]},"Skill 2":{"4001+":[63.52,84.69,101.63,95.28,95.28,114.34],"2001-4000":[50.07,66.76,80.11,75.11,75.11,90.13],"1001-2000":[48.07,64.09,76.91,72.11,72.11,86.53],"0-1000":[47.07,62.76,75.31,70.61,70.61,84.73]},"Skill 3":{"4001+":[64.65,86.2,103.44,96.98,96.98,116.37],"2001-4000":[51.2,68.27,81.92,76.8,76.8,92.16],"1001-2000":[49.2,65.6,78.72,73.8,73.8,88.56],"0-1000":[48.2,64.27,77.12,72.3,72.3,86.76]}};
+const RATES={"Basic":{"4001+":[58.85,78.47,94.16,88.28,88.28,105.93],"2001-4000":[45.4,60.53,72.64,68.1,68.1,81.72],"1001-2000":[43.4,57.87,69.44,65.1,65.1,78.12],"0-1000":[42.4,56.53,67.84,63.6,63.6,76.32]},"Skill 1":{"4001+":[61.25,81.67,98.0,91.88,91.88,110.25],"2001-4000":[47.8,63.73,76.48,71.7,71.7,86.04],"1001-2000":[45.8,61.07,73.28,68.7,68.7,82.44],"0-1000":[44.8,59.73,71.68,67.2,67.2,80.64]},"Skill 2":{"4001+":[63.52,84.69,101.63,95.28,95.28,114.34],"2001-4000":[50.07,66.76,80.11,75.11,75.11,90.13],"1001-2000":[48.07,64.09,76.91,72.11,72.11,86.53],"0-1000":[47.07,62.76,75.31,70.61,70.61,84.73]},"Skill 3":{"4001+":[64.65,86.2,103.44,96.98,96.98,116.37],"2001-4000":[51.2,68.27,81.92,76.8,76.8,92.16],"1001-2000":[49.2,65.6,78.72,73.8,73.8,88.56],"0-1000":[48.2,64.27,77.12,72.3,72.3,86.76]},"Clerk Supervisor":{"4001+":[61.25,81.67,98.0,91.88,91.88,110.25],"2001-4000":[47.8,null,null,null,null,null],"1001-2000":[45.8,null,null,null,null,null],"0-1000":[44.8,null,null,null,null,null]},"Chief/Supercargo (30%)":{"4001+":[64.65,86.2,103.44,96.98,96.98,116.37],"2001-4000":[51.2,null,null,null,null,null],"1001-2000":[49.2,null,null,null,null,null],"0-1000":[48.2,null,null,null,null,null]}};
+/* Clerk classes (PCCCD 2022-2028 coastwise, printed p.141, see clerks-rates): only 4,001+ has full columns in the source; lower tiers have 1st-shift ST only, other columns null = blank (not invented). User-stated EC=30% job (Automation Clerk); Checker inferred Basic. */
 function jobClass(code){const sj=seattleJob(code);if(sj)return sj[2]||null;for(const g in JOBS)for(const [c] of JOBS[g])if(c===code)return g;return null;}
 /* returns {rate,otRate} (numbers) or null if no published default */
 function defaultRates(code,shift,tier){const g=jobClass(code);const si={"1st":0,"2nd":1,"3rd":2}[shift];
- if(!g||si==null||!RATES[g])return null;const row=RATES[g][tier||"4001+"];if(!row)return null;return {rate:row[si],otRate:row[3+si]};}
+ if(!g||si==null||!RATES[g])return null;const row=RATES[g][tier||"4001+"];if(!row)return null;if(row[si]==null&&row[3+si]==null)return null;return {rate:row[si],otRate:row[3+si]};}
 const OT_RATIO=s=>s==="1st"||!s?1.5:1.125; /* OT / own-shift ST: 1.5/1.0, 1.5/1.3333, 1.8/1.6 (Contract 4.142) */
 function jobCode(v){const sj=seattleJob(v);if(sj)return sj[1];for(const g in JOBS)for(const [c] of JOBS[g])if(c===v)return c;return "";}
 function jobLabel(code){const sj=seattleJob(code);if(sj)return sj[0]+(sj[1]?" ("+sj[1]+")":"");for(const g in JOBS)for(const [c,n] of JOBS[g])if(c===code)return c+" "+n;return code||"";}
@@ -245,7 +246,7 @@ const tierKey="l19hours.tier";let rateDirty=false;
 $("tier").innerHTML=TIERS.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
 function applyDefaults(){if(rateDirty)return;const j=$("job").value;const d=j&&j!=="__c"?defaultRates(j,$("shift").value,$("tier").value):null;
- $("rate").value=d?d.rate.toFixed(2):"";$("otrate").value=d?d.otRate.toFixed(2):"";
+ $("rate").value=d&&d.rate!=null?d.rate.toFixed(2):"";$("otrate").value=d&&d.otRate!=null?d.otRate.toFixed(2):"";
  $("rhint").textContent=d?"Contract "+RATES_YEAR+"; edit to override.":(jobClass(j)==="Foreman"?"No 2026-27 foreman rate published in sources – enter yours.":"Enter rate to estimate pay.");
  const sj=seattleJob(j);if(sj&&sj[3]==="inferred"&&d)$("rhint").textContent+=" Code/class mapping for this job is inferred ("+sj[1]+", "+sj[2]+") – verify.";}
 $("rate").oninput=$("otrate").oninput=()=>{rateDirty=true;};
