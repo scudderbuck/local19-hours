@@ -89,6 +89,10 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 #lock{position:fixed;inset:0;background:var(--bg);color:var(--fg);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}
 #lock .lk{width:100%;max-width:340px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;text-align:center}
 #lock label{text-align:left}
+#setup{position:fixed;inset:0;background:var(--bg);color:var(--fg);z-index:49;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px;padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+#setup .su{max-width:480px;margin:0 auto;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px}
+#setup h2{margin:0 0 6px;font-size:1.375rem}#setup .tierbox{margin-top:10px;padding:10px 12px;border:2px solid var(--acc);border-radius:var(--r);font-weight:600;min-height:44px}
+#setup .row button{flex:1}
 .sheet input[type=date]{width:100%}
 </style></head><body>
 <header>ILWU LIFE</header>
@@ -151,7 +155,13 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 <p id="cxm" class="mut" aria-live="polite"></p></div>
 <div class="card"><h3>Hours milestones</h3>
 <label for="sth" style="margin-top:0">Starting hours <span class="mut">(hours worked before you began logging here)</span></label><input type="number" id="sth" step="0.25" min="0" inputmode="decimal" placeholder="0">
-<p id="sthm" class="mut" aria-live="polite">Added to your logged hours for the 1,001 / 2,001 / 4,001 progress on the Week and History tabs.</p></div>
+<p id="sthm" class="mut" aria-live="polite">Added to your logged hours for the 1,001 / 2,001 / 4,001 progress on the Week and History tabs.</p>
+<label for="tmode">Experience tier <span class="mut">(sets the default rate tier for new shifts)</span></label><select id="tmode"><option value="auto">Auto from total hours</option><option value="manual">Manual override</option></select>
+<select id="tman" aria-label="Manual experience tier" style="margin-top:8px"></select>
+<p id="tmm" class="mut" aria-live="polite"></p>
+<label for="dpier">Default pier <span class="mut">(optional)</span></label><select id="dpier"></select>
+<label for="djob">Default job <span class="mut">(optional)</span></label><select id="djob"></select>
+<p class="mut">Saved shifts never change when you change these; they only pre-fill new shifts.</p></div>
 <div class="card"><h3>PIN lock</h3>
 <p id="pinSt" class="mut" style="font-weight:700"></p>
 <p class="mut"><b>Convenience lock only – not encryption.</b> It keeps casual snoopers out when your phone is unlocked. Your data on this device is not encrypted. Only a salted hash of the PIN is stored. If you forget it, the only way back in is to erase all app data (offered on the lock screen).</p>
@@ -339,6 +349,10 @@ const MILESTONES=[1001,2001,4001];
 function milestones(all,start){const total=rd2(num(start)+all.reduce((x,e)=>x+num(e.hours),0));let prev=0;
  const tiers=MILESTONES.map(at=>{const rem=Math.max(0,rd2(at-total)),t={at,reached:total>=at,remaining:rem,pct:Math.max(0,Math.min(100,Math.round((total-prev)/(at-prev)*100)))};prev=at;return t;});
  return {total,tiers,next:tiers.find(t=>!t.reached)||null};}
+/* Experience tier from total hours (same breakpoints as MILESTONES: 1,001 / 2,001 / 4,001) */
+function tierFromHours(h){h=num(h);return h>=4001?"4001+":h>=2001?"2001-4000":h>=1001?"1001-2000":"0-1000";}
+function effectiveTier(mode,manual,total,legacy){if(mode==="auto")return tierFromHours(total);if(TIERS.some(x=>x[0]===manual))return manual;return legacy||"4001+";}
+function setupNeeded(entryCount,flag){return !(entryCount>0)&&flag!=="1";}
 /* Recent / frequent pier+job+shift combos: most recent first, then most frequent */
 function topCombos(all,n){n=n||6;const m=new Map();
  for(const e of all){if(!e.job&&!e.pier)continue;const k=[e.pier||"",e.job||"",e.shift||""].join("|"),c=m.get(k)||{pier:e.pier||"",job:e.job||"",shift:e.shift||"1st",count:0,last:""};c.count++;if(e.date>=c.last)c.last=e.date;m.set(k,c);}
@@ -408,13 +422,14 @@ function refreshEmp(){$("empl").innerHTML=[...new Set(entries.map(e=>e.employer)
 $("pier").onchange=()=>$("pierC").classList.toggle("hide",$("pier").value!=="__c");
 const tierKey="l19hours.tier";let rateDirty=false;
 $("tier").innerHTML=TIERS.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
-try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
+function curTier(){let m="manual",t="",tot=0;try{m=localStorage.getItem("l19.tierMode")==="auto"?"auto":"manual";t=localStorage.getItem(tierKey)||"";const st=num(localStorage.getItem("l19.startHrs"));tot=st+entries.reduce((x,e)=>x+num(e.hours),0);}catch(e){}return effectiveTier(m,t,tot,"4001+");}
+$("tier").value=curTier();
 function applyDefaults(){if(rateDirty)return;const j=$("job").value;const d=j&&j!=="__c"?defaultRates(j,$("shift").value,$("tier").value):null;
  $("rate").value=d&&d.rate!=null?d.rate.toFixed(2):"";$("otrate").value=d&&d.otRate!=null?d.otRate.toFixed(2):"";
  $("rhint").textContent=d?"Contract "+RATES_YEAR+"; edit to override.":(jobClass(j)==="Foreman"?"No 2026-27 foreman rate published in sources – enter yours.":"Enter rate to estimate pay.");
  const sj=seattleJob(j);if(sj&&sj[3]==="inferred"&&d)$("rhint").textContent+=" Code/class mapping for this job is inferred ("+sj[1]+", "+sj[2]+") – verify.";}
 $("rate").oninput=$("otrate").oninput=()=>{rateDirty=true;};
-$("tier").onchange=()=>{try{localStorage.setItem(tierKey,$("tier").value);}catch(e){}applyDefaults();};
+$("tier").onchange=()=>{try{if(localStorage.getItem("l19.tierMode")!=="auto")localStorage.setItem(tierKey,$("tier").value);}catch(e){}applyDefaults();};
 $("shift").onchange=applyDefaults;
 $("job").onchange=()=>{$("jobC").classList.toggle("hide",$("job").value!=="__c");applyDefaults();};
 let upSlot="";
@@ -433,7 +448,8 @@ $("hrs").oninput=$("ot").oninput=otHint;$("shift").addEventListener("change",otH
 ["hrs","shift","job","jobC","st","en"].forEach(i=>$(i).addEventListener("input",guarHint));["shift","job"].forEach(i=>$(i).addEventListener("change",guarHint));
 function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setUp("");upShow();setX(false);
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
- try{const t=localStorage.getItem(tierKey);if(t&&TIERS.some(x=>x[0]===t))$("tier").value=t;}catch(e){}
+ {const dp=LS(DPIER,""),dj=LS(DJOB,"");if(dp&&PIERS.includes(dp))$("pier").value=dp;if(dj&&[...$("job").options].some(o=>o.value===dj))$("job").value=dj;upShow();}
+ $("tier").value=curTier();
  rateDirty=false;applyDefaults();refreshQuick();}
 $("cancel").onclick=()=>{resetForm();show(retTo);retTo="week";};
 $("f").onsubmit=ev=>{ev.preventDefault();
@@ -478,7 +494,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==b.dataset.x);save();renderWeek();}});}
 function download(name,type,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
 $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0="";try{txt0=await f.text();const inc=validImport(JSON.parse(txt0));
- if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
+ if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");$("msg").textContent="All data deleted.";}};
 function show(v){curV=v;for(const x of["add","ships","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
@@ -624,7 +640,7 @@ const LS=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v;}catch(e
 const LSset=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
 const lsJson=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}};
 let curV="add";
-const BK="l19.lastBackup",BKS="l19.bkSnooze",STB="l19.stubs",STH="l19.startHrs",PINK="l19.pin",REM="l19.rem",REMS="l19.remSnooze";
+const BK="l19.lastBackup",BKS="l19.bkSnooze",STB="l19.stubs",STH="l19.startHrs",PINK="l19.pin",SUD="l19.setupDone",TMODE="l19.tierMode",DPIER="l19.defPier",DJOB="l19.defJob",REM="l19.rem",REMS="l19.remSnooze";
 const todayS=()=>fmtDate(new Date());
 const fmtN=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
 /* --- share / download helper --- */
@@ -634,7 +650,7 @@ async function shareFile(name,type,text){const f=new File([text],name,{type});
 /* --- 1. backup reminder + export --- */
 function setLastBackup(){LSset(BK,new Date().toISOString());renderBanners();renderLastBk();}
 function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b>"+esc(backupAgo(LS(BK,""),todayS()))+"</b>";}
-async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0"))},null,1));
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,"")},null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
 /* --- banners (backup + shift reminder) --- */
@@ -671,7 +687,7 @@ function milestoneCard(){const m=milestones(entries,LS(STH,"0")),st=num(LS(STH,"
  const n=m.next;
  return `<div class="card" id="mile"><h4 style="margin-top:0">Hours toward rate steps</h4><div><span class="big">${fmtN(m.total)}</span> <span class="mut">total hrs${st?" (incl. "+fmtN(st)+" starting hrs)":""}</span></div>
  ${n?`<div class="pg" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${n.pct}" aria-label="Progress to ${fmtN(n.at)} hours"><i style="width:${n.pct}%"></i></div><div style="font-weight:600">${fmtN(n.remaining)} hrs to ${fmtN(n.at)} – your rate steps up there.</div>`:'<div style="font-weight:600;margin-top:6px">Past 4,001 hrs – you are at the top rate tier.</div>'}
- <table style="margin-top:6px">${rows}</table><div class="mut" style="margin-top:4px">Counts all hours logged here plus your starting hours (Backup tab). Set the Rate tier on a shift yourself; it is not changed automatically.</div></div>`;}
+ <table style="margin-top:6px">${rows}</table><div class="mut" style="margin-top:4px">Counts all hours logged here plus your starting hours (Backup tab). ${LS(TMODE,"manual")==="auto"?"New shifts default to the "+(TIERS.find(x=>x[0]===tierFromHours(m.total))||[0,""])[1]+" rate tier (Experience tier: Auto, Backup tab).":"Rate tier is not changed automatically unless you set Experience tier to Auto (Backup tab)."}</div></div>`;}
 {const _rh=renderHist;renderHist=function(){_rh();if(hv==="list"){const st=$("v-hist").querySelector(".stats");if(st)st.insertAdjacentHTML("afterend",milestoneCard());}};}
 /* --- 3. quick-pick combos --- */
 function refreshQuick(){const c=topCombos(entries,6),w=$("qpW");if(!w)return;w.classList.toggle("hide",!entries.length||!!editId);
@@ -703,6 +719,42 @@ $("cxd").value=todayS();$("cxn").checked=hidePay;
 $("cxs").onclick=()=>doCsv(false);$("cxe").onclick=()=>doCsv(true);
 /* --- 4b. starting hours setting --- */
 $("sth").value=LS(STH,"0")==="0"?"":LS(STH,"");$("sth").onchange=()=>{const v=Math.max(0,num($("sth").value));LSset(STH,String(v));$("sth").value=v?v:"";$("sthm").textContent="Saved: "+fmtN(v)+" starting hours.";};
+/* --- 4c. experience tier + default pier/job settings --- */
+const tierLabel=t=>(TIERS.find(x=>x[0]===t)||["",t])[1];
+$("tman").innerHTML=TIERS.slice().reverse().map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
+$("dpier").innerHTML='<option value="">— none —</option>'+PIERS.map(p=>`<option>${esc(p)}</option>`).join("");
+function jobOpts(){const t=document.createElement("select");t.innerHTML=$("job").innerHTML;const c=[...t.options].find(o=>o.value==="__c");if(c)c.remove();return t.innerHTML;}
+$("djob").innerHTML=jobOpts().replace("— select job —","— none —");
+function tierUI(){const auto=LS(TMODE,"manual")==="auto",st=num(LS(STH,"0"));$("tmode").value=auto?"auto":"manual";
+ $("tman").value=TIERS.some(x=>x[0]===LS(tierKey,""))?LS(tierKey,""):"4001+";$("tman").classList.toggle("hide",auto);
+ const tot=st+entries.reduce((x,e)=>x+num(e.hours),0);
+ $("tmm").textContent=auto?"Auto: "+fmtN(rd2(tot))+" total hrs → "+tierLabel(tierFromHours(tot))+". New shifts default to this tier's rates; it steps up on its own at 1,001 / 2,001 / 4,001. Saved shifts never change.":"Manual: new shifts default to "+tierLabel($("tman").value)+". You can still pick a tier on each shift.";
+ $("dpier").value=PIERS.includes(LS(DPIER,""))?LS(DPIER,""):"";$("djob").value=[...$("djob").options].some(o=>o.value===LS(DJOB,""))?LS(DJOB,""):"";
+ if(!editId){$("tier").value=curTier();applyDefaults();}}
+$("tmode").onchange=()=>{LSset(TMODE,$("tmode").value);tierUI();};
+$("tman").onchange=()=>{LSset(tierKey,$("tman").value);tierUI();};
+$("dpier").onchange=()=>{LSset(DPIER,$("dpier").value);};$("djob").onchange=()=>{LSset(DJOB,$("djob").value);};
+{const _sc=$("sth").onchange;$("sth").onchange=function(){_sc();tierUI();};}
+tierUI();
+/* --- 4d. first-run welcome / setup --- */
+function setupShow(){if($("setup")){if(!$("lock"))setInert(true);return;}if($("lock")||!setupNeeded(entries.length,LS(SUD,"")))return;
+ const d=document.createElement("div");d.id="setup";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-labelledby","suT");
+ d.innerHTML=`<div class="su"><h2 id="suT">Welcome to ILWU LIFE 👋</h2><p class="mut" style="margin:0 0 8px">Quick setup (about 10 seconds). Already at full scale or have lots of hours? Tell us here.</p>
+ <label for="suH" style="margin-top:8px">How many hours do you have so far?</label><input type="number" id="suH" step="0.25" min="0" inputmode="decimal" placeholder="0" aria-describedby="suTier"><div class="mut" style="margin-top:4px">Total career / registered hours. 0 is fine if you're brand new.</div>
+ <div class="tierbox" id="suTier" aria-live="polite"></div>
+ <label for="suP">Default pier <span class="mut">(optional)</span></label><select id="suP"></select>
+ <label for="suJ">Default job <span class="mut">(optional)</span></label><select id="suJ"></select>
+ <div class="row" style="margin-top:16px"><button type="button" class="p" id="suGo">Save &amp; start</button><button type="button" id="suSkip">I'll do this later</button></div>
+ <p class="mut" style="margin-bottom:0">You can change this any time in the Backup tab (Starting hours / Experience tier).</p></div>`;
+ document.body.appendChild(d);setInert(true);
+ $("suP").innerHTML=$("dpier").innerHTML;$("suJ").innerHTML=$("djob").innerHTML;
+ const upd=()=>{const v=$("suH").value,h=Math.max(0,num(v)),t=tierFromHours(h);$("suTier").textContent=(v===""?"Starting at 0 hrs → ":fmtN(h)+" hrs → ")+tierLabel(t)+" tier. New shifts will default to this tier's pay rates (you can still change the rate on any shift).";};
+ $("suH").oninput=upd;upd();
+ const done=()=>{LSset(SUD,"1");d.remove();setInert(false);if($("lock"))setInert(true);tierUI();renderBanners();show("add");};
+ $("suGo").onclick=()=>{const h=Math.max(0,num($("suH").value));LSset(STH,String(h));$("sth").value=h?h:"";LSset(TMODE,"auto");
+  if($("suP").value)LSset(DPIER,$("suP").value);if($("suJ").value)LSset(DJOB,$("suJ").value);resetForm();done();};
+ $("suSkip").onclick=done;
+ setTimeout(()=>{try{$("suH").focus();}catch(e){}},50);}
 /* --- 7. PIN lock --- */
 function pinCfg(){const o=lsJson(PINK,null);return o&&o.salt&&o.hash?o:null;}
 const subtleOk=()=>!!(globalThis.crypto&&globalThis.crypto.subtle);
@@ -717,7 +769,7 @@ function lockNow(){if(!pinCfg()||$("lock"))return;const d=document.createElement
  async function tryU(){const c=pinCfg();if(!c){d.remove();setInert(false);return;}if(Date.now()<lockWait){msg("Too many tries. Wait a few seconds.");return;}
   const p=$("lpin").value;if(!validPin(p)){msg("Enter 4 digits.");return;}
   let ok=false;try{ok=await verifyPin(p,c.salt,c.hash);}catch(e){}
-  if(ok){lockFails=0;d.remove();setInert(false);renderBanners();}else{lockFails++;if(lockFails>=3)lockWait=Date.now()+5000*(lockFails-2);$("lpin").value="";msg("Wrong PIN.");$("lpin").focus();}}
+  if(ok){lockFails=0;d.remove();setInert(false);renderBanners();setupShow();}else{lockFails++;if(lockFails>=3)lockWait=Date.now()+5000*(lockFails-2);$("lpin").value="";msg("Wrong PIN.");$("lpin").focus();}}
  $("lgo").onclick=tryU;$("lpin").oninput=()=>{$("lpin").value=$("lpin").value.replace(/\D/g,"");if($("lpin").value.length===4)tryU();};
  $("lpin").onkeydown=e=>{if(e.key==="Enter")tryU();};
  $("lforgot").onclick=()=>{if(confirm("Forgot PIN? The only way in is to ERASE ALL DATA on this device (shifts, pay stub checks, settings, ship letter photos). This cannot be undone unless you have a backup file.")&&confirm("Really erase everything and remove the PIN?"))eraseAll();};
@@ -748,12 +800,12 @@ $("remT").onchange=saveRem;
 /* --- wiring --- */
 document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();}else{if(shouldLock(hiddenAt,Date.now(),!!pinCfg()))lockNow();hiddenAt=null;renderBanners();scheduleRem();}});
 renderLastBk();renderPin();renderRem();cxInfo();
-lockNow();renderBanners();scheduleRem();
+lockNow();setupShow();renderBanners();scheduleRem();
 
 resetForm();refreshEmp();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween};
+if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
