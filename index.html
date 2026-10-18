@@ -326,7 +326,7 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
 <div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button><button type="button" id="pgLab" aria-pressed="true">Row/column labels: on</button></div>
 <p class="mut" style="margin-bottom:4px">Position 1 is top-left; numbers run left to right, then down. Tap a position to edit it.</p>
-<div id="pgBb" class="bbbar hide"></div>
+<div id="pgBb" class="bbbar hide"></div><input type="file" id="bbFile" class="hide" accept=".json,application/json,text/plain">
 <div id="pgWrap"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board grid (scrolls sideways)"></div></div>
 <div id="pgBb2" class="bbbar hide"></div>
 <div id="pgEd" class="pged hide"></div>
@@ -538,7 +538,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v46",CACHE_VERSION="l19hours-v46"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v47",CACHE_VERSION="l19hours-v47"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -740,12 +740,29 @@ function pegPresetMissing(b,names){const have=new Set((b&&b.jobs||[]).map(j=>j.n
 function pegsSeed(d){d=pegsClean(d);if(d.seeded)return d;const nb=d.boards["Bull board"]||pegBoardNew();
  if(!nb.jobs.length)d.boards["Bull board"]=pegPresetAdd(nb).board;d.seeded=true;return d;}
 
-/* ===== v46: Bull board slip replica (names transcribed from the photo of the real board; editable) ===== */
-const BULL_SEED=[";;58052|J. RYAN;57846|A. JATTA;58141|G. SAMRA;;;57992|D. WHITE;?8032|S. JASINOWSKI-KAHL;57815|M. LUI;?8211|T. DARBY;58142|K. HOKE;?960|R. CLAY;?8282|S. SIGURDSON;58186|K. HARRIS;58133|R. AXTON;58117|G. DOBSON;?8152|A. CAPPIELLO;?8121|A. LUNA-RAMOS;?7989|J. KELLY;58159|C. BUCKLEY;58222|J. BURKE", "58119|K. JOHNSTON;58049|K. MOKIAO;58131|P. CADIGAN;57976|S. GELINAS;57184|D. QUINLAN;;57981|K. CONNELLY;58080|J. D'ANDREA;58130|M. COX;;57978|R. ROSS;58180|G. PIERCE;58382|J. BOYD;57885|W. PLOURD;58349|J. BEAVERS;57648|B. WAFFORD;57520|J. MOORE;58113|J. BURIAN;?272|R. EGGEBRAATEN;58127|S. MEY;57532|H. KANAHELE;58151|C. HUGGINS", "?7946|B. WALDOCK;57630|M. MARSHALL;58216|L. TURNER;57786|M. RAMIREZ;57651|K. LOWE;58169|R. MAROIS;58206|C. BENDOCK;;58252|J. SYBOUTS;58001|A. JOHNSON;57568|F. GARCIA;58178|J. AUDETTE;58356|P. NEAL;58110|A. TLAHUEL;58351|K. WILKINS;57881|C. CUMBERLAND IV;58195|D. ERIXSON;58224|A. HAYWOOD;57908|C. LYONS;58330|S. HUNT;58262|T. KAAPANA;58285|K. CLARK", "57528|A. BUENO;57778|A. SMITH;?7893|K. PETERSON;58143|J. MORINE;57683|R. CERJANCE;58145|D. VANISON;57736|B. KINCAID;58182|P. PLENKOVICH;?7822|A. BAROUMES;?8275|J. IRISH;57643|I. KUNIYOSHI;58215|C. TAYLOR;58005|D. TILLIS;?8010|B. SPRAGLE;58213|F. EUBANKS;58202|T. CLIFFORD;57506|G. PAUILIHAU;;58205|D. JEFFERSON;58218|P. KALILIMOKU;58199|B. MCDONALD;?7817|D. ELVERSTON", "?8365|J. WUNDERLICH;?8229|D. OHLSON;?7548|BLACK FRENCHMAN;57912|D. PHILIO;57461|? TAYLOR;57837|R. BECK;?7805|B. VANWETTERING;58026|R. FINNE;;58220|K. WECKHORST;57975|C. HILL;?8259|A. MORAN;58189|B. BERNHARD;58175|R. CLOUSE;58137|L. KENNETT;57752|J. CRUZ;?8309|P. ROMAN;57886|D. SAVILL;?8162|K. TRIPLETT;57759|J. LEADLEY;;58122|C. YANEZ", "?8046|J. LATTA ?;;57972|D. MILNE;58280|A. LOWE;57961|M. PROCTOR;;58284|M. BROWN;58257|S. BRACE;?7883|K. ANNIBAL;58108|A. SMITH;58083|N. HOLMES;57627|T. NEUFANG;58271|C. MEANEY;58283|J. SHANE;?8240|S. MATEJOVSKY;58301|M. ASHLEY;;57619|M. STRICKLAND;;58217|D. MARTIN;57636|H. KIRKBRIDE;57661|SNIPER", "57968|R. WILLIS;57507|R. LIVERMAN;57954|A. MACALMA;58106|A. HURT;58198|N. BAIRD;57880|M. JOSE;57894|J. LEON;57719|P. MITCHELL;57913|A. POOLE;58035|S. BLAKE;?8053|M. MAYON;58112|R. GALAVIZ;58123|W. COOK;58187|A. SSEMAKULA;58200|J. KALUNGI;57611|J. ELVERSTON;58191|C. MORAIGN;?8165|A. BERNHARD;57569|M. TODD;57807|R. CARTER;58248|V. VIGIL;57906|D. BUNT", "57934|T. LEWIS;;57456|A. KIDANE;?678|A. SCHNELLE;58276|C. PARKER;57859|J. PRIODE;?7956|L. JASINOWSKI-KAHL ?;;;;;58233|T. WATSON;58075|CAPTAIN;;;58264|D. BENSON;;58387|R. BLAIR;;57433|J. HAYES ?;57830|N. CHERIF;57988|J. KOLLMAR", "57994|B. BASELER;;;57801|R. JEFFERSON;;;;;58274|Z. WALDEN;;;;58227|T. BUCK;57776|C. BROWN;57754|S. STAPLETON;;58266|A. HALL;;;;58021|B. STIERLE;;57771|T. PALMS", ";;58204|J. KOSTA;58325|J. SCHNEIDER;57774|J. VAIL;;57809|R. PEREZ;;;5787?|M. PATZEL ?;;58172|W. MYHRE;;;;57876|R. HUBER;58228|B. SMITH;;58192|T. OLSON;58176|S. WARDEN;58230|N. WALLACE;58185|N. MCLALLIN"]; /* 10 columns; slips top to bottom separated by ";"; each slip "regNo|NAME"; empty = blank slip; "?" = unsure or partly hidden */
+/* ===== v47: Bull board slip replica. NO names ship with the app: the board starts as empty slips; names are imported privately on-device (Import names) ===== */
 const BULL_BOARD="Bull board",BULL_ROWS=23,BULL_COLS=10;
-function bullSeedPegs(){const pegs={};BULL_SEED.forEach((col,ci)=>col.split(";").forEach((cell,ri)=>{if(!cell)return;const i=cell.indexOf("|"),num=cell.slice(0,i),nm=cell.slice(i+1);pegs[pegKey(ri+1,ci+1)]={n:nm,note:num,me:false};}));return pegs;}
-function bullSeedBoard(old){const o=old&&typeof old==="object"?old:pegBoardNew();
- return{cols:BULL_COLS,rows:BULL_ROWS,cm:true,pegs:bullSeedPegs(),updated:"",jobs:(o.jobs||[]).map(j=>({...j,pos:""})),takes:o.takes||[],undo:[]};}
+function bullSeedPegs(){return{};}
+/* v47: validate/clean a names file. Accepts {format:"l19-bull-names",pegs:{"row-col":{n,note}}} or a bare pegs object. Returns {ok,pegs,count,error} */
+function bullNamesParse(text,rows,cols){rows=rows||BULL_ROWS;cols=cols||BULL_COLS;let o;
+ try{o=typeof text==="string"?JSON.parse(text.replace(/^\uFEFF/,"").trim()):text;}catch(e){return{ok:false,error:"That isn't valid JSON text. Paste the whole names file, from the first { to the last }."};}
+ if(!o||typeof o!=="object"||Array.isArray(o))return{ok:false,error:"Not a Bull board names file."};
+ if(o.format!==undefined&&o.format!=="l19-bull-names")return{ok:false,error:"Not a Bull board names file (wrong format)."};
+ const src=o.pegs!==undefined?o.pegs:o;if(!src||typeof src!=="object"||Array.isArray(src))return{ok:false,error:"The file has no names in it."};
+ const pegs={};let count=0;const keys=Object.keys(src);
+ if(keys.length>rows*cols)return{ok:false,error:"Too many entries ("+keys.length+"). The board holds "+rows*cols+"."};
+ for(const k of keys){const m=/^(\d{1,3})-(\d{1,3})$/.exec(k);if(!m)return{ok:false,error:"Unexpected entry “"+String(k).slice(0,20)+"”. Entries must be named like 3-1 (slip-column)."};
+  const r=+m[1],c=+m[2];if(r<1||r>rows||c<1||c>cols)return{ok:false,error:"Entry "+k+" is outside the board ("+rows+" slips × "+cols+" columns)."};
+  const v=src[k];if(!v||typeof v!=="object"||Array.isArray(v))return{ok:false,error:"Entry "+k+" is not valid."};
+  if(v.n!==undefined&&typeof v.n!=="string"||v.note!==undefined&&typeof v.note!=="string")return{ok:false,error:"Entry "+k+" has a name or number that isn't text."};
+  const n=String(v.n||"").trim().slice(0,40),note=String(v.note||"").trim().slice(0,12);if(!n&&!note)continue;
+  pegs[pegKey(r,c)]={n:n,note:note,me:v.me===true};count++;}
+ if(!count)return{ok:false,error:"The file has no names in it."};return{ok:true,pegs:pegs,count:count};}
+/* v47: names-only export of a board (no pegs/jobs/logs) for private sharing */
+function bullNamesExport(b){const pegs={};Object.keys(b.pegs||{}).forEach(k=>{const v=b.pegs[k];if(v&&(v.n||v.note))pegs[k]={n:v.n||"",note:v.note||""};});
+ return{format:"l19-bull-names",version:1,cols:b.cols,rows:b.rows,exported:new Date().toISOString(),pegs:pegs};}
+function bullSeedBoard(old,pegs){const o=old&&typeof old==="object"?old:pegBoardNew();
+ return{cols:BULL_COLS,rows:BULL_ROWS,cm:true,pegs:pegs||bullSeedPegs(),updated:"",jobs:(o.jobs||[]).map(j=>({...j,pos:""})),takes:o.takes||[],undo:[]};}
 function bullStats(b){const st=[];for(let c=1;c<=b.cols;c++){let n=0,u=0,bl=0,ni=0;for(let r=1;r<=b.rows;r++){const v=b.pegs[pegKey(r,c)];if(!v||!v.n){bl++;continue;}n++;if(v.n.includes("?"))u++;if((v.note||"").includes("?"))ni++;}st.push({col:c,names:n,uncertain:u,numIncomplete:ni,blank:bl});}return st;}
 /* migrate: keep every old peg board value; only fill the Bull board when it has no names yet; otherwise leave it and report "kept" */
 function pegBullMigrate(d){d=pegsClean(d);const b=d.boards[BULL_BOARD]||pegBoardNew();
@@ -1459,7 +1476,7 @@ function pegsLoad(){const rawTxt=LS(PGK,""),raw=lsJson(PGK,null);let d=pegsSeed(
   const m=pegBullMigrate(d);d=m.data;LSset(PGMIG,m.kept?"kept":"1");dirty=true;if(m.kept)LSset(PGMIG,"1");}
  if(dirty){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
 function pegsSave(d){LSset(PGK,JSON.stringify(d));}
-let pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null;
+let pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false;
 function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
 function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
 function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
@@ -1557,9 +1574,10 @@ function pgBarRender(name,b){const el=$("pgBb");if(!el)return;const bull=name===
   if(hp)h+=`<div class="hold" role="status">Holding ${esc(hp.name)} – tap a slip to place it <button type="button" id="bbCx" style="margin-left:8px">Cancel</button></div>`;
   h+=`<div class="row"><button type="button" id="bbUn"${b.undo.length?"":" disabled"}>↩ ${b.undo.length?"Undo: "+esc(b.undo[b.undo.length-1].label):"Undo (nothing yet)"}</button><button type="button" id="bbLog">Who took what</button></div>`;
   el.innerHTML=h;h=`<p class="mut" style="margin:6px 0 0">Tap a peg in the legend (or a peg marker on a slip) to pick it up, then tap a slip to put it there. With no peg in hand, tap a slip to edit its name or number. Pinch to zoom, or use A− / A+.</p><div class="row"><button type="button" id="bbTk" aria-pressed="${LS(PGT,"1")!=="0"}">Log “taken” when I place a peg: ${LS(PGT,"1")!=="0"?"on":"off"}</button></div>`;
-  h+=`<div class="row"><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button><button type="button" id="bbReset">Reload names from photo</button></div>`;
+  h+=`<div class="row"><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button><button type="button" id="bbImp">Import names</button><button type="button" id="bbExp">Export names</button></div>`;
+  if(pgImp)h+=`<div class="bbimp"><p class="mut" style="margin:6px 0">Load a names file (.json) that a coworker sent you, or paste its text. Your current Bull board is saved as a backup first. Names stay on this device only.</p><div class="row"><button type="button" id="bbPick">Choose .json file</button></div><textarea id="bbTx" rows="4" placeholder="…or paste the names text here" aria-label="Paste names text" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea><div class="row"><button type="button" id="bbLoad" class="p">Load pasted text</button><button type="button" id="bbImpX">Cancel</button></div></div>`;
   const st=bullStats(b),tot=st.reduce((a,x)=>({n:a.n+x.names,u:a.u+x.uncertain,b:a.b+x.blank}),{n:0,u:0,b:0});
-  h+=`<p class="mut" style="margin:6px 0 0">Names were transcribed from a photo of the board: first pass, so check them. “?” marks a name or number I couldn’t read fully. Everything is editable and stays on this device. ${tot.n} names, ${tot.u} marked “?”, ${tot.b} blank slips.</p>`;}
+  h+=`<p class="mut" style="margin:6px 0 0">${tot.n?tot.n+" names, "+tot.b+" blank slips. ":"No names loaded yet: all slips are blank. Use Import names to load a board file. "}Names are never part of the app or website; they stay on this device (and in your own backups).${tot.u?" “?” marks "+tot.u+" name"+(tot.u===1?"":"s")+" that weren't fully legible.":""}</p>`;}
  const e2=$("pgBb2");e2.classList.toggle("hide",!on);e2.innerHTML=on?h:"";if(!on)el.innerHTML=h;}
 function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg");const labs=[];
  let t=`<div class="bb${pgHeld?" held":""}" style="--bz:${pgZoom()}">`;
@@ -1587,9 +1605,23 @@ const pgBbClick=e=>{const b=e.target.closest("button");if(!b)return;const id=b.i
  else if(id==="bbLog"){pgLogOpen();}
  else if(id==="bbTk"){LSset(PGT,LS(PGT,"1")==="0"?"1":"0");pgRender();}
  else if(id==="bbZo"||id==="bbZi"){LSset(PGZ,String(Math.round((pgZoom()+(id==="bbZi"?0.15:-0.15))*100)/100));pgRender();}
- else if(id==="bbReset"){if(!confirm("Replace the Bull board names with the first-pass photo transcription? Your current Bull board is saved as a backup first. Job peg positions are cleared; the log of takes is kept."))return;
-  try{LSset(PGBK,JSON.stringify(pgBoard(BULL_BOARD)));}catch(_){}
-  pgStore(BULL_BOARD,{...bullSeedBoard(pgBoard(BULL_BOARD)),updated:new Date().toISOString()});pgHeld=null;pgClose();$("pgM").textContent="Bull board names reloaded from the photo transcription.";pgRender();}};
+else if(id==="bbImp"){pgImp=!pgImp;pgRender();}
+ else if(id==="bbImpX"){pgImp=false;pgRender();}
+ else if(id==="bbPick"){$("bbFile").value="";$("bbFile").click();}
+ else if(id==="bbLoad"){const t=$("bbTx")?$("bbTx").value:"";if(!t.trim()){$("pgM").textContent="Paste the names text first.";return;}pgImportNames(t);}
+ else if(id==="bbExp"){pgExportNames();}};
+function pgImportNames(text){const bb=pgBoard(BULL_BOARD),r=bullNamesParse(text,bb.rows||BULL_ROWS,bb.cols||BULL_COLS),pm=$("pgM");
+ if(!r.ok){pm.textContent="Import failed: "+r.error;return;}
+ if(!confirm("Load "+r.count+" names into the Bull board? This replaces the current names. Your current Bull board is saved as a backup first. Job peg positions are cleared; the log of takes is kept."))return;
+ try{LSset(PGBK,JSON.stringify(bb));}catch(_){pm.textContent="Import cancelled: couldn't save a backup of the current board (storage full?).";return;}
+ pgStore(BULL_BOARD,{...bullSeedBoard(bb,r.pegs),cols:bb.cols,rows:bb.rows,updated:new Date().toISOString()});pgHeld=null;pgImp=false;pgClose();pgSelKey=null;pm.textContent="Loaded "+r.count+" names on this device. Previous board kept as a backup.";pgRender();}
+async function pgExportNames(){const b=pgBoard(BULL_BOARD),o=bullNamesExport(b),n=Object.keys(o.pegs).length,pm=$("pgM");
+ if(!n){pm.textContent="Nothing to export: no names on the Bull board yet.";return;}
+ const r=await shareFile("bull-board-names-"+todayS()+".json","application/json",JSON.stringify(o,null,1));
+ pm.textContent=r==="cancel"?"Export cancelled.":(r==="shared"?"Shared ":"Downloaded ")+n+" names. Send the file privately (text or email), not on a public site.";}
+$("bbFile").addEventListener("change",async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;
+ if(f.size>500000){$("pgM").textContent="Import failed: that file is too big to be a names file.";return;}
+ let t="";try{t=await f.text();}catch(_){$("pgM").textContent="Import failed: couldn't read that file.";return;}pgImportNames(t);});
 $("pgBb").addEventListener("click",pgBbClick);$("pgBb2").addEventListener("click",pgBbClick);
 $("pgSel").onchange=()=>{pgD.sel=$("pgSel").value;pegsSave(pgD);pgClose();$("pgM").textContent="";pgRender();};
 $("pgAdd").onclick=()=>{const n=$("pgNew").value.trim().slice(0,40);if(!n){$("pgM").textContent="Type a board name first.";return;}
@@ -1732,7 +1764,7 @@ window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,BULL_SEED,BULL_ROWS,BULL_COLS,bullSeedPegs,bullSeedBoard,bullStats,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
