@@ -95,6 +95,21 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9}
 .sheet>div{background:var(--card);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom));display:grid;gap:8px}
 .sheet h3{margin:0 0 4px}
+.pggrid{isolation:isolate;position:relative;overflow:auto;max-height:70vh;border:1px solid var(--bd);border-radius:10px;background:var(--bg);-webkit-overflow-scrolling:touch}
+.pgt{display:grid;width:max-content}
+.pgt>*{box-sizing:border-box;min-width:0}
+.pgc{width:4.25rem;min-height:3.25rem;padding:2px 3px;border:1px solid var(--bd);border-radius:0;background:var(--card);color:var(--fg);font-size:.875rem;line-height:1.15;text-align:left;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden}
+.pgc .nu{color:var(--mut);font-size:.875rem}.pgc .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.pgc.f{background:#dbe7f8;color:#0b1b30}.pgc.f .nu{color:#3a4c63}
+.pgc.me{background:var(--pri);color:var(--prifg);box-shadow:inset 0 0 0 3px var(--acc);font-weight:700}.pgc.me .nu{color:var(--prifg)}
+.pgc.sel{outline:3px solid var(--acc);outline-offset:-3px}
+.pgh{position:sticky;z-index:3;background:var(--pri);color:var(--prifg);font-weight:700;font-size:.875rem;display:flex;align-items:center;justify-content:center;min-height:2.75rem;min-width:2.75rem;border:1px solid var(--bd)}
+.pgh.col{top:0}.pgh.row{left:0;z-index:2}.pgh.cor{top:0;left:0;z-index:4}
+@media(prefers-color-scheme:dark){.pgc.f{background:#27456e;color:#fff}.pgc.f .nu{color:#d5e2f3}}
+.pged{border:2px solid var(--acc);border-radius:10px;padding:12px;margin-top:10px;background:var(--card)}
+.pged h4{margin-top:0}.pged button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
+#pgPic button.pgp{display:block;width:100%;padding:0;min-height:48px;margin-bottom:8px;overflow:hidden}#pgPic img{display:block;width:100%;max-height:14rem;object-fit:contain;background:var(--bg)}
+#pgSz[disabled]{opacity:1}.pgmine b{color:var(--fg)}
 .ltr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}.ltr button{min-height:44px;padding:0 12px;font-size:1rem}
 .ltr .th{display:flex;align-items:center;gap:6px;padding:0 8px 0 4px}.ltr .th img{width:36px;height:36px;object-fit:cover;border-radius:6px}
 #lv{position:fixed;inset:0;background:#000;z-index:20;display:flex;flex-direction:column;color:#fff}
@@ -193,7 +208,7 @@ body>*:not(#splash){visibility:hidden;animation:spa 1.2s step-end forwards}
 <div class="card"><h3>Backup</h3>
 <p id="lastBk" class="mut"></p>
 <p class="mut">Data lives only on this device (localStorage). Back up now and then. The backup also includes your pay stub checks and starting hours.</p>
-<p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup. Today's needs notes (text) and your dispatch number are included.</p>
+<p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup, and neither are peg board photos. Today's needs notes (text), peg board positions and your dispatch number are included.</p>
 <label for="dpNum2">Dispatch number <span class="mut">(same as on the Ships tab)</span></label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number">
 <div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
@@ -257,6 +272,21 @@ body>*:not(#splash){visibility:hidden;animation:spa 1.2s step-end forwards}
 <p id="ndM" class="mut" aria-live="polite"></p>
 </form></div>
 <div id="ndL"></div>
+<div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards</h3>
+<p class="mut" style="margin-top:0">Your own record of the physical peg boards. Everything is typed in by you; the app does not work out any order or rotation.</p>
+<label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
+<div class="row" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
+<p id="pgMine" class="mut pgmine" aria-live="polite"></p>
+<div id="pgPic"></div>
+<div class="row"><button type="button" id="pgPh">📷 Add photo</button><button type="button" class="p" id="pgShare">Post update (share)</button></div>
+<p id="pgUp" class="mut"></p>
+<div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
+<div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button><button type="button" id="pgLab" aria-pressed="true">Row/column labels: on</button></div>
+<p class="mut" style="margin-bottom:4px">Position 1 is top-left; numbers run left to right, then down. Tap a position to edit it.</p>
+<div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board grid (scrolls sideways)"></div>
+<div id="pgEd" class="pged hide"></div>
+<p id="pgM" class="mut" aria-live="polite"></p>
+<button type="button" class="d hide" id="pgDel" style="width:100%">Remove this custom board</button></div>
 <div class="card"><h3 style="margin-top:0">Ships coming</h3>
 <div id="shSum"></div><p id="shUp" class="mut"></p>
 <div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Letter photos stay on this device only (private, offline). Auto-removed 30 days after the ship's ETD.</p></div>
@@ -428,7 +458,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v37",CACHE_VERSION="l19hours-v37"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v38",CACHE_VERSION="l19hours-v38"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -559,6 +589,44 @@ function needsClean(a){const o=[],seen=new Set();for(const n of Array.isArray(a)
  o.push({id,date:n.date,shift:NEED_SHIFTS.includes(n.shift)?n.shift:"1st",port:NEED_PORTS.includes(n.port)?n.port:"Other",pier:String(n.pier||"").slice(0,80),out:String(n.out||"").slice(0,2000),gang:String(n.gang||"").slice(0,2000),created:String(n.created||"").slice(0,30)});}return o;}
 function needsMerge(cur,inc){const m=new Map(needsClean(cur).map(n=>[n.id,n]));needsClean(inc).forEach(n=>m.set(n.id,n));return[...m.values()];}
 function needsGroups(a){const g={};for(const n of needsClean(a))(g[n.date]=g[n.date]||[]).push(n);return Object.keys(g).sort().reverse().map(k=>({key:k,items:g[k].sort((x,y)=>(y.created||"")>(x.created||"")?1:-1)}));}
+/* ===== Peg boards (pure helpers; manual entries only, no seniority logic) ===== */
+const PEG_BOARDS=["Bull board","Wheat board","Trucker board","Crane board","Stevedore board","Sling board","Little crane board"];
+const PEG_DEF={cols:20,rows:10},PEG_MAX=60;
+function pegDim(v,d){const n=Math.floor(Number(v));return isFinite(n)&&n>=1?Math.min(PEG_MAX,n):d;}
+function pegKey(r,c){return r+"-"+c;}
+function pegNum(r,c,cols){return(r-1)*cols+c;}
+function pegBoardNew(){return{cols:PEG_DEF.cols,rows:PEG_DEF.rows,pegs:{},updated:""};}
+function pegBoardClean(b){const o=pegBoardNew();if(!b||typeof b!=="object")return o;o.cols=pegDim(b.cols,PEG_DEF.cols);o.rows=pegDim(b.rows,PEG_DEF.rows);
+ o.updated=typeof b.updated==="string"&&!isNaN(new Date(b.updated))?b.updated:"";let me=false;
+ const src=b.pegs&&typeof b.pegs==="object"?b.pegs:{};
+ for(const k of Object.keys(src)){const m=/^(\d{1,2})-(\d{1,2})$/.exec(k),v=src[k];if(!m||!v||typeof v!=="object")continue;const r=+m[1],c=+m[2];
+  if(r<1||c<1||r>o.rows||c>o.cols)continue;const n=String(v.n==null?"":v.n).trim().slice(0,80),note=String(v.note==null?"":v.note).trim().slice(0,200),isMe=v.me===true&&!me;
+  if(!n&&!note&&!isMe)continue;if(isMe)me=true;o.pegs[pegKey(r,c)]={n:n,note:note,me:isMe};}
+ return o;}
+function pegsClean(d){const o={boards:{},custom:[],sel:""};if(!d||typeof d!=="object")return o;
+ const bs=d.boards&&typeof d.boards==="object"&&!Array.isArray(d.boards)?d.boards:{};
+ for(const k of Object.keys(bs)){const name=String(k).trim().slice(0,40);if(!name||name==="__proto__")continue;o.boards[name]=pegBoardClean(bs[k]);}
+ const cu=Array.isArray(d.custom)?d.custom:[];
+ for(const x of cu){const name=String(x==null?"":x).trim().slice(0,40);if(name&&name!=="__proto__"&&!PEG_BOARDS.includes(name)&&!o.custom.includes(name))o.custom.push(name);}
+ for(const k of Object.keys(o.boards))if(!PEG_BOARDS.includes(k)&&!o.custom.includes(k))o.custom.push(k);
+ o.custom=o.custom.slice(0,30);o.sel=typeof d.sel==="string"?d.sel:"";return o;}
+function pegDropped(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);return Object.keys(b.pegs).filter(k=>{const m=k.split("-");return +m[0]>rows||+m[1]>cols;}).sort((x,y)=>{const a=x.split("-"),c=y.split("-");return(+a[0]-+c[0])||(+a[1]-+c[1]);});}
+function pegResize(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);const dropped=pegDropped(b,rows,cols),pegs={};
+ for(const k of Object.keys(b.pegs))if(!dropped.includes(k))pegs[k]=b.pegs[k];
+ return{board:{cols:cols,rows:rows,pegs:pegs,updated:b.updated},dropped:dropped};}
+function pegsMerge(cur,inc){const a=pegsClean(cur),b=pegsClean(inc),o={boards:{...a.boards},custom:[...a.custom],sel:a.sel||b.sel};
+ for(const k of Object.keys(b.boards)){const x=o.boards[k],y=b.boards[k];if(!x||(y.updated||"")>(x.updated||""))o.boards[k]=y;}
+ for(const c of b.custom)if(!o.custom.includes(c))o.custom.push(c);return pegsClean(o);}
+function pegWhen(d){d=d instanceof Date?d:new Date(d);if(isNaN(d))return"";const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],h=d.getHours(),m=d.getMinutes();
+ return M[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear()+" "+((h%12)||12)+":"+(m<10?"0":"")+m+" "+(h<12?"AM":"PM");}
+function pegWhere(k,cols){const m=k.split("-"),r=+m[0],c=+m[1];return"#"+pegNum(r,c,cols)+" (row "+r+", col "+c+")";}
+function pegText(name,b,now){const ks=Object.keys(b.pegs).sort((x,y)=>{const p=x.split("-"),q=y.split("-");return pegNum(+p[0],+p[1],b.cols)-pegNum(+q[0],+q[1],b.cols);});
+ const L=[name+" – peg board update","Updated: "+(pegWhen(b.updated)||pegWhen(now)),"Board size: "+b.cols+" columns × "+b.rows+" rows",""];
+ const me=ks.find(k=>b.pegs[k].me);L.push("My position: "+(me?pegWhere(me,b.cols)+(b.pegs[me].n?" – "+b.pegs[me].n:""):"not set"));L.push("");
+ const f=ks.filter(k=>b.pegs[k].n||b.pegs[k].note);
+ if(!f.length)L.push("No positions filled in.");else{L.push("Positions (reading order, left to right, top to bottom):");
+  for(const k of f){const v=b.pegs[k];L.push(pegWhere(k,b.cols)+": "+(v.n||"(no name)")+(v.note?" – "+v.note:"")+(v.me?" ★ me":""));}}
+ L.push("","Shared "+pegWhen(now)+" from ILWU LIFE");return L.join("\n");}
 function letterTitle(vs,eta){return (String(vs||"Ship letter").trim()+" "+(eta||"")).trim();}
 function fitSize(w,h,max){max=max||1600;return w>max?{w:max,h:Math.round(h*max/w)}:{w:w,h:h};}
 function shFmt(s){if(!s)return"?";const[d,t]=s.split("T");return d.slice(5).replace("-","/")+" "+(t||"");}
@@ -667,9 +735,9 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==b.dataset.x);save();renderWeek();}});}
 function download(name,type,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
 $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0="";try{txt0=await f.text();const inc=validImport(JSON.parse(txt0));
- if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
+ if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
-$("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");renderNeeds();$("msg").textContent="All data deleted.";}};
+$("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");try{localStorage.removeItem(PGK);}catch(e){}pgD=pegsLoad();pgClose();pgRender();lAll().then(a=>(a||[]).filter(r=>String(r.k).startsWith("peg|")).forEach(r=>lDel(r.id))).then(refreshPegPic).catch(()=>{});renderNeeds();$("msg").textContent="All data deleted.";}};
 function show(v){curV=v;for(const x of["add","ships","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
@@ -801,6 +869,7 @@ function downsize(file){return new Promise((res,rej)=>{const u=URL.createObjectU
 async function cleanLetters(){try{const today=fmtDate(new Date()),a=await lAll();let n=0;for(const r of a||[])if(letterExpired(r.etd,today)){await lDel(r.id);n++;}return n;}catch(e){return 0;}}
 async function refreshLetters(){
  if(typeof refreshNeedPics==="function")refreshNeedPics();
+ if(typeof refreshPegPic==="function")refreshPegPic();
  document.querySelectorAll("#shList .ltr").forEach(el=>{el.querySelector(".la").disabled=false;});
  if(!ldbOk)return markNoDb();
  let all;try{all=await lAll();}catch(e){return markNoDb();}
@@ -833,7 +902,7 @@ async function viewer(k,vs,eta,etd,i){let a;try{a=await lByKey(k);}catch(e){retu
  if(!a.length){lv.open=false;return;}
  lv.open=true;i=Math.max(0,Math.min(i==null?a.length-1:i,a.length-1));lv.i=i;const r=a[i];lv.url=URL.createObjectURL(r.blob);
  const d=document.createElement("div");d.id="lv";d.setAttribute("role","dialog");
- d.innerHTML=`<div class="cap">${esc(vs)} · ETA ${esc(eta)} · ${esc(letterLabel(r.added))} (${i+1}/${a.length})</div><div class="sc"><img id="lvimg" alt="Letter photo" src="${lv.url}"></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvs">Share</button>${a.length>1?'<button type="button" id="lvsa">Share all</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
+ d.innerHTML=`<div class="cap">${esc(vs)}${eta?" · ETA "+esc(eta):""} · ${esc(letterLabel(r.added))} (${i+1}/${a.length})</div><div class="sc"><img id="lvimg" alt="Letter photo" src="${lv.url}"></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvs">Share</button>${a.length>1?'<button type="button" id="lvsa">Share all</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
  document.body.appendChild(d);const c={k,vs,eta,etd};
  $("lvc").onclick=()=>{d.remove();lv.open=false;if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}refreshLetters();};
  $("lvs").onclick=()=>shareLetters([r.blob],vs,eta);if(a.length>1)$("lvsa").onclick=()=>shareLetters(a.map(x=>x.blob),vs,eta);
@@ -862,7 +931,7 @@ async function shareFile(name,type,text){const f=new File([text],name,{type});
 /* --- 1. backup reminder + export --- */
 function setLastBackup(){LSset(BK,new Date().toISOString());renderBanners();renderLastBk();}
 function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b>"+esc(backupAgo(LS(BK,""),todayS()))+"</b>";}
-async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),dispatch:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),dispatch:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
 
@@ -1127,8 +1196,77 @@ if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;
  const upBanner=()=>{if(shown||$("upd"))return;shown=true;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Update available</span><button type="button" id="updGo">Reload</button>';document.body.appendChild(d);$("updGo").onclick=()=>location.reload();};
  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)upBanner();});
  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
+/* ===== Peg boards: UI (localStorage "l19.pegs"; photo in IndexedDB key peg|<board>) ===== */
+const PGK="l19.pegs",PGL="l19.pegLabels";
+function pegsLoad(){return pegsClean(lsJson(PGK,null));}
+function pegsSave(d){LSset(PGK,JSON.stringify(d));}
+let pgSelKey=null,pgD=pegsLoad(),pgBlob=null;
+function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
+function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
+function pgBoard(name){return pgD.boards[name]||pegBoardNew();}
+function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
+function pgRenderSel(){const cur=pgCur();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur?" selected":""}>${esc(n)}${me?" ★":""}</option>`;}).join("");
+ $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));}
+function pgRender(){pgRenderSel();const name=pgCur(),b=pgBoard(name),labs=LS(PGL,"1")!=="0";
+ $("pgCols").value=b.cols;$("pgRows").value=b.rows;$("pgLab").setAttribute("aria-pressed",String(labs));$("pgLab").textContent="Row/column labels: "+(labs?"on":"off");
+ $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
+ const mine=Object.keys(pgD.boards).filter(k=>Object.values(pgD.boards[k].pegs).some(v=>v.me)).map(k=>{const bb=pgD.boards[k],pk=Object.keys(bb.pegs).find(x=>bb.pegs[x].me),m=pk.split("-");return(k===name?"<b>"+esc(k)+"</b>":esc(k))+": #"+pegNum(+m[0],+m[1],bb.cols)+" (row "+m[0]+", col "+m[1]+")";});
+ $("pgMine").innerHTML=mine.length?"★ My pegs: "+mine.join(" · "):"★ No peg marked as yours yet. Tap a position and turn on “This is my peg”.";
+ let h="";const lab=labs?"2.75rem":"0";
+ const g=$("pgGrid");let t=`<div class="pgt" style="grid-template-columns:${labs?"2.75rem ":""}repeat(${b.cols},4.25rem)">`;
+ if(labs){t+='<div class="pgh cor" aria-hidden="true">#</div>';for(let c=1;c<=b.cols;c++)t+=`<div class="pgh col" aria-hidden="true">C${c}</div>`;}
+ for(let r=1;r<=b.rows;r++){if(labs)t+=`<div class="pgh row" aria-hidden="true">R${r}</div>`;
+  for(let c=1;c<=b.cols;c++){const k=pegKey(r,c),v=b.pegs[k],n=pegNum(r,c,b.cols);
+   t+=`<button type="button" class="pgc${v&&(v.n||v.note)?" f":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Position ${n}, row ${r}, column ${c}${v&&v.me?", my peg":""}${v&&v.n?": "+esc(v.n):", empty"}"><span class="nu">${v&&v.me?"★ ":""}${n}</span><span class="nm">${v&&v.n?esc(v.n):""}</span></button>`;}}
+ g.innerHTML=t+"</div>";refreshPegPic();}
+function pgEdit(k){const name=pgCur(),b=pgBoard(name),m=k.split("-"),r=+m[0],c=+m[1],v=b.pegs[k]||{n:"",note:"",me:false};pgSelKey=k;
+ const e=$("pgEd");e.classList.remove("hide");
+ e.innerHTML=`<h4>${esc(name)} · position ${pegNum(r,c,b.cols)}</h4><p class="mut" style="margin-top:0">Row ${r}, column ${c}</p>
+<label for="pgN" style="margin-top:0">Name</label><input id="pgN" maxlength="80" autocomplete="off" value="${esc(v.n)}">
+<label for="pgNo">Note <span class="mut">(optional)</span></label><input id="pgNo" maxlength="200" autocomplete="off" value="${esc(v.note)}">
+<button type="button" id="pgMe" aria-pressed="${v.me}" style="width:100%;margin-top:12px">${v.me?"★ This is my peg (on)":"☆ This is my peg (off)"}</button>
+<div class="row" style="margin-top:12px"><button type="button" class="p" id="pgSv">Save</button><button type="button" id="pgCl" class="d">Clear</button><button type="button" id="pgCx">Cancel</button></div>`;
+ let me=v.me;$("pgMe").onclick=()=>{me=!me;$("pgMe").setAttribute("aria-pressed",String(me));$("pgMe").textContent=me?"★ This is my peg (on)":"☆ This is my peg (off)";};
+ $("pgSv").onclick=()=>{const bb=pgBoard(name),pegs={...bb.pegs},n=$("pgN").value.trim(),note=$("pgNo").value.trim();
+  if(me)for(const x of Object.keys(pegs))if(pegs[x].me)pegs[x]={...pegs[x],me:false};
+  if(!n&&!note&&!me)delete pegs[k];else pegs[k]={n:n,note:note,me:me};
+  pgStore(name,{...bb,pegs:pegs,updated:new Date().toISOString()});$("pgM").textContent="Saved position "+pegNum(r,c,bb.cols)+".";pgClose();pgRender();};
+ $("pgCl").onclick=()=>{const bb=pgBoard(name),pegs={...bb.pegs};delete pegs[k];pgStore(name,{...bb,pegs:pegs,updated:new Date().toISOString()});$("pgM").textContent="Cleared position "+pegNum(r,c,bb.cols)+".";pgClose();pgRender();};
+ $("pgCx").onclick=()=>{pgClose();pgRender();};
+ pgRender();e.scrollIntoView({block:"nearest"});$("pgN").focus({preventScroll:true});}
+function pgClose(){pgSelKey=null;$("pgEd").classList.add("hide");$("pgEd").innerHTML="";}
+$("pgGrid").addEventListener("click",e=>{const b=e.target.closest(".pgc");if(b)pgEdit(b.dataset.k);});
+$("pgSel").onchange=()=>{pgD.sel=$("pgSel").value;pegsSave(pgD);pgClose();$("pgM").textContent="";pgRender();};
+$("pgAdd").onclick=()=>{const n=$("pgNew").value.trim().slice(0,40);if(!n){$("pgM").textContent="Type a board name first.";return;}
+ const ex=pgNames().find(x=>x.toLowerCase()===n.toLowerCase());if(ex){pgD.sel=ex;pegsSave(pgD);$("pgNew").value="";$("pgM").textContent="That board already exists – switched to it.";pgClose();pgRender();return;}
+ if(pgD.custom.length>=30){$("pgM").textContent="Custom board limit reached (30).";return;}
+ pgD.custom.push(n);pgD.sel=n;pegsSave(pgD);$("pgNew").value="";$("pgM").textContent="Added “"+n+"”.";pgClose();pgRender();};
+$("pgNew").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("pgAdd").click();}};
+$("pgSz").onclick=()=>{const name=pgCur(),b=pgBoard(name),rv=Number($("pgRows").value),cv=Number($("pgCols").value),bad=x=>!(Number.isInteger(x)&&x>=1&&x<=PEG_MAX);
+ if(bad(rv)||bad(cv)){$("pgM").textContent="Rows and columns must be whole numbers from 1 to 60.";return;}
+ const r=pegResize(b,rv,cv);if(r.dropped.length){const nm=r.dropped.slice(0,8).map(k=>"#"+pegNum(+k.split("-")[0],+k.split("-")[1],b.cols)+(b.pegs[k].n?" "+b.pegs[k].n:"")).join(", ");
+  if(!confirm("Making the board "+cv+" × "+rv+" will remove "+r.dropped.length+" peg"+(r.dropped.length===1?"":"s")+" outside the new size ("+nm+(r.dropped.length>8?", …":"")+"). Continue?")){$("pgM").textContent="Size not changed.";pgRender();return;}}
+ pgClose();pgStore(name,{...r.board,updated:b.updated});$("pgM").textContent="Board size set to "+cv+" columns × "+rv+" rows"+(r.dropped.length?" ("+r.dropped.length+" removed).":".");pgRender();};
+$("pgLab").onclick=()=>{LSset(PGL,LS(PGL,"1")==="0"?"1":"0");pgRender();};
+$("pgDel").onclick=async()=>{const n=pgCur();if(PEG_BOARDS.includes(n)||!confirm("Remove the custom board “"+n+"” with all its pegs and photo?"))return;
+ pgD.custom=pgD.custom.filter(x=>x!==n);delete pgD.boards[n];pgD.sel="";pegsSave(pgD);try{(await lByKey("peg|"+n)).forEach(r=>lDel(r.id));}catch(e){}pgClose();$("pgM").textContent="Removed “"+n+"”.";pgRender();};
+function pgCtx(){const n=pgCur();return{k:"peg|"+n,vs:"Peg board: "+n,eta:"",etd:""};}
+$("pgPh").onclick=()=>{if(!ldbOk){$("pgM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pick(pgCtx());};
+async function refreshPegPic(){const el=$("pgPic");if(!el)return;const c=pgCur();let a=[];if(ldbOk){try{a=await lByKey("peg|"+c);}catch(e){}}
+ if(c!==pgCur())return;if(pgBlob){URL.revokeObjectURL(pgBlob);pgBlob=null;}
+ $("pgPh").textContent=a.length?"📷 Add another photo":"📷 Add photo";
+ if(!a.length){el.innerHTML="";return;}pgBlob=URL.createObjectURL(a[a.length-1].blob);
+ el.innerHTML=`<button type="button" class="pgp" aria-label="Open photos of ${esc(c)}"><img alt="Photo of ${esc(c)}" src="${pgBlob}"></button>`;
+ el.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
+$("pgShare").onclick=async()=>{const name=pgCur(),text=pegText(name,pgBoard(name),new Date()),m=$("pgM");
+ try{if(navigator.share){await navigator.share({title:name+" – peg board update",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
+ let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
+ if(!ok){try{const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();}catch(e){}}
+ m.textContent=ok?"Sharing isn't available here, so the update was copied to your clipboard.":"Couldn't share or copy. Try again.";};
+pgRender();
+
 }
-if(typeof module!=="undefined")module.exports={splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
