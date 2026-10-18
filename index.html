@@ -83,6 +83,7 @@ button,input,select{font-size:1rem}
 .chat button.link{background:none;border:0;color:#ffd23f;text-decoration:underline;min-height:44px}
 .chat button:disabled{background:#2c4670;color:#d5dff0;border-color:#2c4670}
 .chat label{color:#f2f6fb}
+/* v44: weekend all-OT */
 /* v43: all Chat text bold */
 .chat,.chat h3,.chat p,.chat label,.chat input,.chat textarea,.chat button,.chat .chnote,.chat .mut,.chm,.chm .tx,.chm button,#chSt{font-weight:700}
 .chat input::placeholder,.chat textarea::placeholder{font-weight:700}
@@ -401,9 +402,12 @@ function jobCode(v){const sj=seattleJob(v);if(sj)return sj[1];for(const g in JOB
 function jobLabel(code){const sj=seattleJob(code);if(sj)return sj[0]+(sj[1]?" ("+sj[1]+")":"");for(const g in JOBS)for(const [c,n] of JOBS[g])if(c===code)return c+" "+n;return code||"";}
 function toMin(t){if(!/^\d{1,2}:\d{2}$/.test(t||""))return null;const [h,m]=t.split(":").map(Number);return h*60+m;}
 const OT_THRESH=s=>s==="3rd"?5:8; /* OT starts after 8h (1st/2nd) or 5h (3rd) */
-function autoOT(hours,shift){return Math.round(Math.max(0,num(hours)-OT_THRESH(shift))*100)/100;}
+/* v44: Sat/Sun (by entry date) = every paid hour at the OT rate, all shifts */
+function isWknd(d){if(typeof d==="object"&&d)d=d.date;if(!/^\d{4}-\d{2}-\d{2}/.test(d||""))return false;const g=parseDate(String(d).slice(0,10)).getDay();return g===0||g===6;}
+const WKND_NOTE="Weekend: all hours OT";
+function autoOT(hours,shift,date){if(isWknd(date))return Math.round(num(hours)*100)/100;return Math.round(Math.max(0,num(hours)-OT_THRESH(shift))*100)/100;}
 /* typed/stored override wins; legacy entries (no flag) with OT>0 are treated as manual */
-function effOT(e){const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
+function effOT(e){if(isWknd(e))return num(e.hours);const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
 function calcHours(s,e){const a=toMin(s),b=toMin(e);if(a==null||b==null)return null;let d=b-a;if(d<=0)d+=1440;return Math.round(d/60*100)/100;}
 function parseDate(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
 function fmtDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -415,7 +419,7 @@ function guarMin(e){return e&&jobClass(e.job)==="Basic"?OT_THRESH(e.shift):0;}
 function paidHours(e){return Math.max(num(e.hours),guarMin(e));}
 function guarNote(e){const m=guarMin(e);return m&&num(e.hours)<m?"guarantee: paid "+m+"h":"";}
 function entryPay(e){const r=e.rate==null||e.rate===""?null:num(e.rate);if(r==null)return null;
- const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
+ const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);if(isWknd(e))return Math.round(paidHours(e)*o*100)/100;const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
  return Math.round((reg*r+ot*o)*100)/100;}
 /* hours = total paid hours incl. OT; OT is the portion of hours that is overtime */
 function summarize(list){const t={hours:0,ot:0,pay:0,anyPay:false,travel:0,miles:0,travelPay:0,milePay:0,byPier:{},byJob:{},count:list.length};
@@ -476,7 +480,7 @@ function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekE
  const L=["ILWU LIFE – Hours, week of "+ws+" to "+we,""];
  if(!list.length)L.push("No shifts logged.");
  for(const e of list){const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][parseDate(e.date).getDay()];
-  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";
+  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(isWknd(e))s+=" [Weekend: all hours OT]";
   s+=" – "+[e.pier,e.employer,e.vessel,jobLabel(e.job)].filter(Boolean).join(", ");
   if(num(e.travel)>0||num(e.miles)>0)s+=" ["+[num(e.travel)>0?"travel "+r2(num(e.travel))+"h":"",num(e.miles)>0?r2(num(e.miles))+" mi":""].filter(Boolean).join(", ")+"]";
   if(upApplies(e.job)&&upLabel(e.upSlot))s+=" ["+upLabel(e.upSlot)+"]";
@@ -502,7 +506,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v43",CACHE_VERSION="l19hours-v43"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v44",CACHE_VERSION="l19hours-v44"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -853,8 +857,8 @@ $("up1").onclick=$("up2").onclick=ev=>{const v=ev.currentTarget.dataset.up;setUp
 $("job").addEventListener("change",upShow);
 function setX(o){$("extras").classList.toggle("hide",!o);$("xt").setAttribute("aria-expanded",o);$("xt").textContent="More details "+(o?"▴":"▾");}
 $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
-function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value);
- guarHint();$("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
+function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value,$("date").value);
+ guarHint();if(isWknd($("date").value)){$("othint").textContent=WKND_NOTE+" (every paid hour at the OT rate; no straight time).";return;}$("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
 function guarHint(){const el=$("guarhint");if(!el)return;const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const n=guarNote({job:$("job").value==="__c"?$("jobC").value:$("job").value,shift:$("shift").value,hours:h==null?0:h});el.textContent=h==null||h===0?"":n;}
 function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null)$("hrs").value=h;otHint();}
 $("st").onchange=$("en").onchange=autoHrs;
@@ -863,7 +867,7 @@ function tmHint(){const th=num($("trv").value),mi=num($("mi").value),p=[];
  if(th>0)p.push("Travel "+r2(th)+"h × "+money(travelRateFor($("tier").value)/1)+"/h (½ basic)"+(hidePay?"":" = "+money(Math.round(th*travelRateFor($("tier").value)*100)/100)));
  if(mi>0)p.push(r2(mi)+" mi × $"+CFG.mileRate.toFixed(3).replace(/0$/,"")+(hidePay?"":" = "+money(Math.round(mi*CFG.mileRate*100)/100)+" reimbursement"));
  $("tmhint").textContent=p.length?p.join(" · "):"Travel is paid at half the basic straight-time rate. Mileage is a reimbursement, separate from wages.";}
-$("trv").oninput=$("mi").oninput=tmHint;$("tier").addEventListener("change",tmHint);$("shift").addEventListener("change",otHint);
+$("trv").oninput=$("mi").oninput=tmHint;$("tier").addEventListener("change",tmHint);$("shift").addEventListener("change",otHint);$("date").addEventListener("change",otHint);$("date").addEventListener("input",otHint);
 ["hrs","shift","job","jobC","st","en"].forEach(i=>$(i).addEventListener("input",guarHint));["shift","job"].forEach(i=>$(i).addEventListener("change",guarHint));
 function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();tmHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setUp("");upShow();setX(false);
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
@@ -876,7 +880,7 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  const job=$("job").value==="__c"?$("jobC").value.trim():$("job").value;
  let hours=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);
  if(hours==null||hours<=0){alert("Enter start/end times or hours.");return;}
- const otManual=$("ot").value.trim()!=="";const ot=otManual?num($("ot").value):autoOT(hours,$("shift").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
+ const otManual=$("ot").value.trim()!=="";const ot=otManual?num($("ot").value):autoOT(hours,$("shift").value,$("date").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
  const e={id:editId||uid(),date:$("date").value,pier,employer:$("emp").value.trim(),vessel:$("ves").value.trim(),job,shift:$("shift").value,upSlot:upApplies(job)?upSlot:"",
   start:$("st").value,end:$("en").value,hours,ot,otManual,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
  {const old=editId?entries.find(x=>x.id===editId):null;
@@ -901,7 +905,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${hasPay(t)?money(payTotal(t)).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">${[t.travel?"Travel "+r2(t.travel)+"h"+(!hidePay&&t.travelPay?" · "+money(t.travelPay):""):"",t.miles?r2(t.miles)+" mi"+(!hidePay&&t.milePay?" · "+money(t.milePay)+" reimbursement (not wages)":""):""].filter(Boolean).join(" · ")}</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
  <div class="row" style="margin-bottom:12px"><button class="p" id="sh">Share week</button><button id="tw">This week</button></div>
- ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
+ ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}${isWknd(e)?` <span class="badge">Wknd OT</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
  $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};
@@ -928,7 +932,7 @@ function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel
 function trvLine(e){const th=num(e.travel),mi=num(e.miles);if(!(th>0||mi>0))return "";const tp=travelPay(e),mp=mileagePay(e);
  return `<div class="l2">${[th>0?"Travel "+r2(th)+"h"+(!hidePay&&tp!=null?" · "+money(tp):""):"",mi>0?r2(mi)+" mi"+(!hidePay&&mp!=null?" · "+money(mp)+" reimb.":""):""].filter(Boolean).join(" · ")}</div>`;}
 function entPayLines(e){const w=entryPay(e),tp=travelPay(e),mp=mileagePay(e),th=num(e.travel),mi=num(e.miles);if(w==null&&!(th>0)&&!(mi>0))return "";
- const L=[];if(!hidePay&&w!=null)L.push(["Shift wages",money(w)]);if(th>0)L.push(["Travel "+r2(th)+"h"+(hidePay?"":" × "+money(travelRateOf(e))),hidePay||tp==null?"":money(tp)]);
+ const L=[];if(!hidePay&&w!=null)L.push(["Shift wages",money(w)]);if(isWknd(e)&&w!=null)L.push([WKND_NOTE,""]);if(th>0)L.push(["Travel "+r2(th)+"h"+(hidePay?"":" × "+money(travelRateOf(e))),hidePay||tp==null?"":money(tp)]);
  if(mi>0)L.push(["Mileage "+r2(mi)+" mi (reimbursement)",hidePay||mp==null?"":money(mp)]);
  return `<table class="mut" style="font-size:.9375rem">${L.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</table>`;}
 function openEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;const o=document.createElement("div");o.className="sheet";
@@ -1595,7 +1599,7 @@ window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
