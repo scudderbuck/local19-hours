@@ -159,6 +159,14 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .slip.me{box-shadow:inset 0 0 0 3px #ffd23f}
 .slip.sel{outline:3px solid #ffd23f;outline-offset:1px}
 .bb.held .slip{cursor:copy}
+.bbzb{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0;padding:6px;border-radius:10px;background:#07153a;border:1px solid #4a6bb5;color:#f2f6ff}
+.bbzb button{min-width:44px;min-height:44px;font-weight:800}
+.bbzb input[type=range]{flex:1 1 110px;min-width:90px;min-height:44px;margin:0}
+.bbzb output{min-width:3.6em;text-align:center;font-weight:800;color:#f2f6ff;font-variant-numeric:tabular-nums}
+.bbzb.hide{display:none}
+#pgGrid.bbg{touch-action:pan-x pan-y}
+.bbz{width:max-content}
+.bbz.mini .sc{width:50%}
 #pgWrap.side{display:flex;gap:8px;flex-wrap:wrap}
 #pgWrap.side .bbph{flex:1 1 100%;max-height:34vh;overflow:auto;border:2px solid #ffd23f;border-radius:10px;background:#07153a;color:#fff;padding:4px;-webkit-overflow-scrolling:touch}
 #pgWrap.side .bbph img{width:100%;height:auto;display:block}
@@ -333,6 +341,7 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button><button type="button" id="pgLab" aria-pressed="true">Row/column labels: on</button></div>
 <p class="mut" style="margin-bottom:4px">Position 1 is top-left; numbers run left to right, then down. Tap a position to edit it.</p>
 <div id="pgBb" class="bbbar hide"></div><input type="file" id="bbFile" class="hide" accept=".json,application/json,text/plain">
+<div id="pgZb" class="bbzb hide" role="group" aria-label="Board zoom"><button type="button" id="bbZm" aria-label="Zoom out">−</button><input type="range" id="bbZs" min="10" max="250" step="1" value="100" aria-label="Board zoom percent"><button type="button" id="bbZa" aria-label="Zoom in">+</button><output id="bbZl" for="bbZs" aria-live="off">100%</output><button type="button" id="bbZf" aria-label="Fit whole board on screen">Fit</button><button type="button" id="bbZ1" aria-label="Zoom to 100 percent">100%</button></div>
 <div id="pgWrap"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board grid (scrolls sideways)"></div></div>
 <div id="pgBb2" class="bbbar hide"></div>
 <div id="pgEd" class="pged hide"></div>
@@ -544,7 +553,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v49",CACHE_VERSION="l19hours-v49"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v50",CACHE_VERSION="l19hours-v50"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -772,6 +781,11 @@ function bullNamesParse(text,rows,cols){rows=rows||BULL_ROWS;cols=cols||BULL_COL
 /* v47: names-only export of a board (no pegs/jobs/logs) for private sharing */
 function bullNamesExport(b){const pegs={};Object.keys(b.pegs||{}).forEach(k=>{const v=b.pegs[k];if(v&&v.n)pegs[k]={n:v.n};}); /* v48: names only, no registration numbers */
  return{format:"l19-bull-names",version:1,cols:b.cols,rows:b.rows,exported:new Date().toISOString(),pegs:pegs};}
+/* v50: board zoom (pure helpers). Range 10%-250% (10% is needed to fit 10 columns on a 360px phone). fit = largest scale at which the whole board fits the available width and height */
+const BULL_ZMIN=0.1,BULL_ZMAX=2.5;
+function bullZoomClamp(z){z=parseFloat(z);if(!isFinite(z))return 1;return Math.min(BULL_ZMAX,Math.max(BULL_ZMIN,Math.round(z*100)/100));}
+function bullFitScale(nw,nh,aw,ah){if(!(nw>0)||!(aw>0))return null;let f=aw/nw;if(ah>0&&nh>0)f=Math.min(f,ah/nh);return Math.min(BULL_ZMAX,Math.max(BULL_ZMIN,Math.floor(f*100)/100));}
+function bullZoomPref(v,narrow){if(v==="fit")return"fit";const z=parseFloat(v);if(v!==""&&v!=null&&isFinite(z))return bullZoomClamp(z);return narrow?"fit":1;}
 function bullSeedBoard(old,pegs){const o=old&&typeof old==="object"?old:pegBoardNew();
  return{cols:BULL_COLS,rows:BULL_ROWS,cm:true,pegs:pegs||bullSeedPegs(),updated:"",jobs:(o.jobs||[]).map(j=>({...j,pos:""})),takes:o.takes||[],undo:[]};}
 function bullStats(b){const st=[];for(let c=1;c<=b.cols;c++){let n=0,u=0,bl=0,ni=0;for(let r=1;r<=b.rows;r++){const v=b.pegs[pegKey(r,c)];if(!v||!v.n){bl++;continue;}n++;if(v.n.includes("?"))u++;if((v.note||"").includes("?"))ni++;}st.push({col:c,names:n,uncertain:u,numIncomplete:ni,blank:bl});}return st;}
@@ -1573,7 +1587,7 @@ function pgHeldPeg(){if(!pgHeld)return null;if(pgHeld.t==="j"){const j=pegJob(pg
  const g=pegGlobal(pgD,pgHeld.id);return g?{t:"g",id:g.id,name:g.name}:null;}
 function pgChip(t,id,name,color,where,held){const c=t==="j"?PEG_COLORS[color]||PEG_COLORS[0]:null;
  return`<button type="button" class="lc" data-t="${t}" data-id="${esc(id)}" aria-pressed="${held}" aria-label="${esc(name)} peg${t==="g"?" (global)":""}: ${esc(where)}. Tap to pick it up, then tap a slip"><span class="pk${t==="g"?" g":""}"${c?` style="${pegSty(c)}"`:""}>${esc(pegAbbr(name))}</span><span>${esc(name)}${where&&where!=="not placed"?`<small>${esc(where)}</small>`:""}</span></button>`;}
-function pgBarRender(name,b){const el=$("pgBb");if(!el)return;const bull=name===BULL_BOARD;el.classList.toggle("hide",!bull);$("pgWrap").classList.toggle("side",bull&&pgSlipOn(name)&&LS(PGP,"0")==="1");
+function pgBarRender(name,b){const el=$("pgBb");if(!el)return;const bull=name===BULL_BOARD;el.classList.toggle("hide",!bull);$("pgZb").classList.toggle("hide",!(bull&&pgSlipOn(name)));$("pgWrap").classList.toggle("side",bull&&pgSlipOn(name)&&LS(PGP,"0")==="1");
  $("pgPane").classList.toggle("hide",!(bull&&pgSlipOn(name)&&LS(PGP,"0")==="1"));
  if(!bull){el.innerHTML="";$("pgBb2").classList.add("hide");$("pgBb2").innerHTML="";return;}
  const on=pgSlipOn(name),hp=pgHeldPeg();if(pgHeld&&!hp)pgHeld=null;
@@ -1584,14 +1598,57 @@ function pgBarRender(name,b){const el=$("pgBb");if(!el)return;const bull=name===
   h+=`<div class="lgd" role="group" aria-label="Peg legend">`+b.jobs.map(j=>pgChip("j",j.id,j.name,j.color,where(j.pos),!!(pgHeld&&pgHeld.t==="j"&&pgHeld.id===j.id))).join("")+pgD.globals.map(g=>pgChip("g",g.id,g.name,0,g.board&&g.pos?(g.board===BULL_BOARD?where(g.pos):g.board):"not placed",!!(pgHeld&&pgHeld.t==="g"&&pgHeld.id===g.id))).join("")+`</div>`;
   if(hp)h+=`<div class="hold" role="status">Holding ${esc(hp.name)} – tap a slip to place it <button type="button" id="bbCx" style="margin-left:8px">Cancel</button></div>`;
   h+=`<div class="row"><button type="button" id="bbUn"${b.undo.length?"":" disabled"}>↩ ${b.undo.length?"Undo: "+esc(b.undo[b.undo.length-1].label):"Undo (nothing yet)"}</button><button type="button" id="bbLog">Who took what</button></div>`;
-  el.innerHTML=h;h=`<p class="mut" style="margin:6px 0 0">Tap a peg in the legend (or a peg marker on a slip) to pick it up, then tap a slip to put it there. With no peg in hand, tap a slip to edit its name or number. Pinch to zoom, or use A− / A+.</p><div class="row"><button type="button" id="bbTk" aria-pressed="${LS(PGT,"1")!=="0"}">Log “taken” when I place a peg: ${LS(PGT,"1")!=="0"?"on":"off"}</button></div>`;
+  el.innerHTML=h;h=`<p class="mut" style="margin:6px 0 0">Tap a peg in the legend (or a peg marker on a slip) to pick it up, then tap a slip to put it there. With no peg in hand, tap a slip to edit its name or number. Pinch with two fingers (or use − / + / Fit above the board) to zoom, double-tap to switch between Fit and 100%. A− / A+ change the text size.</p><div class="row"><button type="button" id="bbTk" aria-pressed="${LS(PGT,"1")!=="0"}">Log “taken” when I place a peg: ${LS(PGT,"1")!=="0"?"on":"off"}</button></div>`;
   h+=`<div class="row"><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button><button type="button" id="bbImp">Import names</button><button type="button" id="bbExp">Export names</button></div>`;
   if(pgImp)h+=`<div class="bbimp"><p class="mut" style="margin:6px 0">Load a names file (.json) that a coworker sent you, or paste its text. Your current Bull board is saved as a backup first. Names stay on this device only.</p><div class="row"><button type="button" id="bbPick">Choose .json file</button></div><textarea id="bbTx" rows="4" placeholder="…or paste the names text here" aria-label="Paste names text" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea><div class="row"><button type="button" id="bbLoad" class="p">Load pasted text</button><button type="button" id="bbImpX">Cancel</button></div></div>`;
   const st=bullStats(b),tot=st.reduce((a,x)=>({n:a.n+x.names,u:a.u+x.uncertain,b:a.b+x.blank}),{n:0,u:0,b:0});
   h+=`<p class="mut" style="margin:6px 0 0">${tot.n?tot.n+" names, "+tot.b+" blank slips. ":"No names loaded yet: all slips are blank. Use Import names to load a board file. "}Names are never part of the app or website; they stay on this device (and in your own backups).${tot.u?" “?” marks "+tot.u+" name"+(tot.u===1?"":"s")+" that weren't fully legible.":""}</p>`;}
  const e2=$("pgBb2");e2.classList.toggle("hide",!on);e2.innerHTML=on?h:"";if(!on)el.innerHTML=h;}
+/* ===== v50: board zoom (CSS zoom on the .bbz wrapper: real layout, so taps hit the right circle) ===== */
+const PGV="l19.bullZoom";let pgZc=1,pgTouchAt=0,pgEditT=0;
+function pgZPref(){return bullZoomPref(LS(PGV,""),window.innerWidth<=700);}
+function pgZFit(){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return null;const cs=getComputedStyle(g),pad=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0),pv=(parseFloat(cs.paddingTop)||0)+(parseFloat(cs.paddingBottom)||0),prev=bz.style.zoom;
+ bz.style.zoom="1";const bb=bz.firstChild,nw=bb.offsetWidth,nh=bb.offsetHeight;bz.style.zoom=prev;
+ return bullFitScale(nw,nh,g.clientWidth-pad-2,Math.min(window.innerHeight*0.8,g.clientHeight||1e9)-pv-2);}
+function pgZUpdate(){const l=$("bbZl"),sl=$("bbZs"),pc=Math.round(pgZc*100);if(l)l.textContent=pc+"%";if(sl&&+sl.value!==pc)sl.value=String(pc);const f=$("bbZf");if(f)f.setAttribute("aria-pressed",String(pgZPref()==="fit"));}
+function pgZApply(){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return;const v=pgZPref();let z;
+ if(v==="fit"){z=pgZFit();if(z==null)return;}else z=v;
+ bz.style.zoom=String(z);bz.classList.toggle("mini",z<0.6);pgZc=z;pgZUpdate();}
+/* val: number or "fit". ax/ay: point in the grid viewport that should stay put */
+function pgZoomTo(val,ax,ay,persist){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return;const old=pgZc;
+ if(persist!==false)LSset(PGV,val==="fit"?"fit":String(bullZoomClamp(val)));
+ let z;if(val==="fit"){z=pgZFit();if(z==null)return;}else z=bullZoomClamp(val);
+ if(ax==null){ax=g.clientWidth/2;ay=g.clientHeight/2;}
+ const cx=(g.scrollLeft+ax)/old,cy=(g.scrollTop+ay)/old;
+ bz.style.zoom=String(z);bz.classList.toggle("mini",z<0.6);pgZc=z;
+ g.scrollLeft=val==="fit"?0:cx*z-ax;g.scrollTop=val==="fit"?0:cy*z-ay;pgZUpdate();}
+$("pgZb").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const id=b.id,st=x=>Math.round(x*100)/100;
+ if(id==="bbZf")pgZoomTo("fit");else if(id==="bbZ1")pgZoomTo(1);
+ else if(id==="bbZm")pgZoomTo(Math.max(BULL_ZMIN,st(pgZc/1.25)));else if(id==="bbZa")pgZoomTo(Math.min(BULL_ZMAX,st(pgZc*1.25)));});
+$("pgZb").addEventListener("input",e=>{if(e.target.id==="bbZs")pgZoomTo(+e.target.value/100);});
+window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{if(pgZPref()==="fit")pgZApply();},120);});let pgZRt=0;
+(function(){const g=$("pgGrid");let pz=null,tp=null,last=null;
+ const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+ g.addEventListener("touchstart",e=>{if(!g.querySelector(".bbz"))return;
+  if(e.touches.length===2){pz={d:dist(e.touches)||1,z:pgZc};tp=null;last=null;}
+  else if(e.touches.length===1&&!pz){tp={x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now(),mv:false,held:pgHeld};}},{passive:true});
+ g.addEventListener("touchmove",e=>{
+  if(pz&&e.touches.length===2){e.preventDefault();const r=g.getBoundingClientRect(),t=e.touches;
+   pgZoomTo(pz.z*dist(t)/pz.d,(t[0].clientX+t[1].clientX)/2-r.left,(t[0].clientY+t[1].clientY)/2-r.top,false);}
+  else if(tp&&e.touches.length===1&&Math.hypot(e.touches[0].clientX-tp.x,e.touches[0].clientY-tp.y)>10)tp.mv=true;},{passive:false});
+ g.addEventListener("touchend",e=>{
+  if(pz){if(e.touches.length<2){LSset(PGV,String(bullZoomClamp(pgZc)));pz=null;pgZUpdate();}return;}
+  pgTouchAt=Date.now();if(!tp||tp.mv||e.touches.length)return;const now=Date.now();
+  if(last&&now-tp.t<400&&now-last.t<350&&Math.hypot(tp.x-last.x,tp.y-last.y)<30&&!last.held){
+   e.preventDefault();clearTimeout(pgEditT);const r=g.getBoundingClientRect(),ax=tp.x-r.left,ay=tp.y-r.top;last=null;tp=null;
+   pgHeld=null;pgClose();$("pgM").textContent="";const to=Math.abs(pgZc-1)<0.02?"fit":1;
+   LSset(PGV,to==="fit"?"fit":"1");const oldz=pgZc,cx=(g.scrollLeft+ax)/oldz,cy=(g.scrollTop+ay)/oldz;pgRender();
+   if(to===1){g.scrollLeft=cx-ax;g.scrollTop=cy-ay;}return;}
+  last={x:tp.x,y:tp.y,t:now,held:tp.held};tp=null;},{passive:false});
+ g.addEventListener("touchcancel",()=>{pz=null;tp=null;});
+})();
 function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg");const labs=[];
- let t=`<div class="bb${pgHeld?" held":""}" style="--bz:${pgZoom()}">`;
+ let t=`<div class="bbz"><div class="bb${pgHeld?" held":""}" style="--bz:${pgZoom()}">`;
  for(let c=1;c<=b.cols;c++){t+=`<div class="bcol" role="group" aria-label="Column ${c}"><div class="bh" aria-hidden="true">${c}</div>`;
   for(let r=1;r<=b.rows;r++){const k=pegKey(r,c),v=b.pegs[k],nm=v&&v.n,pj=jat[k]||[],pg=gat[k]||[];
    const pk=pj.map(j=>{const cc=PEG_COLORS[j.color]||PEG_COLORS[0];return`<span class="pk" data-t="j" data-id="${esc(j.id)}" style="${pegSty(cc)}" title="${esc(j.name)}">${esc(pegAbbr(j.name))}</span>`;}).join("")+pg.map(x=>`<span class="pk g" data-t="g" data-id="${esc(x.id)}" title="${esc(x.name)}">${esc(pegAbbr(x.name))}</span>`).join("");
@@ -1599,7 +1656,7 @@ function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg")
    const cl=top?"Peg "+top.name+(cnt>1?" and "+(cnt-1)+" more":"")+" on this slip. Tap to pick it up":pg.length?"Global peg "+pg[pg.length-1].name+" on this slip. Tap to pick it up":"Empty peg circle. Tap to place the selected peg here";
    t+=`<div class="sw"><button type="button" class="sc${top?" f":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${esc(cl)}"><span class="sd"${tc?` style="${pegSty(tc)}"`:""}>${top?esc(pegAbbr(top.name)):""}${cnt>1?`<i class="cb">${cnt}</i>`:""}</span></button><button type="button" class="slip${nm?"":" e"}${pj.length||pg.length?" hp":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${nm?esc(nm)+(v.note?", number "+esc(v.note):""):"blank"}${v&&v.me?", my peg":""}${pj.map(j=>", peg "+esc(j.name)).join("")}${pg.map(x=>", global peg "+esc(x.name)).join("")}. Opens the slip editor"><span class="sn">${v&&v.note?esc(v.note):""}</span><span class="sl">${nm?(v.me?"★ ":"")+esc(nm):"(blank)"}</span><span class="sp">${pk}</span></button></div>`;}
   t+="</div>";}
- g.innerHTML=t+"</div>";
+ g.innerHTML=t+"</div></div>";pgZApply();
  const pane=$("pgPane");if(pane&&!pane.classList.contains("hide")&&!pane.firstChild)pane.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';}
 function pgHold(t,id){pgHeld=pgHeld&&pgHeld.t===t&&pgHeld.id===id?null:{t:t,id:id};pgClose();const hp=pgHeldPeg();$("pgM").textContent=hp?"Holding "+hp.name+". Tap the slip to put it on.":"Peg put down.";pgRender();}
 function pgDrop(k){const hp=pgHeldPeg();if(!hp){pgHeld=null;return;}const name=BULL_BOARD,b=pgBoard(name),now=new Date(),slipWho=b.pegs[k]&&b.pegs[k].n,pm=$("pgM");
@@ -1612,7 +1669,9 @@ $("pgGrid").addEventListener("click",e=>{const sc=e.target.closest(".sc");
   const b=pgBoard(BULL_BOARD),pj=b.jobs.filter(j=>j.pos===k),pg=pgD.globals.filter(g=>g.board===BULL_BOARD&&g.pos===k);
   if(pj.length)pgHold("j",pj[pj.length-1].id);else if(pg.length)pgHold("g",pg[pg.length-1].id);else{$("pgM").textContent="Pick a peg in the legend first, then tap a circle to place it.";}return;}
  const s=e.target.closest(".slip");if(!s)return;const pk=e.target.closest(".pk");
- if(pk&&!pgHeld){pgHold(pk.dataset.t,pk.dataset.id);return;}if(pgHeld){pgDrop(s.dataset.k);return;}pgEdit(s.dataset.k);});
+ if(pk&&!pgHeld){pgHold(pk.dataset.t,pk.dataset.id);return;}if(pgHeld){pgDrop(s.dataset.k);return;}
+ if(pgTouchAt&&Date.now()-pgTouchAt<700){const k=s.dataset.k;clearTimeout(pgEditT);pgEditT=setTimeout(()=>pgEdit(k),300);return;} /* v50: touch only: wait briefly so a double-tap (zoom toggle) does not open the editor */
+ pgEdit(s.dataset.k);});
 const pgBbClick=e=>{const b=e.target.closest("button");if(!b)return;const id=b.id;
  if(b.classList.contains("lc")){pgHold(b.dataset.t,b.dataset.id);return;}
  if(id==="bbView"){LSset(PGS,pgSlipOn(BULL_BOARD)?"0":"1");pgHeld=null;pgClose();pgRender();}
@@ -1781,7 +1840,7 @@ window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
