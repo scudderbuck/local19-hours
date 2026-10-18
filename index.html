@@ -404,7 +404,9 @@ function toMin(t){if(!/^\d{1,2}:\d{2}$/.test(t||""))return null;const [h,m]=t.sp
 const OT_THRESH=s=>s==="3rd"?5:8; /* OT starts after 8h (1st/2nd) or 5h (3rd) */
 /* v44: Sat/Sun (by entry date) = every paid hour at the OT rate, all shifts */
 function isWknd(d){if(typeof d==="object"&&d)d=d.date;if(!/^\d{4}-\d{2}-\d{2}/.test(d||""))return false;const g=parseDate(String(d).slice(0,10)).getDay();return g===0||g===6;}
-const WKND_NOTE="Weekend: all hours OT";
+const WKND_NOTE="Weekend: all hours OT; 3rd shift paid 8h at 1.5x";function wkndNote(sh){return sh==="3rd"?WKND_NOTE:"Weekend: all hours OT";}
+/* v45: weekend 3rd shift = 1.5x BASE (1st-shift ST) = 3rd ST rate x 1.5/1.6, min 8 paid hrs on Basic; 1st/2nd weekend unchanged (OT rate) */
+function wkndRate(e,r,o){return e.shift==="3rd"?r*1.5/1.6:o;}
 function autoOT(hours,shift,date){if(isWknd(date))return Math.round(num(hours)*100)/100;return Math.round(Math.max(0,num(hours)-OT_THRESH(shift))*100)/100;}
 /* typed/stored override wins; legacy entries (no flag) with OT>0 are treated as manual */
 function effOT(e){if(isWknd(e))return num(e.hours);const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
@@ -415,11 +417,11 @@ function weekStart(s){const d=parseDate(s);d.setDate(d.getDate()-((d.getDay()+1)
 function addDays(s,n){const d=parseDate(s);d.setDate(d.getDate()+n);return fmtDate(d);}
 function num(x){const n=parseFloat(x);return isFinite(n)?n:0;}
 /* Basic-class jobs: minimum PAID hours (8 on 1st/2nd, 5 on 3rd). Skill 1/2/3: none. Hours stay as worked; only pay uses the guarantee. */
-function guarMin(e){return e&&jobClass(e.job)==="Basic"?OT_THRESH(e.shift):0;}
+function guarMin(e){return e&&jobClass(e.job)==="Basic"?(e.shift==="3rd"&&isWknd(e)?8:OT_THRESH(e.shift)):0;}
 function paidHours(e){return Math.max(num(e.hours),guarMin(e));}
 function guarNote(e){const m=guarMin(e);return m&&num(e.hours)<m?"guarantee: paid "+m+"h":"";}
 function entryPay(e){const r=e.rate==null||e.rate===""?null:num(e.rate);if(r==null)return null;
- const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);if(isWknd(e))return Math.round(paidHours(e)*o*100)/100;const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
+ const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);if(isWknd(e))return Math.round(paidHours(e)*wkndRate(e,r,o)*100)/100;const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
  return Math.round((reg*r+ot*o)*100)/100;}
 /* hours = total paid hours incl. OT; OT is the portion of hours that is overtime */
 function summarize(list){const t={hours:0,ot:0,pay:0,anyPay:false,travel:0,miles:0,travelPay:0,milePay:0,byPier:{},byJob:{},count:list.length};
@@ -480,7 +482,7 @@ function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekE
  const L=["ILWU LIFE – Hours, week of "+ws+" to "+we,""];
  if(!list.length)L.push("No shifts logged.");
  for(const e of list){const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][parseDate(e.date).getDay()];
-  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(isWknd(e))s+=" [Weekend: all hours OT]";
+  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(isWknd(e))s+=" [Weekend: all hours OT"+(e.shift==="3rd"?"; 3rd shift paid 8h at 1.5x":"")+"]";
   s+=" – "+[e.pier,e.employer,e.vessel,jobLabel(e.job)].filter(Boolean).join(", ");
   if(num(e.travel)>0||num(e.miles)>0)s+=" ["+[num(e.travel)>0?"travel "+r2(num(e.travel))+"h":"",num(e.miles)>0?r2(num(e.miles))+" mi":""].filter(Boolean).join(", ")+"]";
   if(upApplies(e.job)&&upLabel(e.upSlot))s+=" ["+upLabel(e.upSlot)+"]";
@@ -506,7 +508,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v44",CACHE_VERSION="l19hours-v44"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v45",CACHE_VERSION="l19hours-v45"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -858,7 +860,7 @@ $("job").addEventListener("change",upShow);
 function setX(o){$("extras").classList.toggle("hide",!o);$("xt").setAttribute("aria-expanded",o);$("xt").textContent="More details "+(o?"▴":"▾");}
 $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
 function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value,$("date").value);
- guarHint();if(isWknd($("date").value)){$("othint").textContent=WKND_NOTE+" (every paid hour at the OT rate; no straight time).";return;}$("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
+ guarHint();if(isWknd($("date").value)){$("othint").textContent=($("shift").value==="3rd"?WKND_NOTE+" (1.5x base for Basic min 8h; no straight time).":"Weekend: all hours OT (every paid hour at the OT rate; no straight time).");return;}$("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
 function guarHint(){const el=$("guarhint");if(!el)return;const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const n=guarNote({job:$("job").value==="__c"?$("jobC").value:$("job").value,shift:$("shift").value,hours:h==null?0:h});el.textContent=h==null||h===0?"":n;}
 function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null)$("hrs").value=h;otHint();}
 $("st").onchange=$("en").onchange=autoHrs;
@@ -932,7 +934,7 @@ function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel
 function trvLine(e){const th=num(e.travel),mi=num(e.miles);if(!(th>0||mi>0))return "";const tp=travelPay(e),mp=mileagePay(e);
  return `<div class="l2">${[th>0?"Travel "+r2(th)+"h"+(!hidePay&&tp!=null?" · "+money(tp):""):"",mi>0?r2(mi)+" mi"+(!hidePay&&mp!=null?" · "+money(mp)+" reimb.":""):""].filter(Boolean).join(" · ")}</div>`;}
 function entPayLines(e){const w=entryPay(e),tp=travelPay(e),mp=mileagePay(e),th=num(e.travel),mi=num(e.miles);if(w==null&&!(th>0)&&!(mi>0))return "";
- const L=[];if(!hidePay&&w!=null)L.push(["Shift wages",money(w)]);if(isWknd(e)&&w!=null)L.push([WKND_NOTE,""]);if(th>0)L.push(["Travel "+r2(th)+"h"+(hidePay?"":" × "+money(travelRateOf(e))),hidePay||tp==null?"":money(tp)]);
+ const L=[];if(!hidePay&&w!=null)L.push(["Shift wages",money(w)]);if(isWknd(e)&&w!=null)L.push([wkndNote(e.shift),""]);if(th>0)L.push(["Travel "+r2(th)+"h"+(hidePay?"":" × "+money(travelRateOf(e))),hidePay||tp==null?"":money(tp)]);
  if(mi>0)L.push(["Mileage "+r2(mi)+" mi (reimbursement)",hidePay||mp==null?"":money(mp)]);
  return `<table class="mut" style="font-size:.9375rem">${L.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</table>`;}
 function openEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;const o=document.createElement("div");o.className="sheet";
