@@ -125,7 +125,13 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .nd .nl{font-size:.875rem;font-weight:600;color:var(--mut);margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
 .nd .nb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.nd .nb button{min-height:44px;padding:0 14px}
 .nd .nb .th{display:flex;align-items:center;gap:6px;padding:0 8px 0 4px}.nd .nb .th img{width:36px;height:36px;object-fit:cover;border-radius:6px}
+#splash{position:fixed;inset:0;z-index:100;background:#00214e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spf 1.2s ease-in-out forwards;-webkit-tap-highlight-color:transparent}
+#splash img{width:50%;max-width:320px;height:auto;display:block}
+#splash b{font-size:1.5rem;letter-spacing:.14em;color:#fff}#splash b i{font-style:normal;color:#ffd23f}
+@keyframes spf{0%{opacity:0}35%{opacity:1}70%{opacity:1}99%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
+@media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}}
 </style></head><body>
+<div id="splash" aria-hidden="true"><img src="icon-512.png" alt=""><b>ILWU <i>LIFE</i></b></div>
 <header>ILWU LIFE</header>
 <main>
 <div id="banners"></div>
@@ -257,6 +263,10 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 </main>
 <nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="week">Week</button><button data-v="hist">History</button><button data-v="data">Backup</button></nav>
 <script>
+function splashMs(reduced){return reduced?400:1200}
+(function(){if(typeof document==="undefined")return;var e=document.getElementById("splash");if(!e)return;var d=function(){if(e&&e.parentNode)e.parentNode.removeChild(e);e=null};
+var r=false;try{r=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}
+e.addEventListener("click",d);e.addEventListener("touchstart",d,{passive:true});setTimeout(d,splashMs(r))})();
 "use strict";
 /* ===== core logic (pure, tested in node) ===== */
 const PIERS=["Pier 5","Pier 18","Pier 86 (Louis Dreyfus)","Pier 91","Pier 66 (Port of America)","Pier 46 (PCMC)","Pier 104 (Jones)"];
@@ -414,7 +424,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v35",CACHE_VERSION="l19hours-v35"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v36",CACHE_VERSION="l19hours-v36"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1114,7 +1124,7 @@ if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;
  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)upBanner();});
  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
 }
-if(typeof module!=="undefined")module.exports={RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
