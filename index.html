@@ -37,7 +37,7 @@ label .mut{font-weight:400}
 .dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
 .tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
-.tabs button{flex:1;min-width:0;padding:0 2px;font-size:1rem;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
+.tabs button{flex:1;min-width:0;padding:0 1px;font-size:.8125rem;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
 .tabs button.on{color:var(--acc);font-weight:700;box-shadow:inset 0 3px var(--acc)}
 .ent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--bd)}
 .ent:first-child{border-top:0;padding-top:0}.ent:last-child{padding-bottom:0}
@@ -74,6 +74,25 @@ button,input,select{font-size:1rem}
 .cpop .nav{padding:0;margin-bottom:8px}.cpop .pf{margin-top:10px;border-top:1px solid var(--bd);padding-top:10px}.cpop .pf .row{margin-top:8px}
 #upd{position:fixed;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));z-index:60;background:var(--pri);color:var(--prifg);border:2px solid var(--acc);border-radius:12px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:8px;max-width:544px;margin:0 auto}
 #upd span{flex:1;font-weight:600}#upd button{min-height:44px;background:var(--card);color:var(--fg);border:1px solid var(--acc);font-weight:700}
+.chat{background:#00214e;color:#f2f6fb;border:2px solid #ffd23f;font-size:1.125rem}
+.chat h3{color:#ffd23f;font-size:1.375rem}.chat .mut{color:#c9d6e6}
+.chat input,.chat textarea{width:100%;font:inherit;font-size:1.125rem;padding:10px;border-radius:10px;border:1px solid #ffd23f;background:#0a2f66;color:#fff}
+.chat input::placeholder,.chat textarea::placeholder{color:#b4c4d9}
+.chat button{background:#0a2f66;color:#fff;border:1px solid #ffd23f;font-size:1.0625rem;font-weight:600}
+.chat button.p{background:#ffd23f;color:#00214e;border-color:#ffd23f;font-weight:700}
+.chat button.link{background:none;border:0;color:#ffd23f;text-decoration:underline;min-height:44px}
+.chat button:disabled{background:#2c4670;color:#d5dff0;border-color:#2c4670}
+.chat label{color:#f2f6fb}
+.chtabs{display:flex;gap:8px;margin:10px 0}.chtabs button{flex:1}.chtabs button[aria-pressed=true]{background:#ffd23f;color:#00214e;font-weight:700}
+.chlist{height:50vh;height:50dvh;min-height:260px;overflow-y:auto;border:1px solid #3b5a8c;border-radius:10px;padding:8px;background:#001a3d;display:flex;flex-direction:column;gap:8px}
+.chm{max-width:85%;padding:8px 12px;border-radius:14px;background:#17407f;color:#fff;align-self:flex-start;word-wrap:break-word;overflow-wrap:anywhere}
+.chm.me{align-self:flex-end;background:#ffd23f;color:#00214e}
+.chm .who{font-weight:700;font-size:.9375rem}.chm .tx{white-space:pre-wrap;font-size:1.125rem}
+.chm .mt{font-size:.875rem;opacity:.9;margin-top:2px}.chm button{min-height:44px;padding:0 10px;font-size:.9375rem;margin-left:6px}
+.chm.me button{background:#00214e;color:#ffd23f;border-color:#00214e}
+.chsend{display:flex;gap:8px;margin-top:10px;align-items:flex-end}.chsend textarea{min-height:52px;resize:none;flex:1}.chsend button{min-width:84px}
+.chnote{border-left:4px solid #ffd23f;padding:6px 10px;margin:10px 0;background:#0a2f66;border-radius:6px}
+#chSt{min-height:1.4em;color:#ffd23f;font-weight:600}
 .big{font-size:1.5rem;font-weight:700}
 .sheet>div{max-height:92vh;max-height:92dvh;overflow:auto}
 .sheet textarea{min-height:96px}
@@ -254,6 +273,34 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <p class="mut"><b>How it works, honestly:</b> if you haven't logged a shift for today or yesterday, a banner shows when you open the app. A phone notification is best-effort only: this app has no server, so it can't wake your phone. On iPhone, web apps can show notifications only when added to the Home Screen (iOS 16.4+), and even then only while the app is open or recently active. Android is similar. Don't rely on it; the banner on open is the dependable part.</p>
 <p id="remM" class="mut" aria-live="polite"></p></div>
 </section>
+<section id="v-pegs" class="hide">
+<div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards</h3>
+<p class="mut" style="margin-top:0">Your own record of the physical peg boards. Everyone keeps a fixed position. Each job has its own peg that moves along the board only when you tap Advance, Taken or place it; the app never decides who gets a job.</p>
+<div class="gstrip" id="pgGl" role="region" aria-label="Global pegs"></div>
+<label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
+<div class="row" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
+<p id="pgMine" class="mut pgmine" aria-live="polite"></p>
+<div id="pgPic"></div>
+<div class="row"><button type="button" class="p" id="pgCam">📷 Take photo</button><button type="button" id="pgPh">🖼 Choose from gallery</button></div>
+<div class="row"><button type="button" class="p" id="pgShare">Post board update (share)</button></div>
+<p id="pgUp" class="mut"></p>
+<h4 class="pgjh">Job pegs</h4>
+<div class="row"><input id="pgJN" maxlength="40" placeholder="New job, e.g. Bull 1" aria-label="New job name" autocomplete="off"><button type="button" id="pgJA" style="flex:0 0 auto">Add job peg</button></div>
+<div id="pgJobs"></div>
+<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Flex semi, Bull, Strad, Flex strad, UT, Super flex bull)</button><div id="pgHint" class="hide" role="status" style="margin-top:8px;padding:8px;border:1px solid var(--bd,#888);border-radius:8px"><span>New presets available: Flex semi, Flex strad</span> <button type="button" id="pgHintAdd">Add</button> <button type="button" id="pgHintX" aria-label="Dismiss new presets hint">Dismiss</button></div></div>
+<div class="row"><button type="button" id="pgUn">Undo last action</button><button type="button" id="pgLog">Log of takes</button></div>
+<p class="mut" style="margin-bottom:4px">Advance moves a job peg to the next person in reading order (left to right, then down), skipping empty positions and wrapping at the end. “Taken” logs that person for that job; the peg then rests there until you advance it. Tap any position to place a job peg or a global peg there. Global pegs (Supervisor, Flex supervisor, Foreman) exist once and travel through every board in the order of the Board list, then wrap back to the first board.</p>
+<div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
+<div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button><button type="button" id="pgLab" aria-pressed="true">Row/column labels: on</button></div>
+<p class="mut" style="margin-bottom:4px">Position 1 is top-left; numbers run left to right, then down. Tap a position to edit it.</p>
+<div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board grid (scrolls sideways)"></div>
+<div id="pgEd" class="pged hide"></div>
+<p id="pgM" class="mut" aria-live="polite"></p>
+<button type="button" class="d hide" id="pgDel" style="width:100%">Remove this custom board</button></div>
+</section>
+<section id="v-chat" class="hide">
+<div class="card chat" id="chCard"></div>
+</section>
 <section id="v-ships" class="hide">
 <div class="card"><h3 style="margin-top:0">Dispatch quick links</h3>
 <label for="dpNum" style="margin-top:0">Dispatch number <span class="mut">(you enter it; saved on this device only)</span></label>
@@ -280,29 +327,6 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <p id="ndM" class="mut" aria-live="polite"></p>
 </form></div>
 <div id="ndL"></div>
-<div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards</h3>
-<p class="mut" style="margin-top:0">Your own record of the physical peg boards. Everyone keeps a fixed position. Each job has its own peg that moves along the board only when you tap Advance, Taken or place it; the app never decides who gets a job.</p>
-<div class="gstrip" id="pgGl" role="region" aria-label="Global pegs"></div>
-<label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
-<div class="row" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
-<p id="pgMine" class="mut pgmine" aria-live="polite"></p>
-<div id="pgPic"></div>
-<div class="row"><button type="button" class="p" id="pgCam">📷 Take photo</button><button type="button" id="pgPh">🖼 Choose from gallery</button></div>
-<div class="row"><button type="button" class="p" id="pgShare">Post board update (share)</button></div>
-<p id="pgUp" class="mut"></p>
-<h4 class="pgjh">Job pegs</h4>
-<div class="row"><input id="pgJN" maxlength="40" placeholder="New job, e.g. Bull 1" aria-label="New job name" autocomplete="off"><button type="button" id="pgJA" style="flex:0 0 auto">Add job peg</button></div>
-<div id="pgJobs"></div>
-<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Flex semi, Bull, Strad, Flex strad, UT, Super flex bull)</button><div id="pgHint" class="hide" role="status" style="margin-top:8px;padding:8px;border:1px solid var(--bd,#888);border-radius:8px"><span>New presets available: Flex semi, Flex strad</span> <button type="button" id="pgHintAdd">Add</button> <button type="button" id="pgHintX" aria-label="Dismiss new presets hint">Dismiss</button></div></div>
-<div class="row"><button type="button" id="pgUn">Undo last action</button><button type="button" id="pgLog">Log of takes</button></div>
-<p class="mut" style="margin-bottom:4px">Advance moves a job peg to the next person in reading order (left to right, then down), skipping empty positions and wrapping at the end. “Taken” logs that person for that job; the peg then rests there until you advance it. Tap any position to place a job peg or a global peg there. Global pegs (Supervisor, Flex supervisor, Foreman) exist once and travel through every board in the order of the Board list, then wrap back to the first board.</p>
-<div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
-<div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button><button type="button" id="pgLab" aria-pressed="true">Row/column labels: on</button></div>
-<p class="mut" style="margin-bottom:4px">Position 1 is top-left; numbers run left to right, then down. Tap a position to edit it.</p>
-<div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board grid (scrolls sideways)"></div>
-<div id="pgEd" class="pged hide"></div>
-<p id="pgM" class="mut" aria-live="polite"></p>
-<button type="button" class="d hide" id="pgDel" style="width:100%">Remove this custom board</button></div>
 <div class="card"><h3 style="margin-top:0">Ships coming</h3>
 <div id="shSum"></div><p id="shUp" class="mut"></p>
 <div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Letter photos stay on this device only (private, offline). Auto-removed 30 days after the ship's ETD.</p></div>
@@ -311,7 +335,7 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 </section>
 <footer id="ft">ILWU LIFE <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button></footer>
 </main>
-<nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="week">Week</button><button data-v="hist">History</button><button data-v="data">Backup</button></nav>
+<nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="pegs">Pegs</button><button data-v="chat">Chat</button><button data-v="week">Week</button><button data-v="hist">History</button><button data-v="data">Backup</button></nav>
 <script>
 function splashMs(reduced){return reduced?400:1200}
 (function(){if(typeof document==="undefined")return;var e=document.getElementById("splash");if(!e)return;var d=function(){if(e&&e.parentNode)e.parentNode.removeChild(e);e=null};
@@ -474,7 +498,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v41",CACHE_VERSION="l19hours-v41"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v42",CACHE_VERSION="l19hours-v42"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -503,7 +527,7 @@ const TOUR_CARDS=[["Log a shift","Tap ＋ Add, pick the date, pier, job and shif
  ["History & calendar","History lists every shift by month, with week, month, quarter and year totals. Switch to Calendar to tap a day, or search by job, pier or note."],
  ["Share a week","On the Week tab tap Share week. Choose hours only (no pay) or hours plus a pay estimate, then paste it wherever you need."],
  ["Back up your data","Everything stays on this phone. In the Backup tab, back up to a JSON file now and then. You can also export CSV or open a Year summary."],
- ["Ships & needs","The Ships tab has dispatch quick links, today's needs notes and the ships coming. Replay this tour any time from the Backup tab."]];
+ ["Ships, pegs & chat","Ships has dispatch quick links, today's needs and the ships coming. Pegs has your peg boards. Chat is an online room for coworkers with the invite code; it never sends your hours, pay or pegs. Replay this tour any time from the Backup tab."]];
 function tourDue(flag,setupOpen,locked){return flag!=="1"&&!setupOpen&&!locked;}
 function yearSummary(all,year){const y=String(year),l=(all||[]).filter(e=>e&&typeof e.date==="string"&&e.date.slice(0,4)===y),t=summarize(l);
  const months=[];for(let m=1;m<=12;m++){const k=y+"-"+p2(m),ml=l.filter(e=>e.date.slice(0,7)===k),mt=summarize(ml);
@@ -891,8 +915,8 @@ $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0=""
  if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");try{localStorage.removeItem(PGK);}catch(e){}pgD=pegsLoad();pgClose();pgRender();lAll().then(a=>(a||[]).filter(r=>String(r.k).startsWith("peg|")).forEach(r=>lDel(r.id))).then(refreshPegPic).catch(()=>{});renderNeeds();$("msg").textContent="All data deleted.";}};
-function show(v){curV=v;for(const x of["add","ships","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();}
+function show(v){curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
 function addOn(d){selDate=d;resetForm();retTo="hist";show("add");}
 function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
@@ -1500,7 +1524,75 @@ $("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if
 pgRender();
 
 }
+/* ===== v42: Chat (online, optional; Firebase lazy-loaded only when the Chat tab opens; sends ONLY what the user types) ===== */
+const CHAT_CFG={apiKey:"AIzaSyAskyTwFl7zd0ferXLF7EmDvOU1CE33oeE",authDomain:"ilwu-life-chat.firebaseapp.com",projectId:"ilwu-life-chat",storageBucket:"ilwu-life-chat.firebasestorage.app",messagingSenderId:"787433326416",appId:"1:787433326416:web:43642bdfaaccc13a1e4e55"};
+const CHAT_SDK="https://www.gstatic.com/firebasejs/10.14.1/",CHAT_DEFAULT_CODE="LOCAL19",CHAT_CHANNELS=["Ideas","Updates"],CHAT_GAP=2000;
+function chatCode(s){const c=String(s==null?"":s).toUpperCase().replace(/[^A-Z0-9_-]/g,"").slice(0,30);return c.length>=3?c:"";}
+function chatName(s){return String(s==null?"":s).replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim().slice(0,30);}
+function chatText(s){return String(s==null?"":s).replace(/\r/g,"").trim().slice(0,500);}
+function chatCanSend(last,now){return !last||now-last>=CHAT_GAP;}
+if(typeof document!=="undefined"){(function(){
+const g=id=>document.getElementById(id),E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const KN="l19.chatName",KC="l19.chatCode",KH="l19.chatChan";
+const ls=(k,d)=>{try{return localStorage.getItem(k)||d;}catch(e){return d;}},lss=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
+let FB=null,fbP=null,unsub=null,msgs=[],chan=CHAT_CHANNELS.includes(ls(KH,""))?ls(KH,""):"Ideas",lastSend=0,settings=false,err="",note="";
+function load(){if(fbP)return fbP;fbP=(async()=>{const app=await import(CHAT_SDK+"firebase-app.js"),au=await import(CHAT_SDK+"firebase-auth.js"),fs=await import(CHAT_SDK+"firebase-firestore.js");
+ const a=app.getApps().length?app.getApp():app.initializeApp(CHAT_CFG),auth=au.getAuth(a),db=fs.getFirestore(a);
+ if(!auth.currentUser)await au.signInAnonymously(auth);
+ FB={fs,db,auth};return FB;})().catch(e=>{fbP=null;throw e;});return fbP;}
+function stop(){if(unsub){try{unsub();}catch(e){}unsub=null;}}
+function friendly(e){if(typeof navigator!=="undefined"&&navigator.onLine===false)return"You're offline. Chat needs internet; the rest of the app works as usual.";
+ const c=e&&e.code||"";if(/permission/.test(c))return"Chat isn't open yet (the server rules haven't been set up) or the code was refused.";
+ if(/unavailable|network/.test(c))return"Can't reach the chat server right now. Try again in a moment.";return"Chat couldn't connect. Check your internet and try again.";}
+function head(){return'<h3>Chat</h3><div class="chnote" role="note">Chat is online and visible to coworkers with the code. Your hours and pay stay on your phone.</div>';}
+function paintSetup(){const c=g("chCard");c.innerHTML=head()+'<label for="chN">Your display name (shown to coworkers)</label><input id="chN" maxlength="30" autocomplete="off" value="'+E(ls(KN,""))+'" placeholder="e.g. Sam B.">'+
+ '<label for="chC">Coworker invite code</label><input id="chC" maxlength="30" autocomplete="off" autocapitalize="characters" value="'+E(ls(KC,"")||CHAT_DEFAULT_CODE)+'" placeholder="Invite code">'+
+ '<p class="mut">Ask a coworker for the code. Letters, numbers, - and _ only (3–30).</p><div class="row"><button type="button" class="p" id="chGo">Join chat</button>'+(ls(KN,"")&&ls(KC,"")?'<button type="button" id="chBk">Cancel</button>':"")+'</div><p id="chSt" aria-live="polite">'+E(note)+'</p>';
+ g("chGo").onclick=()=>{const n=chatName(g("chN").value),k=chatCode(g("chC").value);if(!n){g("chSt").textContent="Please enter a display name.";return;}if(!k){g("chSt").textContent="The code needs 3–30 letters or numbers.";return;}
+  const ch=k!==ls(KC,"");lss(KN,n);lss(KC,k);settings=false;note="";if(ch)msgs=[];stop();open();};
+ if(g("chBk"))g("chBk").onclick=()=>{settings=false;note="";open();};}
+function fmt(ms){if(!ms)return"sending…";const d=new Date(ms),n=new Date(),t=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});return d.toDateString()===n.toDateString()?t:d.toLocaleDateString([],{month:"short",day:"numeric"})+" "+t;}
+function paintMain(){const c=g("chCard");if(!g("chL")){
+ c.innerHTML=head()+'<p class="mut" style="margin:0">Room: <b id="chRm"></b> · You: <b id="chMe"></b> · <button type="button" class="link" id="chSet">Change name / code</button></p>'+
+ '<div class="chtabs" role="group" aria-label="Chat channels">'+CHAT_CHANNELS.map(x=>'<button type="button" data-c="'+x+'">'+x+'</button>').join("")+'</div>'+
+ '<p id="chSt" aria-live="polite"></p><div class="chlist" id="chL" role="log" aria-live="polite" tabindex="0"></div>'+
+ '<form class="chsend" id="chF" autocomplete="off"><textarea id="chT" maxlength="500" rows="2" aria-label="Message" placeholder="Message to #'+E(chan)+'"></textarea><button type="submit" class="p" id="chS">Send</button></form>'+
+ '<p class="mut" style="margin:6px 0 0">Report any message that is abusive. Admin removal is done by the app owner.</p>';
+ g("chSet").onclick=()=>{settings=true;stop();paint();};
+ c.querySelectorAll(".chtabs button").forEach(b=>b.onclick=()=>{chan=b.dataset.c;lss(KH,chan);paintMain();});
+ g("chF").onsubmit=ev=>{ev.preventDefault();send();};
+ g("chT").onkeydown=ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();send();}};}
+ g("chRm").textContent=ls(KC,"");g("chMe").textContent=ls(KN,"");
+ document.querySelectorAll(".chtabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===chan)));
+ g("chT").placeholder="Message to #"+chan;g("chSt").textContent=err;
+ const me=FB&&FB.auth.currentUser?FB.auth.currentUser.uid:"",L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,list=msgs.filter(m=>m.channel===chan);
+ L.innerHTML=list.length?list.map(m=>{const mine=m.uid===me;return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+E(m.name)+'</div><div class="tx">'+E(m.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?'<button type="button" data-a="del">Delete</button>':'<button type="button" data-a="rep">Report</button>')+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>';
+ L.querySelectorAll("button[data-a]").forEach(b=>b.onclick=()=>act(b.dataset.a,b.closest(".chm").dataset.id));
+ if(near||!L.dataset.s){L.scrollTop=L.scrollHeight;L.dataset.s="1";}}
+function paint(){if(settings||!ls(KN,"")||!ls(KC,""))paintSetup();else paintMain();}
+async function send(){const t=chatText(g("chT").value),now=Date.now();if(!t)return;if(!chatCanSend(lastSend,now)){err="Slow down a little: one message every 2 seconds.";g("chSt").textContent=err;return;}
+ if(!FB){err="Not connected yet.";g("chSt").textContent=err;return;}
+ lastSend=now;g("chS").disabled=true;err="";
+ try{const f=FB.fs;await f.addDoc(f.collection(FB.db,"rooms",ls(KC,""),"messages"),{text:t,name:chatName(ls(KN,"")),uid:FB.auth.currentUser.uid,channel:chan,createdAt:f.serverTimestamp()});g("chT").value="";err="";}
+ catch(e){err="Message not sent. "+friendly(e);}
+ if(g("chS"))g("chS").disabled=false;if(g("chSt"))g("chSt").textContent=err;}
+async function act(a,id){if(!FB)return;const f=FB.fs;try{
+ if(a==="del"){if(!confirm("Delete this message for everyone?"))return;await f.deleteDoc(f.doc(FB.db,"rooms",ls(KC,""),"messages",id));err="";}
+ else{const r=prompt("Why are you reporting this message? (optional, up to 200 characters)","");if(r===null)return;await f.addDoc(f.collection(FB.db,"reports"),{messageId:String(id).slice(0,100),room:ls(KC,""),reason:String(r).slice(0,200),reporter:FB.auth.currentUser.uid,createdAt:f.serverTimestamp()});err="Thanks. The message was reported.";}
+ }catch(e){err=(a==="del"?"Couldn't delete. ":"Couldn't send the report. ")+friendly(e);}
+ if(g("chSt"))g("chSt").textContent=err;}
+async function open(){if(settings||!ls(KN,"")||!ls(KC,"")){paint();return;}
+ paintMain();err="Connecting…";g("chSt").textContent=err;
+ try{await load();}catch(e){err=friendly(e);if(g("chSt"))g("chSt").textContent=err;return;}
+ if(!g("chL")||unsub)return;err="";const f=FB.fs,q=f.query(f.collection(FB.db,"rooms",ls(KC,""),"messages"),f.orderBy("createdAt","desc"),f.limit(100));
+ unsub=f.onSnapshot(q,s=>{msgs=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,text:String(x.text||""),name:String(x.name||"?"),uid:x.uid,channel:x.channel,ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).reverse();err=s.metadata.fromCache&&navigator.onLine===false?"Offline: showing saved messages.":"";if(g("chL"))paintMain();},
+  e=>{err=friendly(e);stop();if(g("chSt"))g("chSt").textContent=err;});}
+window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
+window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
+})();}
+
 if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
