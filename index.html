@@ -109,6 +109,9 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .pged{border:2px solid var(--acc);border-radius:10px;padding:12px;margin-top:10px;background:var(--card)}
 .pged h4{margin-top:0}.pged button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
 #pgPic button.pgp{display:block;width:100%;padding:0;min-height:48px;margin-bottom:8px;overflow:hidden}#pgPic img{display:block;width:100%;max-height:14rem;object-fit:contain;background:var(--bg)}
+.gbd{display:block;margin-top:1px;padding:0 4px;font-size:.875rem;line-height:1.15;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;box-sizing:border-box;background:var(--card);color:var(--fg);border:3px double var(--fg);border-radius:999px}
+.gstrip{border:2px dashed var(--fg);border-radius:14px;padding:10px;margin:0 0 12px;background:var(--bg)}.gstrip h4{margin:0 0 6px}
+.gp{border:1px solid var(--bd);border-radius:10px;padding:8px;margin-top:8px;background:var(--card)}.gp .gj{width:100%;text-align:left;min-height:44px;font-weight:400}.gp .row{margin-top:6px}
 .pgjh{margin:14px 0 6px}.jb{border:1px solid var(--bd);border-radius:10px;padding:10px;margin-top:8px;background:var(--bg)}.jb p{margin:4px 0}.jb .row{margin-top:6px}
 .jbd{display:inline-block;border-radius:8px;padding:2px 8px;font-weight:700;font-size:.875rem;border:1px solid #fff;box-shadow:0 0 0 1px #000}
 .pgc .jbd{display:block;margin-top:1px;padding:0 3px;font-size:.875rem;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;box-sizing:border-box}
@@ -213,7 +216,7 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <div class="card"><h3>Backup</h3>
 <p id="lastBk" class="mut"></p>
 <p class="mut">Data lives only on this device (localStorage). Back up now and then. The backup also includes your pay stub checks and starting hours.</p>
-<p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup, and neither are peg board photos. Today's needs notes (text), peg board positions and your dispatch number are included.</p>
+<p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup, and neither are peg board photos. Today's needs notes (text), peg board positions, job pegs, global pegs, peg logs and your dispatch number are included.</p>
 <label for="dpNum2">Dispatch number <span class="mut">(same as on the Ships tab)</span></label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number">
 <div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
@@ -279,6 +282,7 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <div id="ndL"></div>
 <div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards</h3>
 <p class="mut" style="margin-top:0">Your own record of the physical peg boards. Everyone keeps a fixed position. Each job has its own peg that moves along the board only when you tap Advance, Taken or place it; the app never decides who gets a job.</p>
+<div class="gstrip" id="pgGl" role="region" aria-label="Global pegs"></div>
 <label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
 <div class="row" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
 <p id="pgMine" class="mut pgmine" aria-live="polite"></p>
@@ -289,8 +293,9 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <h4 class="pgjh">Job pegs</h4>
 <div class="row"><input id="pgJN" maxlength="40" placeholder="New job, e.g. Bull 1" aria-label="New job name" autocomplete="off"><button type="button" id="pgJA" style="flex:0 0 auto">Add job peg</button></div>
 <div id="pgJobs"></div>
+<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
 <div class="row"><button type="button" id="pgUn">Undo last action</button><button type="button" id="pgLog">Log of takes</button></div>
-<p class="mut" style="margin-bottom:4px">Advance moves a job peg to the next person in reading order (left to right, then down), skipping empty positions and wrapping at the end. “Taken” logs that person for that job; the peg then rests there until you advance it. Tap any position to place a job peg there. Other variations can be added later.</p>
+<p class="mut" style="margin-bottom:4px">Advance moves a job peg to the next person in reading order (left to right, then down), skipping empty positions and wrapping at the end. “Taken” logs that person for that job; the peg then rests there until you advance it. Tap any position to place a job peg or a global peg there. Global pegs (Supervisor, Flex supervisor, Foreman) exist once and travel through every board in the order of the Board list, then wrap back to the first board.</p>
 <div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
 <div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button><button type="button" id="pgLab" aria-pressed="true">Row/column labels: on</button></div>
 <p class="mut" style="margin-bottom:4px">Position 1 is top-left; numbers run left to right, then down. Tap a position to edit it.</p>
@@ -469,7 +474,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v39",CACHE_VERSION="l19hours-v39"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v40",CACHE_VERSION="l19hours-v40"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -602,6 +607,7 @@ function needsMerge(cur,inc){const m=new Map(needsClean(cur).map(n=>[n.id,n]));n
 function needsGroups(a){const g={};for(const n of needsClean(a))(g[n.date]=g[n.date]||[]).push(n);return Object.keys(g).sort().reverse().map(k=>({key:k,items:g[k].sort((x,y)=>(y.created||"")>(x.created||"")?1:-1)}));}
 /* ===== Peg boards (pure helpers; manual entries only, no seniority logic) ===== */
 const PEG_BOARDS=["Bull board","Wheat board","Trucker board","Crane board","Stevedore board","Sling board","Little crane board"];
+const PEG_GLOBAL_DEFAULT=["Supervisor","Flex supervisor","Foreman"],PEG_GLOBALS=10,PEG_PRESET=["Semi","Bull","Strad","UT","Super flex bull"];
 const PEG_DEF={cols:25,rows:10},PEG_LEGACY={cols:20,rows:10},PEG_MAX=60,PEG_JOBS=20,PEG_TAKES=500,PEG_UNDO=10;
 const PEG_COLORS=[["Red","#b3261e","#ffffff"],["Orange","#9a4a00","#ffffff"],["Green","#1b5e20","#ffffff"],["Teal","#00606b","#ffffff"],["Blue","#0b4fa8","#ffffff"],["Purple","#6a2c91","#ffffff"],["Pink","#a3185b","#ffffff"],["Yellow","#ffd23f","#1a1400"]];
 function pegDim(v,d){const n=Math.floor(Number(v));return isFinite(n)&&n>=1?Math.min(PEG_MAX,n):d;}
@@ -628,21 +634,89 @@ function pegBoardClean(b){const o=pegBoardNew();if(!b||typeof b!=="object")retur
   o.undo.push({id:u.id.slice(0,40),at:sl(u.at,40),label:sl(u.label,120),pos:ps,take:sl(u.take,40)});}
  o.undo=o.undo.slice(-PEG_UNDO);
  return o;}
-function pegsClean(d){const o={boards:{},custom:[],sel:""};if(!d||typeof d!=="object")return o;
+function pegsClean(d){const o={boards:{},custom:[],sel:"",seeded:false,globals:[],glog:[],gundo:[]};if(!d||typeof d!=="object")return o;
  const bs=d.boards&&typeof d.boards==="object"&&!Array.isArray(d.boards)?d.boards:{};
  for(const k of Object.keys(bs)){const name=String(k).trim().slice(0,40);if(!name||name==="__proto__")continue;o.boards[name]=pegBoardClean(bs[k]);}
  const cu=Array.isArray(d.custom)?d.custom:[];
  for(const x of cu){const name=String(x==null?"":x).trim().slice(0,40);if(name&&name!=="__proto__"&&!PEG_BOARDS.includes(name)&&!o.custom.includes(name))o.custom.push(name);}
  for(const k of Object.keys(o.boards))if(!PEG_BOARDS.includes(k)&&!o.custom.includes(k))o.custom.push(k);
- o.custom=o.custom.slice(0,30);o.sel=typeof d.sel==="string"?d.sel:"";return o;}
+ o.custom=o.custom.slice(0,30);o.sel=typeof d.sel==="string"?d.sel:"";o.seeded=d.seeded===true;
+ const names=[...PEG_BOARDS,...o.custom],sl=(v,m)=>String(v==null?"":v).trim().slice(0,m);
+ const okAt=(bn,k)=>{const b=o.boards[bn]||pegBoardNew(),m=/^(\d{1,2})-(\d{1,2})$/.exec(k);return !!m&&+m[1]>=1&&+m[2]>=1&&+m[1]<=b.rows&&+m[2]<=b.cols;};
+ const gsrc=Array.isArray(d.globals)?d.globals:PEG_GLOBAL_DEFAULT.map(n=>({id:"g-"+n.toLowerCase().replace(/[^a-z0-9]+/g,"-"),name:n})),gid=new Set();
+ for(const g of gsrc){if(!g||typeof g!=="object"||o.globals.length>=PEG_GLOBALS)continue;const id=sl(g.id,24).replace(/[^\w-]/g,""),nm=sl(g.name,40);if(!id||!nm||id==="__proto__"||gid.has(id))continue;gid.add(id);
+  const bd=names.includes(g.board)&&okAt(g.board,g.pos);o.globals.push({id:id,name:nm,board:bd?g.board:"",pos:bd?g.pos:""});}
+ const gl=Array.isArray(d.glog)?d.glog:[],tid=new Set();
+ for(const t of gl){if(!t||typeof t!=="object")continue;const id=sl(t.id,40);if(!id||tid.has(id))continue;tid.add(id);
+  o.glog.push({id:id,at:sl(t.at,40),d:/^\d{4}-\d{2}-\d{2}$/.test(t.d)?t.d:"",gid:sl(t.gid,24),peg:sl(t.peg,40),board:sl(t.board,40),person:sl(t.person,80),pos:/^\d{1,2}-\d{1,2}$/.test(t.pos)?t.pos:"",num:Math.max(0,Math.floor(Number(t.num))||0)});}
+ o.glog=o.glog.slice(-PEG_TAKES);
+ const gu=Array.isArray(d.gundo)?d.gundo:[];
+ for(const u of gu){if(!u||typeof u!=="object"||typeof u.id!=="string"||!u.id)continue;const ps={},src=u.pegs&&typeof u.pegs==="object"?u.pegs:{};
+  for(const k of Object.keys(src)){if(k==="__proto__")continue;const v=src[k];if(!v||typeof v!=="object")continue;const ok=names.includes(v.board)&&okAt(v.board,v.pos);ps[sl(k,24)]={board:ok?v.board:"",pos:ok?v.pos:""};}
+  o.gundo.push({id:u.id.slice(0,40),at:sl(u.at,40),label:sl(u.label,120),pegs:ps,take:sl(u.take,40)});}
+ o.gundo=o.gundo.slice(-PEG_UNDO);return o;}
 function pegDropped(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);return Object.keys(b.pegs).filter(k=>{const m=k.split("-");return +m[0]>rows||+m[1]>cols;}).sort((x,y)=>{const a=x.split("-"),c=y.split("-");return(+a[0]-+c[0])||(+a[1]-+c[1]);});}
 function pegResize(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);const dropped=pegDropped(b,rows,cols),pegs={};
  for(const k of Object.keys(b.pegs))if(!dropped.includes(k))pegs[k]=b.pegs[k];
  const jobs=(b.jobs||[]).map(j=>{if(!j.pos)return j;const m=j.pos.split("-");return +m[0]>rows||+m[1]>cols?{...j,pos:""}:j;});
  return{board:{cols:cols,rows:rows,pegs:pegs,updated:b.updated,jobs:jobs,takes:b.takes||[],undo:[]},dropped:dropped};}
-function pegsMerge(cur,inc){const a=pegsClean(cur),b=pegsClean(inc),o={boards:{...a.boards},custom:[...a.custom],sel:a.sel||b.sel};
+function pegsMerge(cur,inc){const a=pegsClean(cur),b=pegsClean(inc),o={boards:{...a.boards},custom:[...a.custom],sel:a.sel||b.sel,seeded:a.seeded||b.seeded,globals:a.globals.map(g=>({...g})),glog:[...a.glog],gundo:a.gundo};
  for(const k of Object.keys(b.boards)){const x=o.boards[k],y=b.boards[k];if(!x||(y.updated||"")>(x.updated||""))o.boards[k]=y;}
- for(const c of b.custom)if(!o.custom.includes(c))o.custom.push(c);return pegsClean(o);}
+ for(const c of b.custom)if(!o.custom.includes(c))o.custom.push(c);
+ /* globals: keep this device's pegs and positions; add incoming pegs with new ids (and new names); union the log by id */
+ const nm=new Set(o.globals.map(g=>g.name.toLowerCase())),ids=new Set(o.globals.map(g=>g.id));
+ for(const g of b.globals){if(ids.has(g.id)||nm.has(g.name.toLowerCase()))continue;o.globals.push({...g});ids.add(g.id);nm.add(g.name.toLowerCase());}
+ const lid=new Set(o.glog.map(t=>t.id));for(const t of b.glog)if(!lid.has(t.id))o.glog.push(t);
+ o.glog.sort((x,y)=>(x.at||"")<(y.at||"")?-1:(x.at||"")>(y.at||"")?1:0);return pegsClean(o);}
+/* ===== Preset jobs (Bull board) – seeded once, only for a board with no job pegs ===== */
+function pegPresetAdd(b){const jobs=[...(b.jobs||[])];let n=0;
+ PEG_PRESET.forEach((nm,i)=>{if(jobs.length>=PEG_JOBS||jobs.some(j=>j.name.toLowerCase()===nm.toLowerCase()))return;let id="p"+i;while(jobs.some(j=>j.id===id))id+="x";jobs.push({id:id,name:nm,color:i,pos:""});n++;});
+ return{board:{...b,jobs:jobs},added:n};}
+function pegsSeed(d){d=pegsClean(d);if(d.seeded)return d;const nb=d.boards["Bull board"]||pegBoardNew();
+ if(!nb.jobs.length)d.boards["Bull board"]=pegPresetAdd(nb).board;d.seeded=true;return d;}
+/* ===== Global pegs: single pegs that rotate through ALL boards (board selector order), reading order inside each board ===== */
+function pegBoardOrder(d){return[...PEG_BOARDS,...(d.custom||[])];}
+function pegGlobal(d,id){return(d.globals||[]).find(g=>g.id===id)||null;}
+function pegAfter(b,pos){const cur=pegKeyNum(b,pos);for(const k of pegOrder(b))if(pegKeyNum(b,k)>cur)return k;return"";}
+function pegGlobalNext(d,g){const names=pegBoardOrder(d),idx=g&&g.board?names.indexOf(g.board):-1;
+ if(idx>=0&&g.pos){const n=pegAfter(d.boards[g.board]||pegBoardNew(),g.pos);if(n)return{board:g.board,pos:n};}
+ const from=idx>=0?1:0,to=idx>=0?names.length:names.length-1;
+ for(let i=from;i<=to;i++){const bn=names[(idx>=0?idx+i:i)%names.length],ks=pegOrder(d.boards[bn]||pegBoardNew());if(ks.length)return{board:bn,pos:ks[0]};}
+ return null;}
+function pegGPush(d,label,now,take,glog){const pegs={};(d.globals||[]).forEach(g=>{pegs[g.id]={board:g.board,pos:g.pos};});
+ const u={id:now.getTime().toString(36)+"-"+((d.gundo||[]).length),at:now.toISOString(),label:label,pegs:pegs,take:take||""};return{gundo:[...(d.gundo||[]),u].slice(-PEG_UNDO),glog:glog||d.glog};}
+function pegNowOf(now){return now instanceof Date&&!isNaN(now)?now:new Date();}
+function pegGWhere(d,board,pos){const b=d.boards[board]||pegBoardNew();return board+" "+pegWhere2(b,pos)+" – "+(b.pegs[pos]?pegWho(b,pos):"(empty position)");}
+function pegGlobalAdvance(d,id,now){const g=pegGlobal(d,id);if(!g)return{ok:false,error:"That global peg no longer exists."};now=pegNowOf(now);
+ const to=pegGlobalNext(d,g);if(!to)return{ok:false,error:"There are no people on any board to move to."};
+ return{ok:true,from:{board:g.board,pos:g.pos},to:to,data:{...d,...pegGPush(d,"Advance "+g.name,now),globals:d.globals.map(x=>x.id===id?{...x,board:to.board,pos:to.pos}:x)}};}
+function pegGlobalPlace(d,id,board,pos,now){const g=pegGlobal(d,id);if(!g)return{ok:false,error:"That global peg no longer exists."};now=pegNowOf(now);
+ const b=d.boards[board];if(!pegBoardOrder(d).includes(board)||!/^\d{1,2}-\d{1,2}$/.test(pos||""))return{ok:false,error:"That position doesn't exist."};
+ const bb=b||pegBoardNew(),m=pos.split("-");if(+m[0]<1||+m[1]<1||+m[0]>bb.rows||+m[1]>bb.cols)return{ok:false,error:"That position doesn't exist."};
+ return{ok:true,from:{board:g.board,pos:g.pos},to:{board:board,pos:pos},data:{...d,...pegGPush(d,"Move "+g.name,now),globals:d.globals.map(x=>x.id===id?{...x,board:board,pos:pos}:x)}};}
+function pegGlobalTake(d,id,now){const g=pegGlobal(d,id);if(!g)return{ok:false,error:"That global peg no longer exists."};now=pegNowOf(now);
+ if(!g.board||!g.pos)return{ok:false,error:g.name+" isn't on a board yet. Advance it first."};const b=d.boards[g.board]||pegBoardNew();
+ if(!b.pegs[g.pos])return{ok:false,error:"Nobody is at position "+pegKeyNum(b,g.pos)+" on "+g.board+". Advance the peg to a person first."};
+ let tid="gt"+now.getTime().toString(36),i=0;while((d.glog||[]).some(t=>t.id===tid))tid="gt"+now.getTime().toString(36)+(++i);
+ const t={id:tid,at:now.toISOString(),d:pegLocalDay(now),gid:g.id,peg:g.name,board:g.board,person:pegWho(b,g.pos),pos:g.pos,num:pegKeyNum(b,g.pos)};
+ return{ok:true,take:t,data:{...d,...pegGPush(d,"Taken "+g.name,now,tid,[...(d.glog||[]),t].slice(-PEG_TAKES))}};}
+function pegGlobalUndo(d,now){const un=d.gundo||[];if(!un.length)return{ok:false,error:"There is nothing to undo."};const u=un[un.length-1];
+ return{ok:true,undone:u,data:{...d,globals:d.globals.map(g=>Object.prototype.hasOwnProperty.call(u.pegs,g.id)?{...g,board:u.pegs[g.id].board,pos:u.pegs[g.id].pos}:g),glog:u.take?(d.glog||[]).filter(t=>t.id!==u.take):d.glog,gundo:un.slice(0,-1)}};}
+function pegGlobalAdd(d,name,now){name=String(name==null?"":name).trim().slice(0,40);if(!name)return{ok:false,error:"Type a global peg name first."};
+ if((d.globals||[]).length>=PEG_GLOBALS)return{ok:false,error:"You can have up to "+PEG_GLOBALS+" global pegs."};
+ if(d.globals.some(g=>g.name.toLowerCase()===name.toLowerCase()))return{ok:false,error:"There is already a global peg called “"+name+"”."};
+ now=pegNowOf(now);let id="g"+now.getTime().toString(36),i=0;while(pegGlobal(d,id))id="g"+now.getTime().toString(36)+(++i);
+ const g={id:id,name:name,board:"",pos:""};return{ok:true,peg:g,data:{...d,globals:[...d.globals,g]}};}
+function pegGlobalRename(d,id,name){const g=pegGlobal(d,id);if(!g)return{ok:false,error:"That global peg no longer exists."};name=String(name==null?"":name).trim().slice(0,40);if(!name)return{ok:false,error:"Type a name."};
+ if(d.globals.some(x=>x.id!==id&&x.name.toLowerCase()===name.toLowerCase()))return{ok:false,error:"There is already a global peg called “"+name+"”."};
+ return{ok:true,data:{...d,globals:d.globals.map(x=>x.id===id?{...x,name:name}:x)}};}
+function pegGlobalRemove(d,id){if(!pegGlobal(d,id))return{ok:false,error:"That global peg no longer exists."};
+ return{ok:true,data:{...d,globals:d.globals.filter(x=>x.id!==id),gundo:(d.gundo||[]).map(u=>{const p={...u.pegs};delete p[id];return{...u,pegs:p};})}};}
+function pegGlobalDeleteTake(d,tid){if(!(d.glog||[]).some(t=>t.id===tid))return{ok:false,error:"That entry no longer exists."};
+ return{ok:true,data:{...d,glog:d.glog.filter(t=>t.id!==tid),gundo:d.gundo.map(u=>u.take===tid?{...u,take:""}:u)}};}
+function pegGlobalDays(d){const g={};for(const t of d.glog||[]){const k=t.d||"";(g[k]=g[k]||[]).push(t);}return Object.keys(g).sort().reverse().map(k=>({d:k,items:g[k]}));}
+function pegGlobalsOn(d,board){return(d.globals||[]).filter(g=>g.board===board&&g.pos);}
+function pegBoardDeleted(d,name){return{...d,globals:d.globals.map(g=>g.board===name?{...g,board:"",pos:""}:g)};}
 /* ===== Job pegs: each job has one peg that travels through the board in reading order and rests where it is taken ===== */
 function pegOrder(b){return Object.keys(b.pegs).sort((x,y)=>{const p=x.split("-"),q=y.split("-");return pegNum(+p[0],+p[1],b.cols)-pegNum(+q[0],+q[1],b.cols);});}
 function pegKeyNum(b,k){const m=String(k||"").split("-");return m.length===2?pegNum(+m[0],+m[1],b.cols):0;}
@@ -685,9 +759,13 @@ function pegTakeDays(b){const g={};for(const t of b.takes||[]){const d=t.d||"";(
 function pegDateLong(d){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||"");if(!m)return d||"Undated";const x=new Date(+m[1],+m[2]-1,+m[3]);if(isNaN(x))return d;
  return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][x.getDay()]+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][x.getMonth()]+" "+x.getDate()+", "+x.getFullYear();}
 function pegWhere2(b,k){const m=k.split("-");return"#"+pegNum(+m[0],+m[1],b.cols)+" (row "+m[0]+", col "+m[1]+")";}
-function pegBoardText(name,b,now){now=now instanceof Date&&!isNaN(now)?now:new Date();const day=pegLocalDay(now),L=[name+" – board update","Updated: "+(pegWhen(b.updated)||pegWhen(now)),"","Job pegs:"];
+function pegBoardText(name,b,now,gd){now=now instanceof Date&&!isNaN(now)?now:new Date();const day=pegLocalDay(now),L=[name+" – board update","Updated: "+(pegWhen(b.updated)||pegWhen(now)),"","Job pegs:"];
  if(!(b.jobs||[]).length)L.push("(no job pegs set up)");
  for(const j of b.jobs||[]){L.push("• "+j.name+": "+(j.pos?pegWhere2(b,j.pos)+" – "+(b.pegs[j.pos]?pegWho(b,j.pos):"(empty position)"):"not placed"));}
+ if(gd&&(gd.globals||[]).length){L.push("","Global pegs (rotate through all boards):");
+  for(const g of gd.globals){L.push("• "+g.name+": "+(g.board&&g.pos?pegGWhere(gd,g.board,g.pos)+(g.board===name?" (this board)":""):"not placed"));}
+  const names=pegBoardOrder(gd);L.push("By board:");for(const bn of names){const on=pegGlobalsOn(gd,bn);if(on.length||bn===name)L.push("• "+bn+": "+(on.length?on.map(g=>g.name+" #"+pegKeyNum(gd.boards[bn]||pegBoardNew(),g.pos)).join(", "):"none"));}
+  const gt=(gd.glog||[]).filter(t=>t.d===day);L.push("Global pegs taken today:");if(!gt.length)L.push("none yet");for(const t of gt)L.push("• "+t.peg+" – "+t.person+" ("+t.board+" #"+t.num+")");}
  const td=(b.takes||[]).filter(t=>t.d===day);L.push("","Taken today ("+pegDateLong(day)+"):");
  if(!td.length)L.push("none yet");for(const t of td)L.push("• "+t.job+" – "+t.person+(t.pos?" ("+pegWhere2(b,t.pos)+")":""));
  L.push("","Shared "+pegWhen(now)+" from ILWU LIFE");return L.join("\n");}
@@ -1275,11 +1353,12 @@ if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;
  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
 /* ===== Peg boards: UI (localStorage "l19.pegs"; photo in IndexedDB key peg|<board>) ===== */
 const PGK="l19.pegs",PGL="l19.pegLabels";
-function pegsLoad(){return pegsClean(lsJson(PGK,null));}
+function pegsLoad(){const raw=lsJson(PGK,null),d=pegsSeed(raw);if(!raw||raw.seeded!==true||!Array.isArray(raw.globals)){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
 function pegsSave(d){LSset(PGK,JSON.stringify(d));}
 let pgSelKey=null,pgD=pegsLoad(),pgBlob=null;
 function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
 function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
+function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
 function pgBoard(name){return pgD.boards[name]||pegBoardNew();}
 function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
 function pgRenderSel(){const cur=pgCur();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur?" selected":""}>${esc(n)}${me?" ★":""}</option>`;}).join("");
@@ -1317,13 +1396,14 @@ function pgRender(){pgRenderSel();const name=pgCur(),b=pgBoard(name),labs=LS(PGL
  $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
  const mine=Object.keys(pgD.boards).filter(k=>Object.values(pgD.boards[k].pegs).some(v=>v.me)).map(k=>{const bb=pgD.boards[k],pk=Object.keys(bb.pegs).find(x=>bb.pegs[x].me),m=pk.split("-");return(k===name?"<b>"+esc(k)+"</b>":esc(k))+": #"+pegNum(+m[0],+m[1],bb.cols)+" (row "+m[0]+", col "+m[1]+")";});
  $("pgMine").innerHTML=mine.length?"★ My pegs: "+mine.join(" · "):"★ No peg marked as yours yet. Tap a position and turn on “This is my peg”.";
- let h="";const lab=labs?"2.75rem":"0";const jat={};for(const j of b.jobs){if(j.pos)(jat[j.pos]=jat[j.pos]||[]).push(j);}
+ let h="";const lab=labs?"2.75rem":"0";const jat={},gat={};for(const j of b.jobs){if(j.pos)(jat[j.pos]=jat[j.pos]||[]).push(j);}for(const g of pegGlobalsOn(pgD,name))(gat[g.pos]=gat[g.pos]||[]).push(g);
+ pgGlRender();$("pgPreset").classList.toggle("hide",name!=="Bull board");
  pgJobsRender(b);
  const g=$("pgGrid");let t=`<div class="pgt" style="grid-template-columns:${labs?"2.75rem ":""}repeat(${b.cols},4.25rem)">`;
  if(labs){t+='<div class="pgh cor" aria-hidden="true">#</div>';for(let c=1;c<=b.cols;c++)t+=`<div class="pgh col" aria-hidden="true">C${c}</div>`;}
  for(let r=1;r<=b.rows;r++){if(labs)t+=`<div class="pgh row" aria-hidden="true">R${r}</div>`;
   for(let c=1;c<=b.cols;c++){const k=pegKey(r,c),v=b.pegs[k],n=pegNum(r,c,b.cols);
-   t+=`<button type="button" class="pgc${v&&(v.n||v.note)?" f":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Position ${n}, row ${r}, column ${c}${v&&v.me?", my peg":""}${v&&v.n?": "+esc(v.n):", empty"}${(jat[k]||[]).map(j=>", job peg "+esc(j.name)).join("")}"><span class="nu">${v&&v.me?"★ ":""}${n}</span><span class="nm">${v&&v.n?esc(v.n):""}</span>${(jat[k]||[]).map(j=>pgBadge(j,true)).join("")}</button>`;}}
+   t+=`<button type="button" class="pgc${v&&(v.n||v.note)?" f":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Position ${n}, row ${r}, column ${c}${v&&v.me?", my peg":""}${v&&v.n?": "+esc(v.n):", empty"}${(jat[k]||[]).map(j=>", job peg "+esc(j.name)).join("")}${(gat[k]||[]).map(g=>", global peg "+esc(g.name)).join("")}"><span class="nu">${v&&v.me?"★ ":""}${n}</span><span class="nm">${v&&v.n?esc(v.n):""}</span>${(jat[k]||[]).map(j=>pgBadge(j,true)).join("")}${(gat[k]||[]).map(g=>`<span class="gbd">◆ ${esc(g.name)}</span>`).join("")}</button>`;}}
  g.innerHTML=t+"</div>";refreshPegPic();}
 function pgEdit(k){const name=pgCur(),b=pgBoard(name),m=k.split("-"),r=+m[0],c=+m[1],v=b.pegs[k]||{n:"",note:"",me:false};pgSelKey=k;
  const e=$("pgEd");e.classList.remove("hide");
@@ -1332,8 +1412,10 @@ function pgEdit(k){const name=pgCur(),b=pgBoard(name),m=k.split("-"),r=+m[0],c=+
 <label for="pgNo">Note <span class="mut">(optional)</span></label><input id="pgNo" maxlength="200" autocomplete="off" value="${esc(v.note)}">
 <button type="button" id="pgMe" aria-pressed="${v.me}" style="width:100%;margin-top:12px">${v.me?"★ This is my peg (on)":"☆ This is my peg (off)"}</button>
 ${b.jobs.length?`<p class="mut" style="margin:12px 0 0">Job pegs</p><div class="row" style="flex-wrap:wrap">${b.jobs.map(j=>`<button type="button" data-mv="${esc(j.id)}">Move ${esc(j.name)} here</button>`).join("")}</div>`:""}
+${pgD.globals.length?`<p class="mut" style="margin:12px 0 0">Global pegs</p><div class="row" style="flex-wrap:wrap">${pgD.globals.map(g=>`<button type="button" data-mg="${esc(g.id)}">Move ${esc(g.name)} here</button>`).join("")}</div>`:""}
 <div class="row" style="margin-top:12px"><button type="button" class="p" id="pgSv">Save</button><button type="button" id="pgCl" class="d">Clear</button><button type="button" id="pgCx">Cancel</button></div>`;
  e.querySelectorAll("[data-mv]").forEach(x=>x.onclick=()=>{const q=pegPlace(pgBoard(name),x.dataset.mv,k,new Date());if(!q.ok){$("pgM").textContent=q.error;return;}pgStore(name,q.board);const jj=pegJob(q.board,x.dataset.mv);$("pgM").textContent=jj.name+" placed at position "+pegNum(r,c,b.cols)+".";pgClose();pgRender();});
+ e.querySelectorAll("[data-mg]").forEach(x=>x.onclick=()=>{const g=pegGlobal(pgD,x.dataset.mg),q=pegGlobalPlace(pgD,x.dataset.mg,name,k,new Date());pgGApply(q,q.ok?g.name+" placed at "+name+" position "+pegNum(r,c,b.cols)+".":"");});
  let me=v.me;$("pgMe").onclick=()=>{me=!me;$("pgMe").setAttribute("aria-pressed",String(me));$("pgMe").textContent=me?"★ This is my peg (on)":"☆ This is my peg (off)";};
  $("pgSv").onclick=()=>{const bb=pgBoard(name),pegs={...bb.pegs},n=$("pgN").value.trim(),note=$("pgNo").value.trim();
   if(me)for(const x of Object.keys(pegs))if(pegs[x].me)pegs[x]={...pegs[x],me:false};
@@ -1357,7 +1439,7 @@ $("pgSz").onclick=()=>{const name=pgCur(),b=pgBoard(name),rv=Number($("pgRows").
  pgClose();pgStore(name,{...r.board,updated:b.updated});$("pgM").textContent="Board size set to "+cv+" columns × "+rv+" rows"+(r.dropped.length?" ("+r.dropped.length+" removed).":".");pgRender();};
 $("pgLab").onclick=()=>{LSset(PGL,LS(PGL,"1")==="0"?"1":"0");pgRender();};
 $("pgDel").onclick=async()=>{const n=pgCur();if(PEG_BOARDS.includes(n)||!confirm("Remove the custom board “"+n+"” with all its pegs and photo?"))return;
- pgD.custom=pgD.custom.filter(x=>x!==n);delete pgD.boards[n];pgD.sel="";pegsSave(pgD);try{(await lByKey("peg|"+n)).forEach(r=>lDel(r.id));}catch(e){}pgClose();$("pgM").textContent="Removed “"+n+"”.";pgRender();};
+ pgD=pegBoardDeleted(pgD,n);pgD.custom=pgD.custom.filter(x=>x!==n);delete pgD.boards[n];pgD.sel="";pegsSave(pgD);try{(await lByKey("peg|"+n)).forEach(r=>lDel(r.id));}catch(e){}pgClose();$("pgM").textContent="Removed “"+n+"”.";pgRender();};
 function pgCtx(){const n=pgCur();return{k:"peg|"+n,vs:"Peg board: "+n,eta:"",etd:""};}
 $("pgPh").onclick=()=>{if(!ldbOk){$("pgM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pick(pgCtx());};
 $("pgCam").onclick=()=>{if(!ldbOk){$("pgM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pickCam(pgCtx());};
@@ -1373,15 +1455,47 @@ $("pgJN").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();
 $("pgJobs").addEventListener("click",e=>{const b=e.target.closest("button[data-a]");if(b&&!b.disabled)pgJobAct(b.dataset.a,b.closest(".jb").dataset.j);});
 $("pgUn").onclick=()=>{const name=pgCur(),r=pegUndo(pgBoard(name),new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);pgClose();pgRender();$("pgM").textContent="Undid: "+r.undone.label+".";};
 $("pgLog").onclick=pgLogOpen;
-$("pgShare").onclick=async()=>{const name=pgCur(),text=pegBoardText(name,pgBoard(name),new Date()),m=$("pgM");
+$("pgShare").onclick=async()=>{const name=pgCur(),text=pegBoardText(name,pgBoard(name),new Date(),pgD),m=$("pgM");
  try{if(navigator.share){await navigator.share({title:name+" – board update",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
  let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
  if(!ok){try{const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();}catch(e){}}
  m.textContent=ok?"Sharing isn't available here, so the update was copied to your clipboard.":"Couldn't share or copy. Try again.";};
+
+/* ----- Global pegs UI ----- */
+function pgGLine(g){if(!g.board||!g.pos)return"Not on a board yet";const b=pgBoard(g.board);return esc(g.board)+" · #"+pegKeyNum(b,g.pos)+" (row "+g.pos.split("-")[0]+", col "+g.pos.split("-")[1]+") – <b>"+(b.pegs[g.pos]?esc(pegWho(b,g.pos)):"(empty position)")+"</b>";}
+function pgGlRender(){const el=$("pgGl");if(!el)return;const gs=pgD.globals,un=pgD.gundo;
+ el.innerHTML=`<h4>◆ Global pegs</h4><p class="mut" style="margin:0 0 4px">One peg each. Moves through every board in order, then back to the first board.</p>`+
+ (gs.length?gs.map(g=>`<div class="gp" data-g="${esc(g.id)}"><button type="button" class="gj" data-ga="jump" aria-label="${esc(g.name)}: ${g.board&&g.pos?"on "+esc(g.board)+", position "+pegKeyNum(pgBoard(g.board),g.pos)+". Tap to go to that board":"not on a board yet"}"><b>◆ ${esc(g.name)}</b><br><span class="mut">${pgGLine(g)}</span></button><div class="row"><button type="button" class="p" data-ga="adv">Advance</button><button type="button" data-ga="take"${g.board&&g.pos&&pgBoard(g.board).pegs[g.pos]?"":" disabled"}>Taken</button></div></div>`).join(""):'<p class="mut">No global pegs. Use Manage to add one.</p>')+
+ `<div class="row"><button type="button" id="gUn"${un.length?"":" disabled"}>${un.length?"Undo: "+esc(un[un.length-1].label):"Undo last global move"}</button><button type="button" id="gLog">Global log</button><button type="button" id="gMan">Manage</button></div>`;
+ $("gUn").onclick=()=>{const r=pegGlobalUndo(pgD,new Date());pgGApply(r,r.ok?"Undid: "+r.undone.label+".":"");};$("gLog").onclick=pgGLogOpen;$("gMan").onclick=pgGManage;}
+function pgJump(board,pos){pgD.sel=board;pegsSave(pgD);pgClose();pgRender();const cell=document.querySelector('.pgc[data-k="'+pos+'"]');if(cell&&cell.scrollIntoView)cell.scrollIntoView({block:"nearest",inline:"center"});}
+$("pgGl").addEventListener("click",e=>{const b=e.target.closest("button[data-ga]");if(!b||b.disabled)return;const id=b.closest(".gp").dataset.g,g=pegGlobal(pgD,id);if(!g)return;const a=b.dataset.ga,now=new Date();
+ if(a==="jump"){if(g.board&&g.pos){pgJump(g.board,g.pos);$("pgM").textContent=g.name+" is on "+g.board+".";}else $("pgM").textContent=g.name+" isn't on a board yet. Tap Advance to start it.";return;}
+ if(a==="adv"){const r=pegGlobalAdvance(pgD,id,now);if(pgGApply(r,r.ok?g.name+" advanced to "+pegGWhere(r.data,r.to.board,r.to.pos)+".":""))pgJump(r.to.board,r.to.pos);}
+ if(a==="take"){const r=pegGlobalTake(pgD,id,now);pgGApply(r,r.ok?"Logged: "+g.name+" taken by "+r.take.person+" ("+r.take.board+", position "+r.take.num+").":"");}});
+function pgGLogOpen(){if($("pgGLogS"))return;const o=pgSheet("pgGLogS"),days=pegGlobalDays(pgD);
+ o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="glT" class="rot"><h3 id="glT">Global pegs log · all boards</h3>
+ ${days.length?days.map(g=>`<div class="rlg"><p><b>${esc(pegDateLong(g.d))}</b></p>${g.items.slice().reverse().map(t=>`<p>◆ ${esc(t.peg)} – <b>${esc(t.person)}</b><br><span class="mut">${esc(t.board)}${t.num?" · position #"+t.num:""}</span></p><div class="row"><button type="button" class="d" data-x="${esc(t.id)}">Delete</button></div>`).join("")}</div>`).join(""):'<p class="mut">No global pegs taken yet.</p>'}
+ <p class="mut" style="margin:0">Newest first; the last ${PEG_TAKES} are kept. Job-peg takes are in each board's “Log of takes”.</p><button type="button" class="p" id="glDn">Close</button></div>`;
+ o.onclick=ev=>{if(ev.target===o){o.remove();return;}const d=ev.target.dataset||{};if(d.x){if(!confirm("Delete this log entry?"))return;const r=pegGlobalDeleteTake(pgD,d.x);o.remove();if(pgGApply(r,""))pgGLogOpen();}};
+ $("glDn").onclick=()=>o.remove();$("glDn").focus();}
+function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
+ o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="gmT" class="rot"><h3 id="gmT">Manage global pegs</h3>
+ ${pgD.globals.map(g=>`<div class="rlg"><label style="margin-top:0" for="gn-${esc(g.id)}">Name</label><input id="gn-${esc(g.id)}" maxlength="40" autocomplete="off" value="${esc(g.name)}"><div class="row"><button type="button" class="p" data-s="${esc(g.id)}">Rename</button><button type="button" class="d" data-r="${esc(g.id)}">Remove</button></div></div>`).join("")}
+ <label for="gnNew">Add a global peg</label><div class="row"><input id="gnNew" maxlength="40" placeholder="e.g. Hatch tender" autocomplete="off"><button type="button" id="gnAdd" style="flex:0 0 auto">Add</button></div>
+ <p id="gmM" class="mut" aria-live="polite" style="margin:0"></p><button type="button" class="p" id="gmDn">Done</button></div>`;
+ const redo=m=>{o.remove();pgGManage();if(m)$("gmM").textContent=m;};
+ o.onclick=ev=>{if(ev.target===o){o.remove();return;}const d=ev.target.dataset||{};
+  if(d.s){const r=pegGlobalRename(pgD,d.s,$("gn-"+d.s).value);if(!r.ok){$("gmM").textContent=r.error;return;}pgGApply(r,"");redo("Renamed.");}
+  if(d.r){const g=pegGlobal(pgD,d.r);if(!g||!confirm("Remove the global peg “"+g.name+"”? Its past takes stay in the log."))return;const r=pegGlobalRemove(pgD,d.r);pgGApply(r,"Removed “"+g.name+"”.");redo("Removed.");}};
+ $("gnAdd").onclick=()=>{const r=pegGlobalAdd(pgD,$("gnNew").value,new Date());if(!r.ok){$("gmM").textContent=r.error;return;}pgGApply(r,"Added global peg “"+r.peg.name+"”.");redo("Added.");};
+ $("gnNew").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("gnAdd").click();}});
+ $("gmDn").onclick=()=>o.remove();$("gmDn").focus();}
+$("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if(!r.added){$("pgM").textContent="All preset jobs are already on the Bull board.";return;}pgStore(name,r.board);$("pgM").textContent="Added "+r.added+" preset job"+(r.added===1?"":"s")+".";pgRender();};
 pgRender();
 
 }
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,pegPresetAdd,pegsSeed,pegBoardOrder,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
