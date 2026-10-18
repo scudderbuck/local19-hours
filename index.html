@@ -83,6 +83,10 @@ button,input,select{font-size:1rem}
 .chat button.link{background:none;border:0;color:#ffd23f;text-decoration:underline;min-height:44px}
 .chat button:disabled{background:#2c4670;color:#d5dff0;border-color:#2c4670}
 .chat label{color:#f2f6fb}
+/* v43: all Chat text bold */
+.chat,.chat h3,.chat p,.chat label,.chat input,.chat textarea,.chat button,.chat .chnote,.chat .mut,.chm,.chm .tx,.chm button,#chSt{font-weight:700}
+.chat input::placeholder,.chat textarea::placeholder{font-weight:700}
+.chm .who{font-weight:800}.chm .mt{font-weight:600}
 .chtabs{display:flex;gap:8px;margin:10px 0}.chtabs button{flex:1}.chtabs button[aria-pressed=true]{background:#ffd23f;color:#00214e;font-weight:700}
 .chlist{height:50vh;height:50dvh;min-height:260px;overflow-y:auto;border:1px solid #3b5a8c;border-radius:10px;padding:8px;background:#001a3d;display:flex;flex-direction:column;gap:8px}
 .chm{max-width:85%;padding:8px 12px;border-radius:14px;background:#17407f;color:#fff;align-self:flex-start;word-wrap:break-word;overflow-wrap:anywhere}
@@ -498,7 +502,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v42",CACHE_VERSION="l19hours-v42"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v43",CACHE_VERSION="l19hours-v43"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
