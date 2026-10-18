@@ -293,7 +293,7 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <h4 class="pgjh">Job pegs</h4>
 <div class="row"><input id="pgJN" maxlength="40" placeholder="New job, e.g. Bull 1" aria-label="New job name" autocomplete="off"><button type="button" id="pgJA" style="flex:0 0 auto">Add job peg</button></div>
 <div id="pgJobs"></div>
-<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
+<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Flex semi, Bull, Strad, Flex strad, UT, Super flex bull)</button><div id="pgHint" class="hide" role="status" style="margin-top:8px;padding:8px;border:1px solid var(--bd,#888);border-radius:8px"><span>New presets available: Flex semi, Flex strad</span> <button type="button" id="pgHintAdd">Add</button> <button type="button" id="pgHintX" aria-label="Dismiss new presets hint">Dismiss</button></div></div>
 <div class="row"><button type="button" id="pgUn">Undo last action</button><button type="button" id="pgLog">Log of takes</button></div>
 <p class="mut" style="margin-bottom:4px">Advance moves a job peg to the next person in reading order (left to right, then down), skipping empty positions and wrapping at the end. “Taken” logs that person for that job; the peg then rests there until you advance it. Tap any position to place a job peg or a global peg there. Global pegs (Supervisor, Flex supervisor, Foreman) exist once and travel through every board in the order of the Board list, then wrap back to the first board.</p>
 <div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
@@ -474,7 +474,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v40",CACHE_VERSION="l19hours-v40"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v41",CACHE_VERSION="l19hours-v41"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -607,7 +607,7 @@ function needsMerge(cur,inc){const m=new Map(needsClean(cur).map(n=>[n.id,n]));n
 function needsGroups(a){const g={};for(const n of needsClean(a))(g[n.date]=g[n.date]||[]).push(n);return Object.keys(g).sort().reverse().map(k=>({key:k,items:g[k].sort((x,y)=>(y.created||"")>(x.created||"")?1:-1)}));}
 /* ===== Peg boards (pure helpers; manual entries only, no seniority logic) ===== */
 const PEG_BOARDS=["Bull board","Wheat board","Trucker board","Crane board","Stevedore board","Sling board","Little crane board"];
-const PEG_GLOBAL_DEFAULT=["Supervisor","Flex supervisor","Foreman"],PEG_GLOBALS=10,PEG_PRESET=["Semi","Bull","Strad","UT","Super flex bull"];
+const PEG_GLOBAL_DEFAULT=["Supervisor","Flex supervisor","Foreman"],PEG_GLOBALS=10,PEG_PRESET=["Semi","Flex semi","Bull","Strad","Flex strad","UT","Super flex bull"],PEG_PRESET_ID=["p0","p5","p1","p2","p6","p3","p4"],PEG_PRESET_COLOR=[0,5,1,2,6,3,4],PEG_PRESET_NEW=["Flex semi","Flex strad"]; /* ids/colors of the v40 five are kept stable */
 const PEG_DEF={cols:25,rows:10},PEG_LEGACY={cols:20,rows:10},PEG_MAX=60,PEG_JOBS=20,PEG_TAKES=500,PEG_UNDO=10;
 const PEG_COLORS=[["Red","#b3261e","#ffffff"],["Orange","#9a4a00","#ffffff"],["Green","#1b5e20","#ffffff"],["Teal","#00606b","#ffffff"],["Blue","#0b4fa8","#ffffff"],["Purple","#6a2c91","#ffffff"],["Pink","#a3185b","#ffffff"],["Yellow","#ffd23f","#1a1400"]];
 function pegDim(v,d){const n=Math.floor(Number(v));return isFinite(n)&&n>=1?Math.min(PEG_MAX,n):d;}
@@ -670,8 +670,9 @@ function pegsMerge(cur,inc){const a=pegsClean(cur),b=pegsClean(inc),o={boards:{.
  o.glog.sort((x,y)=>(x.at||"")<(y.at||"")?-1:(x.at||"")>(y.at||"")?1:0);return pegsClean(o);}
 /* ===== Preset jobs (Bull board) – seeded once, only for a board with no job pegs ===== */
 function pegPresetAdd(b){const jobs=[...(b.jobs||[])];let n=0;
- PEG_PRESET.forEach((nm,i)=>{if(jobs.length>=PEG_JOBS||jobs.some(j=>j.name.toLowerCase()===nm.toLowerCase()))return;let id="p"+i;while(jobs.some(j=>j.id===id))id+="x";jobs.push({id:id,name:nm,color:i,pos:""});n++;});
+ PEG_PRESET.forEach((nm,i)=>{if(jobs.length>=PEG_JOBS||jobs.some(j=>j.name.toLowerCase()===nm.toLowerCase()))return;let id=PEG_PRESET_ID[i];while(jobs.some(j=>j.id===id))id+="x";jobs.push({id:id,name:nm,color:PEG_PRESET_COLOR[i],pos:""});n++;});
  return{board:{...b,jobs:jobs},added:n};}
+function pegPresetMissing(b,names){const have=new Set((b&&b.jobs||[]).map(j=>j.name.toLowerCase()));return(names||PEG_PRESET).filter(n=>!have.has(n.toLowerCase()));}
 function pegsSeed(d){d=pegsClean(d);if(d.seeded)return d;const nb=d.boards["Bull board"]||pegBoardNew();
  if(!nb.jobs.length)d.boards["Bull board"]=pegPresetAdd(nb).board;d.seeded=true;return d;}
 /* ===== Global pegs: single pegs that rotate through ALL boards (board selector order), reading order inside each board ===== */
@@ -1352,7 +1353,7 @@ if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;
  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)upBanner();});
  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
 /* ===== Peg boards: UI (localStorage "l19.pegs"; photo in IndexedDB key peg|<board>) ===== */
-const PGK="l19.pegs",PGL="l19.pegLabels";
+const PGK="l19.pegs",PGH="l19.pegHint41",PGL="l19.pegLabels";
 function pegsLoad(){const raw=lsJson(PGK,null),d=pegsSeed(raw);if(!raw||raw.seeded!==true||!Array.isArray(raw.globals)){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
 function pegsSave(d){LSset(PGK,JSON.stringify(d));}
 let pgSelKey=null,pgD=pegsLoad(),pgBlob=null;
@@ -1397,7 +1398,7 @@ function pgRender(){pgRenderSel();const name=pgCur(),b=pgBoard(name),labs=LS(PGL
  const mine=Object.keys(pgD.boards).filter(k=>Object.values(pgD.boards[k].pegs).some(v=>v.me)).map(k=>{const bb=pgD.boards[k],pk=Object.keys(bb.pegs).find(x=>bb.pegs[x].me),m=pk.split("-");return(k===name?"<b>"+esc(k)+"</b>":esc(k))+": #"+pegNum(+m[0],+m[1],bb.cols)+" (row "+m[0]+", col "+m[1]+")";});
  $("pgMine").innerHTML=mine.length?"★ My pegs: "+mine.join(" · "):"★ No peg marked as yours yet. Tap a position and turn on “This is my peg”.";
  let h="";const lab=labs?"2.75rem":"0";const jat={},gat={};for(const j of b.jobs){if(j.pos)(jat[j.pos]=jat[j.pos]||[]).push(j);}for(const g of pegGlobalsOn(pgD,name))(gat[g.pos]=gat[g.pos]||[]).push(g);
- pgGlRender();$("pgPreset").classList.toggle("hide",name!=="Bull board");
+ pgGlRender();$("pgPreset").classList.toggle("hide",name!=="Bull board");pgHintRender();
  pgJobsRender(b);
  const g=$("pgGrid");let t=`<div class="pgt" style="grid-template-columns:${labs?"2.75rem ":""}repeat(${b.cols},4.25rem)">`;
  if(labs){t+='<div class="pgh cor" aria-hidden="true">#</div>';for(let c=1;c<=b.cols;c++)t+=`<div class="pgh col" aria-hidden="true">C${c}</div>`;}
@@ -1463,6 +1464,8 @@ $("pgShare").onclick=async()=>{const name=pgCur(),text=pegBoardText(name,pgBoard
 
 /* ----- Global pegs UI ----- */
 function pgGLine(g){if(!g.board||!g.pos)return"Not on a board yet";const b=pgBoard(g.board);return esc(g.board)+" · #"+pegKeyNum(b,g.pos)+" (row "+g.pos.split("-")[0]+", col "+g.pos.split("-")[1]+") – <b>"+(b.pegs[g.pos]?esc(pegWho(b,g.pos)):"(empty position)")+"</b>";}
+function pgHintOn(){let d="";try{d=localStorage.getItem(PGH)||"";}catch(e){}return !d&&pegPresetMissing(pgBoard("Bull board"),PEG_PRESET_NEW).length>0;}
+function pgHintRender(){const el=$("pgHint");if(el)el.classList.toggle("hide",!pgHintOn());}
 function pgGlRender(){const el=$("pgGl");if(!el)return;const gs=pgD.globals,un=pgD.gundo;
  el.innerHTML=`<h4>◆ Global pegs</h4><p class="mut" style="margin:0 0 4px">One peg each. Moves through every board in order, then back to the first board.</p>`+
  (gs.length?gs.map(g=>`<div class="gp" data-g="${esc(g.id)}"><button type="button" class="gj" data-ga="jump" aria-label="${esc(g.name)}: ${g.board&&g.pos?"on "+esc(g.board)+", position "+pegKeyNum(pgBoard(g.board),g.pos)+". Tap to go to that board":"not on a board yet"}"><b>◆ ${esc(g.name)}</b><br><span class="mut">${pgGLine(g)}</span></button><div class="row"><button type="button" class="p" data-ga="adv">Advance</button><button type="button" data-ga="take"${g.board&&g.pos&&pgBoard(g.board).pegs[g.pos]?"":" disabled"}>Taken</button></div></div>`).join(""):'<p class="mut">No global pegs. Use Manage to add one.</p>')+
@@ -1491,11 +1494,13 @@ function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
  $("gnAdd").onclick=()=>{const r=pegGlobalAdd(pgD,$("gnNew").value,new Date());if(!r.ok){$("gmM").textContent=r.error;return;}pgGApply(r,"Added global peg “"+r.peg.name+"”.");redo("Added.");};
  $("gnNew").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("gnAdd").click();}});
  $("gmDn").onclick=()=>o.remove();$("gmDn").focus();}
+$("pgHintX").onclick=()=>{try{localStorage.setItem(PGH,"1");}catch(e){}pgHintRender();};
+$("pgHintAdd").onclick=()=>{$("pgPre").onclick();try{localStorage.setItem(PGH,"1");}catch(e){}pgHintRender();};
 $("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if(!r.added){$("pgM").textContent="All preset jobs are already on the Bull board.";return;}pgStore(name,r.board);$("pgM").textContent="Added "+r.added+" preset job"+(r.added===1?"":"s")+".";pgRender();};
 pgRender();
 
 }
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,pegPresetAdd,pegsSeed,pegBoardOrder,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
