@@ -142,17 +142,19 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .pk.g{border-radius:6px;border:3px double #fff;background:#10151c;color:#fff}
 .pggrid.bbg{background:#07153a;border-color:#ffd23f;max-height:80vh;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .bb{display:flex;gap:.6em;width:max-content;padding:.5em;font-size:calc(1rem*var(--bz,1));color:#f2f6ff}
-.bcol{width:12em;flex:0 0 12em;display:flex;flex-direction:column;gap:.25em}
+.bcol{width:11.5em;flex:0 0 11.5em;display:flex;flex-direction:column;gap:.25em}
 .bh{position:sticky;top:0;z-index:2;align-self:center;width:2.2em;height:2.2em;margin-bottom:.15em;border-radius:50%;background:#ffd23f;color:#07153a;font-weight:800;font-size:1.3em;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #07153a}
-.slip{display:flex;flex-wrap:wrap;align-items:center;gap:.4em;width:100%;min-height:2.75em;padding:.2em .35em;box-sizing:border-box;border:1px solid #4a6bb5;border-radius:6px;background:#16306a;color:#f2f6ff;font-size:1em;text-align:left;position:relative}
-.sw{position:relative;width:100%}.sw .slip{padding-left:max(48px,3.1em);min-height:max(44px,2.75em)}
+.slip{display:flex;flex-wrap:nowrap;align-items:center;gap:.2em;width:100%;min-height:2.75em;padding:.1em .25em;box-sizing:border-box;border:1px solid #4a6bb5;border-radius:6px;background:#16306a;color:#f2f6ff;font-size:1em;text-align:left;position:relative}
+.sw{position:relative;width:100%}.sw .slip{padding-left:max(42px,2.6em);min-height:max(44px,2.75em)}
 .sc{position:absolute;left:0;top:0;bottom:0;width:max(44px,2.75em);min-height:44px;padding:0;margin:0;border:0;background:transparent;display:flex;align-items:center;justify-content:center;z-index:1;cursor:pointer}
 .sc .sd{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:36px;height:36px;border-radius:50%;border:3px solid #cfe0ff;background:transparent;box-sizing:border-box;font-size:.8em;font-weight:800;line-height:1;box-shadow:0 0 0 1px #000}
 .sc.f .sd{box-shadow:0 0 0 1px #000,0 0 0 3px #07153a}
 .bb.held .sc .sd{border-color:#ffd23f;border-style:dashed}.bb.held .sc.f .sd{border-style:solid}
 .sc .cb{position:absolute;right:-6px;top:-6px;min-width:1.3em;height:1.3em;border-radius:999px;background:#fff;color:#07153a;border:2px solid #07153a;font-style:normal;font-size:.85em;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 2px;box-sizing:border-box}
-.slip .sn{flex:0 0 2.9em;font-size:.72em;color:#b8cdf5;font-variant-numeric:tabular-nums}
-.slip .sl{flex:1 1 5em;min-width:0;font-weight:700;font-size:.95em;line-height:1.15;overflow-wrap:anywhere}
+.slip .sn{flex:0 0 auto;max-width:2.4em;font-size:.66em;color:#b8cdf5;font-variant-numeric:tabular-nums}
+.slip .sl{flex:1 1 auto;min-width:0;font-weight:700;font-size:clamp(.78em,.9em,.92em);letter-spacing:-.015em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slip .sl.sm{font-size:.8em;letter-spacing:-.02em}
+.slip .sl.w2{white-space:normal;overflow:hidden;text-overflow:clip;overflow-wrap:anywhere;font-size:.8em;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.05}
 .slip .sp{display:flex;gap:2px;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
 .slip.e{background:transparent;border-style:dashed;border-color:#34508f;color:#8ea6d6}.slip.e .sl{font-weight:400;font-style:italic}
 .slip.hp{border:2px solid #ffd23f;background:#1f3f86}
@@ -553,7 +555,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v50",CACHE_VERSION="l19hours-v50"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v51",CACHE_VERSION="l19hours-v51"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1647,6 +1649,8 @@ window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{
   last={x:tp.x,y:tp.y,t:now,held:tp.held};tp=null;},{passive:false});
  g.addEventListener("touchcancel",()=>{pz=null;tp=null;});
 })();
+/* v51: names stay on ONE line; only a name that still overflows at the base size wraps to two lines (measured at zoom 1, so the result is the same at every zoom) */
+function pgNameFit(g){g.querySelectorAll(".slip .sl").forEach(e=>{if(e.scrollWidth>e.clientWidth+1){e.classList.add("sm");if(e.scrollWidth>e.clientWidth+1)e.classList.add("w2");}});}
 function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg");const labs=[];
  let t=`<div class="bbz"><div class="bb${pgHeld?" held":""}" style="--bz:${pgZoom()}">`;
  for(let c=1;c<=b.cols;c++){t+=`<div class="bcol" role="group" aria-label="Column ${c}"><div class="bh" aria-hidden="true">${c}</div>`;
@@ -1654,9 +1658,9 @@ function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg")
    const pk=pj.map(j=>{const cc=PEG_COLORS[j.color]||PEG_COLORS[0];return`<span class="pk" data-t="j" data-id="${esc(j.id)}" style="${pegSty(cc)}" title="${esc(j.name)}">${esc(pegAbbr(j.name))}</span>`;}).join("")+pg.map(x=>`<span class="pk g" data-t="g" data-id="${esc(x.id)}" title="${esc(x.name)}">${esc(pegAbbr(x.name))}</span>`).join("");
    const top=pj.length?pj[pj.length-1]:null,tc=top?PEG_COLORS[top.color]||PEG_COLORS[0]:null,cnt=pj.length+pg.length;
    const cl=top?"Peg "+top.name+(cnt>1?" and "+(cnt-1)+" more":"")+" on this slip. Tap to pick it up":pg.length?"Global peg "+pg[pg.length-1].name+" on this slip. Tap to pick it up":"Empty peg circle. Tap to place the selected peg here";
-   t+=`<div class="sw"><button type="button" class="sc${top?" f":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${esc(cl)}"><span class="sd"${tc?` style="${pegSty(tc)}"`:""}>${top?esc(pegAbbr(top.name)):""}${cnt>1?`<i class="cb">${cnt}</i>`:""}</span></button><button type="button" class="slip${nm?"":" e"}${pj.length||pg.length?" hp":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${nm?esc(nm)+(v.note?", number "+esc(v.note):""):"blank"}${v&&v.me?", my peg":""}${pj.map(j=>", peg "+esc(j.name)).join("")}${pg.map(x=>", global peg "+esc(x.name)).join("")}. Opens the slip editor"><span class="sn">${v&&v.note?esc(v.note):""}</span><span class="sl">${nm?(v.me?"★ ":"")+esc(nm):"(blank)"}</span><span class="sp">${pk}</span></button></div>`;}
+   t+=`<div class="sw"><button type="button" class="sc${top?" f":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${esc(cl)}"><span class="sd"${tc?` style="${pegSty(tc)}"`:""}>${top?esc(pegAbbr(top.name)):""}${cnt>1?`<i class="cb">${cnt}</i>`:""}</span></button><button type="button" class="slip${nm?"":" e"}${pj.length||pg.length?" hp":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${nm?esc(nm)+(v.note?", number "+esc(v.note):""):"blank"}${v&&v.me?", my peg":""}${pj.map(j=>", peg "+esc(j.name)).join("")}${pg.map(x=>", global peg "+esc(x.name)).join("")}. Opens the slip editor">${v&&v.note?`<span class="sn">${esc(v.note)}</span>`:""}<span class="sl">${nm?(v.me?"★ ":"")+esc(nm):"(blank)"}</span><span class="sp">${pk}</span></button></div>`;}
   t+="</div>";}
- g.innerHTML=t+"</div></div>";pgZApply();
+ g.innerHTML=t+"</div></div>";pgNameFit(g);pgZApply();
  const pane=$("pgPane");if(pane&&!pane.classList.contains("hide")&&!pane.firstChild)pane.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';}
 function pgHold(t,id){pgHeld=pgHeld&&pgHeld.t===t&&pgHeld.id===id?null:{t:t,id:id};pgClose();const hp=pgHeldPeg();$("pgM").textContent=hp?"Holding "+hp.name+". Tap the slip to put it on.":"Peg put down.";pgRender();}
 function pgDrop(k){const hp=pgHeldPeg();if(!hp){pgHeld=null;return;}const name=BULL_BOARD,b=pgBoard(name),now=new Date(),slipWho=b.pegs[k]&&b.pegs[k].n,pm=$("pgM");
