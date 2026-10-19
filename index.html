@@ -218,13 +218,26 @@ body.pgdrag{overscroll-behavior:none}
 .sw{display:flex;gap:6px;flex-wrap:wrap}.sw button{min-width:44px;min-height:44px;padding:0 8px;font-weight:700;border:2px solid var(--bd)}.sw button[aria-pressed=true]{outline:3px solid var(--acc);outline-offset:1px}
 #pgSz[disabled]{opacity:1}.pgmine b{color:var(--fg)}
 .ltr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}.ltr button{min-height:44px;padding:0 12px;font-size:1rem}
-.ltr .th{display:flex;align-items:center;gap:6px;padding:0 8px 0 4px}.ltr .th img{width:36px;height:36px;object-fit:cover;border-radius:6px}
-#lv{position:fixed;inset:0;background:#000;z-index:20;display:flex;flex-direction:column;color:#fff}
-#lv .sc{flex:1;overflow:auto;touch-action:pan-x pan-y pinch-zoom;-webkit-overflow-scrolling:touch}
-#lv .sc img{display:block;width:100%;height:auto;max-width:none}
-#lv .bar{display:flex;flex-wrap:wrap;gap:6px;padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:#111}
-#lv .bar button{flex:1 1 22%;color:#fff;background:#222;border-color:#444}#lv .bar button.d{color:#ff8a80}
-#lv .cap{padding:8px;font-size:.875rem;background:#111}
+/* v54: letter / needs photos show as large full-width previews (was a 36px thumbnail) */
+#shList .ent>div{flex:1 1 auto;min-width:0}
+.ltr>span,.nd .nb .npic{flex:1 1 100%;min-width:0;max-width:100%;order:-1}.ltr>span:empty,.nd .nb .npic:empty{display:none}.nd .nb .npic{order:0}
+.ltr .th,.nd .nb .th{display:block;width:100%;max-width:100%;padding:0;overflow:hidden;text-align:left;min-height:48px}
+.ltr .th img,.nd .nb .th img{display:block;width:100%;height:auto;max-height:min(70vh,560px);object-fit:contain;background:#fff;border-radius:0}
+.ltr .th span,.nd .nb .th span{display:block;padding:8px 12px;font-size:1rem}
+/* v54: full-screen photo viewer. Own class names (the old ".sc" collided with the peg-board slip ".sc" rule, shrinking the image area to 44px). */
+#lv{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:100vw;overflow:hidden;background:#00214e;z-index:20;display:flex;flex-direction:column;color:#f2f6ff;overscroll-behavior:contain}
+#lv .cap{display:flex;align-items:center;gap:8px;padding:4px 4px 4px 12px;padding-top:max(4px,env(safe-area-inset-top));font-size:.9375rem;background:#00183a;flex:0 0 auto}
+#lv .cap .ct{flex:1 1 auto;min-width:0;overflow-wrap:anywhere;line-height:1.3}
+#lv .cap #lvx{flex:0 0 auto;min-width:48px;min-height:48px;padding:0;font-size:1.375rem;line-height:1;color:#fff;background:transparent;border:2px solid #5d7bb5;border-radius:10px}
+#lv .lvst{flex:1 1 auto;min-height:0;min-width:0;position:relative;overflow:hidden;touch-action:none;cursor:grab;background:#00214e;-webkit-user-select:none;user-select:none}
+#lv .lvst img{position:absolute;left:0;top:0;max-width:none;max-height:none;transform-origin:0 0;will-change:transform;-webkit-user-drag:none;user-select:none;pointer-events:none;background:#fff;visibility:hidden}
+#lv .lvst img.on{visibility:visible}
+#lv .lvzb{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 8px;background:#00183a;flex:0 0 auto}
+#lv .lvzb button{min-width:56px;min-height:44px;padding:0 12px;font-size:1.25rem;font-weight:700;color:#fff;background:#0b3170;border-color:#5d7bb5}
+#lv .lvzb #lvzp{min-width:64px;text-align:center;font-size:.9375rem;color:#f2f6ff}
+#lv .bar{display:flex;flex-wrap:wrap;gap:6px;padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:#00183a;flex:0 0 auto}
+#lv .bar button{flex:1 1 22%;min-width:0;min-height:44px;color:#fff;background:#0b3170;border-color:#5d7bb5}#lv .bar button.d{color:#ffb4ab}
+#pgWrap.side .bbph img{cursor:zoom-in}
 .ban{background:var(--card);border:2px solid var(--acc);border-radius:var(--r);padding:12px 16px;margin-bottom:var(--s)}
 .pg{height:14px;border-radius:7px;background:var(--bd);border:1px solid var(--mut);overflow:hidden;margin:8px 0}.pg>i{display:block;height:100%;background:var(--acc)}
 #qp{margin-top:0}#qp button{text-align:left}
@@ -247,7 +260,6 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .nd .nh{font-weight:700}.nd pre{white-space:pre-wrap;word-break:break-word;font:inherit;font-size:1rem;margin:4px 0 0}
 .nd .nl{font-size:.875rem;font-weight:600;color:var(--mut);margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
 .nd .nb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.nd .nb button{min-height:44px;padding:0 14px}
-.nd .nb .th{display:flex;align-items:center;gap:6px;padding:0 8px 0 4px}.nd .nb .th img{width:36px;height:36px;object-fit:cover;border-radius:6px}
 html,body{background:#00214e}
 #splash{position:fixed;inset:0;z-index:2147483000;opacity:1;background:#00214e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spf 1.2s linear forwards;-webkit-tap-highlight-color:transparent}
 #splash img{width:50%;max-width:320px;height:auto;display:block}
@@ -584,7 +596,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v53",CACHE_VERSION="l19hours-v53"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v54",CACHE_VERSION="l19hours-v54"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1014,6 +1026,13 @@ function pegText(name,b,now){const ks=Object.keys(b.pegs).sort((x,y)=>{const p=x
  L.push("","Shared "+pegWhen(now)+" from ILWU LIFE");return L.join("\n");}
 function letterTitle(vs,eta){return (String(vs||"Ship letter").trim()+" "+(eta||"")).trim();}
 function fitSize(w,h,max){max=max||1600;return w>max?{w:max,h:Math.round(h*max/w)}:{w:w,h:h};}
+/* v54 photo viewer math. Scale s is CSS px per image px; fit = whole image visible. */
+function lvFitScale(nw,nh,W,H){if(!(nw>0&&nh>0&&W>0&&H>0))return 1;return Math.min(W/nw,H/nh);}
+function lvMaxScale(fit){return Math.max(fit*8,2);}
+function lvClampScale(s,fit){return Math.min(lvMaxScale(fit),Math.max(fit,s));}
+function lvClampPan(x,y,dw,dh,W,H){return{x:dw<=W?(W-dw)/2:Math.min(0,Math.max(W-dw,x)),y:dh<=H?(H-dh)/2:Math.min(0,Math.max(H-dh,y))};}
+function lvZoomAt(z,ns,ax,ay){const k=ns/z.s;return{s:ns,x:ax-(ax-z.x)*k,y:ay-(ay-z.y)*k};}
+function lvDoubleTap(s,fit){return s>fit*1.05?fit:fit*2;}
 function shFmt(s){if(!s)return"?";const[d,t]=s.split("T");return d.slice(5).replace("-","/")+" "+(t||"");}
 function shDate(k){if(!/^\d{4}-/.test(k))return k;const d=parseDate(k);return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]+" "+k.slice(5).replace("-","/");}
 if(typeof document!=="undefined"){
@@ -1263,7 +1282,7 @@ async function refreshLetters(){
   el.querySelector(".la").textContent=a.length?"＋ Add another":"📷 Add letter";
   if(!a.length){t.innerHTML="";return;}
   const last=a[a.length-1],url=URL.createObjectURL(last.blob);
-  t.innerHTML=`<button type="button" class="th lo" aria-label="Open letter photos"><img alt="" src="${url}"><span>${esc(letterLabel(last.added))}${a.length>1?" · ×"+a.length:""}</span></button>`;});
+  t.innerHTML=`<button type="button" class="th lo" aria-label="Open letter photos"><img alt="" src="${url}"><span>${esc(letterLabel(last.added))}${a.length>1?" · "+a.length+" letters, tap to view all":" · tap to view full screen"}</span></button>`;});
  }
 function markNoDb(){document.querySelectorAll("#shList .ltr").forEach(el=>{el.querySelector(".la").disabled=true;el.querySelector(".lt").innerHTML='<span class="mut">Letter photos unavailable (private storage not supported in this browser).</span>';});}
 const lfile=document.createElement("input");lfile.type="file";lfile.accept="image/*";lfile.multiple=true;lfile.id="lfile";lfile.className="hide";document.body.appendChild(lfile);
@@ -1279,23 +1298,60 @@ async function lSave(inp,src){const fs=[...inp.files],c=lctx;inp.value="";if(!fs
  await refreshLetters();if(lv.open)viewer(c.k,c.vs,c.eta,c.etd,lv.i);}
 function pick(c){lctx=c;lfile.click();}
 function pickCam(c){lctx=c;lcam.click();}
-const lv={open:false,i:0,url:null};
+const lv={open:false,i:0,url:null,off:null,zm:null};
 function letterFile(blob,vs,eta,n){const ext=(blob.type||"").includes("png")?"png":(blob.type||"").includes("webp")?"webp":"jpg";const nm=(letterTitle(vs,eta).replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"_")||"letter")+(n?"_"+n:"")+"."+ext;return new File([blob],nm,{type:blob.type||"image/jpeg"});}
 function dlFiles(fs){fs.forEach((f,i)=>setTimeout(()=>{const u=URL.createObjectURL(f),a=document.createElement("a");a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);},i*400));}
 async function shareLetters(blobs,vs,eta){const fs=blobs.map((b,i)=>letterFile(b,vs,eta,blobs.length>1?i+1:0)),title=letterTitle(vs,eta);
  try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:fs})){await navigator.share({files:fs,title});return;}}catch(e){if(e&&e.name==="AbortError")return;}
  dlFiles(fs);}
+function lvTeardown(){const d=$("lv");if(d)d.remove();if(lv.off){lv.off();lv.off=null;}if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}}
+function lvClose(){if(!lv.open&&!$("lv"))return;lvTeardown();lv.open=false;if(history.state&&history.state.l19lv){try{history.back();}catch(e){}}refreshLetters();}
+window.addEventListener("popstate",()=>{if(lv.open||$("lv")){lvTeardown();lv.open=false;refreshLetters();}});
+/* pinch / pan / double-tap / wheel zoom inside the viewer; the page itself never zooms or scrolls sideways */
+function lvZoomer(st,img,lab){let nw=0,nh=0,fit=1,z={s:1,x:0,y:0},fitMode=true;const pts=new Map();let pinch=null,pan=null,lastTap=null,moved=false;
+ const W=()=>st.clientWidth,H=()=>st.clientHeight;
+ const paint=()=>{const dw=nw*z.s,dh=nh*z.s,c=lvClampPan(z.x,z.y,dw,dh,W(),H());z.x=c.x;z.y=c.y;
+  img.style.width=dw+"px";img.style.height=dh+"px";img.style.transform="translate3d("+z.x+"px,"+z.y+"px,0)";
+  fitMode=z.s<=fit*1.001;if(lab)lab.textContent=Math.round(z.s/fit*100)+"%";st.style.cursor=fitMode?"zoom-in":"grab";};
+ const toFit=()=>{fit=lvFitScale(nw,nh,W(),H());z={s:fit,x:0,y:0};paint();};
+ const zoomTo=(ns,ax,ay)=>{ns=lvClampScale(ns,fit);if(ax==null){ax=W()/2;ay=H()/2;}z=lvZoomAt(z,ns,ax,ay);paint();};
+ const rel=e=>{const r=st.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};};
+ const ready=()=>{nw=img.naturalWidth;nh=img.naturalHeight;if(!nw||!nh)return;toFit();img.classList.add("on");};
+ if(img.complete&&img.naturalWidth)ready();else img.addEventListener("load",ready);
+ st.addEventListener("pointerdown",e=>{if(!nw)return;try{st.setPointerCapture(e.pointerId);}catch(_){}pts.set(e.pointerId,rel(e));moved=false;
+  if(pts.size===2){const[a,b]=[...pts.values()],m={x:(a.x+b.x)/2,y:(a.y+b.y)/2};pinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,s:z.s,m,x:z.x,y:z.y};pan=null;}
+  else if(pts.size===1){const p=rel(e);pan={sx:p.x,sy:p.y,x:z.x,y:z.y};}e.preventDefault();});
+ st.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,rel(e));
+  if(pinch&&pts.size>=2){const[a,b]=[...pts.values()],m={x:(a.x+b.x)/2,y:(a.y+b.y)/2},ns=lvClampScale(pinch.s*Math.hypot(a.x-b.x,a.y-b.y)/pinch.d,fit),k=ns/pinch.s;
+   z={s:ns,x:m.x-(pinch.m.x-pinch.x)*k,y:m.y-(pinch.m.y-pinch.y)*k};moved=true;paint();}
+  else if(pan){const p=rel(e),dx=p.x-pan.sx,dy=p.y-pan.sy;if(Math.abs(dx)+Math.abs(dy)>8)moved=true;if(moved){z.x=pan.x+dx;z.y=pan.y+dy;paint();}}e.preventDefault();});
+ const up=e=>{if(!pts.has(e.pointerId))return;const p=pts.get(e.pointerId);pts.delete(e.pointerId);
+  if(pts.size<2)pinch=null;if(pts.size===1){const q=[...pts.values()][0];pan={sx:q.x,sy:q.y,x:z.x,y:z.y};return;}pan=null;
+  if(e.type!=="pointerup"||moved){lastTap=null;return;}const t=Date.now();
+  if(lastTap&&t-lastTap.t<350&&Math.hypot(p.x-lastTap.x,p.y-lastTap.y)<40){lastTap=null;const ns=lvDoubleTap(z.s,fit);if(ns===fit)toFit();else zoomTo(ns,p.x,p.y);}
+  else lastTap={t,x:p.x,y:p.y};};
+ st.addEventListener("pointerup",up);st.addEventListener("pointercancel",up);
+ st.addEventListener("wheel",e=>{if(!nw)return;e.preventDefault();const p=rel(e);zoomTo(z.s*Math.exp(-e.deltaY*0.0015),p.x,p.y);},{passive:false});
+ const onRs=()=>{if(!nw)return;const was=fitMode;fit=lvFitScale(nw,nh,W(),H());if(was)toFit();else{z.s=lvClampScale(z.s,fit);paint();}};
+ let ro=null;if(window.ResizeObserver){ro=new ResizeObserver(onRs);ro.observe(st);}else window.addEventListener("resize",onRs);
+ return{zin:()=>zoomTo(z.s*1.5),zout:()=>zoomTo(z.s/1.5),fit:toFit,state:()=>({...z,fit,nw,nh}),off:()=>{if(ro)ro.disconnect();else window.removeEventListener("resize",onRs);}};}
 async function viewer(k,vs,eta,etd,i){let a;try{a=await lByKey(k);}catch(e){return;}
- const old=$("lv");if(old)old.remove();if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}
- if(!a.length){lv.open=false;return;}
- lv.open=true;i=Math.max(0,Math.min(i==null?a.length-1:i,a.length-1));lv.i=i;const r=a[i];lv.url=URL.createObjectURL(r.blob);
- const d=document.createElement("div");d.id="lv";d.setAttribute("role","dialog");
- d.innerHTML=`<div class="cap">${esc(vs)}${eta?" · ETA "+esc(eta):""} · ${esc(String(k).startsWith("peg|")?(r.src==="gal"?"Photo added ":"Photo taken ")+pegWhen(r.added):letterLabel(r.added))} (${i+1}/${a.length})</div><div class="sc"><img id="lvimg" alt="Letter photo" src="${lv.url}"></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvs">Share</button>${a.length>1?'<button type="button" id="lvsa">Share all</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
+ const was=lv.open;lvTeardown();
+ if(!a.length){lv.open=false;if(history.state&&history.state.l19lv){try{history.back();}catch(e){}}return;}
+ lv.open=true;if(!was||!(history.state&&history.state.l19lv)){try{history.pushState({l19lv:1},"");}catch(e){}}
+ i=Math.max(0,Math.min(i==null?a.length-1:i,a.length-1));lv.i=i;const r=a[i];lv.url=URL.createObjectURL(r.blob);
+ const peg=String(k).startsWith("peg|"),need=String(k).startsWith("need|");
+ const d=document.createElement("div");d.id="lv";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-label",peg||need?"Photo viewer":"Letter viewer");
+ d.innerHTML=`<div class="cap"><div class="ct">${esc(vs)}${eta?" · ETA "+esc(eta):""} · ${esc(peg?(r.src==="gal"?"Photo added ":"Photo taken ")+pegWhen(r.added):letterLabel(r.added))} (${i+1}/${a.length})</div><button type="button" id="lvx" aria-label="Close viewer">✕</button></div><div class="lvst" id="lvst"><img id="lvimg" alt="${peg||need?"Photo":"Letter photo"} ${i+1} of ${a.length}" decoding="async" draggable="false" src="${lv.url}"></div><div class="lvzb" role="group" aria-label="Zoom"><button type="button" id="lvzo" aria-label="Zoom out">−</button><span id="lvzp" aria-live="polite">100%</span><button type="button" id="lvzf" aria-label="Fit to screen">Fit</button><button type="button" id="lvzi" aria-label="Zoom in">+</button></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvs">Share</button>${a.length>1?'<button type="button" id="lvsa">Share all</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
  document.body.appendChild(d);const c={k,vs,eta,etd};
- $("lvc").onclick=()=>{d.remove();lv.open=false;if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}refreshLetters();};
+ const zm=lvZoomer($("lvst"),$("lvimg"),$("lvzp"));lv.zm=zm;
+ const onKey=e=>{if(e.key==="Escape")lvClose();else if(e.key==="+"||e.key==="=")zm.zin();else if(e.key==="-")zm.zout();else if(e.key==="0")zm.fit();else if(a.length>1&&e.key==="ArrowRight")$("lvn").click();else if(a.length>1&&e.key==="ArrowLeft")$("lvp").click();};
+ document.addEventListener("keydown",onKey);lv.off=()=>{document.removeEventListener("keydown",onKey);zm.off();};
+ $("lvzi").onclick=zm.zin;$("lvzo").onclick=zm.zout;$("lvzf").onclick=zm.fit;
+ $("lvc").onclick=lvClose;$("lvx").onclick=lvClose;$("lvx").focus({preventScroll:true});
  $("lvs").onclick=()=>shareLetters([r.blob],vs,eta);if(a.length>1)$("lvsa").onclick=()=>shareLetters(a.map(x=>x.blob),vs,eta);
  $("lva").onclick=()=>pick(c);$("lvr").onclick=()=>pick({...c,replaceId:r.id});
- $("lvd").onclick=async()=>{if(!confirm("Delete this letter photo?"))return;try{await lDel(r.id);}catch(e){}await refreshLetters();viewer(k,vs,eta,etd,Math.max(0,i-1));};
+ $("lvd").onclick=async()=>{if(!confirm("Delete this photo?"))return;try{await lDel(r.id);}catch(e){}await refreshLetters();viewer(k,vs,eta,etd,Math.max(0,i-1));};
  if(a.length>1){$("lvp").onclick=()=>viewer(k,vs,eta,etd,(i+a.length-1)%a.length);$("lvn").onclick=()=>viewer(k,vs,eta,etd,(i+1)%a.length);}}
 $("shList").addEventListener("click",e=>{const el=e.target.closest(".ltr");if(!el)return;const c={k:el.dataset.k,vs:el.dataset.vs,eta:el.dataset.eta,etd:el.dataset.etd};
  if(e.target.closest(".la"))pick(c);else if(e.target.closest(".lo"))viewer(c.k,c.vs,c.eta,c.etd);});
@@ -1355,6 +1411,7 @@ $("ndF").onsubmit=e=>{e.preventDefault();const d=$("ndD").value;if(!/^\d{4}-\d{2
  LSset(NDK,JSON.stringify(needsMerge(list,[n])));const ed=!!old;ndPend=null;ndReset();renderNeeds();$("ndM").textContent=ed?"Note updated.":"Note saved.";};
 $("ndCx").onclick=()=>{ndReset();$("ndM").textContent="";};
 $("ndPh").onclick=()=>{if(!ldbOk){$("ndM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pick(ndCtx());};
+$("ndPt").addEventListener("click",e=>{if(!e.target.closest(".th"))return;const c=ndCtx();viewer(c.k,c.vs,c.eta,c.etd);});
 $("ndL").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
  if(b.dataset.pic){const id=b.dataset.pic,n=needsList().find(x=>x.id===id);if(n)viewer(ndKey(id),"Needs "+n.port,n.date,"");return;}
  const id=b.dataset.id,n=needsList().find(x=>x.id===id);if(!n)return;
@@ -1852,7 +1909,7 @@ async function refreshPegPic(){const el=$("pgPic");if(!el)return;const c=pgCur()
  if(c!==pgCur())return;if(pgBlob){URL.revokeObjectURL(pgBlob);pgBlob=null;}
  $("pgCam").textContent=a.length?"📷 Take another photo":"📷 Take photo";
  const pn=$("pgPane");if(!a.length){el.innerHTML="";if(pn&&!pn.classList.contains("hide"))pn.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';return;}const last=a[a.length-1];pgBlob=URL.createObjectURL(last.blob);
- if(pn&&!pn.classList.contains("hide"))pn.innerHTML=`<img alt="Photo of the ${esc(c)} to compare" src="${pgBlob}">`;
+ if(pn&&!pn.classList.contains("hide")){pn.innerHTML=`<img alt="Photo of the ${esc(c)} to compare (tap to open full screen)" src="${pgBlob}">`;pn.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
  el.innerHTML=`<button type="button" class="pgp" aria-label="Open photos of ${esc(c)}"><img alt="Photo of ${esc(c)}" src="${pgBlob}"></button><p class="mut pgpl" style="margin:0 0 8px"><b>${last.src==="gal"?"Photo added":"Photo taken"} ${esc(pegWhen(last.added))}</b>${a.length>1?" · "+a.length+" photos (tap to view all, share or delete)":" · tap to view full size, share or delete"}</p>`;
  el.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
 
@@ -2112,7 +2169,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
