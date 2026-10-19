@@ -84,10 +84,26 @@ button,input,select{font-size:1rem}
 .chat button:disabled{background:#2c4670;color:#d5dff0;border-color:#2c4670}
 .chat label{color:#f2f6fb}
 /* v44: weekend all-OT */
+
+/* v53: chat roles + shared boards */
+.rb{display:inline-block;font-size:.75rem;line-height:1;padding:3px 6px;border-radius:6px;margin-left:6px;font-weight:800;background:#ffd23f;color:#00214e;vertical-align:middle}.rb.m{background:#9fd8ff;color:#00214e}
+.chm.me .rb{background:#00214e;color:#ffd23f}.chm.me .rb.m{background:#17407f;color:#fff}
+.chat code{display:block;word-break:break-all;background:#001a3d;border:1px solid #ffd23f;border-radius:8px;padding:10px;color:#fff;font-weight:700;font-size:1rem;user-select:all;-webkit-user-select:all}
+.chat details{margin:8px 0}.chat summary{min-height:44px;display:flex;align-items:center;color:#ffd23f;cursor:pointer}.chat ol{margin:6px 0;padding-left:22px}.chat li{margin:4px 0}
+.chp,.chr{border:1px solid #3b5a8c;border-radius:10px;padding:8px;margin:8px 0;background:#001a3d}.chp .who,.chr .who{font-weight:800}.chp small,.chr small{color:#c9d6e6;font-weight:700}
+.chat h4{color:#ffd23f;margin:12px 0 4px}.chwarn{border-left:4px solid #ff8a80;padding:6px 10px;margin:8px 0;background:#3a1020;border-radius:6px}
+.chp .row button,.chr .row button{flex:1 1 100%}
+#pgCard.shv .shx{display:none!important}
+.pgshc{margin:8px 0;font-size:.9375rem}.pgshc .chip{display:inline-block;min-height:44px;margin:4px 6px 0 0;padding:0 12px;border-radius:22px;border:2px solid var(--fg);background:var(--card);font-weight:700}.pgshc .chip[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc)}
+.shban{background:#ffd23f;color:#1a1400;font-weight:800;border-radius:8px;padding:10px 12px;margin:8px 0}
+.shg{display:grid;gap:4px;min-width:min-content}.shgw{overflow:auto;max-height:70vh;border:1px solid var(--bd);border-radius:10px;padding:6px;background:var(--bg)}
+.shh{font-weight:800;font-size:.8125rem;text-align:center;position:sticky;top:0;background:var(--bg);padding:2px 0;color:var(--fg)}
+.shc{min-height:56px;border:1px solid var(--bd);border-radius:8px;padding:4px 6px;background:var(--card);color:var(--fg);font-size:.875rem;word-break:break-word}.shc small{display:block;color:var(--mut);font-weight:700}.shc .shn{font-weight:700}.shc .pk{margin:2px 2px 0 0}
+.shl2{margin:6px 0;display:flex;flex-wrap:wrap;gap:6px}.shl2 span.lg{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:8px;padding:4px 8px;background:var(--card);font-size:.875rem;font-weight:600}
 /* v43: all Chat text bold */
 .chat,.chat h3,.chat p,.chat label,.chat input,.chat textarea,.chat button,.chat .chnote,.chat .mut,.chm,.chm .tx,.chm button,#chSt{font-weight:700}
 .chat input::placeholder,.chat textarea::placeholder{font-weight:700}
-.chm .who{font-weight:800}.chm .mt{font-weight:600}
+.chm .who{font-weight:800}.chat h4,.chat code,.chat summary,.chat li{font-weight:700}.chm .mt{font-weight:600}
 .chtabs{display:flex;gap:8px;margin:10px 0}.chtabs button{flex:1}.chtabs button[aria-pressed=true]{background:#ffd23f;color:#00214e;font-weight:700}
 .chlist{height:50vh;height:50dvh;min-height:260px;overflow-y:auto;border:1px solid #3b5a8c;border-radius:10px;padding:8px;background:#001a3d;display:flex;flex-direction:column;gap:8px}
 .chm{max-width:85%;padding:8px 12px;border-radius:14px;background:#17407f;color:#fff;align-self:flex-start;word-wrap:break-word;overflow-wrap:anywhere}
@@ -339,27 +355,29 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden
 </section>
 <section id="v-pegs" class="hide">
 <div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards</h3>
-<p class="mut" style="margin-top:0">Your own record of the physical peg boards. Pick a board, tap a peg in the legend (or a peg already on a slip) and then tap a slip circle to put it there. The app never decides who gets a job. To move a slip itself, press and hold it, then drag; or open the slip and use Move.</p>
-<div class="gstrip" id="pgGl" role="region" aria-label="Global pegs"></div>
+<p class="mut" style="margin-top:0">Your own record of the physical peg boards (admins can also share a board live with the whole chat room; shared boards are read-only for everyone else). Pick a board, tap a peg in the legend (or a peg already on a slip) and then tap a slip circle to put it there. The app never decides who gets a job. To move a slip itself, press and hold it, then drag; or open the slip and use Move.</p>
+<div class="gstrip shx" id="pgGl" role="region" aria-label="Global pegs"></div>
 <label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
-<div class="row" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
-<p id="pgMine" class="mut pgmine" aria-live="polite"></p>
-<div id="pgPic"></div>
-<div class="row"><button type="button" class="p" id="pgCam">📷 Take photo</button><button type="button" id="pgPh">🖼 Choose from gallery</button></div>
-<div class="row"><button type="button" class="p" id="pgShare">Post board update (share)</button></div>
-<p id="pgUp" class="mut"></p>
-<h4 class="pgjh">Add peg to this board</h4>
-<div class="row pgap"><input id="pgJN" maxlength="40" placeholder="Peg name, e.g. Bull 1" aria-label="New peg name" autocomplete="off"><select id="pgJC" aria-label="New peg color"></select><button type="button" id="pgJA" style="flex:0 0 auto">Add peg</button></div>
-<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
-<div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
-<div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button></div>
-<div id="pgBb" class="bbbar hide"></div><input type="file" id="bbFile" class="hide" accept=".json,application/json,text/plain">
-<div id="pgZb" class="bbzb hide" role="group" aria-label="Board zoom"><button type="button" id="bbZm" aria-label="Zoom out">−</button><input type="range" id="bbZs" min="10" max="250" step="1" value="100" aria-label="Board zoom percent"><button type="button" id="bbZa" aria-label="Zoom in">+</button><output id="bbZl" for="bbZs" aria-live="off">100%</output><button type="button" id="bbZf" aria-label="Fit whole board on screen">Fit</button><button type="button" id="bbZ1" aria-label="Zoom to 100 percent">100%</button></div>
-<div id="pgWrap"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board slips (scrolls sideways)"></div></div>
-<div id="pgBb2" class="bbbar hide"></div>
-<div id="pgEd" class="pged hide"></div>
+<div id="pgShC" class="pgshc" aria-live="polite"></div><div id="pgSh" class="hide"></div>
+<div class="row shx" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
+<p id="pgMine" class="mut pgmine shx" aria-live="polite"></p>
+<div id="pgPic" class="shx"></div>
+<div class="row shx"><button type="button" class="p" id="pgCam">📷 Take photo</button><button type="button" id="pgPh">🖼 Choose from gallery</button></div>
+<div class="row shx"><button type="button" class="p" id="pgShare">Post board update (share)</button></div>
+<div id="pgShr" class="hide shx"><div class="row"><button type="button" id="pgShB">Share this board</button></div><p id="pgShS" class="mut" aria-live="polite"></p></div>
+<p id="pgUp" class="mut shx"></p>
+<h4 class="pgjh shx">Add peg to this board</h4>
+<div class="row pgap shx"><input id="pgJN" maxlength="40" placeholder="Peg name, e.g. Bull 1" aria-label="New peg name" autocomplete="off"><select id="pgJC" aria-label="New peg color"></select><button type="button" id="pgJA" style="flex:0 0 auto">Add peg</button></div>
+<div id="pgPreset" class="hide shx"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
+<div class="row pgsz shx"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
+<div class="row shx" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button></div>
+<div id="pgBb" class="bbbar hide shx"></div><input type="file" id="bbFile" class="hide" accept=".json,application/json,text/plain">
+<div id="pgZb" class="bbzb hide shx" role="group" aria-label="Board zoom"><button type="button" id="bbZm" aria-label="Zoom out">−</button><input type="range" id="bbZs" min="10" max="250" step="1" value="100" aria-label="Board zoom percent"><button type="button" id="bbZa" aria-label="Zoom in">+</button><output id="bbZl" for="bbZs" aria-live="off">100%</output><button type="button" id="bbZf" aria-label="Fit whole board on screen">Fit</button><button type="button" id="bbZ1" aria-label="Zoom to 100 percent">100%</button></div>
+<div id="pgWrap" class="shx"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board slips (scrolls sideways)"></div></div>
+<div id="pgBb2" class="bbbar hide shx"></div>
+<div id="pgEd" class="pged hide shx"></div>
 <p id="pgM" class="mut" aria-live="polite"></p>
-<button type="button" class="d hide" id="pgDel" style="width:100%">Remove this custom board</button></div>
+<button type="button" class="d hide shx" id="pgDel" style="width:100%">Remove this custom board</button></div>
 </section>
 <section id="v-chat" class="hide">
 <div class="card chat" id="chCard"></div>
@@ -566,7 +584,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v52",CACHE_VERSION="l19hours-v52"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v53",CACHE_VERSION="l19hours-v53"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -595,7 +613,7 @@ const TOUR_CARDS=[["Log a shift","Tap ＋ Add, pick the date, pier, job and shif
  ["History & calendar","History lists every shift by month, with week, month, quarter and year totals. Switch to Calendar to tap a day, or search by job, pier or note."],
  ["Share a week","On the Week tab tap Share week. Choose hours only (no pay) or hours plus a pay estimate, then paste it wherever you need."],
  ["Back up your data","Everything stays on this phone. In the Backup tab, back up to a JSON file now and then. You can also export CSV or open a Year summary."],
- ["Ships, pegs & chat","Ships has dispatch quick links, today's needs and the ships coming. Pegs has your peg boards: tap a peg, then a slip circle, to place it; press and hold a slip, then drag, to move it. Chat is an online room for coworkers with the invite code; it never sends your hours, pay or pegs. Replay this tour any time from the Backup tab."]];
+ ["Ships, pegs & chat","Ships has dispatch quick links, today's needs and the ships coming. Pegs has your peg boards: tap a peg, then a slip circle, to place it; press and hold a slip, then drag, to move it. Admins can share a board live: everyone in the chat room sees it read-only under Shared on the Pegs tab (slip names and pegs only). Chat is an online room for coworkers with the invite code; moderators and admins show a MOD or ADMIN badge and can remove messages. Chat never sends your hours or pay. Replay this tour any time from the Backup tab."]];
 function tourDue(flag,setupOpen,locked){return flag!=="1"&&!setupOpen&&!locked;}
 function yearSummary(all,year){const y=String(year),l=(all||[]).filter(e=>e&&typeof e.date==="string"&&e.date.slice(0,4)===y),t=summarize(l);
  const months=[];for(let m=1;m<=12;m++){const k=y+"-"+p2(m),ml=l.filter(e=>e.date.slice(0,7)===k),mt=summarize(ml);
@@ -1106,7 +1124,7 @@ $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0=""
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");try{localStorage.removeItem(PGK);}catch(e){}pgD=pegsLoad();pgClose();pgRender();lAll().then(a=>(a||[]).filter(r=>String(r.k).startsWith("peg|")).forEach(r=>lDel(r.id))).then(refreshPegPic).catch(()=>{});renderNeeds();$("msg").textContent="All data deleted.";}};
 function show(v){curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);}
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);if(v==="pegs"&&window.l19Sh)window.l19Sh.open();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
 function addOn(d){selDate=d;resetForm();retTo="hist";show("add");}
 function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
@@ -1574,14 +1592,14 @@ function pegsLoad(){const rawTxt=LS(PGK,""),raw=lsJson(PGK,null);if(rawTxt&&!LS(
   const m=pegBullMigrate(d);d=m.data;LSset(PGMIG,m.kept?"kept":"1");dirty=true;if(m.kept)LSset(PGMIG,"1");}
  if(LS(PGFR,"")!=="1"){const fr=pegFlexRemove(d);d=fr.data;LSset(PGFR,"1");dirty=true;} /* v52: raw data was copied to l19.pegs.v51raw above */
  if(dirty){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
-function pegsSave(d){LSset(PGK,JSON.stringify(d));}
-let pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
+function pegsSave(d){LSset(PGK,JSON.stringify(d));if(typeof shTouch==="function")shTouch();}
+let pgShared=null,pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
 function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
 function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
 function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
 function pgBoard(name){return pgD.boards[name]||pegBoardNew();}
 function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
-function pgRenderSel(){const cur=pgCur();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur?" selected":""}>${esc(n)}${me?" ★":""}</option>`;}).join("");
+function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`;}).join("")+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
  $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));}
 function pgSheet(id){const o=document.createElement("div");o.className="sheet";o.id=id;o.addEventListener("keydown",e=>{if(e.key==="Escape")o.remove();});document.body.appendChild(o);return o;}
 function pgJobEdit(id){if($("pgJobS"))return;const name=pgCur(),b=pgBoard(name),j=pegJob(b,id);if(!j)return;let col=j.color;const o=pgSheet("pgJobS");
@@ -1601,7 +1619,7 @@ function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=
   if(d.e){const t=pgBoard(name).takes.find(x=>x.id===d.e);if(!t)return;const row=ev.target.parentNode;row.innerHTML=`<input aria-label="Person" id="lgP" maxlength="80" value="${esc(t.person)}"><button type="button" class="p" id="lgS">Save</button>`;$("lgP").focus();
    $("lgS").onclick=()=>{const r=pegTakeEdit(pgBoard(name),d.e,$("lgP").value,new Date());if(!r.ok){$("lgP").setAttribute("aria-invalid","true");return;}pgStore(name,r.board);pgRender();o.remove();pgLogOpen();};}};
  $("lgDn").onclick=()=>o.remove();$("lgDn").focus();}
-function pgRender(){pgRenderSel();const name=pgCur(),b=pgBoard(name);
+function pgRender(){if(pgShared&&!shGet(pgShared))pgShared=null;$("pgCard").classList.toggle("shv",!!pgShared);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();const name=pgCur(),b=pgBoard(name);
  $("pgCols").value=b.cols;$("pgRows").value=b.rows;
  $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
  const mine=Object.keys(pgD.boards).filter(k=>Object.values(pgD.boards[k].pegs).some(v=>v.me)).map(k=>{const bb=pgD.boards[k],pk=Object.keys(bb.pegs).find(x=>bb.pegs[x].me),m=pk.split("-");return(k===name?"<b>"+esc(k)+"</b>":esc(k))+": column "+m[1]+", slip "+m[0];});
@@ -1814,7 +1832,7 @@ $("bbFile").addEventListener("change",async e=>{const f=e.target.files&&e.target
  if(f.size>500000){$("pgM").textContent="Import failed: that file is too big to be a names file.";return;}
  let t="";try{t=await f.text();}catch(_){$("pgM").textContent="Import failed: couldn't read that file.";return;}pgImportNames(t);});
 $("pgBb").addEventListener("click",pgBbClick);$("pgBb2").addEventListener("click",pgBbClick);
-$("pgSel").onchange=()=>{pgD.sel=$("pgSel").value;pegsSave(pgD);pgClose();$("pgM").textContent="";pgRender();};
+$("pgSel").onchange=()=>{const v=$("pgSel").value;pgClose();$("pgM").textContent="";if(v.slice(0,3)==="sh:"){pgShared=v.slice(3);pgRender();return;}pgShared=null;pgD.sel=v;pegsSave(pgD);pgRender();};
 $("pgAdd").onclick=()=>{const n=$("pgNew").value.trim().slice(0,40);if(!n){$("pgM").textContent="Type a board name first.";return;}
  const ex=pgNames().find(x=>x.toLowerCase()===n.toLowerCase());if(ex){pgD.sel=ex;pegsSave(pgD);$("pgNew").value="";$("pgM").textContent="That board already exists – switched to it.";pgClose();pgRender();return;}
  if(pgD.custom.length>=30){$("pgM").textContent="Custom board limit reached (30).";return;}
@@ -1874,6 +1892,82 @@ function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
  $("gnNew").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("gnAdd").click();}});
  $("gmDn").onclick=()=>o.remove();$("gmDn").focus();}
 $("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if(!r.added){$("pgM").textContent="All preset jobs are already on the Bull board.";return;}pgStore(name,r.board);$("pgM").textContent="Added "+r.added+" preset job"+(r.added===1?"":"s")+".";pgRender();};
+/* ===== v53: shared boards (admins publish a board to rooms/{room}/boards/{id}; everyone in the room sees a live read-only copy). Board data only: no hours, pay, photos, notes or "my peg" flags. ===== */
+const SHK="l19.shared",SHL="l19.shareMap";
+let shUnsub=null,shCode="",shErr="",shCached=false,shT=0,shLast={},shBusy=false,shMsgT="",shPushErr="";
+function shJoined(){return !!(window.l19Fb&&window.l19Fb.joined());}
+function shMap(){const o=lsJson(SHL,{});const m={};if(o&&typeof o==="object"&&o.code===(window.l19Fb?window.l19Fb.code():"")&&o.map&&typeof o.map==="object")for(const k of Object.keys(o.map))if(typeof o.map[k]==="string"&&k!=="__proto__")m[k]=o.map[k];return m;}
+function shMapSet(m){try{LSset(SHL,JSON.stringify({code:window.l19Fb.code(),map:m}));}catch(e){}}
+function shAdmin(){return !!(window.l19Fb&&window.l19Fb.isAdmin());}
+function shAll(){const c=lsJson(SHK,null);if(!shJoined()||!c||typeof c!=="object"||c.code!==window.l19Fb.code()||!c.boards||typeof c.boards!=="object")return[];
+ return Object.keys(c.boards).map(k=>shareFromDoc(k,{...c.boards[k],updatedAt:c.boards[k].ms})).filter(Boolean).sort((a,b)=>a.name.localeCompare(b.name));}
+function shGet(id){return shAll().find(x=>x.id===id)||null;}
+function shListUi(){const all=shAll();if(!shAdmin())return all;const lk=shMap(),ids=new Set(Object.keys(lk).filter(n=>pgNames().includes(n)).map(n=>lk[n]));return all.filter(x=>!ids.has(x.id));}
+function shFriendly(e){if(typeof navigator!=="undefined"&&navigator.onLine===false)return"You're offline.";const c=e&&e.code||"";if(/permission/.test(c))return"Shared boards aren't open yet (the server rules haven't been updated) or you aren't allowed.";if(/unavailable|network/.test(c))return"Can't reach the server right now.";return"Couldn't reach shared boards.";}
+function shWhenBy(sh){return sh.ms?"Last updated "+pegWhen(new Date(sh.ms))+(sh.byName?" by "+sh.byName:""):"Last updated: just now (waiting for the server)";}
+function shOffline(){return typeof navigator!=="undefined"&&navigator.onLine===false||!!shErr||shCached;}
+function shCacheSave(boards){try{LSset(SHK,JSON.stringify({code:window.l19Fb.code(),at:Date.now(),boards:boards}));}catch(e){}}
+function shRepaint(){if(!$("v-pegs").classList.contains("hide"))pgRender();}
+async function shOpen(){shRepaint();if(!shJoined()){return;}
+ if(typeof navigator!=="undefined"&&navigator.onLine===false){shErr="";shCached=true;shRepaint();return;}
+ try{await window.l19Fb.ready();}catch(e){shErr=shFriendly(e);shRepaint();return;}
+ if(!shReg){shReg=true;window.l19Fb.on(()=>shRepaint());}
+ const code=window.l19Fb.code();if(shUnsub&&shCode===code)return;if(shUnsub){try{shUnsub();}catch(e){}shUnsub=null;}
+ shCode=code;const f=window.l19Fb.fs(),db=window.l19Fb.db();
+ shUnsub=f.onSnapshot(f.collection(db,"rooms",code,"boards"),snap=>{const boards={};snap.docs.forEach(d=>{const x=d.data({serverTimestamps:"estimate"}),ms=x&&x.updatedAt&&x.updatedAt.toMillis?x.updatedAt.toMillis():0;boards[d.id]={name:x.name,cols:x.cols,rows:x.rows,slips:x.slips,jobs:x.jobs,gl:x.gl,placements:x.placements,takes:x.takes,ms:ms,updatedBy:x.updatedBy,updatedByName:x.updatedByName};});
+   shCacheSave(boards);shErr="";shCached=!!snap.metadata.fromCache&&typeof navigator!=="undefined"&&navigator.onLine===false;shRepaint();},
+  e=>{shErr=shFriendly(e);if(shUnsub){try{shUnsub();}catch(x){}shUnsub=null;shCode="";}shRepaint();});}
+let shReg=false;
+function shChips(){const el=$("pgShC");if(!el)return;
+ if(!shJoined()){el.innerHTML='<span class="mut">Shared boards: join Chat (name + invite code) to see boards your admins share.</span>';return;}
+ const all=shListUi();let h="";
+ h+=all.length?'<b>Shared boards:</b> '+all.map(x=>'<button type="button" class="chip" data-s="'+esc(x.id)+'" aria-pressed="'+(pgShared===x.id)+'">🔗 '+esc(x.name)+'</button>').join(""):'<span class="mut">Shared boards: none yet.</span>';
+ if(shErr)h+='<div class="mut" role="status">'+esc(shErr)+(all.length?" Showing the last saved copy.":"")+'</div>';
+ else if(shOffline()&&all.length)h+='<div class="mut" role="status">Offline: showing the last saved copy.</div>';
+ el.innerHTML=h;el.querySelectorAll("button[data-s]").forEach(b=>b.onclick=()=>{pgClose();$("pgM").textContent="";pgShared=b.dataset.s;pgRender();});}
+function shRender(){const el=$("pgSh"),sh=shGet(pgShared);if(!sh){el.innerHTML="";return;}
+ const lines=shOffline()?"Offline, last updated "+(sh.ms?pegWhen(new Date(sh.ms)):"unknown")+(sh.byName?" by "+sh.byName:"")+".":shWhenBy(sh)+".";
+ let h=`<div class="shban" role="status">Shared by admins, read-only</div><p class="mut" style="margin:4px 0">${esc(sh.name)} · ${esc(lines)}</p>`;
+ h+=`<div class="shl2" role="group" aria-label="Pegs">`+sh.jobs.map(j=>`<span class="lg"><span class="pk" style="${pegSty(PEG_COLORS[j.color]||PEG_COLORS[0])}">${esc(j.label)}</span>${esc(j.name)}: ${esc(shareWhere(sh,"j:"+j.id))}</span>`).join("")+sh.gl.map(g=>`<span class="lg"><span class="pk g">${esc(pegAbbr(g.name))}</span>${esc(g.name)}: ${esc(shareWhere(sh,"g:"+g.id))}</span>`).join("")+`</div>`;
+ const at={};for(const j of sh.jobs){const k=sh.pl["j:"+j.id];if(k)(at[k]=at[k]||[]).push(`<span class="pk" title="${esc(j.name)}" style="${pegSty(PEG_COLORS[j.color]||PEG_COLORS[0])}">${esc(j.label)}</span>`);}
+ for(const g of sh.gl){const k=sh.pl["g:"+g.id];if(k)(at[k]=at[k]||[]).push(`<span class="pk g" title="${esc(g.name)}">${esc(pegAbbr(g.name))}</span>`);}
+ let gr=`<div class="shgw" tabindex="0" role="group" aria-label="${esc(sh.name)} slips (scrolls sideways)"><div class="shg" style="grid-template-columns:repeat(${sh.cols},minmax(104px,1fr))">`;
+ for(let c=1;c<=sh.cols;c++)gr+=`<div class="shh">Col ${c}</div>`;
+ for(let r=1;r<=sh.rows;r++)for(let c=1;c<=sh.cols;c++){const k=pegKey(r,c),v=sh.slips[k];gr+=`<div class="shc"><small>${r}</small><span class="shn">${v?esc(v.n):""}</span>${at[k]?`<div>${at[k].join("")}</div>`:""}</div>`;}
+ h+=gr+`</div></div>`;
+ const days=pegTakeDays({takes:sh.takes});
+ h+=`<details style="margin-top:8px"><summary>Who took what (${sh.takes.length})</summary>${days.length?days.map(g=>`<p><b>${esc(pegDateLong(g.d))}</b></p>`+g.items.slice().reverse().map(t=>`<p style="margin:2px 0">${esc(t.job)} – <b>${esc(t.person)}</b>${t.num?" (#"+t.num+")":""}</p>`).join("")).join(""):'<p class="mut">No takes logged.</p>'}</details>`;
+ h+=`<p class="mut" style="margin:8px 0 0">Only board data is shared (slip names, pegs, who took what). Photos, notes, your hours and pay stay on each phone.</p>`;
+ if(shAdmin())h+=`<div class="row"><button type="button" class="p" id="shEdit">Edit on this device (copy to my boards)</button></div><div class="row"><button type="button" class="d" id="shStop">Stop sharing (delete the shared copy)</button></div>`;
+ el.innerHTML=h;
+ if($("shEdit"))$("shEdit").onclick=()=>shAdopt(sh);
+ if($("shStop"))$("shStop").onclick=async()=>{if(!confirm("Stop sharing “"+sh.name+"”? Everyone in the room loses the shared copy. Local copies stay."))return;
+  try{const F=window.l19Fb,f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",sh.id));const m=shMap();for(const k of Object.keys(m))if(m[k]===sh.id)delete m[k];shMapSet(m);pgShared=null;$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Couldn't stop sharing. "+shFriendly(e);}pgRender();};}
+function shAdopt(sh){const name=sh.name,m=shMap();if(!pgNames().includes(name)){if(name==="__proto__"){return;}}
+ if(pgNames().includes(name)&&!confirm("Replace your board “"+name+"” with the shared copy and keep it synced from this device?"))return;
+ if(!pgNames().includes(name))pgD.custom.push(name);
+ pgD.boards[name]=shareToBoard(sh);pgD.sel=name;m[name]=sh.id;shMapSet(m);shLast[name]=JSON.stringify(shareBuild(name,pgD.boards[name],pegGlobalsOn(pgD,name)));pegsSave(pgD);pgShared=null;$("pgM").textContent="Copied to your boards. Your edits will sync to the shared copy.";pgRender();}
+function shLocalUi(){const box=$("pgShr");if(!box)return;const show=shJoined()&&shAdmin();box.classList.toggle("hide",!show);if(!show)return;
+ const name=pgCur(),m=shMap(),id=m[name],sh=id?shGet(id):null;
+ $("pgShB").textContent=id?"🔗 Shared live: tap to stop sharing":"Share this board with the room";$("pgShB").setAttribute("aria-pressed",String(!!id));
+ $("pgShS").textContent=shPushErr?shPushErr:id?("Shared in room "+window.l19Fb.code()+". Others see a read-only copy. "+(sh?shWhenBy(sh)+".":"Syncing…")):"Admins only. Shares slip names, pegs and the take log with everyone in the room. Photos, notes and ★ stay on your phone.";}
+async function shPush(name,force){const F=window.l19Fb,id=shMap()[name];if(!F||!id||!F.isAdmin()||!pgNames().includes(name))return;
+ const doc=shareBuild(name,pgBoard(name),pegGlobalsOn(pgD,name)),ser=JSON.stringify(doc);if(!force&&ser===shLast[name])return;
+ if(ser.length>SHARE_MAX_JSON){shPushErr="This board is too big to share.";shLocalUi();return;}
+ try{await F.ready();const f=F.fs();await f.setDoc(f.doc(F.db(),"rooms",F.code(),"boards",id),{...doc,updatedAt:f.serverTimestamp(),updatedBy:F.uid(),updatedByName:chatName(F.name())||"?"});shLast[name]=ser;shPushErr="";}
+ catch(e){shPushErr="Couldn't sync to the room. "+shFriendly(e)+" Your own board is safe; it will retry on your next change.";}shLocalUi();}
+async function shFlush(){if(shBusy)return;shBusy=true;try{const m=shMap();for(const n of Object.keys(m))await shPush(n,false);}finally{shBusy=false;}}
+function shTouch(){if(!window.l19Fb||!shJoined())return;if(!Object.keys(shMap()).length)return;clearTimeout(shT);shT=setTimeout(shFlush,1000);}
+$("pgShB").onclick=async()=>{const name=pgCur(),m=shMap(),F=window.l19Fb;if(!shAdmin())return;
+ if(m[name]){if(!confirm("Stop sharing “"+name+"”? Everyone in the room loses the shared copy. Your own board stays."))return;const id=m[name];delete m[name];shMapSet(m);
+  try{const f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",id));$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Unlinked here, but the shared copy could not be deleted. "+shFriendly(e);}shPushErr="";pgRender();return;}
+ const id=shareId(name);if(!id){$("pgM").textContent="Give the board a name with letters or numbers first.";return;}
+ if(Object.keys(m).some(k=>m[k]===id)){$("pgM").textContent="Another of your boards already shares as that name.";return;}
+ if(!confirm("Share “"+name+"” with everyone in room "+F.code()+"? They will see slip names, pegs and the take log (read-only). Photos, notes, ★ and your hours/pay are never shared."))return;
+ m[name]=id;shMapSet(m);$("pgM").textContent="Sharing…";await shPush(name,true);$("pgM").textContent=shPushErr?"":"Shared. Changes you make are sent to the room within a second.";pgRender();};
+window.l19Sh={open:shOpen};
+window.addEventListener("online",()=>{shCached=false;if(!$("v-pegs").classList.contains("hide"))shOpen();shTouch();});
+window.addEventListener("offline",()=>shRepaint());
 pgRender();
 
 }
@@ -1884,45 +1978,117 @@ function chatCode(s){const c=String(s==null?"":s).toUpperCase().replace(/[^A-Z0-
 function chatName(s){return String(s==null?"":s).replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim().slice(0,30);}
 function chatText(s){return String(s==null?"":s).replace(/\r/g,"").trim().slice(0,500);}
 function chatCanSend(last,now){return !last||now-last>=CHAT_GAP;}
+/* v53: shared boards (pure helpers) + roles */
+const SHARE_TAKES=100,SHARE_MAX_JSON=600000;
+function shareId(name){return String(name==null?"":name).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40).replace(/-+$/,"");}
+function shareBuild(name,b,gOn){b=b||pegBoardNew();const slips={};for(const k of Object.keys(b.pegs||{})){const n=String(b.pegs[k]&&b.pegs[k].n||"").trim().slice(0,80);if(n)slips[k]={n:n};}
+ const jobs=[],pl={};for(const j of (b.jobs||[]).slice(0,PEG_JOBS)){jobs.push({id:j.id,name:j.name,color:j.color,label:pegAbbr(j.name)});if(j.pos)pl["j:"+j.id]=j.pos;}
+ const gl=[];for(const g of (gOn||[]).slice(0,PEG_GLOBALS)){if(!g||!g.pos)continue;gl.push({id:String(g.id).slice(0,24),name:String(g.name).slice(0,40)});pl["g:"+g.id]=g.pos;}
+ const takes=(b.takes||[]).slice(-SHARE_TAKES).map(t=>({id:t.id,at:t.at,d:t.d,jid:t.jid,job:t.job,person:t.person,pos:t.pos,num:t.num}));
+ return{name:String(name==null?"":name).trim().slice(0,40),cols:b.cols,rows:b.rows,slips:slips,jobs:jobs,gl:gl,placements:pl,takes:takes};}
+function shareFromDoc(id,x){if(!x||typeof x!=="object")return null;const sl=(v,m)=>String(v==null?"":v).slice(0,m),o={id:String(id).slice(0,40),name:sl(x.name,40).trim(),cols:pegDim(x.cols,PEG_DEF.cols),rows:pegDim(x.rows,PEG_DEF.rows),slips:{},jobs:[],gl:[],pl:{},takes:[],ms:0,by:sl(x.updatedBy,128),byName:sl(x.updatedByName,30)};
+ if(!o.name)return null;
+ const okPos=k=>{const m=/^(\d{1,2})-(\d{1,2})$/.exec(k);return !!m&&+m[1]>=1&&+m[2]>=1&&+m[1]<=o.rows&&+m[2]<=o.cols;};
+ const sp=x.slips&&typeof x.slips==="object"?x.slips:{};for(const k of Object.keys(sp)){if(!okPos(k)||!sp[k])continue;const n=sl(sp[k].n,80).trim();if(n)o.slips[k]={n:n};}
+ for(const j of Array.isArray(x.jobs)?x.jobs:[]){if(!j||o.jobs.length>=PEG_JOBS)continue;const jid=sl(j.id,24).replace(/[^\w-]/g,""),nm=sl(j.name,40).trim();if(!jid||!nm)continue;let c=Math.floor(Number(j.color));c=c>=0&&c<PEG_COLORS.length?c:0;o.jobs.push({id:jid,name:nm,color:c,label:sl(j.label,6)||pegAbbr(nm)});}
+ for(const g of Array.isArray(x.gl)?x.gl:[]){if(!g||o.gl.length>=PEG_GLOBALS)continue;const gid=sl(g.id,24).replace(/[^\w-]/g,""),nm=sl(g.name,40).trim();if(gid&&nm)o.gl.push({id:gid,name:nm});}
+ const pl=x.placements&&typeof x.placements==="object"?x.placements:{};for(const k of Object.keys(pl)){if(!/^[jg]:[\w-]{1,24}$/.test(k)||!okPos(pl[k]))continue;o.pl[k]=pl[k];}
+ for(const t of (Array.isArray(x.takes)?x.takes:[]).slice(-SHARE_TAKES)){if(!t||typeof t!=="object")continue;o.takes.push({id:sl(t.id,40),at:sl(t.at,40),d:/^\d{4}-\d{2}-\d{2}$/.test(t.d)?t.d:"",jid:sl(t.jid,24),job:sl(t.job,40),person:sl(t.person,80),pos:/^\d{1,2}-\d{1,2}$/.test(t.pos)?t.pos:"",num:Math.max(0,Math.floor(Number(t.num))||0)});}
+ const u=x.updatedAt;o.ms=u&&typeof u.toMillis==="function"?u.toMillis():(typeof u==="number"?u:0);return o;}
+function shareToBoard(sh){const b=pegBoardNew();b.cols=sh.cols;b.rows=sh.rows;for(const k of Object.keys(sh.slips))b.pegs[k]={n:sh.slips[k].n,note:"",me:false};
+ b.jobs=sh.jobs.map(j=>({id:j.id,name:j.name,color:j.color,pos:sh.pl["j:"+j.id]||""}));b.takes=sh.takes.slice();b.updated=sh.ms?new Date(sh.ms).toISOString():"";return pegBoardClean({...b,pv:49});}
+function shareWhere(sh,key){const p=sh.pl[key];if(!p)return"not placed";const m=p.split("-");return"column "+m[1]+", slip "+m[0];}
+function roleLabel(r){return r==="admin"?"ADMIN":r==="moderator"?"MOD":"";}
+function roleCanDelete(role,msgUid,myUid){return !!myUid&&(msgUid===myUid||role==="admin"||role==="moderator");}
+function roleCanChange(role,targetUid,myUid){return role==="admin"&&!!targetUid&&targetUid!==myUid;}
+function rolePeople(msgs,roles){const seen=new Map();for(const m of (msgs||[]).slice().reverse()){if(m&&m.uid&&!seen.has(m.uid))seen.set(m.uid,String(m.name||"?"));}for(const id of Object.keys(roles||{}))if(!seen.has(id))seen.set(id,String(roles[id].name||"(no name)"));
+ return[...seen].map(([uid,name])=>({uid:uid,name:name,role:roles&&roles[uid]?roles[uid].role:""}));}
+
 if(typeof document!=="undefined"){(function(){
 const g=id=>document.getElementById(id),E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const KN="l19.chatName",KC="l19.chatCode",KH="l19.chatChan";
 const ls=(k,d)=>{try{return localStorage.getItem(k)||d;}catch(e){return d;}},lss=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
 let FB=null,fbP=null,unsub=null,msgs=[],chan=CHAT_CHANNELS.includes(ls(KH,""))?ls(KH,""):"Ideas",lastSend=0,settings=false,err="",note="";
+let panel="",roles={},rolesUnsub=null,rolesCode="",rolesErr="",reps=null,repErr="",pnote="";const lis=[];
 function load(){if(fbP)return fbP;fbP=(async()=>{const app=await import(CHAT_SDK+"firebase-app.js"),au=await import(CHAT_SDK+"firebase-auth.js"),fs=await import(CHAT_SDK+"firebase-firestore.js");
  const a=app.getApps().length?app.getApp():app.initializeApp(CHAT_CFG),auth=au.getAuth(a),db=fs.getFirestore(a);
  if(!auth.currentUser)await au.signInAnonymously(auth);
  FB={fs,db,auth};return FB;})().catch(e=>{fbP=null;throw e;});return fbP;}
 function stop(){if(unsub){try{unsub();}catch(e){}unsub=null;}}
+function uid(){return FB&&FB.auth.currentUser?FB.auth.currentUser.uid:"";}
+function role(){const r=roles[uid()];return r?r.role:"member";}
+function staff(){return roleCanDelete(role(),"",uid())||role()==="admin"||role()==="moderator";}
+function isAdm(){return role()==="admin";}
+function badge(u){const r=roles[u];return r?'<span class="rb'+(r.role==="admin"?"":" m")+'">'+roleLabel(r.role)+'</span>':"";}
+function fire(){lis.forEach(f=>{try{f();}catch(e){}});const v=g("v-chat");if(v&&!v.classList.contains("hide")&&!settings&&ls(KN,"")&&ls(KC,"")){if(panel)paintPanel();else if(g("chL"))paintMain();}else if(settings&&g("chRl"))fillId();}
+function rolesStop(){if(rolesUnsub){try{rolesUnsub();}catch(e){}rolesUnsub=null;}rolesCode="";roles={};}
+function rolesStart(){const code=ls(KC,"");if(!FB||!code)return;if(rolesUnsub&&rolesCode===code)return;rolesStop();rolesCode=code;const f=FB.fs;
+ try{rolesUnsub=f.onSnapshot(f.collection(FB.db,"rooms",code,"roles"),s=>{roles={};s.docs.forEach(d=>{const x=d.data();if(x&&(x.role==="admin"||x.role==="moderator"))roles[d.id]={role:x.role,name:String(x.name||"").slice(0,30)};});rolesErr="";fire();},
+  e=>{roles={};rolesErr=/permission/.test(e&&e.code||"")?"Roles aren't open yet (server rules not updated). Everyone is a member for now.":"";fire();});}catch(e){}}
 function friendly(e){if(typeof navigator!=="undefined"&&navigator.onLine===false)return"You're offline. Chat needs internet; the rest of the app works as usual.";
  const c=e&&e.code||"";if(/permission/.test(c))return"Chat isn't open yet (the server rules haven't been set up) or the code was refused.";
  if(/unavailable|network/.test(c))return"Can't reach the chat server right now. Try again in a moment.";return"Chat couldn't connect. Check your internet and try again.";}
 function head(){return'<h3>Chat</h3><div class="chnote" role="note">Chat is online and visible to coworkers with the code. Your hours and pay stay on your phone.</div>';}
+function fillId(){const u=uid(),el=g("chUid");if(!el)return;el.textContent=u||"Loading…";const r=g("chRl");if(r)r.textContent=u?"Your role in this room: "+(roleLabel(role())||"MEMBER")+(rolesErr?" ("+rolesErr+")":""):"";}
 function paintSetup(){const c=g("chCard");c.innerHTML=head()+'<label for="chN">Your display name (shown to coworkers)</label><input id="chN" maxlength="30" autocomplete="off" value="'+E(ls(KN,""))+'" placeholder="e.g. Sam B.">'+
  '<label for="chC">Coworker invite code</label><input id="chC" maxlength="30" autocomplete="off" autocapitalize="characters" value="'+E(ls(KC,"")||CHAT_DEFAULT_CODE)+'" placeholder="Invite code">'+
- '<p class="mut">Ask a coworker for the code. Letters, numbers, - and _ only (3–30).</p><div class="row"><button type="button" class="p" id="chGo">Join chat</button>'+(ls(KN,"")&&ls(KC,"")?'<button type="button" id="chBk">Cancel</button>':"")+'</div><p id="chSt" aria-live="polite">'+E(note)+'</p>';
+ '<p class="mut">Ask a coworker for the code. Letters, numbers, - and _ only (3–30).</p><div class="row"><button type="button" class="p" id="chGo">Join chat</button>'+(ls(KN,"")&&ls(KC,"")?'<button type="button" id="chBk">Cancel</button>':"")+'</div><p id="chSt" aria-live="polite">'+E(note)+'</p>'+
+ '<h4>My ID (uid)</h4><code id="chUid">Loading…</code><div class="row"><button type="button" id="chCp">Copy</button></div><p class="mut" id="chCpM" aria-live="polite" style="margin:0"></p><p class="mut" id="chRl" style="margin:4px 0 0"></p>'+
+ '<details open><summary>Owner: make the first admin</summary><ol><li>Tap Copy above.</li><li>Open the Firebase console, project ilwu-life-chat, Firestore Database, Data.</li><li>Go to rooms, your room code (for example LOCAL19), then roles. Add a document: Document ID = your ID (paste), field <b>role</b> (string) = <b>admin</b>.</li><li>Come back here and open Chat again. You now see ADMIN, People and Reports.</li></ol><p class="mut">Your ID belongs to this phone and browser. If site data is cleared or you use a new device you get a new ID, so keep a second admin.</p></details>';
  g("chGo").onclick=()=>{const n=chatName(g("chN").value),k=chatCode(g("chC").value);if(!n){g("chSt").textContent="Please enter a display name.";return;}if(!k){g("chSt").textContent="The code needs 3–30 letters or numbers.";return;}
-  const ch=k!==ls(KC,"");lss(KN,n);lss(KC,k);settings=false;note="";if(ch)msgs=[];stop();open();};
- if(g("chBk"))g("chBk").onclick=()=>{settings=false;note="";open();};}
+  const ch=k!==ls(KC,"");lss(KN,n);lss(KC,k);settings=false;note="";if(ch){msgs=[];rolesStop();}stop();open();};
+ if(g("chBk"))g("chBk").onclick=()=>{settings=false;note="";open();};
+ g("chCp").onclick=async()=>{const u=uid();if(!u){g("chCpM").textContent="Your ID isn't ready yet (needs internet).";return;}
+  try{await navigator.clipboard.writeText(u);g("chCpM").textContent="Copied.";}catch(e){try{const r=document.createRange();r.selectNodeContents(g("chUid"));const sl=window.getSelection();sl.removeAllRanges();sl.addRange(r);g("chCpM").textContent=document.execCommand&&document.execCommand("copy")?"Copied.":"Selected: press and hold to copy.";}catch(x){g("chCpM").textContent="Press and hold the ID to copy it.";}}};
+ fillId();if(!FB)load().then(()=>{if(ls(KC,""))rolesStart();fillId();}).catch(e=>{if(g("chUid"))g("chUid").textContent="Not available: "+friendly(e);});}
 function fmt(ms){if(!ms)return"sending…";const d=new Date(ms),n=new Date(),t=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});return d.toDateString()===n.toDateString()?t:d.toLocaleDateString([],{month:"short",day:"numeric"})+" "+t;}
 function paintMain(){const c=g("chCard");if(!g("chL")){
- c.innerHTML=head()+'<p class="mut" style="margin:0">Room: <b id="chRm"></b> · You: <b id="chMe"></b> · <button type="button" class="link" id="chSet">Change name / code</button></p>'+
+ c.innerHTML=head()+'<p class="mut" style="margin:0">Room: <b id="chRm"></b> · You: <b id="chMe"></b> · <button type="button" class="link" id="chSet">Change name / code / My ID</button></p><div class="row" id="chRb"></div>'+
  '<div class="chtabs" role="group" aria-label="Chat channels">'+CHAT_CHANNELS.map(x=>'<button type="button" data-c="'+x+'">'+x+'</button>').join("")+'</div>'+
  '<p id="chSt" aria-live="polite"></p><div class="chlist" id="chL" role="log" aria-live="polite" tabindex="0"></div>'+
  '<form class="chsend" id="chF" autocomplete="off"><textarea id="chT" maxlength="500" rows="2" aria-label="Message" placeholder="Message to #'+E(chan)+'"></textarea><button type="submit" class="p" id="chS">Send</button></form>'+
- '<p class="mut" style="margin:6px 0 0">Report any message that is abusive. Admin removal is done by the app owner.</p>';
+ '<p class="mut" style="margin:6px 0 0">Report any message that is abusive. Moderators and admins can remove messages.</p>';
  g("chSet").onclick=()=>{settings=true;stop();paint();};
  c.querySelectorAll(".chtabs button").forEach(b=>b.onclick=()=>{chan=b.dataset.c;lss(KH,chan);paintMain();});
  g("chF").onsubmit=ev=>{ev.preventDefault();send();};
  g("chT").onkeydown=ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();send();}};}
- g("chRm").textContent=ls(KC,"");g("chMe").textContent=ls(KN,"");
+ g("chRm").textContent=ls(KC,"");g("chMe").textContent=ls(KN,"")+(roleLabel(role())?" ("+roleLabel(role())+")":"");
+ const rb=g("chRb"),bt=[];if(staff())bt.push('<button type="button" id="chRp">Reports</button>');if(isAdm())bt.push('<button type="button" id="chPp">People</button>');
+ rb.innerHTML=bt.join("");rb.classList.toggle("hide",!bt.length);
+ if(g("chRp"))g("chRp").onclick=()=>{panel="reports";reps=null;repErr="";repsLoad();paint();};
+ if(g("chPp"))g("chPp").onclick=()=>{panel="people";pnote="";paint();};
  document.querySelectorAll(".chtabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===chan)));
  g("chT").placeholder="Message to #"+chan;g("chSt").textContent=err;
- const me=FB&&FB.auth.currentUser?FB.auth.currentUser.uid:"",L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,list=msgs.filter(m=>m.channel===chan);
- L.innerHTML=list.length?list.map(m=>{const mine=m.uid===me;return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+E(m.name)+'</div><div class="tx">'+E(m.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?'<button type="button" data-a="del">Delete</button>':'<button type="button" data-a="rep">Report</button>')+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>';
+ const me=uid(),L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,list=msgs.filter(m=>m.channel===chan),rl=role();
+ L.innerHTML=list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me);return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+E(m.name)+badge(m.uid)+'</div><div class="tx">'+E(m.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep">Report</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>';
  L.querySelectorAll("button[data-a]").forEach(b=>b.onclick=()=>act(b.dataset.a,b.closest(".chm").dataset.id));
  if(near||!L.dataset.s){L.scrollTop=L.scrollHeight;L.dataset.s="1";}}
-function paint(){if(settings||!ls(KN,"")||!ls(KC,""))paintSetup();else paintMain();}
+function back(){panel="";pnote="";open();}
+async function repsLoad(){try{await load();rolesStart();const f=FB.fs,s=await f.getDocs(f.query(f.collection(FB.db,"reports"),f.where("room","==",ls(KC,"")),f.limit(100)));
+  reps=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,messageId:String(x.messageId||""),reason:String(x.reason||""),reporter:String(x.reporter||""),ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).sort((a,b)=>b.ms-a.ms);repErr="";}
+ catch(e){reps=[];repErr=/permission/.test(e&&e.code||"")?"Couldn't load reports. The server rules may not be updated yet, or you aren't a moderator or admin.":friendly(e);}
+ if(panel==="reports")paintPanel();}
+function paintPanel(){const c=g("chCard");
+ if(panel==="reports"){const me=uid();
+  c.innerHTML=head()+'<h4>Reports (this room)</h4><div class="row"><button type="button" id="chBk2">Back to chat</button><button type="button" id="chRf">Refresh</button></div><p id="chSt" aria-live="polite">'+E(repErr||pnote)+'</p>'+
+   (reps===null?'<p class="mut">Loading…</p>':reps.length?reps.map(r=>{const m=msgs.find(x=>x.id===r.messageId);return'<div class="chr" data-r="'+E(r.id)+'" data-m="'+E(r.messageId)+'"><div class="who">'+(m?E(m.name)+badge(m.uid):"(message not loaded)")+' <small>'+E(fmt(r.ms))+'</small></div><div class="tx" style="white-space:pre-wrap">'+(m?E(m.text):"Not in the last 100 messages, or already deleted.")+'</div><p class="mut" style="margin:4px 0">Reason: '+E(r.reason||"(none given)")+'</p><div class="row"><button type="button" class="p" data-x="delm">Delete message &amp; resolve</button><button type="button" data-x="res">Resolve (remove report)</button></div></div>';}).join(""):(repErr?"":'<p class="mut">No open reports. Good.</p>'));
+  g("chBk2").onclick=back;g("chRf").onclick=()=>{reps=null;repErr="";pnote="";paintPanel();repsLoad();};
+  c.querySelectorAll(".chr button[data-x]").forEach(b=>b.onclick=async()=>{const box=b.closest(".chr"),rid=box.dataset.r,mid=box.dataset.m,f=FB.fs;
+   try{if(b.dataset.x==="delm"){if(!confirm("Delete this message for everyone and resolve the report?"))return;if(mid)await f.deleteDoc(f.doc(FB.db,"rooms",ls(KC,""),"messages",mid));}
+    await f.deleteDoc(f.doc(FB.db,"reports",rid));reps=reps.filter(x=>x.id!==rid);pnote="Done.";}catch(e){pnote="Couldn't do that. "+(/permission/.test(e&&e.code||"")?"Not allowed (rules not updated, or you aren't a moderator).":friendly(e));}
+   paintPanel();});return;}
+ if(panel==="people"){const me=uid(),ppl=rolePeople(msgs,roles);
+  c.innerHTML=head()+'<h4>People (admins only)</h4><div class="row"><button type="button" id="chBk2">Back to chat</button></div><div class="chwarn" role="note">Roles belong to a phone/browser ID. Only another admin can remove or change an admin, and you can’t change your own role: keep at least two admins so the room is never left without one.</div><p id="chSt" aria-live="polite">'+E(pnote)+'</p>'+
+   (ppl.length?ppl.map(u=>{const self=u.uid===me,can=roleCanChange(role(),u.uid,me);return'<div class="chp" data-u="'+E(u.uid)+'" data-n="'+E(u.name)+'"><div class="who">'+E(u.name)+badge(u.uid)+(self?" (you)":"")+' <small>ID …'+E(u.uid.slice(-6))+'</small></div><div class="row"><button type="button" data-x="moderator"'+(!can||u.role==="moderator"?" disabled":"")+'>Make moderator</button><button type="button" data-x="admin"'+(!can||u.role==="admin"?" disabled":"")+'>Make admin</button><button type="button" class="d" data-x="remove"'+(!can||!u.role?" disabled":"")+'>Remove role</button></div>'+(self?'<p class="mut" style="margin:4px 0 0">Another admin must change your role.</p>':"")+'</div>';}).join(""):'<p class="mut">Nobody has chatted yet. People appear here once they post a message.</p>');
+  g("chBk2").onclick=back;
+  c.querySelectorAll(".chp button[data-x]").forEach(b=>b.onclick=async()=>{const box=b.closest(".chp"),u=box.dataset.u,n=chatName(box.dataset.n)||"?",x=b.dataset.x,f=FB.fs,ref=f.doc(FB.db,"rooms",ls(KC,""),"roles",u);
+   if(!roleCanChange(role(),u,uid()))return;
+   if(x==="admin"&&!confirm("Make "+n+" an admin? Admins manage roles and shared boards, and can only be removed by another admin."))return;
+   if(x==="remove"&&!confirm("Remove the role from "+n+"? They become a regular member."))return;
+   try{if(x==="remove")await f.deleteDoc(ref);else await f.setDoc(ref,{role:x,name:n,setAt:f.serverTimestamp()});pnote=x==="remove"?"Role removed from "+n+".":n+" is now "+(x==="admin"?"an admin":"a moderator")+".";}
+   catch(e){pnote="Couldn't change the role. "+(/permission/.test(e&&e.code||"")?"Not allowed (rules not updated, or you aren't an admin).":friendly(e));}
+   paintPanel();});return;}}
+function paint(){if(settings||!ls(KN,"")||!ls(KC,""))paintSetup();else if(panel)paintPanel();else paintMain();}
 async function send(){const t=chatText(g("chT").value),now=Date.now();if(!t)return;if(!chatCanSend(lastSend,now)){err="Slow down a little: one message every 2 seconds.";g("chSt").textContent=err;return;}
  if(!FB){err="Not connected yet.";g("chSt").textContent=err;return;}
  lastSend=now;g("chS").disabled=true;err="";
@@ -1934,17 +2100,19 @@ async function act(a,id){if(!FB)return;const f=FB.fs;try{
  else{const r=prompt("Why are you reporting this message? (optional, up to 200 characters)","");if(r===null)return;await f.addDoc(f.collection(FB.db,"reports"),{messageId:String(id).slice(0,100),room:ls(KC,""),reason:String(r).slice(0,200),reporter:FB.auth.currentUser.uid,createdAt:f.serverTimestamp()});err="Thanks. The message was reported.";}
  }catch(e){err=(a==="del"?"Couldn't delete. ":"Couldn't send the report. ")+friendly(e);}
  if(g("chSt"))g("chSt").textContent=err;}
-async function open(){if(settings||!ls(KN,"")||!ls(KC,"")){paint();return;}
+async function open(){panel="";if(settings||!ls(KN,"")||!ls(KC,"")){paint();return;}
  paintMain();err="Connecting…";g("chSt").textContent=err;
  try{await load();}catch(e){err=friendly(e);if(g("chSt"))g("chSt").textContent=err;return;}
+ rolesStart();paintMain();
  if(!g("chL")||unsub)return;err="";const f=FB.fs,q=f.query(f.collection(FB.db,"rooms",ls(KC,""),"messages"),f.orderBy("createdAt","desc"),f.limit(100));
  unsub=f.onSnapshot(q,s=>{msgs=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,text:String(x.text||""),name:String(x.name||"?"),uid:x.uid,channel:x.channel,ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).reverse();err=s.metadata.fromCache&&navigator.onLine===false?"Offline: showing saved messages.":"";if(g("chL"))paintMain();},
   e=>{err=friendly(e);stop();if(g("chSt"))g("chSt").textContent=err;});}
 window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
+window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(KC,""),name:()=>ls(KN,""),joined:()=>!!(ls(KN,"")&&ls(KC,"")),uid:uid,role:role,isAdmin:isAdm,fs:()=>FB&&FB.fs,db:()=>FB&&FB.db,on:f=>{lis.push(f);},friendly:friendly};
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
