@@ -167,6 +167,21 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .bbzb output{min-width:3.6em;text-align:center;font-weight:800;color:#f2f6ff;font-variant-numeric:tabular-nums}
 .bbzb.hide{display:none}
 #pgGrid.bbg{touch-action:pan-x pan-y}
+/* v52 slip move */
+.bb,.bb .slip{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.slip.dragsrc{opacity:.45;outline:3px dashed #ffd23f;outline-offset:1px}
+.slip.dt-ins{box-shadow:inset 0 .5em 0 0 #ffd23f}
+.slip.dt-swap{outline:4px dashed #ffd23f;outline-offset:-3px;background:#2a4f9e}
+#pgGh{position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-130%);max-width:70vw;padding:6px 12px;border-radius:999px;background:#ffd23f;color:#1a1400;font-weight:800;font-size:1rem;box-shadow:0 2px 8px #000a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pgGh[data-t]:not([data-t=""])::after{content:" · " attr(data-t)}
+#pgDt{position:fixed;left:0;right:0;bottom:0;z-index:9998;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px;background:#07153a;color:#f2f6ff;border-top:3px solid #ffd23f;font-weight:700}
+#pgDt .dtb{min-height:44px;padding:4px 10px;border-radius:999px;border:2px solid #cfe0ff;background:#16306a;color:#f2f6ff;font-weight:700}
+#pgDt .dtb.on{background:#ffd23f;color:#1a1400;border-color:#fff}
+body.pgdrag{overscroll-behavior:none}
+.bbbar .lcw{display:inline-flex;align-items:center;gap:2px}.bbbar .lce{min-width:44px;min-height:44px;padding:0;border-radius:50%;border:2px solid var(--bd);background:var(--card);color:var(--fg);font-size:1.1rem}
+.mvr{align-items:flex-end}.mvr>div{flex:1 1 90px;min-width:0}.mvr select,.mvr input{width:100%}
+.pgap select{flex:0 0 7.5rem;min-width:0}
+
 .bbz{width:max-content}
 .bbz.mini .sc{width:50%}
 #pgWrap.side{display:flex;gap:8px;flex-wrap:wrap}
@@ -222,9 +237,9 @@ html,body{background:#00214e}
 #splash img{width:50%;max-width:320px;height:auto;display:block}
 #splash b{font-size:1.5rem;letter-spacing:.14em;color:#fff}#splash b i{font-style:normal;color:#ffd23f}
 @keyframes spf{0%,70%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
-body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s step-end forwards}
+body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden;animation:spa 1.2s step-end forwards}
 @keyframes spa{0%,69%{visibility:hidden}70%,100%{visibility:visible}}
-@media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}body>*:not(#splash):not(.sheet):not(#lv){animation:spb 0s .4s forwards}@keyframes spb{to{visibility:visible}}}
+@media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){animation:spb 0s .4s forwards}@keyframes spb{to{visibility:visible}}}
 </style></head><body style="background:#00214e">
 <div id="splash" aria-hidden="true"><img src="data:image/png;base64,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" alt="" width="160" height="160"><b>ILWU <i>LIFE</i></b></div>
 <header>ILWU LIFE</header>
@@ -324,7 +339,7 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 </section>
 <section id="v-pegs" class="hide">
 <div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards</h3>
-<p class="mut" style="margin-top:0">Your own record of the physical peg boards. Everyone keeps a fixed position. Each job has its own peg that moves along the board only when you tap Advance, Taken or place it; the app never decides who gets a job.</p>
+<p class="mut" style="margin-top:0">Your own record of the physical peg boards. Pick a board, tap a peg in the legend (or a peg already on a slip) and then tap a slip circle to put it there. The app never decides who gets a job. To move a slip itself, press and hold it, then drag; or open the slip and use Move.</p>
 <div class="gstrip" id="pgGl" role="region" aria-label="Global pegs"></div>
 <label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
 <div class="row" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
@@ -333,18 +348,14 @@ body>*:not(#splash):not(.sheet):not(#lv){visibility:hidden;animation:spa 1.2s st
 <div class="row"><button type="button" class="p" id="pgCam">📷 Take photo</button><button type="button" id="pgPh">🖼 Choose from gallery</button></div>
 <div class="row"><button type="button" class="p" id="pgShare">Post board update (share)</button></div>
 <p id="pgUp" class="mut"></p>
-<h4 class="pgjh">Job pegs</h4>
-<div class="row"><input id="pgJN" maxlength="40" placeholder="New job, e.g. Bull 1" aria-label="New job name" autocomplete="off"><button type="button" id="pgJA" style="flex:0 0 auto">Add job peg</button></div>
-<div id="pgJobs"></div>
-<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Flex semi, Bull, Strad, Flex strad, UT, Super flex bull)</button><div id="pgHint" class="hide" role="status" style="margin-top:8px;padding:8px;border:1px solid var(--bd,#888);border-radius:8px"><span>New presets available: Flex semi, Flex strad</span> <button type="button" id="pgHintAdd">Add</button> <button type="button" id="pgHintX" aria-label="Dismiss new presets hint">Dismiss</button></div></div>
-<div class="row"><button type="button" id="pgUn">Undo last action</button><button type="button" id="pgLog">Log of takes</button></div>
-<p class="mut" style="margin-bottom:4px">Advance moves a job peg to the next person in reading order (left to right, then down), skipping empty positions and wrapping at the end. “Taken” logs that person for that job; the peg then rests there until you advance it. Tap any position to place a job peg or a global peg there. Global pegs (Supervisor, Flex supervisor, Foreman) exist once and travel through every board in the order of the Board list, then wrap back to the first board.</p>
+<h4 class="pgjh">Add peg to this board</h4>
+<div class="row pgap"><input id="pgJN" maxlength="40" placeholder="Peg name, e.g. Bull 1" aria-label="New peg name" autocomplete="off"><select id="pgJC" aria-label="New peg color"></select><button type="button" id="pgJA" style="flex:0 0 auto">Add peg</button></div>
+<div id="pgPreset" class="hide"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
 <div class="row pgsz"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
-<div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button><button type="button" id="pgLab" aria-pressed="true">Row/column labels: on</button></div>
-<p class="mut" style="margin-bottom:4px">Position 1 is top-left; numbers run left to right, then down. Tap a position to edit it.</p>
+<div class="row" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button></div>
 <div id="pgBb" class="bbbar hide"></div><input type="file" id="bbFile" class="hide" accept=".json,application/json,text/plain">
 <div id="pgZb" class="bbzb hide" role="group" aria-label="Board zoom"><button type="button" id="bbZm" aria-label="Zoom out">−</button><input type="range" id="bbZs" min="10" max="250" step="1" value="100" aria-label="Board zoom percent"><button type="button" id="bbZa" aria-label="Zoom in">+</button><output id="bbZl" for="bbZs" aria-live="off">100%</output><button type="button" id="bbZf" aria-label="Fit whole board on screen">Fit</button><button type="button" id="bbZ1" aria-label="Zoom to 100 percent">100%</button></div>
-<div id="pgWrap"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board grid (scrolls sideways)"></div></div>
+<div id="pgWrap"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board slips (scrolls sideways)"></div></div>
 <div id="pgBb2" class="bbbar hide"></div>
 <div id="pgEd" class="pged hide"></div>
 <p id="pgM" class="mut" aria-live="polite"></p>
@@ -555,7 +566,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v51",CACHE_VERSION="l19hours-v51"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v52",CACHE_VERSION="l19hours-v52"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -584,7 +595,7 @@ const TOUR_CARDS=[["Log a shift","Tap ＋ Add, pick the date, pier, job and shif
  ["History & calendar","History lists every shift by month, with week, month, quarter and year totals. Switch to Calendar to tap a day, or search by job, pier or note."],
  ["Share a week","On the Week tab tap Share week. Choose hours only (no pay) or hours plus a pay estimate, then paste it wherever you need."],
  ["Back up your data","Everything stays on this phone. In the Backup tab, back up to a JSON file now and then. You can also export CSV or open a Year summary."],
- ["Ships, pegs & chat","Ships has dispatch quick links, today's needs and the ships coming. Pegs has your peg boards. Chat is an online room for coworkers with the invite code; it never sends your hours, pay or pegs. Replay this tour any time from the Backup tab."]];
+ ["Ships, pegs & chat","Ships has dispatch quick links, today's needs and the ships coming. Pegs has your peg boards: tap a peg, then a slip circle, to place it; press and hold a slip, then drag, to move it. Chat is an online room for coworkers with the invite code; it never sends your hours, pay or pegs. Replay this tour any time from the Backup tab."]];
 function tourDue(flag,setupOpen,locked){return flag!=="1"&&!setupOpen&&!locked;}
 function yearSummary(all,year){const y=String(year),l=(all||[]).filter(e=>e&&typeof e.date==="string"&&e.date.slice(0,4)===y),t=summarize(l);
  const months=[];for(let m=1;m<=12;m++){const k=y+"-"+p2(m),ml=l.filter(e=>e.date.slice(0,7)===k),mt=summarize(ml);
@@ -688,8 +699,8 @@ function needsMerge(cur,inc){const m=new Map(needsClean(cur).map(n=>[n.id,n]));n
 function needsGroups(a){const g={};for(const n of needsClean(a))(g[n.date]=g[n.date]||[]).push(n);return Object.keys(g).sort().reverse().map(k=>({key:k,items:g[k].sort((x,y)=>(y.created||"")>(x.created||"")?1:-1)}));}
 /* ===== Peg boards (pure helpers; manual entries only, no seniority logic) ===== */
 const PEG_BOARDS=["Bull board","Wheat board","Trucker board","Crane board","Stevedore board","Sling board","Little crane board"];
-const PEG_GLOBAL_DEFAULT=["Supervisor","Flex supervisor","Foreman"],PEG_GLOBALS=10,PEG_PRESET=["Semi","Flex semi","Bull","Strad","Flex strad","UT","Super flex bull"],PEG_PRESET_ID=["p0","p5","p1","p2","p6","p3","p4"],PEG_PRESET_COLOR=[7,10,8,0,11,9,12],PEG_PRESET_OLDCOLOR=[0,5,1,2,6,3,4],PEG_PRESET_NEW=["Flex semi","Flex strad"]; /* ids/colors of the v40 five are kept stable */
-const PEG_DEF={cols:25,rows:10},PEG_LEGACY={cols:20,rows:10},PEG_MAX=60,PEG_JOBS=20,PEG_TAKES=500,PEG_UNDO=10;
+const PEG_GLOBAL_DEFAULT=["Supervisor","Flex supervisor","Foreman"],PEG_GLOBALS=10,PEG_PRESET=["Semi","Bull","Strad","UT","Super flex bull"],PEG_PRESET_ID=["p0","p1","p2","p3","p4"],PEG_PRESET_COLOR=[7,8,0,9,12],PEG_PRESET_OLDCOLOR=[0,1,2,3,4],PEG_PRESET_NEW=[],PEG_REMOVED=["flex semi","flex strad"]; /* ids/colors of the v40 five are kept stable */
+const PEG_MUNDO=5,PEG_DEF={cols:25,rows:10},PEG_LEGACY={cols:20,rows:10},PEG_MAX=60,PEG_JOBS=20,PEG_TAKES=500,PEG_UNDO=10;
 const PEG_COLORS=[["Red","#b3261e","#ffffff"],["Orange","#9a4a00","#ffffff"],["Green","#1b5e20","#ffffff"],["Teal","#00606b","#ffffff"],["Blue","#0b4fa8","#ffffff"],["Purple","#6a2c91","#ffffff"],["Pink","#a3185b","#ffffff"],["Yellow","#ffd23f","#1a1400"],["Orange (bright)","#ff8a1f","#1a0e00","#ffffff"],["Teal (bright)","#1fc2b3","#00201d","#ffffff"],["Yellow, dashed flex ring","#ffd23f","#1a1400","#ffffff",1],["Red, dashed flex ring","#b3261e","#ffffff","#ffffff",1],["Purple (bright)","#8e44c7","#ffffff","#ffffff"]]; /* v49: slots 8-12 are the slip-board peg colors; optional 4th item = ring color */
 function pegRing(c){return c&&c[3]?c[3]:"#fff";}
 function pegSty(c){c=c||PEG_COLORS[0];return"background:"+c[1]+";color:"+c[2]+";border-color:"+pegRing(c)+(c[4]?";border-style:dashed":"");}
@@ -719,7 +730,7 @@ function pegBoardClean(b){const o=pegBoardNew();if(!b||typeof b!=="object")retur
   o.undo.push({id:u.id.slice(0,40),at:sl(u.at,40),label:sl(u.label,120),pos:ps,take:sl(u.take,40)});}
  o.undo=o.undo.slice(-PEG_UNDO);
  return o;}
-function pegsClean(d){const o={boards:{},custom:[],sel:"",seeded:false,globals:[],glog:[],gundo:[]};if(!d||typeof d!=="object")return o;
+function pegsClean(d){const o={boards:{},custom:[],sel:"",seeded:false,globals:[],glog:[],gundo:[],mundo:[]};if(!d||typeof d!=="object")return o;
  const bs=d.boards&&typeof d.boards==="object"&&!Array.isArray(d.boards)?d.boards:{};
  for(const k of Object.keys(bs)){const name=String(k).trim().slice(0,40);if(!name||name==="__proto__")continue;o.boards[name]=pegBoardClean(bs[k]);}
  const cu=Array.isArray(d.custom)?d.custom:[];
@@ -739,7 +750,17 @@ function pegsClean(d){const o={boards:{},custom:[],sel:"",seeded:false,globals:[
  for(const u of gu){if(!u||typeof u!=="object"||typeof u.id!=="string"||!u.id)continue;const ps={},src=u.pegs&&typeof u.pegs==="object"?u.pegs:{};
   for(const k of Object.keys(src)){if(k==="__proto__")continue;const v=src[k];if(!v||typeof v!=="object")continue;const ok=names.includes(v.board)&&okAt(v.board,v.pos);ps[sl(k,24)]={board:ok?v.board:"",pos:ok?v.pos:""};}
   o.gundo.push({id:u.id.slice(0,40),at:sl(u.at,40),label:sl(u.label,120),pegs:ps,take:sl(u.take,40)});}
- o.gundo=o.gundo.slice(-PEG_UNDO);return o;}
+ o.gundo=o.gundo.slice(-PEG_UNDO);
+ /* v52: undo stack for slip moves (snapshots of the boards a move touched) */
+ o.mundo=[];const okK=k=>/^\d{1,2}-\d{1,2}$/.test(k);
+ for(const u of Array.isArray(d.mundo)?d.mundo:[]){if(!u||typeof u!=="object"||!u.snap||typeof u.snap!=="object"||!u.snap.boards||typeof u.snap.boards!=="object")continue;const boards={};
+  for(const bn of Object.keys(u.snap.boards)){const sn=u.snap.boards[bn];if(!sn||typeof sn!=="object"||!names.includes(bn))continue;const pg={},sp=sn.pegs&&typeof sn.pegs==="object"?sn.pegs:{};
+   for(const k of Object.keys(sp)){if(!okK(k)||!sp[k]||typeof sp[k]!=="object")continue;pg[k]={n:sl(sp[k].n,80),note:sl(sp[k].note,200),me:sp[k].me===true};}
+   const jb={};if(sn.jobs&&typeof sn.jobs==="object")for(const id of Object.keys(sn.jobs))jb[id.slice(0,24)]=okK(sn.jobs[id])?sn.jobs[id]:"";
+   boards[bn]={rows:pegDim(sn.rows,PEG_DEF.rows),pegs:pg,jobs:jb,updated:sl(sn.updated,40)};}
+  const gl=(Array.isArray(u.snap.globals)?u.snap.globals:[]).filter(g=>g&&typeof g.id==="string").map(g=>({id:g.id.slice(0,24),board:sl(g.board,40),pos:okK(g.pos)?g.pos:""}));
+  o.mundo.push({id:sl(u.id,40),at:sl(u.at,40),label:sl(u.label,120),snap:{boards:boards,globals:gl}});}
+ o.mundo=o.mundo.slice(-PEG_MUNDO);return o;}
 function pegDropped(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);return Object.keys(b.pegs).filter(k=>{const m=k.split("-");return +m[0]>rows||+m[1]>cols;}).sort((x,y)=>{const a=x.split("-"),c=y.split("-");return(+a[0]-+c[0])||(+a[1]-+c[1]);});}
 function pegResize(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);const dropped=pegDropped(b,rows,cols),pegs={};
  for(const k of Object.keys(b.pegs))if(!dropped.includes(k))pegs[k]=b.pegs[k];
@@ -758,6 +779,11 @@ function pegPresetAdd(b){const jobs=[...(b.jobs||[])];let n=0;
  PEG_PRESET.forEach((nm,i)=>{if(jobs.length>=PEG_JOBS||jobs.some(j=>j.name.toLowerCase()===nm.toLowerCase()))return;let id=PEG_PRESET_ID[i];while(jobs.some(j=>j.id===id))id+="x";jobs.push({id:id,name:nm,color:PEG_PRESET_COLOR[i],pos:""});n++;});
  return{board:{...b,jobs:jobs},added:n};}
 function pegPresetMissing(b,names){const have=new Set((b&&b.jobs||[]).map(j=>j.name.toLowerCase()));return(names||PEG_PRESET).filter(n=>!have.has(n.toLowerCase()));}
+/* v52: the two flex presets do not exist; drop those two job pegs from the Bull board (old log entries stay as history) */
+function pegFlexRemove(d){d=pegsClean(d);const b=d.boards["Bull board"];if(!b)return{data:d,removed:0};const gone=(b.jobs||[]).filter(j=>PEG_REMOVED.includes(j.name.toLowerCase()));if(!gone.length)return{data:d,removed:0};
+ let nb=b;gone.forEach(j=>{const r=pegJobRemove(nb,j.id);if(r.ok)nb=r.board;});
+ const mundo=(d.mundo||[]).map(u=>({...u,snap:{...u.snap,boards:Object.fromEntries(Object.entries(u.snap.boards).map(([k,v])=>{const jb={...v.jobs};if(k==="Bull board")gone.forEach(j=>{delete jb[j.id];});return[k,{...v,jobs:jb}];}))}}));
+ return{data:{...d,boards:{...d.boards,"Bull board":nb},mundo:mundo},removed:gone.length};}
 function pegsSeed(d){d=pegsClean(d);if(d.seeded)return d;const nb=d.boards["Bull board"]||pegBoardNew();
  if(!nb.jobs.length)d.boards["Bull board"]=pegPresetAdd(nb).board;d.seeded=true;return d;}
 
@@ -804,6 +830,50 @@ function pegPlaceTake(b,id,pos,now){const r1=pegPlace(b,id,pos,now);if(!r1.ok)re
  const r2=pegTake(r1.board,id,now);if(!r2.ok)return r1;const u1=r1.board.undo[r1.board.undo.length-1],un=r2.board.undo.slice(0,-2),u2=r2.board.undo[r2.board.undo.length-1];
  un.push({...u2,pos:u1.pos,label:"Placed "+r2.take.job+" on "+r2.take.person});
  return{ok:true,take:r2.take,from:r1.from,to:pos,board:{...r2.board,undo:un.slice(-PEG_UNDO)}};}
+/* ===== v52: move a slip (same board or another board). Insert (default) or swap. Pegs ride with the slip inside a board; between boards they are taken off. Never touches the takes log. ===== */
+function pegGlobalPlaceTake(d,id,board,pos,now){const r1=pegGlobalPlace(d,id,board,pos,now);if(!r1.ok)return r1;const b=d.boards[board];if(!b||!b.pegs[pos]||!b.pegs[pos].n)return r1;
+ const r2=pegGlobalTake(r1.data,id,now);if(!r2.ok)return r1;const g2=r2.data.gundo,u1=g2[g2.length-2],u2=g2[g2.length-1];
+ return{ok:true,take:r2.take,to:r1.to,from:r1.from,data:{...r2.data,gundo:[...g2.slice(0,-2),{...u1,take:u2.take,label:"Placed "+r2.take.peg+" on "+r2.take.person}].slice(-PEG_UNDO)}};}
+function pegCellsOf(d,bn){const b=d.boards[bn]||pegBoardNew(),c={},at=k=>c[k]||(c[k]={v:null,j:[],g:[]});
+ for(const k of Object.keys(b.pegs))at(k).v=b.pegs[k];for(const j of b.jobs||[])if(j.pos)at(j.pos).j.push(j.id);for(const g of d.globals||[])if(g.board===bn&&g.pos)at(g.pos).g.push(g.id);return c;}
+function pegCellsPut(d,bn,cells,rows,now){const b=d.boards[bn]||pegBoardNew(),pegs={},jp={},gp={};
+ for(const k of Object.keys(cells)){const x=cells[k];if(x.v)pegs[k]=x.v;x.j.forEach(i=>{jp[i]=k;});x.g.forEach(i=>{gp[i]=k;});}
+ d.boards[bn]={...b,rows:rows,pegs:pegs,updated:now.toISOString(),jobs:(b.jobs||[]).map(j=>({...j,pos:jp[j.id]||""}))};
+ d.globals=(d.globals||[]).map(g=>g.board===bn?(gp[g.id]?{...g,pos:gp[g.id]}:{...g,board:"",pos:""}):g);}
+function pegColLast(cells,c){let l=0;for(const k of Object.keys(cells)){const m=k.split("-");if(+m[1]===c&&+m[0]>l)l=+m[0];}return l;}
+function pegCShiftUp(cells,c,r){const l=pegColLast(cells,c);for(let i=r+1;i<=l;i++){const a=pegKey(i,c);if(cells[a]){cells[pegKey(i-1,c)]=cells[a];delete cells[a];}}}
+function pegCShiftDown(cells,c,r,rows){const l=pegColLast(cells,c),nr=Math.max(rows,l+1);if(nr>PEG_MAX)return -1;
+ for(let i=l;i>=r;i--){const a=pegKey(i,c);if(cells[a]){cells[pegKey(i+1,c)]=cells[a];delete cells[a];}}return nr;}
+function pegMSnap(d,bns){const boards={};bns.forEach(bn=>{if(boards[bn])return;const b=d.boards[bn]||pegBoardNew(),jobs={};(b.jobs||[]).forEach(j=>{jobs[j.id]=j.pos||"";});boards[bn]={rows:b.rows,pegs:JSON.parse(JSON.stringify(b.pegs)),jobs:jobs,updated:b.updated||""};});
+ return{boards:boards,globals:(d.globals||[]).map(g=>({id:g.id,board:g.board||"",pos:g.pos||""}))};}
+function pegSlipMove(d,from,to,mode,now){now=pegNowOf(now);mode=mode==="swap"?"swap":"insert";const names=pegBoardOrder(d);
+ if(!from||!to||!names.includes(from.board)||!names.includes(to.board))return{ok:false,error:"That board doesn't exist."};
+ const A=d.boards[from.board]||pegBoardNew(),B=d.boards[to.board]||pegBoardNew(),fm=/^(\d+)-(\d+)$/.exec(from.key||""),tm=/^(\d+)-(\d+)$/.exec(to.key||"");
+ if(!fm||!A.pegs[from.key])return{ok:false,error:"There is no slip there to move."};
+ if(!tm||+tm[1]<1||+tm[2]<1||+tm[1]>B.rows||+tm[2]>B.cols)return{ok:false,error:"That position is not on "+to.board+" (it has "+B.cols+" columns and "+B.rows+" rows)."};
+ const same=from.board===to.board;if(same&&from.key===to.key)return{ok:false,error:"That slip is already there."};
+ const fc=+fm[2],fr=+fm[1],tc=+tm[2],tr=+tm[1],snap=pegMSnap(d,[from.board,to.board]),nd={...d,boards:{...d.boards},globals:(d.globals||[]).map(g=>({...g}))};
+ const name=A.pegs[from.key].n||"(no name)";let cleared=false,note="",res;
+ if(same){const cells=pegCellsOf(nd,from.board),X=cells[from.key],Y=cells[to.key];let rows=A.rows;
+  if(!Y||!Y.v){delete cells[from.key];cells[to.key]={v:X.v,j:[...(Y?Y.j:[]),...X.j],g:[...(Y?Y.g:[]),...X.g]};}
+  else if(mode==="swap"){cells[to.key]=X;cells[from.key]=Y;}
+  else{delete cells[from.key];pegCShiftUp(cells,fc,fr);rows=pegCShiftDown(cells,tc,tr,rows);if(rows<0)return{ok:false,error:"That column is full ("+PEG_MAX+" slips)."};cells[to.key]=X;}
+  pegCellsPut(nd,from.board,cells,rows,now);}
+ else{const ca=pegCellsOf(nd,from.board),cb=pegCellsOf(nd,to.board),X=ca[from.key],Y=cb[to.key];let rows=B.rows;cleared=X.j.length>0||X.g.length>0;
+  const v=X.v.me&&Object.keys(B.pegs).some(k=>B.pegs[k].me)?{...X.v,me:false}:X.v;if(v!==X.v)note=" The “my peg” star was not carried over because "+to.board+" already has one.";
+  const Xn={v:v,j:[],g:[]};
+  if(!Y||!Y.v){delete ca[from.key];cb[to.key]={v:v,j:Y?Y.j:[],g:Y?Y.g:[]};}
+  else if(mode==="swap"){cb[to.key]=Xn;ca[from.key]={v:Y.v,j:[],g:[]};cleared=cleared||Y.j.length>0||Y.g.length>0;}
+  else{delete ca[from.key];pegCShiftUp(ca,fc,fr);rows=pegCShiftDown(cb,tc,tr,rows);if(rows<0)return{ok:false,error:"That column is full ("+PEG_MAX+" slips)."};cb[to.key]=Xn;}
+  pegCellsPut(nd,from.board,ca,A.rows,now);pegCellsPut(nd,to.board,cb,rows,now);}
+ const u={id:now.getTime().toString(36)+"-"+((d.mundo||[]).length),at:now.toISOString(),label:"Move "+name,snap:snap};nd.mundo=[...(d.mundo||[]),u].slice(-PEG_MUNDO);
+ const msg="Moved "+name+" to "+(same?"":to.board+", ")+"column "+tc+", slip "+tr+(mode==="swap"?" (swapped)":"")+"."+(cleared?" Pegs on the slip were taken off the board (pegs don't travel between boards).":"")+note+" Use Undo move to take it back.";
+ return{ok:true,data:nd,msg:msg,cleared:cleared,name:name};}
+function pegSlipUndo(d,now){now=pegNowOf(now);const st=d.mundo||[];if(!st.length)return{ok:false,error:"There is no slip move to undo."};const u=st[st.length-1],nd={...d,boards:{...d.boards}};
+ for(const bn of Object.keys(u.snap.boards)){const sn=u.snap.boards[bn],cur=nd.boards[bn]||pegBoardNew();
+  nd.boards[bn]={...cur,rows:Math.max(cur.rows,sn.rows),pegs:JSON.parse(JSON.stringify(sn.pegs)),updated:sn.updated,jobs:(cur.jobs||[]).map(j=>Object.prototype.hasOwnProperty.call(sn.jobs,j.id)?{...j,pos:sn.jobs[j.id]}:j)};}
+ const gm={};u.snap.globals.forEach(g=>{gm[g.id]=g;});nd.globals=(d.globals||[]).map(g=>gm[g.id]?{...g,board:gm[g.id].board,pos:gm[g.id].pos}:g);
+ nd.mundo=st.slice(0,-1);return{ok:true,data:nd,undone:u};}
 /* edit a column of slips: insert / remove / up / down; job pegs and global pegs ride with their slip */
 function pegColOp(d,bn,op,r,c){const b=d.boards[bn];if(!b)return{ok:false,error:"No such board."};r=+r;c=+c;
  if(!(r>=1&&r<=b.rows&&c>=1&&c<=b.cols))return{ok:false,error:"That slip is not on the board."};
@@ -870,11 +940,11 @@ function pegLocalDay(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padSta
 function pegNext(b,pos){const ks=pegOrder(b);if(!ks.length)return"";const cur=pos?pegKeyNum(b,pos):0;
  for(const k of ks)if(pegKeyNum(b,k)>cur)return k;return ks[0];}
 function pegJob(b,id){return(b.jobs||[]).find(j=>j.id===id)||null;}
-function pegJobAdd(b,name,now){name=String(name==null?"":name).trim().slice(0,40);if(!name)return{ok:false,error:"Type a job name first."};
+function pegJobAdd(b,name,now,color){name=String(name==null?"":name).trim().slice(0,40);if(!name)return{ok:false,error:"Type a job name first."};
  if((b.jobs||[]).length>=PEG_JOBS)return{ok:false,error:"A board can have up to "+PEG_JOBS+" job pegs."};
  if((b.jobs||[]).some(j=>j.name.toLowerCase()===name.toLowerCase()))return{ok:false,error:"There is already a job called “"+name+"”."};
  now=now instanceof Date&&!isNaN(now)?now:new Date();let id="j"+now.getTime().toString(36),i=0;while(pegJob(b,id))id="j"+now.getTime().toString(36)+(++i);
- const job={id:id,name:name,color:(b.jobs||[]).length%PEG_COLORS.length,pos:""};return{ok:true,job:job,board:{...b,jobs:[...(b.jobs||[]),job]}};}
+ const cc=Math.floor(Number(color)),job={id:id,name:name,color:color!==undefined&&color!==""&&cc>=0&&cc<PEG_COLORS.length?cc:(b.jobs||[]).length%PEG_COLORS.length,pos:""};return{ok:true,job:job,board:{...b,jobs:[...(b.jobs||[]),job]}};}
 function pegJobEdit(b,id,name,color){const j=pegJob(b,id);if(!j)return{ok:false,error:"That job no longer exists."};name=String(name==null?"":name).trim().slice(0,40);if(!name)return{ok:false,error:"Type a job name."};
  if((b.jobs||[]).some(x=>x.id!==id&&x.name.toLowerCase()===name.toLowerCase()))return{ok:false,error:"There is already a job called “"+name+"”."};
  const c=Math.floor(Number(color));return{ok:true,board:{...b,jobs:b.jobs.map(x=>x.id===id?{...x,name:name,color:c>=0&&c<PEG_COLORS.length?c:x.color}:x)}};}
@@ -1497,13 +1567,15 @@ if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;
  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)upBanner();});
  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
 /* ===== Peg boards: UI (localStorage "l19.pegs"; photo in IndexedDB key peg|<board>) ===== */
-const PGK="l19.pegs",PGH="l19.pegHint41",PGL="l19.pegLabels",PGS="l19.pegSlip",PGP="l19.pegSide",PGT="l19.pegTakeOnPlace",PGZ="l19.pegZoom",PGB45="l19.pegs.v45raw",PGMIG="l19.bull48",PGBK="l19.pegs.bullbak";
-function pegsLoad(){const rawTxt=LS(PGK,""),raw=lsJson(PGK,null);let d=pegsSeed(raw||{}),dirty=!raw||raw.seeded!==true||!Array.isArray(raw.globals);
+const PGK="l19.pegs",PGH="l19.pegHint41",PGL="l19.pegLabels",PGS="l19.pegSlip",PGP="l19.pegSide",PGT="l19.pegTakeOnPlace",PGZ="l19.pegZoom",PGB45="l19.pegs.v45raw",PGMIG="l19.bull48",PGBK="l19.pegs.bullbak",PGB52="l19.pegs.v51raw",PGFR="l19.flexRemoved52";
+function pegsLoad(){const rawTxt=LS(PGK,""),raw=lsJson(PGK,null);if(rawTxt&&!LS(PGB52,""))LSset(PGB52,rawTxt); /* v52: untouched copy of the v51 data, kept once */
+ let d=pegsSeed(raw||{}),dirty=!raw||raw.seeded!==true||!Array.isArray(raw.globals);
  if(LS(PGMIG,"")!=="1"){if(rawTxt&&!LS(PGB45,""))LSset(PGB45,rawTxt); /* v46: back up the untouched v45 data once */
   const m=pegBullMigrate(d);d=m.data;LSset(PGMIG,m.kept?"kept":"1");dirty=true;if(m.kept)LSset(PGMIG,"1");}
+ if(LS(PGFR,"")!=="1"){const fr=pegFlexRemove(d);d=fr.data;LSset(PGFR,"1");dirty=true;} /* v52: raw data was copied to l19.pegs.v51raw above */
  if(dirty){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
 function pegsSave(d){LSset(PGK,JSON.stringify(d));}
-let pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false;
+let pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
 function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
 function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
 function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
@@ -1511,16 +1583,6 @@ function pgBoard(name){return pgD.boards[name]||pegBoardNew();}
 function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
 function pgRenderSel(){const cur=pgCur();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur?" selected":""}>${esc(n)}${me?" ★":""}</option>`;}).join("");
  $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));}
-function pgBadge(j,short){const c=PEG_COLORS[j.color]||PEG_COLORS[0];return`<span class="jbd" style="background:${c[1]};color:${c[2]}">${esc(short?j.name:j.name)}</span>`;}
-function pgJobsRender(b){const el=$("pgJobs");$("pgUn").disabled=!b.undo.length;$("pgUn").textContent=b.undo.length?"Undo: "+b.undo[b.undo.length-1].label:"Undo last action";
- if(!b.jobs.length){el.innerHTML='<p class="mut">No job pegs yet. Add one above (for example “Bull 1”).</p>';return;}
- el.innerHTML=b.jobs.map(j=>{const at=j.pos?(b.pegs[j.pos]?"At position "+pegKeyNum(b,j.pos)+" (row "+j.pos.split("-")[0]+", col "+j.pos.split("-")[1]+") – <b>"+esc(pegWho(b,j.pos))+"</b>":"At position "+pegKeyNum(b,j.pos)+" (empty position)"):"Not on the board yet";
-  return`<div class="jb" data-j="${esc(j.id)}"><p>${pgBadge(j)} <span class="mut">${at}</span></p><div class="row"><button type="button" class="p" data-a="adv">Advance</button><button type="button" data-a="take"${j.pos&&b.pegs[j.pos]?"":" disabled"}>Stop here / Taken</button><button type="button" data-a="edit" style="flex:0 0 auto">Edit</button></div></div>`;}).join("");}
-function pgJobAct(a,id){const name=pgCur(),b=pgBoard(name),pm=$("pgM");let r;
- if(a==="adv")r=pegAdvance(b,id,new Date());else if(a==="take")r=pegTake(b,id,new Date());else if(a==="edit"){pgJobEdit(id);return;}
- if(!r.ok){pm.textContent=r.error;return;}pgStore(name,r.board);
- const j=pegJob(r.board,id);pm.textContent=a==="adv"?j.name+" advanced to position "+pegKeyNum(r.board,r.to)+" – "+pegWho(r.board,r.to)+".":"Logged: "+j.name+" taken by "+r.take.person+" (position "+r.take.num+").";pgRender();
- const cell=document.querySelector('.pgc[data-k="'+(r.to||j.pos)+'"]');if(cell&&cell.scrollIntoView)cell.scrollIntoView({block:"nearest",inline:"nearest"});}
 function pgSheet(id){const o=document.createElement("div");o.className="sheet";o.id=id;o.addEventListener("keydown",e=>{if(e.key==="Escape")o.remove();});document.body.appendChild(o);return o;}
 function pgJobEdit(id){if($("pgJobS"))return;const name=pgCur(),b=pgBoard(name),j=pegJob(b,id);if(!j)return;let col=j.color;const o=pgSheet("pgJobS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="jeT" class="rot"><h3 id="jeT">Edit job peg</h3><label for="jeN" style="margin-top:0">Job name</label><input id="jeN" maxlength="40" autocomplete="off" value="${esc(j.name)}">
@@ -1539,35 +1601,27 @@ function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=
   if(d.e){const t=pgBoard(name).takes.find(x=>x.id===d.e);if(!t)return;const row=ev.target.parentNode;row.innerHTML=`<input aria-label="Person" id="lgP" maxlength="80" value="${esc(t.person)}"><button type="button" class="p" id="lgS">Save</button>`;$("lgP").focus();
    $("lgS").onclick=()=>{const r=pegTakeEdit(pgBoard(name),d.e,$("lgP").value,new Date());if(!r.ok){$("lgP").setAttribute("aria-invalid","true");return;}pgStore(name,r.board);pgRender();o.remove();pgLogOpen();};}};
  $("lgDn").onclick=()=>o.remove();$("lgDn").focus();}
-function pgRender(){pgRenderSel();const name=pgCur(),b=pgBoard(name),labs=LS(PGL,"1")!=="0";
- $("pgCols").value=b.cols;$("pgRows").value=b.rows;$("pgLab").setAttribute("aria-pressed",String(labs));$("pgLab").textContent="Row/column labels: "+(labs?"on":"off");
+function pgRender(){pgRenderSel();const name=pgCur(),b=pgBoard(name);
+ $("pgCols").value=b.cols;$("pgRows").value=b.rows;
  $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
- const mine=Object.keys(pgD.boards).filter(k=>Object.values(pgD.boards[k].pegs).some(v=>v.me)).map(k=>{const bb=pgD.boards[k],pk=Object.keys(bb.pegs).find(x=>bb.pegs[x].me),m=pk.split("-");return(k===name?"<b>"+esc(k)+"</b>":esc(k))+": #"+pegNum(+m[0],+m[1],bb.cols)+" (row "+m[0]+", col "+m[1]+")";});
- $("pgMine").innerHTML=mine.length?"★ My pegs: "+mine.join(" · "):"★ No peg marked as yours yet. Tap a position and turn on “This is my peg”.";
- let h="";const lab=labs?"2.75rem":"0";const jat={},gat={};for(const j of b.jobs){if(j.pos)(jat[j.pos]=jat[j.pos]||[]).push(j);}for(const g of pegGlobalsOn(pgD,name))(gat[g.pos]=gat[g.pos]||[]).push(g);
- pgGlRender();$("pgPreset").classList.toggle("hide",name!=="Bull board");pgHintRender();
- pgJobsRender(b);pgBarRender(name,b);
- if(pgSlipOn(name)){pgSlipRender(name,b,jat,gat);refreshPegPic();return;}
- $("pgGrid").classList.remove("bbg");
- const g=$("pgGrid");let t=`<div class="pgt" style="grid-template-columns:${labs?"2.75rem ":""}repeat(${b.cols},4.25rem)">`;
- if(labs){t+='<div class="pgh cor" aria-hidden="true">#</div>';for(let c=1;c<=b.cols;c++)t+=`<div class="pgh col" aria-hidden="true">C${c}</div>`;}
- for(let r=1;r<=b.rows;r++){if(labs)t+=`<div class="pgh row" aria-hidden="true">R${r}</div>`;
-  for(let c=1;c<=b.cols;c++){const k=pegKey(r,c),v=b.pegs[k],n=pegNum(r,c,b.cols);
-   t+=`<button type="button" class="pgc${v&&(v.n||v.note)?" f":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Position ${n}, row ${r}, column ${c}${v&&v.me?", my peg":""}${v&&v.n?": "+esc(v.n):", empty"}${(jat[k]||[]).map(j=>", job peg "+esc(j.name)).join("")}${(gat[k]||[]).map(g=>", global peg "+esc(g.name)).join("")}"><span class="nu">${v&&v.me?"★ ":""}${n}</span><span class="nm">${v&&v.n?esc(v.n):""}</span>${(jat[k]||[]).map(j=>pgBadge(j,true)).join("")}${(gat[k]||[]).map(g=>`<span class="gbd">◆ ${esc(g.name)}</span>`).join("")}</button>`;}}
- g.innerHTML=t+"</div>";refreshPegPic();}
+ const mine=Object.keys(pgD.boards).filter(k=>Object.values(pgD.boards[k].pegs).some(v=>v.me)).map(k=>{const bb=pgD.boards[k],pk=Object.keys(bb.pegs).find(x=>bb.pegs[x].me),m=pk.split("-");return(k===name?"<b>"+esc(k)+"</b>":esc(k))+": column "+m[1]+", slip "+m[0];});
+ $("pgMine").innerHTML=mine.length?"★ My pegs: "+mine.join(" · "):"★ No peg marked as yours yet. Tap a slip and turn on “This is my peg”.";
+ const jat={},gat={};for(const j of b.jobs){if(j.pos)(jat[j.pos]=jat[j.pos]||[]).push(j);}for(const g of pegGlobalsOn(pgD,name))(gat[g.pos]=gat[g.pos]||[]).push(g);
+ pgGlRender();$("pgPreset").classList.toggle("hide",name!=="Bull board");
+ pgBarRender(name,b);pgSlipRender(name,b,jat,gat);refreshPegPic();}
 function pgEdit(k){const name=pgCur(),b=pgBoard(name),m=k.split("-"),r=+m[0],c=+m[1],v=b.pegs[k]||{n:"",note:"",me:false};pgSelKey=k;
  const e=$("pgEd");e.classList.remove("hide");
- const slip=pgSlipOn(name);
+ const slip=true;
  e.innerHTML=`<h4>${esc(name)} · ${slip?"column "+c+", slip "+r:"position "+pegNum(r,c,b.cols)}</h4><p class="mut" style="margin-top:0">${slip?"Edit this slip":"Row "+r+", column "+c}</p>
 <label for="pgN" style="margin-top:0">${slip?"Name (e.g. S. LASTNAME)":"Name"}</label><input id="pgN" maxlength="80" autocomplete="off" value="${esc(v.n)}">
 <label for="pgNo">${slip?"Registration number":"Note"} <span class="mut">(optional, stays on this device)</span></label><input id="pgNo" maxlength="200" autocomplete="off" value="${esc(v.note)}">
 <button type="button" id="pgMe" aria-pressed="${v.me}" style="width:100%;margin-top:12px">${v.me?"★ This is my peg (on)":"☆ This is my peg (off)"}</button>
-${b.jobs.length?`<p class="mut" style="margin:12px 0 0">Job pegs</p><div class="row" style="flex-wrap:wrap">${b.jobs.map(j=>`<button type="button" data-mv="${esc(j.id)}">Move ${esc(j.name)} here</button>`).join("")}</div>`:""}
-${pgD.globals.length?`<p class="mut" style="margin:12px 0 0">Global pegs</p><div class="row" style="flex-wrap:wrap">${pgD.globals.map(g=>`<button type="button" data-mg="${esc(g.id)}">Move ${esc(g.name)} here</button>`).join("")}</div>`:""}
 ${slip?`<p class="mut" style="margin:12px 0 0">Slips in this column (pegs move with their slip)</p><div class="row" style="flex-wrap:wrap"><button type="button" data-co="up">▲ Move up</button><button type="button" data-co="down">▼ Move down</button><button type="button" data-co="insert">＋ Insert blank slip above</button><button type="button" class="d" data-co="remove">Remove slip (close gap)</button></div>`:""}
+<p class="mut" style="margin:12px 0 0">Move this slip (its pegs go with it inside this board; between boards they are taken off)</p>
+<div class="row mvr"><div><label for="mvB" style="margin-top:0">Board</label><select id="mvB">${pgNames().map(n=>`<option value="${esc(n)}"${n===name?" selected":""}>${esc(n)}</option>`).join("")}</select></div><div><label for="mvC" style="margin-top:0">Column</label><input id="mvC" type="number" inputmode="numeric" min="1" max="60" value="${c}"></div><div><label for="mvR" style="margin-top:0">Slip (row)</label><input id="mvR" type="number" inputmode="numeric" min="1" max="60" value="${r}"></div></div>
+<div class="row"><button type="button" id="mvMode" aria-pressed="${pgMoveMode()==="swap"}">${pgMoveModeText()}</button><button type="button" class="p" id="mvGo">Move to column/row</button></div>
+<div class="row"><button type="button" id="mvTap">Move by tapping the new place…</button></div>
 <div class="row" style="margin-top:12px"><button type="button" class="p" id="pgSv">Save</button><button type="button" id="pgCl" class="d">Clear</button><button type="button" id="pgCx">Cancel</button></div>`;
- e.querySelectorAll("[data-mv]").forEach(x=>x.onclick=()=>{const q=pegPlace(pgBoard(name),x.dataset.mv,k,new Date());if(!q.ok){$("pgM").textContent=q.error;return;}pgStore(name,q.board);const jj=pegJob(q.board,x.dataset.mv);$("pgM").textContent=jj.name+" placed at position "+pegNum(r,c,b.cols)+".";pgClose();pgRender();});
- e.querySelectorAll("[data-mg]").forEach(x=>x.onclick=()=>{const g=pegGlobal(pgD,x.dataset.mg),q=pegGlobalPlace(pgD,x.dataset.mg,name,k,new Date());pgGApply(q,q.ok?g.name+" placed at "+name+" position "+pegNum(r,c,b.cols)+".":"");});
  e.querySelectorAll("[data-co]").forEach(x=>x.onclick=()=>{const op=x.dataset.co;if(op==="remove"&&!confirm("Remove this slip and move the ones below it up? Pegs on it stay at this spot."))return;
   const q=pegColOp(pgD,name,op,r,c);if(!q.ok){$("pgM").textContent=q.error;return;}pgD={...q.data,sel:pgD.sel};pegsSave(pgD);$("pgM").textContent=op==="insert"?"Inserted a blank slip.":op==="remove"?"Removed the slip.":"Moved the slip "+op+".";
   if(op==="up"||op==="down"){pgSelKey=null;pgEdit(pegKey(op==="up"?r-1:r+1,c));}else{pgClose();pgRender();}});
@@ -1578,34 +1632,40 @@ ${slip?`<p class="mut" style="margin:12px 0 0">Slips in this column (pegs move w
   pgStore(name,{...bb,pegs:pegs,updated:new Date().toISOString()});$("pgM").textContent="Saved position "+pegNum(r,c,bb.cols)+".";pgClose();pgRender();};
  $("pgCl").onclick=()=>{const bb=pgBoard(name),pegs={...bb.pegs};delete pegs[k];pgStore(name,{...bb,pegs:pegs,updated:new Date().toISOString()});$("pgM").textContent="Cleared position "+pegNum(r,c,bb.cols)+".";pgClose();pgRender();};
  $("pgCx").onclick=()=>{pgClose();pgRender();};
+ $("mvMode").onclick=()=>{LSset(PGMM,pgMoveMode()==="swap"?"insert":"swap");$("mvMode").textContent=pgMoveModeText();$("mvMode").setAttribute("aria-pressed",String(pgMoveMode()==="swap"));};
+ $("mvB").onchange=()=>{const bb=pgBoard($("mvB").value);$("mvC").max=bb.cols;$("mvR").max=bb.rows;};
+ $("mvGo").onclick=()=>{const tc=Number($("mvC").value),tr=Number($("mvR").value),bn=$("mvB").value,bb=pgBoard(bn);if(!(Number.isInteger(tc)&&Number.isInteger(tr)&&tc>=1&&tr>=1&&tc<=bb.cols&&tr<=bb.rows)){$("pgM").textContent=bn+" has columns 1–"+bb.cols+" and slips 1–"+bb.rows+". Enter whole numbers in that range.";return;}
+  pgMoveDo({board:name,key:k},{board:bn,key:pegKey(tr,tc)},pgMoveMode());};
+ $("mvTap").onclick=()=>{pgMoving={board:name,key:k};pgHeld=null;pgClose();$("pgM").textContent="Moving "+(v.n||"this slip")+". Tap the slip where it should go (you can change the board first).";pgRender();};
  pgRender();e.scrollIntoView({block:"nearest"});$("pgN").focus({preventScroll:true});}
 function pgClose(){pgSelKey=null;$("pgEd").classList.add("hide");$("pgEd").innerHTML="";}
-$("pgGrid").addEventListener("click",e=>{const b=e.target.closest(".pgc");if(b)pgEdit(b.dataset.k);});
 
 /* ===== v46: Bull board slip view ===== */
-function pgSlipOn(name){return name===BULL_BOARD&&LS(PGS,"1")!=="0";}
+function pgSlipOn(name){return true;} /* v52: slip view is the only view, for every board */
+const PGMM="l19.pegMoveMode";function pgMoveMode(){return LS(PGMM,"insert")==="swap"?"swap":"insert";}function pgMoveModeText(){return pgMoveMode()==="swap"?"Move mode: Swap places":"Move mode: Insert (push others down)";}
 function pgZoom(){const z=parseFloat(LS(PGZ,"1"));return isFinite(z)?Math.min(2,Math.max(0.7,z)):1;}
-function pgHeldPeg(){if(!pgHeld)return null;if(pgHeld.t==="j"){const j=pegJob(pgBoard(BULL_BOARD),pgHeld.id);return j?{t:"j",id:j.id,name:j.name,col:j.color}:null;}
+function pgHeldPeg(){if(!pgHeld)return null;if(pgHeld.t==="j"){const j=pegJob(pgBoard(pgCur()),pgHeld.id);return j?{t:"j",id:j.id,name:j.name,col:j.color}:null;}
  const g=pegGlobal(pgD,pgHeld.id);return g?{t:"g",id:g.id,name:g.name}:null;}
 function pgChip(t,id,name,color,where,held){const c=t==="j"?PEG_COLORS[color]||PEG_COLORS[0]:null;
  return`<button type="button" class="lc" data-t="${t}" data-id="${esc(id)}" aria-pressed="${held}" aria-label="${esc(name)} peg${t==="g"?" (global)":""}: ${esc(where)}. Tap to pick it up, then tap a slip"><span class="pk${t==="g"?" g":""}"${c?` style="${pegSty(c)}"`:""}>${esc(pegAbbr(name))}</span><span>${esc(name)}${where&&where!=="not placed"?`<small>${esc(where)}</small>`:""}</span></button>`;}
-function pgBarRender(name,b){const el=$("pgBb");if(!el)return;const bull=name===BULL_BOARD;el.classList.toggle("hide",!bull);$("pgZb").classList.toggle("hide",!(bull&&pgSlipOn(name)));$("pgWrap").classList.toggle("side",bull&&pgSlipOn(name)&&LS(PGP,"0")==="1");
- $("pgPane").classList.toggle("hide",!(bull&&pgSlipOn(name)&&LS(PGP,"0")==="1"));
- if(!bull){el.innerHTML="";$("pgBb2").classList.add("hide");$("pgBb2").innerHTML="";return;}
- const on=pgSlipOn(name),hp=pgHeldPeg();if(pgHeld&&!hp)pgHeld=null;
+function pgBarRender(name,b){const el=$("pgBb");if(!el)return;el.classList.remove("hide");$("pgZb").classList.remove("hide");const side=LS(PGP,"0")==="1";$("pgWrap").classList.toggle("side",side);$("pgPane").classList.toggle("hide",!side);
+ const hp=pgHeldPeg();if(pgHeld&&!hp)pgHeld=null;
+ if(pgMoving&&!(pgD.boards[pgMoving.board]&&pgD.boards[pgMoving.board].pegs[pgMoving.key]))pgMoving=null;
  const where=pos=>pos&&b.pegs[pos]?(b.pegs[pos].n||"(no name)"):pos?"(blank slip)":"not placed";
- let h=`<div class="row"><button type="button" id="bbView" aria-pressed="${on}">${on?"Slip view: on":"Slip view: off (grid)"}</button>`;
- if(on)h+=`<button type="button" id="bbPhoto" aria-pressed="${LS(PGP,"0")==="1"}">Photo beside board: ${LS(PGP,"0")==="1"?"on":"off"}</button></div>`;else h+="</div>";
- if(on){
-  h+=`<div class="lgd" role="group" aria-label="Peg legend">`+b.jobs.map(j=>pgChip("j",j.id,j.name,j.color,where(j.pos),!!(pgHeld&&pgHeld.t==="j"&&pgHeld.id===j.id))).join("")+pgD.globals.map(g=>pgChip("g",g.id,g.name,0,g.board&&g.pos?(g.board===BULL_BOARD?where(g.pos):g.board):"not placed",!!(pgHeld&&pgHeld.t==="g"&&pgHeld.id===g.id))).join("")+`</div>`;
-  if(hp)h+=`<div class="hold" role="status">Holding ${esc(hp.name)} – tap a slip to place it <button type="button" id="bbCx" style="margin-left:8px">Cancel</button></div>`;
-  h+=`<div class="row"><button type="button" id="bbUn"${b.undo.length?"":" disabled"}>↩ ${b.undo.length?"Undo: "+esc(b.undo[b.undo.length-1].label):"Undo (nothing yet)"}</button><button type="button" id="bbLog">Who took what</button></div>`;
-  el.innerHTML=h;h=`<p class="mut" style="margin:6px 0 0">Tap a peg in the legend (or a peg marker on a slip) to pick it up, then tap a slip to put it there. With no peg in hand, tap a slip to edit its name or number. Pinch with two fingers (or use − / + / Fit above the board) to zoom, double-tap to switch between Fit and 100%. A− / A+ change the text size.</p><div class="row"><button type="button" id="bbTk" aria-pressed="${LS(PGT,"1")!=="0"}">Log “taken” when I place a peg: ${LS(PGT,"1")!=="0"?"on":"off"}</button></div>`;
-  h+=`<div class="row"><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button><button type="button" id="bbImp">Import names</button><button type="button" id="bbExp">Export names</button></div>`;
-  if(pgImp)h+=`<div class="bbimp"><p class="mut" style="margin:6px 0">Load a names file (.json) that a coworker sent you, or paste its text. Your current Bull board is saved as a backup first. Names stay on this device only.</p><div class="row"><button type="button" id="bbPick">Choose .json file</button></div><textarea id="bbTx" rows="4" placeholder="…or paste the names text here" aria-label="Paste names text" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea><div class="row"><button type="button" id="bbLoad" class="p">Load pasted text</button><button type="button" id="bbImpX">Cancel</button></div></div>`;
-  const st=bullStats(b),tot=st.reduce((a,x)=>({n:a.n+x.names,u:a.u+x.uncertain,b:a.b+x.blank}),{n:0,u:0,b:0});
-  h+=`<p class="mut" style="margin:6px 0 0">${tot.n?tot.n+" names, "+tot.b+" blank slips. ":"No names loaded yet: all slips are blank. Use Import names to load a board file. "}Names are never part of the app or website; they stay on this device (and in your own backups).${tot.u?" “?” marks "+tot.u+" name"+(tot.u===1?"":"s")+" that weren't fully legible.":""}</p>`;}
- const e2=$("pgBb2");e2.classList.toggle("hide",!on);e2.innerHTML=on?h:"";if(!on)el.innerHTML=h;}
+ let h="";
+ if(pgMoving){const mb=pgD.boards[pgMoving.board],mm=pgMoving.key.split("-");h+=`<div class="hold" role="status">Moving ${esc(mb.pegs[pgMoving.key].n||"slip")} (${esc(pgMoving.board)}, column ${mm[1]}, slip ${mm[0]}) – tap the slip where it should go. You can change the board first. <div class="row" style="margin-top:6px"><button type="button" id="bbMm2">${pgMoveModeText()}</button><button type="button" id="bbMvX">Cancel move</button></div></div>`;}
+ h+=`<div class="lgd" role="group" aria-label="Peg legend">`+b.jobs.map(j=>`<span class="lcw">`+pgChip("j",j.id,j.name,j.color,where(j.pos),!!(pgHeld&&pgHeld.t==="j"&&pgHeld.id===j.id))+`<button type="button" class="lce" data-e="${esc(j.id)}" aria-label="Edit peg ${esc(j.name)}">✎</button></span>`).join("")+pgD.globals.map(g=>pgChip("g",g.id,g.name,0,g.board&&g.pos?(g.board===name?where(g.pos):g.board):"not placed",!!(pgHeld&&pgHeld.t==="g"&&pgHeld.id===g.id))).join("")+`</div>`;
+ if(!b.jobs.length)h+=`<p class="mut" style="margin:0 0 6px">This board has no job pegs yet. Use “Add peg to this board” (name and color) below.</p>`;
+ if(hp)h+=`<div class="hold" role="status">Holding ${esc(hp.name)} – tap a slip to place it <button type="button" id="bbCx" style="margin-left:8px">Cancel</button></div>`;
+ h+=`<div class="row"><button type="button" id="bbUn"${b.undo.length?"":" disabled"}>↩ ${b.undo.length?"Undo: "+esc(b.undo[b.undo.length-1].label):"Undo (nothing yet)"}</button><button type="button" id="bbLog">Who took what</button></div>`;
+ const mu=pgD.mundo||[];h+=`<div class="row"><button type="button" id="bbMu"${mu.length?"":" disabled"}>↩ ${mu.length?"Undo move: "+esc(mu[mu.length-1].label):"Undo move (nothing yet)"}</button></div>`;
+ el.innerHTML=h;
+ h=`<p class="mut" style="margin:6px 0 0">Tap a peg in the legend (or a peg marker on a slip) to pick it up, then tap a slip circle to put it there. With no peg in hand, tap a slip to edit its name or number, or to move it. To move a slip: press and hold it, then drag it to the new place (or onto a board name to send it to another board); a gold bar shows where it will land. Pinch with two fingers (or use − / + / Fit above the board) to zoom, double-tap to switch between Fit and 100%. A− / A+ change the text size.</p><div class="row"><button type="button" id="bbTk" aria-pressed="${LS(PGT,"1")!=="0"}">Log “taken” when I place a peg: ${LS(PGT,"1")!=="0"?"on":"off"}</button><button type="button" id="bbMm" aria-pressed="${pgMoveMode()==="swap"}">${pgMoveModeText()}</button></div>`;
+ h+=`<div class="row"><button type="button" id="bbPhoto" aria-pressed="${side}">Photo beside board: ${side?"on":"off"}</button><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button></div><div class="row"><button type="button" id="bbImp">Import names</button><button type="button" id="bbExp">Export names</button></div>`;
+ if(pgImp)h+=`<div class="bbimp"><p class="mut" style="margin:6px 0">Load a names file (.json) that a coworker sent you, or paste its text. Your current ${esc(name)} is saved as a backup first. Names stay on this device only.</p><div class="row"><button type="button" id="bbPick">Choose .json file</button></div><textarea id="bbTx" rows="4" placeholder="…or paste the names text here" aria-label="Paste names text" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea><div class="row"><button type="button" id="bbLoad" class="p">Load pasted text</button><button type="button" id="bbImpX">Cancel</button></div></div>`;
+ const st=bullStats(b),tot=st.reduce((a,x)=>({n:a.n+x.names,u:a.u+x.uncertain,b:a.b+x.blank}),{n:0,u:0,b:0});
+ h+=`<p class="mut" style="margin:6px 0 0">${tot.n?tot.n+" names, "+tot.b+" blank slips. ":"No names loaded yet: all slips are blank. Use Import names to load a board file, or tap a slip to type a name. "}Names are never part of the app or website; they stay on this device (and in your own backups).${tot.u?" “?” marks "+tot.u+" name"+(tot.u===1?"":"s")+" that weren't fully legible.":""}</p>`;
+ const e2=$("pgBb2");e2.classList.remove("hide");e2.innerHTML=h;}
 /* ===== v50: board zoom (CSS zoom on the .bbz wrapper: real layout, so taps hit the right circle) ===== */
 const PGV="l19.bullZoom";let pgZc=1,pgTouchAt=0,pgEditT=0;
 function pgZPref(){return bullZoomPref(LS(PGV,""),window.innerWidth<=700);}
@@ -1640,7 +1700,7 @@ window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{
   else if(tp&&e.touches.length===1&&Math.hypot(e.touches[0].clientX-tp.x,e.touches[0].clientY-tp.y)>10)tp.mv=true;},{passive:false});
  g.addEventListener("touchend",e=>{
   if(pz){if(e.touches.length<2){LSset(PGV,String(bullZoomClamp(pgZc)));pz=null;pgZUpdate();}return;}
-  pgTouchAt=Date.now();if(!tp||tp.mv||e.touches.length)return;const now=Date.now();
+  pgTouchAt=Date.now();if(pgDrag||Date.now()-pgDragEnd<400){tp=null;last=null;return;}if(!tp||tp.mv||e.touches.length)return;const now=Date.now();
   if(last&&now-tp.t<400&&now-last.t<350&&Math.hypot(tp.x-last.x,tp.y-last.y)<30&&!last.held){
    e.preventDefault();clearTimeout(pgEditT);const r=g.getBoundingClientRect(),ax=tp.x-r.left,ay=tp.y-r.top;last=null;tp=null;
    pgHeld=null;pgClose();$("pgM").textContent="";const to=Math.abs(pgZc-1)<0.02?"fit":1;
@@ -1648,6 +1708,48 @@ window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{
    if(to===1){g.scrollLeft=cx-ax;g.scrollTop=cy-ay;}return;}
   last={x:tp.x,y:tp.y,t:now,held:tp.held};tp=null;},{passive:false});
  g.addEventListener("touchcancel",()=>{pz=null;tp=null;});
+})();
+/* ===== v52: drag a slip (mouse drag, or touch press-and-hold then drag). Drop target comes from elementFromPoint, so it is correct at any zoom. ===== */
+(function(){const g=$("pgGrid");let pend=null,lx=0,ly=0,ghost=null,bar=null;
+ const slipOf=t=>{if(!t||!t.closest)return null;const a=t.closest("#pgGrid .slip");if(a)return a;const w=t.closest("#pgGrid .sw");return w?w.querySelector(".slip"):null;};
+ const canStart=t=>{const sl=t&&t.closest?t.closest("#pgGrid .slip"):null;return sl&&!t.closest(".pk")&&!pgHeld&&!pgMoving&&!pgDrag?sl:null;};
+ function clearMarks(){g.querySelectorAll(".dt-ins,.dt-swap").forEach(x=>x.classList.remove("dt-ins","dt-swap"));if(bar)bar.querySelectorAll(".on").forEach(x=>x.classList.remove("on"));}
+ function begin(k,x,y,touch){const b=pgBoard(pgCur()),v=b.pegs[k];if(!v||!(v.n||v.note||v.me))return;
+  pgDrag={board:pgCur(),key:k,to:null,touch:touch};pgClose();
+  const sl=g.querySelector('.slip[data-k="'+k+'"]');if(sl)sl.classList.add("dragsrc");
+  ghost=document.createElement("div");ghost.id="pgGh";ghost.setAttribute("aria-hidden","true");ghost.textContent=v.n||"(slip)";document.body.appendChild(ghost);
+  bar=document.createElement("div");bar.id="pgDt";bar.setAttribute("role","group");bar.setAttribute("aria-label","Drop on a board to send the slip there");
+  bar.innerHTML='<span>Send to board:</span>'+pgNames().filter(n=>n!==pgCur()).map(n=>`<button type="button" class="dtb" data-b="${esc(n)}" tabindex="-1">${esc(n)}</button>`).join("");document.body.appendChild(bar);
+  document.body.classList.add("pgdrag");try{if(touch&&navigator.vibrate)navigator.vibrate(15);}catch(e){}
+  $("pgM").textContent="Dragging "+(v.n||"slip")+". Drop on a slip to put it there ("+(pgMoveMode()==="swap"?"swap":"insert")+"), or on a board name below to send it to another board. Move off the board to cancel.";over(x,y);}
+ function over(x,y){if(!pgDrag)return;lx=x;ly=y;clearMarks();ghost.style.left=Math.min(Math.max(x,110),window.innerWidth-110)+"px";ghost.style.top=y+"px";
+  const el=document.elementFromPoint(x,y),sl=slipOf(el),bt=el&&el.closest?el.closest(".dtb"):null;pgDrag.to=null;
+  if(bt){bt.classList.add("on");pgDrag.to={b:bt.dataset.b};ghost.dataset.t="Send to "+bt.dataset.b;}
+  else if(sl&&sl.dataset.k!==pgDrag.key){const t=pgBoard(pgCur()).pegs[sl.dataset.k],sw=pgMoveMode()==="swap"&&t&&(t.n||t.note);pgDrag.to={key:sl.dataset.k};sl.classList.add(sw?"dt-swap":"dt-ins");ghost.dataset.t=!t||!(t.n||t.note)?"Place here":sw?"Swap with "+(t.n||"slip"):"Insert here";}
+  else ghost.dataset.t="";
+  const r=g.getBoundingClientRect(),m=36;if(y<r.top+m)g.scrollTop-=14;else if(y>r.bottom-m&&y<r.bottom+m)g.scrollTop+=14;if(x<r.left+m)g.scrollLeft-=14;else if(x>r.right-m)g.scrollLeft+=14;}
+ function end(commit){if(!pgDrag)return;const d=pgDrag,to=d.to;pgDrag=null;pgDragEnd=Date.now();pend=null;clearMarks();
+  if(ghost){ghost.remove();ghost=null;}if(bar){bar.remove();bar=null;}document.body.classList.remove("pgdrag");const sl=g.querySelector(".dragsrc");if(sl)sl.classList.remove("dragsrc");
+  if(!commit||!to){$("pgM").textContent=commit?"Not moved. Drop it on a slip to move it.":"Move cancelled.";return;}
+  if(to.b){pgMoving={board:d.board,key:d.key};pgD.sel=to.b;pegsSave(pgD);pgClose();$("pgM").textContent="Now tap the slip on "+to.b+" where it should go.";pgRender();return;}
+  pgMoveDo({board:d.board,key:d.key},{board:d.board,key:to.key},pgMoveMode());}
+ /* touch: press and hold ~0.45 s without moving, then drag; two fingers (pinch) always win */
+ g.addEventListener("touchstart",e=>{if(pend){clearTimeout(pend.t);pend=null;}
+  if(pgDrag){if(e.touches.length>1)end(false);return;}
+  if(e.touches.length!==1){return;}const sl=canStart(e.target);if(!sl)return;const t=e.touches[0];lx=t.clientX;ly=t.clientY;
+  pend={k:sl.dataset.k,x:t.clientX,y:t.clientY,t:setTimeout(()=>{if(!pend)return;const k=pend.k;pend=null;begin(k,lx,ly,true);},450)};},{passive:true});
+ document.addEventListener("touchmove",e=>{const t=e.touches[0];if(pgDrag){e.preventDefault();if(e.touches.length>1){end(false);return;}over(t.clientX,t.clientY);return;}
+  if(pend&&t){lx=t.clientX;ly=t.clientY;if(e.touches.length>1||Math.hypot(t.clientX-pend.x,t.clientY-pend.y)>10){clearTimeout(pend.t);pend=null;}}},{passive:false});
+ const tEnd=e=>{if(pend){clearTimeout(pend.t);pend=null;}if(pgDrag){const t=e.changedTouches&&e.changedTouches[0];if(t&&e.type==="touchend")over(t.clientX,t.clientY);if(e.cancelable)e.preventDefault();end(e.type==="touchend");}};
+ document.addEventListener("touchend",tEnd,{passive:false});document.addEventListener("touchcancel",tEnd);
+ g.addEventListener("contextmenu",e=>{if(pend||pgDrag||(e.target.closest&&e.target.closest(".slip")&&pgTouchAt&&Date.now()-pgTouchAt<1500))e.preventDefault();});
+ /* mouse */
+ g.addEventListener("mousedown",e=>{if(e.button!==0||(pgTouchAt&&Date.now()-pgTouchAt<800))return;const sl=canStart(e.target);if(!sl)return;pend={k:sl.dataset.k,x:e.clientX,y:e.clientY,mouse:true};});
+ document.addEventListener("mousemove",e=>{if(pgDrag&&!pgDrag.touch){over(e.clientX,e.clientY);return;}
+  if(pend&&pend.mouse&&(e.buttons&1)&&Math.hypot(e.clientX-pend.x,e.clientY-pend.y)>6){const k=pend.k;pend=null;begin(k,e.clientX,e.clientY,false);}});
+ document.addEventListener("mouseup",e=>{if(pend&&pend.mouse)pend=null;if(pgDrag&&!pgDrag.touch)end(true);});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&pgDrag)end(false);});
+ g.addEventListener("dragstart",e=>{e.preventDefault();});
 })();
 /* v51: names stay on ONE line; only a name that still overflows at the base size wraps to two lines (measured at zoom 1, so the result is the same at every zoom) */
 function pgNameFit(g){g.querySelectorAll(".slip .sl").forEach(e=>{if(e.scrollWidth>e.clientWidth+1){e.classList.add("sm");if(e.scrollWidth>e.clientWidth+1)e.classList.add("w2");}});}
@@ -1658,19 +1760,25 @@ function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg")
    const pk=pj.map(j=>{const cc=PEG_COLORS[j.color]||PEG_COLORS[0];return`<span class="pk" data-t="j" data-id="${esc(j.id)}" style="${pegSty(cc)}" title="${esc(j.name)}">${esc(pegAbbr(j.name))}</span>`;}).join("")+pg.map(x=>`<span class="pk g" data-t="g" data-id="${esc(x.id)}" title="${esc(x.name)}">${esc(pegAbbr(x.name))}</span>`).join("");
    const top=pj.length?pj[pj.length-1]:null,tc=top?PEG_COLORS[top.color]||PEG_COLORS[0]:null,cnt=pj.length+pg.length;
    const cl=top?"Peg "+top.name+(cnt>1?" and "+(cnt-1)+" more":"")+" on this slip. Tap to pick it up":pg.length?"Global peg "+pg[pg.length-1].name+" on this slip. Tap to pick it up":"Empty peg circle. Tap to place the selected peg here";
-   t+=`<div class="sw"><button type="button" class="sc${top?" f":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${esc(cl)}"><span class="sd"${tc?` style="${pegSty(tc)}"`:""}>${top?esc(pegAbbr(top.name)):""}${cnt>1?`<i class="cb">${cnt}</i>`:""}</span></button><button type="button" class="slip${nm?"":" e"}${pj.length||pg.length?" hp":""}${v&&v.me?" me":""}${pgSelKey===k?" sel":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${nm?esc(nm)+(v.note?", number "+esc(v.note):""):"blank"}${v&&v.me?", my peg":""}${pj.map(j=>", peg "+esc(j.name)).join("")}${pg.map(x=>", global peg "+esc(x.name)).join("")}. Opens the slip editor">${v&&v.note?`<span class="sn">${esc(v.note)}</span>`:""}<span class="sl">${nm?(v.me?"★ ":"")+esc(nm):"(blank)"}</span><span class="sp">${pk}</span></button></div>`;}
+   t+=`<div class="sw"><button type="button" class="sc${top?" f":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${esc(cl)}"><span class="sd"${tc?` style="${pegSty(tc)}"`:""}>${top?esc(pegAbbr(top.name)):""}${cnt>1?`<i class="cb">${cnt}</i>`:""}</span></button><button type="button" class="slip${nm?"":" e"}${pj.length||pg.length?" hp":""}${v&&v.me?" me":""}${pgSelKey===k||(pgMoving&&pgMoving.board===name&&pgMoving.key===k)?" sel":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${nm?esc(nm)+(v.note?", number "+esc(v.note):""):"blank"}${v&&v.me?", my peg":""}${pj.map(j=>", peg "+esc(j.name)).join("")}${pg.map(x=>", global peg "+esc(x.name)).join("")}. Opens the slip editor. Press and hold, then drag, to move it">${v&&v.note?`<span class="sn">${esc(v.note)}</span>`:""}<span class="sl">${nm?(v.me?"★ ":"")+esc(nm):"(blank)"}</span><span class="sp">${pk}</span></button></div>`;}
   t+="</div>";}
  g.innerHTML=t+"</div></div>";pgNameFit(g);pgZApply();
  const pane=$("pgPane");if(pane&&!pane.classList.contains("hide")&&!pane.firstChild)pane.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';}
-function pgHold(t,id){pgHeld=pgHeld&&pgHeld.t===t&&pgHeld.id===id?null:{t:t,id:id};pgClose();const hp=pgHeldPeg();$("pgM").textContent=hp?"Holding "+hp.name+". Tap the slip to put it on.":"Peg put down.";pgRender();}
-function pgDrop(k){const hp=pgHeldPeg();if(!hp){pgHeld=null;return;}const name=BULL_BOARD,b=pgBoard(name),now=new Date(),slipWho=b.pegs[k]&&b.pegs[k].n,pm=$("pgM");
- if(hp.t==="j"){const takeOn=LS(PGT,"1")!=="0",r=takeOn?pegPlaceTake(b,hp.id,k,now):pegPlace(b,hp.id,k,now);if(!r.ok){pm.textContent=r.error;return;}pgStore(name,r.board);
+function pgHold(t,id){pgMoving=null;pgHeld=pgHeld&&pgHeld.t===t&&pgHeld.id===id?null:{t:t,id:id};pgClose();const hp=pgHeldPeg();$("pgM").textContent=hp?"Holding "+hp.name+". Tap the slip to put it on.":"Peg put down.";pgRender();}
+function pgDrop(k){const hp=pgHeldPeg();if(!hp){pgHeld=null;return;}const name=pgCur(),b=pgBoard(name),now=new Date(),slipWho=b.pegs[k]&&b.pegs[k].n,pm=$("pgM"),takeOn=LS(PGT,"1")!=="0";
+ if(hp.t==="j"){const r=takeOn?pegPlaceTake(b,hp.id,k,now):pegPlace(b,hp.id,k,now);if(!r.ok){pm.textContent=r.error;return;}pgStore(name,r.board);
   pm.textContent=hp.name+" placed on "+(slipWho||"(blank slip)")+(r.take?" and logged as taken.":takeOn&&!slipWho?" (blank slip, nothing logged).":".")+" Use Undo to take it back.";}
- else{const r=pegGlobalPlace(pgD,hp.id,name,k,now);if(!r.ok){pm.textContent=r.error;return;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);pm.textContent=hp.name+" placed on "+(slipWho||"(blank slip)")+". Use its Taken button to log it.";}
+ else{const r=takeOn?pegGlobalPlaceTake(pgD,hp.id,name,k,now):pegGlobalPlace(pgD,hp.id,name,k,now);if(!r.ok){pm.textContent=r.error;return;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);pm.textContent=hp.name+" placed on "+(slipWho||"(blank slip)")+(r.take?" and logged as taken.":takeOn&&!slipWho?" (blank slip, nothing logged).":".")+" Use Undo (global pegs) to take it back.";}
  pgHeld=null;pgClose();pgRender();const cell=document.querySelector('.slip[data-k="'+k+'"]');if(cell&&cell.scrollIntoView)cell.scrollIntoView({block:"nearest",inline:"nearest"});}
-$("pgGrid").addEventListener("click",e=>{const sc=e.target.closest(".sc");
+/* ===== v52: move a slip ===== */
+function pgMoveDo(from,to,mode){const r=pegSlipMove(pgD,from,to,mode,new Date()),pm=$("pgM");if(!r.ok){pm.textContent=r.error;return false;}
+ pgD={...r.data,sel:to.board};pegsSave(pgD);pgMoving=null;pgHeld=null;pgClose();pm.textContent=r.msg;pgRender();
+ const cell=document.querySelector('.slip[data-k="'+to.key+'"]');if(cell&&cell.scrollIntoView)cell.scrollIntoView({block:"nearest",inline:"nearest"});return true;}
+function pgMoveUndo(){const r=pegSlipUndo(pgD,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);pgClose();pgMoving=null;$("pgM").textContent="Undid: "+r.undone.label+".";pgRender();}
+$("pgGrid").addEventListener("click",e=>{if(Date.now()-pgDragEnd<400)return;const sc=e.target.closest(".sc");
+ if(pgMoving){const t=e.target.closest(".sc,.slip");if(t)pgMoveDo(pgMoving,{board:pgCur(),key:t.dataset.k},pgMoveMode());return;}
  if(sc){const k=sc.dataset.k;if(pgHeld){pgDrop(k);return;}
-  const b=pgBoard(BULL_BOARD),pj=b.jobs.filter(j=>j.pos===k),pg=pgD.globals.filter(g=>g.board===BULL_BOARD&&g.pos===k);
+  const b=pgBoard(pgCur()),pj=b.jobs.filter(j=>j.pos===k),pg=pgD.globals.filter(g=>g.board===pgCur()&&g.pos===k);
   if(pj.length)pgHold("j",pj[pj.length-1].id);else if(pg.length)pgHold("g",pg[pg.length-1].id);else{$("pgM").textContent="Pick a peg in the legend first, then tap a circle to place it.";}return;}
  const s=e.target.closest(".slip");if(!s)return;const pk=e.target.closest(".pk");
  if(pk&&!pgHeld){pgHold(pk.dataset.t,pk.dataset.id);return;}if(pgHeld){pgDrop(s.dataset.k);return;}
@@ -1678,10 +1786,13 @@ $("pgGrid").addEventListener("click",e=>{const sc=e.target.closest(".sc");
  pgEdit(s.dataset.k);});
 const pgBbClick=e=>{const b=e.target.closest("button");if(!b)return;const id=b.id;
  if(b.classList.contains("lc")){pgHold(b.dataset.t,b.dataset.id);return;}
- if(id==="bbView"){LSset(PGS,pgSlipOn(BULL_BOARD)?"0":"1");pgHeld=null;pgClose();pgRender();}
+ if(b.classList.contains("lce")){pgJobEdit(b.dataset.e);return;}
+ if(id==="bbMm"||id==="bbMm2"){LSset(PGMM,pgMoveMode()==="swap"?"insert":"swap");pgRender();}
+ else if(id==="bbMvX"){pgMoving=null;$("pgM").textContent="Move cancelled.";pgRender();}
+ else if(id==="bbMu"){pgMoveUndo();}
  else if(id==="bbPhoto"){LSset(PGP,LS(PGP,"0")==="1"?"0":"1");pgRender();}
  else if(id==="bbCx"){pgHeld=null;$("pgM").textContent="Peg put down.";pgRender();}
- else if(id==="bbUn"){$("pgUn").click();}
+ else if(id==="bbUn"){pgUndo();}
  else if(id==="bbLog"){pgLogOpen();}
  else if(id==="bbTk"){LSset(PGT,LS(PGT,"1")==="0"?"1":"0");pgRender();}
  else if(id==="bbZo"||id==="bbZi"){LSset(PGZ,String(Math.round((pgZoom()+(id==="bbZi"?0.15:-0.15))*100)/100));pgRender();}
@@ -1690,14 +1801,14 @@ else if(id==="bbImp"){pgImp=!pgImp;pgRender();}
  else if(id==="bbPick"){$("bbFile").value="";$("bbFile").click();}
  else if(id==="bbLoad"){const t=$("bbTx")?$("bbTx").value:"";if(!t.trim()){$("pgM").textContent="Paste the names text first.";return;}pgImportNames(t);}
  else if(id==="bbExp"){pgExportNames();}};
-function pgImportNames(text){const bb=pgBoard(BULL_BOARD),r=bullNamesParse(text,bb.rows||BULL_ROWS,bb.cols||BULL_COLS),pm=$("pgM");
+function pgImportNames(text){const BN=pgCur(),bb=pgBoard(BN),r=bullNamesParse(text,bb.rows||BULL_ROWS,bb.cols||BULL_COLS),pm=$("pgM");
  if(!r.ok){pm.textContent="Import failed: "+r.error;return;}
- if(!confirm("Load "+r.count+" names into the Bull board? This replaces the current names. Your current Bull board is saved as a backup first. Job peg positions are cleared; the log of takes is kept."))return;
+ if(!confirm("Load "+r.count+" names into the "+BN+"? This replaces the current names. Your current "+BN+" is saved as a backup first. Job peg positions are cleared; the log of takes is kept."))return;
  try{LSset(PGBK,JSON.stringify(bb));}catch(_){pm.textContent="Import cancelled: couldn't save a backup of the current board (storage full?).";return;}
- pgStore(BULL_BOARD,{...bullSeedBoard(bb,r.pegs),cols:bb.cols,rows:bb.rows,updated:new Date().toISOString()});pgHeld=null;pgImp=false;pgClose();pgSelKey=null;pm.textContent="Loaded "+r.count+" names on this device. Previous board kept as a backup.";pgRender();}
-async function pgExportNames(){const b=pgBoard(BULL_BOARD),o=bullNamesExport(b),n=Object.keys(o.pegs).length,pm=$("pgM");
- if(!n){pm.textContent="Nothing to export: no names on the Bull board yet.";return;}
- const r=await shareFile("bull-board-names-"+todayS()+".json","application/json",JSON.stringify(o,null,1));
+ pgStore(BN,{...bullSeedBoard(bb,r.pegs),cols:bb.cols,rows:bb.rows,cm:bb.cm,updated:new Date().toISOString()});pgHeld=null;pgImp=false;pgClose();pgSelKey=null;pm.textContent="Loaded "+r.count+" names on this device. Previous board kept as a backup.";pgRender();}
+async function pgExportNames(){const BN=pgCur(),b=pgBoard(BN),o=bullNamesExport(b),n=Object.keys(o.pegs).length,pm=$("pgM");
+ if(!n){pm.textContent="Nothing to export: no names on the "+BN+" yet.";return;}
+ const r=await shareFile(BN.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")+"-names-"+todayS()+".json","application/json",JSON.stringify(o,null,1));
  pm.textContent=r==="cancel"?"Export cancelled.":(r==="shared"?"Shared ":"Downloaded ")+n+" names. Send the file privately (text or email), not on a public site.";}
 $("bbFile").addEventListener("change",async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;
  if(f.size>500000){$("pgM").textContent="Import failed: that file is too big to be a names file.";return;}
@@ -1714,7 +1825,6 @@ $("pgSz").onclick=()=>{const name=pgCur(),b=pgBoard(name),rv=Number($("pgRows").
  const r=pegResize(b,rv,cv);if(r.dropped.length){const nm=r.dropped.slice(0,8).map(k=>"#"+pegNum(+k.split("-")[0],+k.split("-")[1],b.cols)+(b.pegs[k].n?" "+b.pegs[k].n:"")).join(", ");
   if(!confirm("Making the board "+cv+" × "+rv+" will remove "+r.dropped.length+" peg"+(r.dropped.length===1?"":"s")+" outside the new size ("+nm+(r.dropped.length>8?", …":"")+"). Continue?")){$("pgM").textContent="Size not changed.";pgRender();return;}}
  pgClose();pgStore(name,{...r.board,updated:b.updated});$("pgM").textContent="Board size set to "+cv+" columns × "+rv+" rows"+(r.dropped.length?" ("+r.dropped.length+" removed).":".");pgRender();};
-$("pgLab").onclick=()=>{LSset(PGL,LS(PGL,"1")==="0"?"1":"0");pgRender();};
 $("pgDel").onclick=async()=>{const n=pgCur();if(PEG_BOARDS.includes(n)||!confirm("Remove the custom board “"+n+"” with all its pegs and photo?"))return;
  pgD=pegBoardDeleted(pgD,n);pgD.custom=pgD.custom.filter(x=>x!==n);delete pgD.boards[n];pgD.sel="";pegsSave(pgD);try{(await lByKey("peg|"+n)).forEach(r=>lDel(r.id));}catch(e){}pgClose();$("pgM").textContent="Removed “"+n+"”.";pgRender();};
 function pgCtx(){const n=pgCur();return{k:"peg|"+n,vs:"Peg board: "+n,eta:"",etd:""};}
@@ -1728,11 +1838,10 @@ async function refreshPegPic(){const el=$("pgPic");if(!el)return;const c=pgCur()
  el.innerHTML=`<button type="button" class="pgp" aria-label="Open photos of ${esc(c)}"><img alt="Photo of ${esc(c)}" src="${pgBlob}"></button><p class="mut pgpl" style="margin:0 0 8px"><b>${last.src==="gal"?"Photo added":"Photo taken"} ${esc(pegWhen(last.added))}</b>${a.length>1?" · "+a.length+" photos (tap to view all, share or delete)":" · tap to view full size, share or delete"}</p>`;
  el.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
 
-$("pgJA").onclick=()=>{const name=pgCur(),r=pegJobAdd(pgBoard(name),$("pgJN").value,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);$("pgJN").value="";$("pgM").textContent="Added job peg “"+r.job.name+"”.";pgRender();};
+$("pgJC").innerHTML=PEG_COLORS.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
+$("pgJA").onclick=()=>{const name=pgCur(),b=pgBoard(name),cv=$("pgJC").value,r=pegJobAdd(b,$("pgJN").value,new Date(),cv===""?undefined:cv);if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);$("pgJN").value="";$("pgM").textContent="Added peg “"+r.job.name+"” to "+name+". Tap it in the legend, then tap a slip circle.";pgRender();};
 $("pgJN").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("pgJA").click();}});
-$("pgJobs").addEventListener("click",e=>{const b=e.target.closest("button[data-a]");if(b&&!b.disabled)pgJobAct(b.dataset.a,b.closest(".jb").dataset.j);});
-$("pgUn").onclick=()=>{const name=pgCur(),r=pegUndo(pgBoard(name),new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);pgClose();pgRender();$("pgM").textContent="Undid: "+r.undone.label+".";};
-$("pgLog").onclick=pgLogOpen;
+function pgUndo(){const name=pgCur(),r=pegUndo(pgBoard(name),new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);pgClose();pgRender();$("pgM").textContent="Undid: "+r.undone.label+".";}
 $("pgShare").onclick=async()=>{const name=pgCur(),text=pegBoardText(name,pgBoard(name),new Date(),pgD),m=$("pgM");
  try{if(navigator.share){await navigator.share({title:name+" – board update",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
  let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
@@ -1740,23 +1849,16 @@ $("pgShare").onclick=async()=>{const name=pgCur(),text=pegBoardText(name,pgBoard
  m.textContent=ok?"Sharing isn't available here, so the update was copied to your clipboard.":"Couldn't share or copy. Try again.";};
 
 /* ----- Global pegs UI ----- */
-function pgGLine(g){if(!g.board||!g.pos)return"Not on a board yet";const b=pgBoard(g.board);return esc(g.board)+" · #"+pegKeyNum(b,g.pos)+" (row "+g.pos.split("-")[0]+", col "+g.pos.split("-")[1]+") – <b>"+(b.pegs[g.pos]?esc(pegWho(b,g.pos)):"(empty position)")+"</b>";}
-function pgHintOn(){let d="";try{d=localStorage.getItem(PGH)||"";}catch(e){}return !d&&pegPresetMissing(pgBoard("Bull board"),PEG_PRESET_NEW).length>0;}
-function pgHintRender(){const el=$("pgHint");if(el)el.classList.toggle("hide",!pgHintOn());}
+function pgGLine(g){if(!g.board||!g.pos)return"Not on a board yet";const b=pgBoard(g.board);return esc(g.board)+" · column "+g.pos.split("-")[1]+", slip "+g.pos.split("-")[0]+" – <b>"+(b.pegs[g.pos]?esc(pegWho(b,g.pos)):"(blank slip)")+"</b>";}
 function pgGlRender(){const el=$("pgGl");if(!el)return;const gs=pgD.globals,un=pgD.gundo;
- el.innerHTML=`<h4>◆ Global pegs</h4><p class="mut" style="margin:0 0 4px">One peg each. Moves through every board in order, then back to the first board.</p>`+
- (gs.length?gs.map(g=>`<div class="gp" data-g="${esc(g.id)}"><button type="button" class="gj" data-ga="jump" aria-label="${esc(g.name)}: ${g.board&&g.pos?"on "+esc(g.board)+", position "+pegKeyNum(pgBoard(g.board),g.pos)+". Tap to go to that board":"not on a board yet"}"><b>◆ ${esc(g.name)}</b><br><span class="mut">${pgGLine(g)}</span></button><div class="row"><button type="button" class="p" data-ga="adv">Advance</button><button type="button" data-ga="take"${g.board&&g.pos&&pgBoard(g.board).pegs[g.pos]?"":" disabled"}>Taken</button></div></div>`).join(""):'<p class="mut">No global pegs. Use Manage to add one.</p>')+
- `<div class="row"><button type="button" id="gUn"${un.length?"":" disabled"}>${un.length?"Undo: "+esc(un[un.length-1].label):"Undo last global move"}</button><button type="button" id="gLog">Global log</button><button type="button" id="gMan">Manage</button></div>`;
+ el.innerHTML=`<h4>◆ Global pegs</h4><p class="mut" style="margin:0 0 4px">One peg each, shared by every board. Pick one up in the legend below the board picker and tap a slip circle on any board.</p>`+
+ (gs.length?gs.map(g=>`<p class="gp" data-g="${esc(g.id)}"><b>◆ ${esc(g.name)}</b><br><span class="mut">${pgGLine(g)}</span></p>`).join(""):'<p class="mut">No global pegs. Use Manage to add one.</p>')+
+ `<div class="row"><button type="button" id="gUn"${un.length?"":" disabled"}>${un.length?"Undo: "+esc(un[un.length-1].label):"Undo (global pegs)"}</button><button type="button" id="gLog">Global log</button><button type="button" id="gMan">Manage</button></div>`;
  $("gUn").onclick=()=>{const r=pegGlobalUndo(pgD,new Date());pgGApply(r,r.ok?"Undid: "+r.undone.label+".":"");};$("gLog").onclick=pgGLogOpen;$("gMan").onclick=pgGManage;}
-function pgJump(board,pos){pgD.sel=board;pegsSave(pgD);pgClose();pgRender();const cell=document.querySelector('.pgc[data-k="'+pos+'"]');if(cell&&cell.scrollIntoView)cell.scrollIntoView({block:"nearest",inline:"center"});}
-$("pgGl").addEventListener("click",e=>{const b=e.target.closest("button[data-ga]");if(!b||b.disabled)return;const id=b.closest(".gp").dataset.g,g=pegGlobal(pgD,id);if(!g)return;const a=b.dataset.ga,now=new Date();
- if(a==="jump"){if(g.board&&g.pos){pgJump(g.board,g.pos);$("pgM").textContent=g.name+" is on "+g.board+".";}else $("pgM").textContent=g.name+" isn't on a board yet. Tap Advance to start it.";return;}
- if(a==="adv"){const r=pegGlobalAdvance(pgD,id,now);if(pgGApply(r,r.ok?g.name+" advanced to "+pegGWhere(r.data,r.to.board,r.to.pos)+".":""))pgJump(r.to.board,r.to.pos);}
- if(a==="take"){const r=pegGlobalTake(pgD,id,now);pgGApply(r,r.ok?"Logged: "+g.name+" taken by "+r.take.person+" ("+r.take.board+", position "+r.take.num+").":"");}});
 function pgGLogOpen(){if($("pgGLogS"))return;const o=pgSheet("pgGLogS"),days=pegGlobalDays(pgD);
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="glT" class="rot"><h3 id="glT">Global pegs log · all boards</h3>
  ${days.length?days.map(g=>`<div class="rlg"><p><b>${esc(pegDateLong(g.d))}</b></p>${g.items.slice().reverse().map(t=>`<p>◆ ${esc(t.peg)} – <b>${esc(t.person)}</b><br><span class="mut">${esc(t.board)}${t.num?" · position #"+t.num:""}</span></p><div class="row"><button type="button" class="d" data-x="${esc(t.id)}">Delete</button></div>`).join("")}</div>`).join(""):'<p class="mut">No global pegs taken yet.</p>'}
- <p class="mut" style="margin:0">Newest first; the last ${PEG_TAKES} are kept. Job-peg takes are in each board's “Log of takes”.</p><button type="button" class="p" id="glDn">Close</button></div>`;
+ <p class="mut" style="margin:0">Newest first; the last ${PEG_TAKES} are kept. Job-peg takes are in each board's “Who took what” log.</p><button type="button" class="p" id="glDn">Close</button></div>`;
  o.onclick=ev=>{if(ev.target===o){o.remove();return;}const d=ev.target.dataset||{};if(d.x){if(!confirm("Delete this log entry?"))return;const r=pegGlobalDeleteTake(pgD,d.x);o.remove();if(pgGApply(r,""))pgGLogOpen();}};
  $("glDn").onclick=()=>o.remove();$("glDn").focus();}
 function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
@@ -1771,8 +1873,6 @@ function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
  $("gnAdd").onclick=()=>{const r=pegGlobalAdd(pgD,$("gnNew").value,new Date());if(!r.ok){$("gmM").textContent=r.error;return;}pgGApply(r,"Added global peg “"+r.peg.name+"”.");redo("Added.");};
  $("gnNew").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("gnAdd").click();}});
  $("gmDn").onclick=()=>o.remove();$("gmDn").focus();}
-$("pgHintX").onclick=()=>{try{localStorage.setItem(PGH,"1");}catch(e){}pgHintRender();};
-$("pgHintAdd").onclick=()=>{$("pgPre").onclick();try{localStorage.setItem(PGH,"1");}catch(e){}pgHintRender();};
 $("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if(!r.added){$("pgM").textContent="All preset jobs are already on the Bull board.";return;}pgStore(name,r.board);$("pgM").textContent="Added "+r.added+" preset job"+(r.added===1?"":"s")+".";pgRender();};
 pgRender();
 
@@ -1844,7 +1944,7 @@ window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
