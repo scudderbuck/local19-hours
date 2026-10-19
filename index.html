@@ -261,7 +261,7 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .nd .nl{font-size:.875rem;font-weight:600;color:var(--mut);margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
 /* v55: ships at the chosen needs port (light on navy) */
 #ndSh{margin-top:12px;background:#00214e;color:#f3f5f8;border:2px solid #ffd23f;border-radius:12px;padding:12px;font-size:1.0625rem;line-height:1.4;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box}
-#ndSh h4{margin:0 0 6px;color:#ffd23f;font-size:1.125rem}#ndSh .nsr{border-top:1px solid rgba(255,210,63,.35);padding:6px 0;display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}#ndSh .nsr:first-of-type{border-top:0}#ndSh .nsn{font-weight:800;font-size:1.125rem;color:#fff}#ndSh .nss{color:#e6ecf3}#ndSh .nst{display:inline-block;background:#ffd23f;color:#00214e;font-weight:800;border-radius:6px;padding:0 6px;font-size:.9375rem}#ndSh .nse,#ndSh .nsx{color:#e6ecf3}#ndSh .nsw{color:#ffd23f;font-weight:700;margin-top:6px}
+#ndSh h4{margin:0 0 6px;color:#ffd23f;font-size:1.125rem}#ndSh .nsr{border-top:1px solid rgba(255,210,63,.35);padding:6px 0;display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}#ndSh .nsr:first-of-type{border-top:0}#ndSh .nsn{font-weight:800;font-size:1.125rem;color:#fff}#ndSh .nss{color:#e6ecf3}#ndSh .nst{display:inline-block;background:#ffd23f;color:#00214e;font-weight:800;border-radius:6px;padding:0 6px;font-size:.9375rem}#ndSh .nse,#ndSh .nsx{color:#e6ecf3}#ndSh .nsw{color:#ffd23f;font-weight:700;margin-top:6px}#ndSh .nsc{color:#e6ecf3;font-size:.875rem;margin-top:6px;overflow-wrap:anywhere}#ndSh .nsn,#ndSh .nst{overflow-wrap:anywhere}
 .nd .nb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.nd .nb button{min-height:44px;padding:0 14px}
 html,body{background:#00214e}
 #splash{position:fixed;inset:0;z-index:2147483000;opacity:1;background:#00214e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spf 1.2s linear forwards;-webkit-tap-highlight-color:transparent}
@@ -428,7 +428,8 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden
 <div id="shSum"></div><p id="shUp" class="mut"></p>
 <div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Letter photos stay on this device only (private, offline). Auto-removed 30 days after the ship's ETD.</p></div>
 <div id="shList"></div>
-<div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. Source: Northwest Seaport Alliance Vessel Schedule Forecast. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). Seattle container terminals only (T5, T18); T91 is cruise, no container calls.</p></div>
+<div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). <b>Ships coming</b> lists Seattle container terminals only (T5, T18); T91 is cruise, no container calls. The Needs <b>At berth now</b> box covers more ports.</p>
+<p class="mut" style="margin:8px 0 0"><b>Sources:</b> Seattle and Tacoma: Northwest Seaport Alliance Vessel Schedule Forecast (Tacoma includes car ships and breakbulk). Aberdeen: Port of Grays Harbor vessel schedule (dates only). Olympia: Port of Olympia vessel announcements (dates only). Everett: Port of Everett shipping schedule. Port Angeles: Port of Port Angeles ship schedule. Longview and Vancouver WA: no public schedule; Columbia River Pilots dispatch is used only when it is current. "leaves ?" means the source gives no departure time.</p></div>
 </section>
 <footer id="ft">ILWU LIFE <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button></footer>
 </main>
@@ -600,7 +601,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v56",CACHE_VERSION="l19hours-v56"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v57",CACHE_VERSION="l19hours-v57"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -712,10 +713,10 @@ function msUntil(time,now){const m=toMin(time||"18:00");const t=new Date(now);t.
 function trackUrl(n,imo){return /^\d{7}$/.test(imo||"")?"https://www.vesselfinder.com/vessels/details/"+imo:"https://www.vesselfinder.com/vessels?name="+encodeURIComponent(n||"");}
 const SHIP_TERMS=["T5","T18"],SHIP_KEY="l19ships.v1";
 const shDay=s=>String(s||"").slice(0,10);
-function shipsOnDay(v,term,day){return v.filter(x=>x.terminal===term&&shDay(x.eta)<=day&&day<=shDay(x.etd));}
+function shipsOnDay(v,term,day){return v.filter(x=>x&&x.terminal===term&&vesselPort(x)==="Seattle"&&shDay(x.eta)<=day&&day<=shDay(x.etd));}
 function shipSummary(v,today,terms){terms=terms||SHIP_TERMS;const tm=addDays(today,1);
  return terms.map(t=>{const a=shipsOnDay(v,t,today).length,b=shipsOnDay(v,t,tm).length,p=n=>n+(n===1?" ship":" ships");return t+": "+p(a)+" today, "+b+" tomorrow";});}
-function shipGroups(v,today){const up=v.filter(x=>shDay(x.etd)>=today&&SHIP_TERMS.includes(x.terminal)).sort((a,b)=>a.eta<b.eta?-1:a.eta>b.eta?1:0),g=[];
+function shipGroups(v,today){const up=v.filter(x=>x&&shDay(x.etd)>=today&&SHIP_TERMS.includes(x.terminal)&&vesselPort(x)==="Seattle").sort((a,b)=>a.eta<b.eta?-1:a.eta>b.eta?1:0),g=[];
  for(const x of up){const k=shDay(x.eta)<today?"In port now (arrived earlier)":shDay(x.eta);let r=g.find(q=>q.key===k);if(!r){r={key:k,items:[]};g.push(r);}r.items.push(x);}
  return g;}
 const LETTER_KEEP_DAYS=30;
@@ -727,19 +728,51 @@ const NEED_PORTS=["Seattle","Tacoma","Everett","Olympia","Longview","Vancouver W
    "Seattle Txx" container rows (today T5, T18), so a vessel's terminal code (T5, T18, any Txx / Pier nn) maps to Seattle.
    A future "port" field on a vessel wins if present. Other ports have no feed yet -> empty message. */
 const NEED_SHIP_DAYS=7;
-function vesselPort(x){if(!x)return"";const p=String(x.port||"").trim();if(p)return NEED_PORTS.find(q=>q.toLowerCase()===p.toLowerCase())||p;
+function vesselPort(x){if(!x)return"";const p=String(x.port||"").trim();if(p)return NEED_PORTS.find(q=>q.toLowerCase()===p.toLowerCase())||PORT_ALIAS[p.toLowerCase()]||p;
  return /^(T\d+|PIER\s*\d+)$/i.test(String(x.terminal||"").trim())?"Seattle":"";}
 function needRef(date,now){const t=fmtDate(now),p=n=>String(n).padStart(2,"0");if(!/^\d{4}-\d{2}-\d{2}$/.test(date||"")||date===t)return t+"T"+p(now.getHours())+":"+p(now.getMinutes());return date+"T00:00";}
-function needShips(v,port,ref,days){days=days==null?NEED_SHIP_DAYS:days;const end=addDays(ref.slice(0,10),days)+"T23:59",ok=[],o={list:[],later:0,portHasData:false};
- for(const x of Array.isArray(v)?v:[]){if(!x||!x.vessel||vesselPort(x)!==port||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(x.eta||""))continue;o.portHasData=true;
-  const etd=/^\d{4}-\d{2}-\d{2}T/.test(x.etd||"")?x.etd:"";if(etd?etd<=ref:shDay(x.eta)<ref.slice(0,10))continue;
-  if(x.eta>end){o.later++;continue;}ok.push(Object.assign({},x,{status:x.eta<=ref?"now":"due"}));}
- o.list=ok.sort((a,b)=>a.eta<b.eta?-1:a.eta>b.eta?1:a.vessel<b.vessel?-1:1);return o;}
+/* v57: outports. Every feed row has "port" (a Tacoma "T7" is never Seattle). eta_time:false = date-only source (00:00 is a
+   placeholder, show the date only). No ETD -> assumed stay of PORT_STAY days after the ETA date, shown as "leaves ?".
+   at_berth:true rows (Columbia River Pilots) may have no ETA. Obvious duplicates (same port, same name ignoring
+   punctuation, overlapping times) are merged. */
+const PORT_STAY={"Aberdeen":3,"Olympia":3,"Everett":2,"Port Angeles":2,"Longview":2,"Vancouver WA":2};
+const PORT_ALIAS={"vancouver":"Vancouver WA","vancouver, wa":"Vancouver WA","grays harbor":"Aberdeen"};
+const PORT_SRC={"Seattle":"Northwest Seaport Alliance","Tacoma":"Northwest Seaport Alliance","Aberdeen":"Port of Grays Harbor vessel schedule","Olympia":"Port of Olympia vessel announcements","Everett":"Port of Everett shipping schedule","Port Angeles":"Port of Port Angeles ship schedule","Longview":"Columbia River Pilots dispatch","Vancouver WA":"Columbia River Pilots dispatch"};
+const NO_PUBLIC_SCHED=["Longview","Vancouver WA"];
+const TERM_NAMES={"Seattle":{"T5":"Terminal 5","T18":"Terminal 18"},"Tacoma":{"EB1":"East Blair One","WUT":"Washington United Terminals","PCT":"Pierce County Terminal","WST":"West Sitcum Terminal","Husky":"Husky Terminal","TOTE":"TOTE Maritime terminal","T7":"Terminal 7","Blair":"Blair"},"Aberdeen":{"T2":"Terminal 2","T4":"Terminal 4"},"Port Angeles":{"T1":"Terminal 1","T3":"Terminal 3"},"Olympia":{"Marine Terminal":"Marine Terminal"}};
+function shipTag(x){const t=String((x&&x.terminal)||"").trim().slice(0,24),p=vesselPort(x),n=(TERM_NAMES[p]||{})[t];return{tag:t,title:t?(p?p+" ":"")+(n||t):""};}
+const SH_ISO=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+function shipWin(x){if(!x)return null;const eta=SH_ISO.test(x.eta||"")?String(x.eta).slice(0,16):"",etd0=SH_ISO.test(x.etd||"")?String(x.etd).slice(0,16):"";
+ if(!eta&&!(x.at_berth===true&&etd0))return null;let etd=etd0,guess=false;
+ if(!etd){etd=addDays(eta.slice(0,10),PORT_STAY[vesselPort(x)]||0)+"T23:59";guess=true;}
+ if(eta&&etd<eta)return null;return{start:eta||"0000-01-01T00:00",end:etd,guess,dateOnly:x.eta_time===false};}
+const shipKeyName=n=>String(n||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+function shipDedupe(rows){const out=[];
+ for(const x of rows.slice().sort((a,b)=>a._w.start<b._w.start?-1:a._w.start>b._w.start?1:0)){const k=shipKeyName(x.vessel),p=vesselPort(x);
+  const d=out.find(y=>shipKeyName(y.vessel)===k&&vesselPort(y)===p&&y._w.start<=x._w.end&&x._w.start<=y._w.end);
+  if(!d){out.push(x);continue;}
+  if(x._w.end>d._w.end&&!x._w.guess){d._w=Object.assign({},d._w,{end:x._w.end,guess:false});d.etd=x.etd;}
+  for(const f of ["terminal","agent","service","imo"])if(!d[f]&&x[f])d[f]=x[f];}
+ return out;}
+function needShips(v,port,ref,days){days=days==null?NEED_SHIP_DAYS:days;const end=addDays(ref.slice(0,10),days)+"T23:59",ok=[],o={list:[],later:0,portHasData:false},rows=[];
+ for(const x of Array.isArray(v)?v:[]){if(!x||!x.vessel||vesselPort(x)!==port)continue;const w=shipWin(x);if(!w)continue;rows.push(Object.assign({},x,{_w:w}));}
+ o.portHasData=rows.length>0;
+ for(const x of shipDedupe(rows)){const w=x._w;if(w.end<=ref)continue;if(w.start>end){o.later++;continue;}
+  ok.push(Object.assign(x,{status:w.start<=ref?"now":"due",etdGuess:w.guess,dateOnly:w.dateOnly}));}
+ o.list=ok.sort((a,b)=>a._w.start<b._w.start?-1:a._w.start>b._w.start?1:a.vessel<b.vessel?-1:1);return o;}
+function portNote(sd,port){const o=(sd&&sd.outports&&typeof sd.outports==="object"&&sd.outports[port])||null,src=String((o&&o.credit)||PORT_SRC[port]||"").slice(0,80);
+ if(NO_PUBLIC_SCHED.includes(port))return{msg:"No public schedule for "+port+".",src};
+ const ld=o&&/^\d{4}-\d{2}-\d{2}$/.test(o.latest||"")?needDateLong(o.latest).replace(/^\w+ /,""):"";
+ if(o&&o.status==="stale")return{msg:port+" schedule is out of date"+(ld?" (newest entry "+ld+")":"")+".",src};
+ if(o&&o.status==="error")return{msg:port+" schedule couldn't be read at the last update.",src};
+ return{msg:(PORT_SRC[port]?"No "+port+" ships in the schedule right now.":"No ship schedule for "+port+"."),src};}
 function needBerth(v,port,ref){const r=needShips(v,port,ref,36500),now=r.list.filter(x=>x.status==="now");return{list:now,next:r.list.find(x=>x.status==="due")||null,portHasData:r.portHasData};}
 function needPierNote(v,port,pier){const t=String(pier||"").toUpperCase().replace(/\s+/g," ").trim();if(!t)return"";const a=Array.isArray(v)?v:[];
  const hit=a.filter(x=>x&&x.vessel&&String(x.vessel).length>=4&&t.includes(String(x.vessel).toUpperCase().replace(/\s+/g," ").trim()));
  if(hit.length&&!hit.some(x=>vesselPort(x)===port))return String(hit[0].vessel)+" isn't listed at "+port+". Your Pier / terminal text is kept.";
- const m=t.match(/\b(T\d+)\b/);if(m&&!hit.length){const own=a.filter(x=>x&&String(x.terminal||"").toUpperCase()===m[1]);if(own.length&&!own.some(x=>vesselPort(x)===port))return m[1]+" is a "+vesselPort(own[0])+" terminal, not "+port+". Your text is kept.";}
+ if(!hit.length){const codes=[...new Set(a.map(x=>String((x&&x.terminal)||"").toUpperCase().trim()).filter(c=>c.length>=2&&c.length<=24))].sort((p,q)=>q.length-p.length);
+  const c=codes.find(c=>(" "+t.replace(/[^A-Z0-9]+/g," ")+" ").includes(" "+c.replace(/[^A-Z0-9]+/g," ")+" "));
+  if(c){const own=a.filter(x=>x&&String(x.terminal||"").toUpperCase().trim()===c);if(own.length&&!own.some(x=>vesselPort(x)===port)){const op=vesselPort(own[0]);return own[0].terminal+" is "+(/^[AEIOU]/i.test(op)?"an ":"a ")+op+" terminal, not "+port+". Your text is kept.";}}}
  return"";}
 function telHref(s){s=String(s||"").trim();const d=s.replace(/\D/g,"");if(d.length<7||d.length>15)return"";return"tel:"+(s.charAt(0)==="+"?"+":"")+d;}
 function cleanPhone(s){return String(s||"").replace(/[^\d+\-().\s]/g,"").trim().slice(0,30);}
@@ -1425,9 +1458,12 @@ function renderNdShips(){const el=$("ndSh");if(!el)return;const port=$("ndP").va
  if(port==="Other"){el.innerHTML=h4+'<div class="nse">Pick a port above to see its ships.</div>';return;}
  if(!shipData){el.innerHTML=h4+'<div class="nse">Ship schedule not loaded. Tap Refresh under Ships coming.</div>';return;}
  const v=shipData.vessels||[],r=needBerth(v,port,needRef("",new Date())),w=needPierNote(v,port,$("ndT2").value),wh=w?`<div class="nsw">${esc(w)}</div>`:"";
- if(!r.portHasData){el.innerHTML=h4+`<div class="nse">No ship schedule for ${esc(port)}. The app's feed covers Seattle (T5, T18) only.</div>`+wh;return;}
- const tm=s=>{const[d,t]=String(s||"").split("T");return d?shDate(d)+" "+(t||"").slice(0,5):"?";};
- el.innerHTML=`<h4>At berth now · ${esc(port)} (${r.list.length})</h4>`+(r.list.length?r.list.map(x=>`<div class="nsr"><b class="nsn">${esc(x.vessel)}</b><span class="nst">${esc(x.terminal||"")}</span><span class="nss">leaves ${esc(tm(x.etd))}</span></div>`).join(""):`<div class="nse">No ships at berth at ${esc(port)} right now.</div>`+(r.next?`<div class="nsx">Next: ${esc(r.next.vessel)} (${esc(r.next.terminal||"")}) ${esc(tm(r.next.eta))}</div>`:""))+wh;}
+ const pn=portNote(shipData,port),sc=pn.src?`<div class="nsc">Source: ${esc(pn.src)}</div>`:"";
+ if(!r.portHasData){el.innerHTML=h4+`<div class="nse">${esc(pn.msg)}</div>`+wh+sc;return;}
+ const tm=(s,d)=>{const[a,t]=String(s||"").split("T");return a?shDate(a)+(d?"":" "+(t||"").slice(0,5)):"?";};
+ const tg=x=>{const g=shipTag(x);return g.tag?`<span class="nst" title="${esc(g.title)}">${esc(g.tag)}</span>`:"";};
+ const lv=x=>x.etdGuess?"leaves ?":"leaves "+tm(x.etd,x.dateOnly);
+ el.innerHTML=`<h4>At berth now · ${esc(port)} (${r.list.length})</h4>`+(r.list.length?r.list.map(x=>`<div class="nsr"><b class="nsn">${esc(x.vessel)}</b>${tg(x)}<span class="nss">${esc(lv(x))}</span></div>`).join(""):`<div class="nse">No ships at berth at ${esc(port)} right now.</div>`+(r.next?`<div class="nsx">Next: ${esc(r.next.vessel)}${r.next.terminal?" ("+esc(shipTag(r.next).tag)+")":""} ${esc(tm(r.next.eta,r.next.dateOnly))}</div>`:""))+wh+sc;}
 $("ndP").addEventListener("change",renderNdShips);$("ndT2").addEventListener("input",renderNdShips);setInterval(()=>{if(!$("v-ships").classList.contains("hide"))renderNdShips();},60000);
 function renderNeeds(){const g=needsGroups(needsList()),L=$("ndL");
  L.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(needDateLong(r.key))}</h4>${r.items.map(n=>`<div class="nd"><div class="nh">${esc(n.shift)} shift · ${esc(n.port)}${n.pier?" · "+esc(n.pier):""}</div><div class="nl">Out-of-port needs</div><pre>${esc(n.out||"—")}</pre><div class="nl">Gang allocation</div><pre>${esc(n.gang||"—")}</pre><div class="nb"><button type="button" class="p" data-a="share" data-id="${esc(n.id)}">Share</button><button type="button" data-a="edit" data-id="${esc(n.id)}">Edit</button><button type="button" class="d" data-a="del" data-id="${esc(n.id)}">Delete</button><span class="npic" data-id="${esc(n.id)}"></span></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No needs logged yet. Call dispatch, then save what you hear above.</div>';
@@ -2200,7 +2236,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
