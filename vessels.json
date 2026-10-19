@@ -1,16 +1,16 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-19T05:45:05-07:00",
+ "updated": "2026-10-19T08:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
    "status": "ok",
    "credit": "Port of Grays Harbor vessel schedule",
    "source": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpAomeTT0eQnICFNJZD2-7wMPnOBeK_3wGTR_Uf2FOr7UibmUqkliQyL2A9QuzSC_VvbBS7rVo3dpD/pub?output=csv",
-   "parsed": 14,
-   "current": 10,
-   "latest": "2026-11-01"
+   "parsed": 15,
+   "current": 12,
+   "latest": "2026-11-04"
   },
   "Olympia": {
    "status": "stale",
@@ -100,16 +100,6 @@
    "imo": "9515474"
   },
   {
-   "vessel": "OOCL NEW YORK",
-   "service": "PNW1",
-   "terminal": "T18",
-   "agent": "Inchcape",
-   "eta": "2026-10-17T05:00",
-   "etd": "2026-10-18T04:00",
-   "port": "Seattle",
-   "imo": "9198109"
-  },
-  {
    "vessel": "MAERSK TORINO",
    "service": "WC4/TP5",
    "terminal": "Husky",
@@ -194,7 +184,7 @@
   },
   {
    "vessel": "ONE OWL",
-   "service": "FP2",
+   "service": "Ad Hoc",
    "terminal": "Husky",
    "agent": "Norton Lilly International",
    "eta": "2026-10-19T15:00",
@@ -327,16 +317,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9505065"
-  },
-  {
-   "vessel": "MSC FLORA",
-   "service": "CLX",
-   "terminal": "T5",
-   "agent": "",
-   "eta": "2026-10-22T07:00",
-   "etd": "2026-10-23T04:00",
-   "port": "Seattle",
-   "imo": "9978937"
   },
   {
    "vessel": "ARC INDEPENDENCE",
@@ -640,6 +620,16 @@
    "imo": "9935296"
   },
   {
+   "vessel": "MSC FLORA",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-10-29T14:46",
+   "etd": "2026-10-30T11:46",
+   "port": "Seattle",
+   "imo": "9978937"
+  },
+  {
    "vessel": "CMA CGM DUTCH HARBOR",
    "service": "Oceania",
    "terminal": "T18",
@@ -660,16 +650,6 @@
    "eta_time": false
   },
   {
-   "vessel": "MSC NITYA B",
-   "service": "CLX",
-   "terminal": "T5",
-   "agent": "",
-   "eta": "2026-10-30T00:05",
-   "etd": "2026-10-30T21:05",
-   "port": "Seattle",
-   "imo": "9778117"
-  },
-  {
    "vessel": "NADI CHIEF",
    "service": "EB Service 2",
    "terminal": "T18",
@@ -688,6 +668,16 @@
    "etd": "2026-10-30T20:00",
    "port": "Tacoma",
    "imo": "8419142"
+  },
+  {
+   "vessel": "MSC NITYA B",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-10-30T12:50",
+   "etd": "2026-10-31T09:50",
+   "port": "Seattle",
+   "imo": "9778117"
   },
   {
    "vessel": "ONE SYNERGY",
@@ -836,6 +826,17 @@
    "imo": "9424912"
   },
   {
+   "vessel": "Engiadina",
+   "service": "",
+   "terminal": "T2",
+   "agent": "",
+   "eta": "2026-11-03T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "9423592"
+  },
+  {
    "vessel": "EVER SMILE",
    "service": "TPN",
    "terminal": "PCT",
@@ -876,6 +877,17 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9338838"
+  },
+  {
+   "vessel": "Glovis Legend",
+   "service": "",
+   "terminal": "T4",
+   "agent": "",
+   "eta": "2026-11-04T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "1063281"
   },
   {
    "vessel": "ONE FANTASTIC",
