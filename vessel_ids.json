@@ -1,7 +1,47 @@
 {
+ "ANAFI": {
+  "checked": "2026-10-19",
+  "imo": "9978602"
+ },
+ "ARC ENDEAVOR": {
+  "checked": "2026-10-19",
+  "imo": "9505065"
+ },
+ "ARC HONOR": {
+  "checked": "2026-10-19",
+  "imo": "9505089"
+ },
+ "ARC INDEPENDENCE": {
+  "checked": "2026-10-19",
+  "imo": "9332925"
+ },
+ "ARISTEIA": {
+  "checked": "2026-10-19",
+  "imo": null
+ },
+ "BUDAPEST EXPRESS": {
+  "checked": "2026-10-19",
+  "imo": "9450430"
+ },
+ "CANVASBACK": {
+  "checked": "2026-10-19",
+  "imo": "1033535"
+ },
  "CAPE TAINARO": {
   "checked": "2026-10-16",
   "imo": "9706205"
+ },
+ "CARNATION ACE": {
+  "checked": "2026-10-19",
+  "imo": "9544920"
+ },
+ "CENTURY COSMOS": {
+  "checked": "2026-10-19",
+  "imo": "1074137"
+ },
+ "CENTURY HIGHWAY": {
+  "checked": "2026-10-19",
+  "imo": null
  },
  "CMA CGM ALMAVIVA": {
   "checked": "2026-10-16",
@@ -19,6 +59,10 @@
   "checked": "2026-10-16",
   "imo": "9966764"
  },
+ "CORNEILLE": {
+  "checked": "2026-10-19",
+  "imo": "9409170"
+ },
  "COSCO SANTOS": {
   "checked": "2026-10-17",
   "imo": "9484376"
@@ -31,17 +75,125 @@
   "checked": "2026-10-16",
   "imo": "9461477"
  },
+ "EUROPEAN HIGHWAY": {
+  "checked": "2026-10-19",
+  "imo": "9206011"
+ },
+ "EVER ELITE": {
+  "checked": "2026-10-19",
+  "imo": "9241281"
+ },
+ "EVER MACH": {
+  "checked": "2026-10-19",
+  "imo": "9935210"
+ },
+ "EVER MODE": {
+  "checked": "2026-10-19",
+  "imo": "9935296"
+ },
+ "EVER MOST": {
+  "checked": "2026-10-19",
+  "imo": "9935337"
+ },
+ "EVER SALUTE": {
+  "checked": "2026-10-19",
+  "imo": "9300477"
+ },
+ "EVER SMILE": {
+  "checked": "2026-10-19",
+  "imo": "9300415"
+ },
+ "EVER STRONG": {
+  "checked": "2026-10-19",
+  "imo": "9300441"
+ },
+ "EVER SUMMIT": {
+  "checked": "2026-10-19",
+  "imo": "9300453"
+ },
  "EXPRESS ROME": {
   "checked": "2026-10-16",
   "imo": "9484936"
+ },
+ "FRANKFURT EXPRESS": {
+  "checked": "2026-10-19",
+  "imo": "9450442"
+ },
+ "GLOVIS LEGEND": {
+  "checked": "2026-10-19",
+  "imo": "1063281"
+ },
+ "GLOVIS TREASURE": {
+  "checked": "2026-10-19",
+  "imo": "9983152"
+ },
+ "GLOVIS TRUST": {
+  "checked": "2026-10-19",
+  "imo": "9983140"
+ },
+ "HYUNDAI FORWARD": {
+  "checked": "2026-10-19",
+  "imo": "9330707"
+ },
+ "IRIS ACE": {
+  "checked": "2026-10-19",
+  "imo": "9515474"
  },
  "LAUTOKA CHIEF": {
   "checked": "2026-10-17",
   "imo": "9868431"
  },
+ "LAVENDER ACE": {
+  "checked": "2026-10-19",
+  "imo": "9363948"
+ },
+ "LIBERTY PASSION": {
+  "checked": "2026-10-19",
+  "imo": "9777888"
+ },
+ "LIBERTY PEACE": {
+  "checked": "2026-10-19",
+  "imo": "9777890"
+ },
+ "LIBRA LEADER": {
+  "checked": "2026-10-19",
+  "imo": "9174490"
+ },
  "LOTUS A": {
   "checked": "2026-10-17",
   "imo": "9461465"
+ },
+ "MAERSK TORINO": {
+  "checked": "2026-10-19",
+  "imo": "1040863"
+ },
+ "MANULANI": {
+  "checked": "2026-10-19",
+  "imo": "9273674"
+ },
+ "MATSON ANCHORAGE": {
+  "checked": "2026-10-19",
+  "imo": "8419142"
+ },
+ "MATSON KODIAK": {
+  "checked": "2026-10-19",
+  "imo": "8419166"
+ },
+ "MAUNAWILI": {
+  "checked": "2026-10-19",
+  "imo": "9268538"
+ },
+ "MIDNIGHT SUN": {
+  "checked": "2026-10-19",
+  "imo": "7307110"
+ },
+ "MODERN LINK": {
+  "checked": "2026-10-19",
+  "imo": "9188829"
+ },
+ "MORNING LUCY": {
+  "checked": "2026-10-19",
+  "imo": "9383431"
  },
  "MSC BOSTON": {
   "checked": "2026-10-16",
@@ -87,6 +239,34 @@
   "checked": "2026-10-16",
   "imo": "9861885"
  },
+ "NORTH STAR": {
+  "checked": "2026-10-19",
+  "imo": "9978676"
+ },
+ "ONE DURBAN": {
+  "checked": "2026-10-19",
+  "imo": "9567673"
+ },
+ "ONE FANTASTIC": {
+  "checked": "2026-10-19",
+  "imo": "9936381"
+ },
+ "ONE MAJESTY": {
+  "checked": "2026-10-19",
+  "imo": "9424912"
+ },
+ "ONE MODERN": {
+  "checked": "2026-10-19",
+  "imo": "9475636"
+ },
+ "ONE OWL": {
+  "checked": "2026-10-19",
+  "imo": "9741449"
+ },
+ "ONE SYNERGY": {
+  "checked": "2026-10-19",
+  "imo": "9976197"
+ },
  "OOCL NEW YORK": {
   "checked": "2026-10-16",
   "imo": "9198109"
@@ -102,6 +282,38 @@
  "OOCL SEATTLE": {
   "checked": "2026-10-17",
   "imo": "9984431"
+ },
+ "PATARA": {
+  "checked": "2026-10-19",
+  "imo": "9491898"
+ },
+ "POLARIS MILA": {
+  "checked": "2026-10-19",
+  "imo": "9289908"
+ },
+ "R.J. PFEIFFER": {
+  "checked": "2026-10-19",
+  "imo": null
+ },
+ "RED COSMOS": {
+  "checked": "2026-10-19",
+  "imo": "9748459"
+ },
+ "RJ PFEIFFER": {
+  "checked": "2026-10-19",
+  "imo": "9002037"
+ },
+ "SALVIA ACE": {
+  "checked": "2026-10-19",
+  "imo": "9338876"
+ },
+ "SANTA RITA": {
+  "checked": "2026-10-19",
+  "imo": "9619098"
+ },
+ "SHANGHAI HIGHWAY": {
+  "checked": "2026-10-19",
+  "imo": "9294343"
  },
  "SM MUMBAI": {
   "checked": "2026-10-16",
@@ -119,6 +331,38 @@
   "checked": "2026-10-16",
   "imo": "9464704"
  },
+ "SOO SHIN": {
+  "checked": "2026-10-19",
+  "imo": "9166704"
+ },
+ "SPIKE": {
+  "checked": "2026-10-19",
+  "imo": "9976628"
+ },
+ "SWIFT ACE": {
+  "checked": "2026-10-19",
+  "imo": "9338838"
+ },
+ "THEMIS LEADER": {
+  "checked": "2026-10-19",
+  "imo": "9553115"
+ },
+ "THEMISA": {
+  "checked": "2026-10-19",
+  "imo": "9722314"
+ },
+ "TONGALA": {
+  "checked": "2026-10-19",
+  "imo": "9278105"
+ },
+ "TOURMALINE ACE": {
+  "checked": "2026-10-19",
+  "imo": "9979084"
+ },
+ "VIENNA EXPRESS": {
+  "checked": "2026-10-19",
+  "imo": "9450416"
+ },
  "WESTWOOD COLUMBIA": {
   "checked": "2026-10-16",
   "imo": "9226047"
@@ -134,5 +378,21 @@
  "XIN ZHAN JIANG": {
   "checked": "2026-10-17",
   "imo": "9378814"
+ },
+ "YM COSMOS": {
+  "checked": "2026-10-19",
+  "imo": "9198288"
+ },
+ "YM PLUM": {
+  "checked": "2026-10-19",
+  "imo": "9198264"
+ },
+ "YM TUTORIAL": {
+  "checked": "2026-10-19",
+  "imo": "9792618"
+ },
+ "YM WEALTH": {
+  "checked": "2026-10-19",
+  "imo": "9278088"
  }
 }
