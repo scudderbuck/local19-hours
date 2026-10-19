@@ -290,6 +290,7 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden
 <div class="row"><button type="button" id="up1" data-up="first" aria-pressed="false">First up (AM)</button><button type="button" id="up2" data-up="second" aria-pressed="false">Second up (PM)</button></div></div>
 <div class="row"><div><label for="shift">Shift</label><select id="shift"><option>1st</option><option>2nd</option><option>3rd</option></select></div>
 <div><label for="hrs">Hours</label><input type="number" id="hrs" step="0.25" min="0" max="48" inputmode="decimal"></div></div>
+<div class="mut" id="hrsHint" aria-live="polite" style="margin-top:4px"></div>
 <p style="margin:8px 0 0"><button type="button" id="xt" class="link" aria-expanded="false">More details ▾</button></p>
 <div id="extras" class="hide">
 <div class="row"><div><label for="st">Start</label><input type="time" id="st"></div><div><label for="en">End</label><input type="time" id="en"></div></div>
@@ -454,7 +455,7 @@ const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman
    status: "direct" = name matches a code in the PMA occupation-code list; "inferred" = code is my best guess, check against your pay stub; "none" = no confident match (rate left for you); "user" = class stated by the user, no code.
    Rates autofill from the class (see RATES). Old PMA-list entries stay under "Other (PMA list)" in JOBS below. */
 const SEATTLE_JOBS=[
-["Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned"],
+["Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned. Pier 66 cruise sheet lists Stevedore as 007 Basic, but PMA 0007 = Holdman, so no code is attached (ambiguous)"],
 ["Sling man","0006","Basic","direct","0006 Frontman/Slingman"],
 ["Lasher","0009","Basic","direct","0009 Lasher"],
 ["Extra Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned"],
@@ -465,12 +466,19 @@ const SEATTLE_JOBS=[
 ["Crane op","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
 ["RTG","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
 ["Bus","0055","Skill 2","user","User-stated code 0055 Lift Truck-Heavy, Skill 2 (PMA list); rates from Skill 2 schedule"],
-["Sweeper","","","none","No matching PMA code; enter yourself"],
+["Sweeper","0037","Skill 1","user","T91/Pier 66 cruise sheets: Sweepers 037 Skill I (PMA 0037 Utility Lift Driver); Skill 1 rates"],
 ["Millwright","","","none","No matching PMA code; enter yourself"],
-["UT man","0037","","inferred","Code 0037 Utility Lift Driver (guess). PMA group Skill 1; rate NOT prefilled"],
+["UT man","0037","","inferred","Code 0037 Utility Lift Driver (guess; Sweeper also uses 0037 per cruise sheets). PMA group Skill 1; rate NOT prefilled"],
 ["Heavy bull","0055","Skill 2","user","User-stated code 0055 Lift Truck-Heavy, Skill 2 (PMA list); rates from Skill 2 schedule"],
-["Porter","","","none","No matching PMA code; enter yourself"],
-["Trucker","","Basic","user","User-stated Basic (non-skilled); no PMA code assigned; rate from Basic schedule"],
+["Porter","0005","Basic","user","Pier 66 cruise sheet: Porters 005 Basic (same PMA code as Dockman); Basic rates"],
+["Trucker","","Basic","user","User-stated Basic (non-skilled); no PMA code assigned (T91 cruise sheet lists Truckers under 005, which is PMA Dockman); rate from Basic schedule"],
+["Dockman","0005","Basic","direct","0005 Dockman (Pier 66 cruise sheet: 005 Basic)"],
+["Skilled holdman","0033","Skill 1","direct","0033 Skilled Holdman (T91/Pier 66 cruise sheets: 033 Skill I)"],
+["Button pusher","0023","Skill 1","direct","0023 Button Pusher (Pier 66 cruise sheet: 023 Skill I)"],
+["Button pusher (conveyor)","0023","Skill 1","direct","0023 Button Pusher, conveyor (Pier 66 cruise sheet: 023 Skill I)"],
+["Gangway operator","0085","Skill 2","user","T91 cruise sheet: Gangway operators 085 Skill II; new job, Skill 2 rates from sheet (gangway is not treated as a crane)"],
+["Ramp","0085","Skill 2","user","Pier 66 cruise sheet: Ramp 085 Skill II; new job, Skill 2 rates from sheet"],
+["Jib operator","0085","Skill 3","user","T91 cruise sheet: Jib operators 085 Skill II; a jib is crane equipment, so it follows the user rule all crane jobs = Skill 3 (same as Crane op)"],
 ["Lokey","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Switch","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Deckman","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
@@ -481,6 +489,15 @@ const SEATTLE_JOBS=[
 ["EC (Exception clerk)","","Chief/Supercargo (30%)","user","User-stated EC is a 30% job (Automation Clerk, PCCCD 1.255) = Chief/Supercargo skill rate. Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
 ["Supercargo","","Chief/Supercargo (30%)","inferred","Ex-Local 52 job. Chief Supervisor & Supercargo skill rate (PCCCD 4.33). Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."]];
 function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||null;}
+/* ===== PIER DEFAULT HOURS (cruise work sheets) — EDIT HERE =====
+   Prefills the Hours box when you pick the pier + job on a new shift; you can always edit it. Keys = job value in the picker.
+   P91 = Terminal 91 cruise sheet (stevedore co. Metro); P66 = Pier 66 sheet (Norwegian Bliss/Encore Sat-Sun 2023). Pay class is NOT changed by this. */
+const PIER_HOURS={
+ "P91":{"Sling man":9,"Skilled holdman":9,"Crane op":11,"0128":11,"Bull":9,"Semi":9,"Gangway operator":12,"Trucker":9,"Sweeper":10,"Jib operator":11,"Bus":11,"Heavy bull":11},
+ "P66":{"Sweeper":10,"Ramp":12,"Porter":9,"Dockman":9,"Sling man":9,"Button pusher":9,"Bull":9,"Skilled holdman":9,"Mobile crane":11,"Button pusher (conveyor)":9}};
+const PIER_HOURS_SRC={"P91":"Terminal 91 cruise sheet","P66":"Pier 66 cruise sheet"};
+function pierKey(p){const t=String(p||"");if(/\b(?:pier|terminal|t)\s*-?\s*91\b/i.test(t))return "P91";if(/\b(?:pier|terminal|t)\s*-?\s*66\b/i.test(t))return "P66";return "";}
+function pierHours(pier,job){const k=pierKey(pier),t=k&&PIER_HOURS[k];return t&&Object.prototype.hasOwnProperty.call(t,job)?t[job]:null;}
 /* Default pay rates: ILWU-PMA Pacific Coast Longshore Contract Document 2022-2028, Wage Schedule 2026/2027
    (eff. 8:00 a.m. Jul 4 2026 - Jul 3 2027), "No Cargo Penalty" table, printed p.161 (PDF p.170). Arrays = [1st ST, 2nd ST, 3rd ST, OT 1st, OT 2nd, OT 3rd].
    Tiers = accumulated work-experience hours (Contract 4.131). Foreman: no 2026-27 figure in the contract/PMA report -> blank (enter your own). */
@@ -603,7 +620,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v58",CACHE_VERSION="l19hours-v58"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v59",CACHE_VERSION="l19hours-v59"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1127,8 +1144,16 @@ function openPicker(){const d=$("date");try{if(d.showPicker)d.showPicker();}catc
  d.addEventListener("focus",()=>{if(Date.now()-lastOpen>800)openPicker();});}
 $("dprev").onclick=()=>shiftDate(-1);$("dnext").onclick=()=>shiftDate(1);
 $("dtoday").onclick=()=>{$("date").value=fmtDate(new Date());$("date").dispatchEvent(new Event("change",{bubbles:true}));};
-function refreshEmp(){$("empl").innerHTML=[...new Set(entries.map(e=>e.employer).filter(Boolean))].map(x=>`<option value="${esc(x)}">`).join("");}
-$("pier").onchange=()=>$("pierC").classList.toggle("hide",$("pier").value!=="__c");
+function refreshEmp(){$("empl").innerHTML=[...new Set(entries.map(e=>e.employer).filter(Boolean).concat(["Metro"]))].map(x=>`<option value="${esc(x)}">`).join("");}
+$("pier").onchange=()=>{$("pierC").classList.toggle("hide",$("pier").value!=="__c");pierHrs();};
+/* pier default hours: fill only when Hours is blank or still holds the last auto-filled value (never overwrite what the user typed or a saved entry) */
+let hrsAuto=null;
+function curPier(){return $("pier").value==="__c"?$("pierC").value:$("pier").value;}
+function pierHrs(){const el=$("hrsHint");if(editId){if(el)el.textContent="";return;}const j=$("job").value,h=pierHours(curPier(),j),v=$("hrs").value,mine=v===""||(hrsAuto!=null&&num(v)===hrsAuto);
+ if(h!=null&&mine){$("hrs").value=h;hrsAuto=h;}else if(h==null&&hrsAuto!=null&&v!==""&&num(v)===hrsAuto){$("hrs").value="";hrsAuto=null;}
+ if(el)el.textContent=h!=null?"Default "+h+"h for "+(seattleJob(j)?j:jobLabel(j))+" from the "+PIER_HOURS_SRC[pierKey(curPier())]+" – edit if your shift differs.":"";
+ otHint();}
+$("pierC").addEventListener("input",pierHrs);
 const tierKey="l19hours.tier";let rateDirty=false;
 $("tier").innerHTML=TIERS.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 function curTier(){let m="manual",t="",tot=0;try{m=localStorage.getItem("l19.tierMode")==="auto"?"auto":"manual";t=localStorage.getItem(tierKey)||"";const st=num(localStorage.getItem("l19.startHrs"));tot=st+entries.reduce((x,e)=>x+num(e.hours),0);}catch(e){}return effectiveTier(m,t,tot,"4001+");}
@@ -1140,7 +1165,7 @@ function applyDefaults(){if(rateDirty)return;const j=$("job").value;const d=j&&j
 $("rate").oninput=$("otrate").oninput=()=>{rateDirty=true;};
 $("tier").onchange=()=>{try{if(localStorage.getItem("l19.tierMode")!=="auto")localStorage.setItem(tierKey,$("tier").value);}catch(e){}applyDefaults();};
 $("shift").onchange=applyDefaults;
-$("job").onchange=()=>{$("jobC").classList.toggle("hide",$("job").value!=="__c");applyDefaults();};
+$("job").onchange=()=>{$("jobC").classList.toggle("hide",$("job").value!=="__c");applyDefaults();pierHrs();};
 let upSlot="";
 function setUp(v){upSlot=v||"";$("up1").setAttribute("aria-pressed",upSlot==="first");$("up2").setAttribute("aria-pressed",upSlot==="second");}
 function upShow(){const a=upApplies($("job").value);$("upW").classList.toggle("hide",!a);if(!a)setUp("");}
@@ -1151,9 +1176,9 @@ $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
 function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value,$("date").value);
  guarHint();if(isWknd($("date").value)){$("othint").textContent=($("shift").value==="3rd"?WKND_NOTE+" (1.5x base for Basic min 8h; no straight time).":"Weekend: all hours OT (every paid hour at the OT rate; no straight time).");return;}$("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
 function guarHint(){const el=$("guarhint");if(!el)return;const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const n=guarNote({job:$("job").value==="__c"?$("jobC").value:$("job").value,shift:$("shift").value,hours:h==null?0:h});el.textContent=h==null||h===0?"":n;}
-function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null)$("hrs").value=h;otHint();}
+function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null){$("hrs").value=h;hrsAuto=null;const el=$("hrsHint");if(el)el.textContent="";}otHint();}
 $("st").onchange=$("en").onchange=autoHrs;
-$("hrs").oninput=$("ot").oninput=otHint;
+$("hrs").oninput=()=>{hrsAuto=null;const el=$("hrsHint");if(el)el.textContent="";otHint();};$("ot").oninput=otHint;
 function tmHint(){const th=num($("trv").value),mi=num($("mi").value),p=[];
  if(th>0)p.push("Travel "+r2(th)+"h × "+money(travelRateFor($("tier").value)/1)+"/h (½ basic)"+(hidePay?"":" = "+money(Math.round(th*travelRateFor($("tier").value)*100)/100)));
  if(mi>0)p.push(r2(mi)+" mi × $"+CFG.mileRate.toFixed(3).replace(/0$/,"")+(hidePay?"":" = "+money(Math.round(mi*CFG.mileRate*100)/100)+" reimbursement"));
@@ -1164,7 +1189,7 @@ function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHi
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
  {const dp=LS(DPIER,""),dj=LS(DJOB,"");if(dp&&PIERS.includes(dp))$("pier").value=dp;if(dj&&[...$("job").options].some(o=>o.value===dj))$("job").value=dj;upShow();}
  $("tier").value=curTier();
- rateDirty=false;applyDefaults();refreshQuick();}
+ rateDirty=false;applyDefaults();hrsAuto=null;pierHrs();refreshQuick();}
 $("cancel").onclick=()=>{resetForm();show(retTo);retTo="week";};
 $("f").onsubmit=ev=>{ev.preventDefault();
  const pier=$("pier").value==="__c"?$("pierC").value.trim():$("pier").value;
@@ -1583,7 +1608,7 @@ function fillCombo(x){if(!x)return;
  if(PIERS.includes(x.pier)||!x.pier){$("pier").value=x.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=x.pier;$("pierC").classList.remove("hide");}
  const known=[...$("job").options].some(o=>o.value===x.job&&x.job);
  if(known||!x.job){$("job").value=x.job||"";$("jobC").classList.add("hide");}else{$("job").value="__c";$("jobC").value=x.job;$("jobC").classList.remove("hide");}
- $("shift").value=x.shift||"1st";setUp("");upShow();rateDirty=false;applyDefaults();otHint();guarHint();$("hrs").focus();}
+ $("shift").value=x.shift||"1st";setUp("");upShow();rateDirty=false;applyDefaults();pierHrs();otHint();guarHint();$("hrs").focus();}
 /* --- 5. repeat shift --- */
 function repeatSheet(e){if(!e)return;const o=document.createElement("div");o.className="sheet";const def=repeatDefaultDate(e,todayS());
  o.innerHTML=`<div role="dialog" aria-label="Repeat shift"><h3>Repeat shift</h3><div class="mut">${esc(jobLabel(e.job)||"Shift")} · ${esc(e.pier||"")} · ${esc(e.shift)} · ${r2(num(e.hours))}h</div><label for="rpd" style="margin-top:6px">Copy to date</label><input type="date" id="rpd" value="${def}" min="2000-01-01" max="2099-12-31"><div class="mut" id="rpn" aria-live="polite"></div><button class="p" data-m="ok">Repeat shift</button><button data-m="x">Cancel</button></div>`;
@@ -2314,7 +2339,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
