@@ -259,6 +259,9 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .nd{border-top:1px solid var(--bd);padding:12px 0}.nd:first-of-type{border-top:0;padding-top:0}.nd:last-child{padding-bottom:0}
 .nd .nh{font-weight:700}.nd pre{white-space:pre-wrap;word-break:break-word;font:inherit;font-size:1rem;margin:4px 0 0}
 .nd .nl{font-size:.875rem;font-weight:600;color:var(--mut);margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
+/* v55: ships at the chosen needs port (light on navy) */
+#ndSh{margin-top:12px;background:#00214e;color:#f3f5f8;border:2px solid #ffd23f;border-radius:12px;padding:12px;font-size:1.0625rem;line-height:1.4;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box}
+#ndSh h4{margin:0 0 6px;color:#ffd23f;font-size:1.125rem}#ndSh .nsr{border-top:1px solid rgba(255,210,63,.35);padding:8px 0}#ndSh .nsr:first-of-type{border-top:0}#ndSh .nsn{font-weight:800;font-size:1.125rem;color:#fff}#ndSh .nss{color:#e6ecf3}#ndSh .nst{display:inline-block;background:#ffd23f;color:#00214e;font-weight:800;border-radius:6px;padding:0 6px;margin-right:6px;font-size:.9375rem}#ndSh .nse,#ndSh .nsx{color:#e6ecf3}#ndSh .nsw{color:#ffd23f;font-weight:700;margin-top:6px}
 .nd .nb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.nd .nb button{min-height:44px;padding:0 14px}
 html,body{background:#00214e}
 #splash{position:fixed;inset:0;z-index:2147483000;opacity:1;background:#00214e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spf 1.2s linear forwards;-webkit-tap-highlight-color:transparent}
@@ -413,6 +416,7 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden
 <label for="ndS">Shift</label><select id="ndS"><option>1st</option><option>2nd</option><option>3rd</option></select>
 <label for="ndP">Port</label><select id="ndP"><option>Seattle</option><option>Tacoma</option><option>Everett</option><option>Olympia</option><option>Longview</option><option>Vancouver WA</option><option>Aberdeen</option><option>Port Angeles</option><option>Other</option></select>
 <label for="ndT2">Pier / terminal <span class="mut">(optional)</span></label><input id="ndT2" maxlength="80" placeholder="e.g. T5, Pier 91">
+<div id="ndSh" aria-live="polite"></div>
 <label for="ndO">Out-of-port needs</label><textarea id="ndO" maxlength="2000"></textarea>
 <label for="ndG">Gang allocation</label><textarea id="ndG" maxlength="2000"></textarea>
 <div class="ltr" style="margin-top:10px"><button type="button" id="ndPh">📷 Add photo (optional)</button><span id="ndPt"></span></div>
@@ -596,7 +600,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v54",CACHE_VERSION="l19hours-v54"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v55",CACHE_VERSION="l19hours-v55"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -719,6 +723,23 @@ function letterKey(vessel,eta){return String(vessel||"").trim().toUpperCase().re
 function letterExpired(etd,today,days){const d=shDay(etd);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;return addDays(d,days==null?LETTER_KEEP_DAYS:days)<today;}
 function letterLabel(iso){const d=new Date(iso);return isNaN(d)?"":"Letter · "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]+" "+d.getDate();}
 const NEED_PORTS=["Seattle","Tacoma","Everett","Olympia","Longview","Vancouver WA","Aberdeen","Port Angeles","Other"],NEED_SHIFTS=["1st","2nd","3rd"];
+/* v55: Needs port -> ships. vessels.json has no port field: fetch_vessels.py keeps only the NWSA schedule's
+   "Seattle Txx" container rows (today T5, T18), so a vessel's terminal code (T5, T18, any Txx / Pier nn) maps to Seattle.
+   A future "port" field on a vessel wins if present. Other ports have no feed yet -> empty message. */
+const NEED_SHIP_DAYS=7;
+function vesselPort(x){if(!x)return"";const p=String(x.port||"").trim();if(p)return NEED_PORTS.find(q=>q.toLowerCase()===p.toLowerCase())||p;
+ return /^(T\d+|PIER\s*\d+)$/i.test(String(x.terminal||"").trim())?"Seattle":"";}
+function needRef(date,now){const t=fmtDate(now),p=n=>String(n).padStart(2,"0");if(!/^\d{4}-\d{2}-\d{2}$/.test(date||"")||date===t)return t+"T"+p(now.getHours())+":"+p(now.getMinutes());return date+"T00:00";}
+function needShips(v,port,ref,days){days=days==null?NEED_SHIP_DAYS:days;const end=addDays(ref.slice(0,10),days)+"T23:59",ok=[],o={list:[],later:0,portHasData:false};
+ for(const x of Array.isArray(v)?v:[]){if(!x||!x.vessel||vesselPort(x)!==port||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(x.eta||""))continue;o.portHasData=true;
+  const etd=/^\d{4}-\d{2}-\d{2}T/.test(x.etd||"")?x.etd:"";if(etd?etd<=ref:shDay(x.eta)<ref.slice(0,10))continue;
+  if(x.eta>end){o.later++;continue;}ok.push(Object.assign({},x,{status:x.eta<=ref?"now":"due"}));}
+ o.list=ok.sort((a,b)=>a.eta<b.eta?-1:a.eta>b.eta?1:a.vessel<b.vessel?-1:1);return o;}
+function needPierNote(v,port,pier){const t=String(pier||"").toUpperCase().replace(/\s+/g," ").trim();if(!t)return"";const a=Array.isArray(v)?v:[];
+ const hit=a.filter(x=>x&&x.vessel&&String(x.vessel).length>=4&&t.includes(String(x.vessel).toUpperCase().replace(/\s+/g," ").trim()));
+ if(hit.length&&!hit.some(x=>vesselPort(x)===port))return String(hit[0].vessel)+" isn't listed at "+port+". Your Pier / terminal text is kept.";
+ const m=t.match(/\b(T\d+)\b/);if(m&&!hit.length){const own=a.filter(x=>x&&String(x.terminal||"").toUpperCase()===m[1]);if(own.length&&!own.some(x=>vesselPort(x)===port))return m[1]+" is a "+vesselPort(own[0])+" terminal, not "+port+". Your text is kept.";}
+ return"";}
 function telHref(s){s=String(s||"").trim();const d=s.replace(/\D/g,"");if(d.length<7||d.length>15)return"";return"tel:"+(s.charAt(0)==="+"?"+":"")+d;}
 function cleanPhone(s){return String(s||"").replace(/[^\d+\-().\s]/g,"").trim().slice(0,30);}
 function needDateLong(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d||""))return String(d||"");const x=new Date(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10));return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][x.getDay()]+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][x.getMonth()]+" "+x.getDate()+", "+x.getFullYear();}
@@ -1237,7 +1258,7 @@ function wireHist(){
  document.querySelectorAll("#v-hist [data-a]").forEach(b=>b.onclick=()=>addOn(b.dataset.a));}
 let shipData=null,shipStale=false;
 function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
- if(!shipData){sum.innerHTML='<p class="mut">Ship schedule unavailable right now (offline or not published yet). Try Refresh.</p>';list.innerHTML="";up.textContent="";return;}
+ if(!shipData){if(typeof renderNdShips==="function")renderNdShips();sum.innerHTML='<p class="mut">Ship schedule unavailable right now (offline or not published yet). Try Refresh.</p>';list.innerHTML="";up.textContent="";return;}
  const today=fmtDate(new Date()),v=shipData.vessels||[];
  sum.innerHTML=shipSummary(v,today).map(x=>`<div><b>${esc(x)}</b></div>`).join("");
  let u="";if(shipData.updated){const d=new Date(shipData.updated);u="Schedule last updated: "+(isNaN(d)?esc(shipData.updated):d.toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}));
@@ -1246,7 +1267,7 @@ function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
  up.textContent=u;
  const g=shipGroups(v,today);
  const _h=g.length;list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span> <a class="trk" href="${esc(trackUrl(x.vessel,x.imo))}" target="_blank" rel="noopener" style="font-size:.875rem;color:var(--acc)">Track ↗</a><div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div><div class="ltr" data-k="${esc(letterKey(x.vessel,x.eta))}" data-vs="${esc(x.vessel)}" data-eta="${esc(shDay(x.eta))}" data-etd="${esc(shDay(x.etd))}"><button type="button" class="la">📷 Add letter</button><span class="lt"></span></div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';
- if(_h)refreshLetters();}
+ if(_h)refreshLetters();if(typeof renderNdShips==="function")renderNdShips();}
 async function loadShips(){
  try{const r=await fetch("vessels.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json();if(!j||!Array.isArray(j.vessels))throw 0;
   shipData=j;shipStale=false;try{localStorage.setItem(SHIP_KEY,JSON.stringify(j));}catch(e){}}
@@ -1392,12 +1413,20 @@ const ndKey=id=>"need|"+id;
 function ndCtx(){return{k:ndKey(ndPend),vs:"Needs "+($("ndP").value||""),eta:$("ndD").value,etd:""};}
 function ndReset(){if(ndPend&&!needsList().some(n=>n.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});
  ndEdit=null;ndPend=uid();$("ndD").value=todayS();$("ndS").value="1st";$("ndP").value="Seattle";$("ndT2").value="";$("ndO").value="";$("ndG").value="";
- $("ndT").textContent="Today's needs";$("ndSv").textContent="Save note";$("ndCx").classList.add("hide");$("ndPt").innerHTML="";}
+ $("ndT").textContent="Today's needs";$("ndSv").textContent="Save note";$("ndCx").classList.add("hide");$("ndPt").innerHTML="";if(typeof renderNdShips==="function")renderNdShips();}
 async function ndPics(){let all=[];if(ldbOk){try{all=await lAll()||[];}catch(e){}}const by={};for(const r of all)if(String(r.k).startsWith("need|"))(by[r.k]=by[r.k]||[]).push(r);return by;}
 async function refreshNeedPics(){const by=await ndPics();
  const fill=(el,id)=>{const a=(by[ndKey(id)]||[]).sort((x,y)=>x.added<y.added?-1:1);if(!a.length){el.innerHTML="";return;}const url=URL.createObjectURL(a[a.length-1].blob);
   el.innerHTML=`<button type="button" class="th" data-pic="${esc(id)}" aria-label="Open photos"><img alt="" src="${url}"><span>Photo${a.length>1?" · ×"+a.length:""}</span></button>`;};
  document.querySelectorAll("#ndL .npic").forEach(el=>fill(el,el.dataset.id));const f=$("ndPt");if(f&&ndPend)fill(f,ndPend);}
+function renderNdShips(){const el=$("ndSh");if(!el)return;const port=$("ndP").value||"Seattle",h4=`<h4>Ships at ${esc(port)}</h4>`;
+ if(port==="Other"){el.innerHTML=h4+'<div class="nse">Pick a port above to see its ships.</div>';return;}
+ if(!shipData){el.innerHTML=h4+'<div class="nse">Ship schedule not loaded. Tap Refresh under Ships coming.</div>';return;}
+ const v=shipData.vessels||[],r=needShips(v,port,needRef($("ndD").value,new Date())),w=needPierNote(v,port,$("ndT2").value),wh=w?`<div class="nsw">${esc(w)}</div>`:"";
+ if(!r.portHasData){el.innerHTML=h4+`<div class="nse">No ship schedule for ${esc(port)}. The app's feed covers Seattle (T5, T18) only.</div>`+wh;return;}
+ const tm=s=>{const[d,t]=String(s||"").split("T");return d?shDate(d)+" "+(t||"").slice(0,5):"?";},nN=r.list.filter(x=>x.status==="now").length,nD=r.list.length-nN;
+ el.innerHTML=`<h4>Ships at ${esc(port)}${r.list.length?` · ${nN} in port, ${nD} arriving`:""}</h4>`+(r.list.length?r.list.map(x=>`<div class="nsr"><div class="nsn">${esc(x.vessel)}</div><div class="nss"><span class="nst">${esc(x.terminal||"")}</span>${x.status==="now"?"In port now · leaves "+esc(tm(x.etd)):"Arriving "+esc(tm(x.eta))+(x.etd?" · leaves "+esc(tm(x.etd)):"")}</div></div>`).join(""):`<div class="nse">No ships at ${esc(port)} in the next ${NEED_SHIP_DAYS} days.</div>`)+(r.later?`<div class="nsx">+${r.later} more later. See Ships coming below.</div>`:"")+wh;}
+for(const id of["ndP","ndD"])$(id).addEventListener("change",renderNdShips);$("ndT2").addEventListener("input",renderNdShips);
 function renderNeeds(){const g=needsGroups(needsList()),L=$("ndL");
  L.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(needDateLong(r.key))}</h4>${r.items.map(n=>`<div class="nd"><div class="nh">${esc(n.shift)} shift · ${esc(n.port)}${n.pier?" · "+esc(n.pier):""}</div><div class="nl">Out-of-port needs</div><pre>${esc(n.out||"—")}</pre><div class="nl">Gang allocation</div><pre>${esc(n.gang||"—")}</pre><div class="nb"><button type="button" class="p" data-a="share" data-id="${esc(n.id)}">Share</button><button type="button" data-a="edit" data-id="${esc(n.id)}">Edit</button><button type="button" class="d" data-a="del" data-id="${esc(n.id)}">Delete</button><span class="npic" data-id="${esc(n.id)}"></span></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No needs logged yet. Call dispatch, then save what you hear above.</div>';
  refreshNeedPics();}
@@ -1416,7 +1445,7 @@ $("ndL").addEventListener("click",async e=>{const b=e.target.closest("button");i
  if(b.dataset.pic){const id=b.dataset.pic,n=needsList().find(x=>x.id===id);if(n)viewer(ndKey(id),"Needs "+n.port,n.date,"");return;}
  const id=b.dataset.id,n=needsList().find(x=>x.id===id);if(!n)return;
  if(b.dataset.a==="share")shareNeed(n);
- else if(b.dataset.a==="edit"){if(ndPend&&ndPend!==id&&!needsList().some(x=>x.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});ndEdit=id;ndPend=id;$("ndD").value=n.date;$("ndS").value=n.shift;$("ndP").value=n.port;$("ndT2").value=n.pier;$("ndO").value=n.out;$("ndG").value=n.gang;$("ndT").textContent="Edit needs note";$("ndSv").textContent="Update note";$("ndCx").classList.remove("hide");$("ndM").textContent="";refreshNeedPics();$("ndT").scrollIntoView({block:"start"});}
+ else if(b.dataset.a==="edit"){if(ndPend&&ndPend!==id&&!needsList().some(x=>x.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});ndEdit=id;ndPend=id;$("ndD").value=n.date;$("ndS").value=n.shift;$("ndP").value=n.port;$("ndT2").value=n.pier;$("ndO").value=n.out;$("ndG").value=n.gang;$("ndT").textContent="Edit needs note";$("ndSv").textContent="Update note";$("ndCx").classList.remove("hide");$("ndM").textContent="";refreshNeedPics();renderNdShips();$("ndT").scrollIntoView({block:"start"});}
  else if(b.dataset.a==="del"&&confirm("Delete this needs note?")){LSset(NDK,JSON.stringify(needsList().filter(x=>x.id!==id)));try{(await lByKey(ndKey(id))).forEach(r=>lDel(r.id));}catch(_){}if(ndEdit===id)ndReset();renderNeeds();}});
 ndReset();renderNeeds();renderDispatch();
 /* --- banners (backup + shift reminder) --- */
@@ -2169,7 +2198,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needPierNote,NEED_SHIP_DAYS,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
