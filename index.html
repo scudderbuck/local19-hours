@@ -221,6 +221,7 @@ body.pgdrag{overscroll-behavior:none}
 /* v54: letter / needs photos show as large full-width previews (was a 36px thumbnail) */
 #shList .ent>div{flex:1 1 auto;min-width:0}
 .ltr>span,.nd .nb .npic{flex:1 1 100%;min-width:0;max-width:100%;order:-1}.ltr>span:empty,.nd .nb .npic:empty{display:none}.nd .nb .npic{order:0}
+#ndPt{flex:1 1 100%;min-width:0}#ndPt:empty{display:none}.nsp{width:100%;margin-top:8px;min-height:44px}.ndft{display:block;margin-top:6px;font-size:.9375rem}
 .ltr .th,.nd .nb .th{display:block;width:100%;max-width:100%;padding:0;overflow:hidden;text-align:left;min-height:48px}
 .ltr .th img,.nd .nb .th img{display:block;width:100%;height:auto;max-height:min(70vh,560px);object-fit:contain;background:#fff;border-radius:0}
 .ltr .th span,.nd .nb .th span{display:block;padding:8px 12px;font-size:1rem}
@@ -379,6 +380,7 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden
 <div id="pgPic" class="shx"></div>
 <div class="row shx"><button type="button" class="p" id="pgCam">📷 Take photo</button><button type="button" id="pgPh">🖼 Choose from gallery</button></div>
 <div class="row shx"><button type="button" class="p" id="pgShare">Post board update (share)</button></div>
+<div class="row shx"><button type="button" id="pgSnap">📤 Share board picture</button></div>
 <div id="pgShr" class="hide shx"><div class="row"><button type="button" id="pgShB">Share this board</button></div><p id="pgShS" class="mut" aria-live="polite"></p></div>
 <p id="pgUp" class="mut shx"></p>
 <h4 class="pgjh shx">Add peg to this board</h4>
@@ -419,7 +421,7 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden
 <div id="ndSh" aria-live="polite"></div>
 <label for="ndO">Out-of-port needs</label><textarea id="ndO" maxlength="2000"></textarea>
 <label for="ndG">Gang allocation</label><textarea id="ndG" maxlength="2000"></textarea>
-<div class="ltr" style="margin-top:10px"><button type="button" id="ndPh">📷 Add photo (optional)</button><span id="ndPt"></span></div>
+<label style="margin-top:12px">Gang allocation photo <span class="mut">(optional)</span></label><div class="ltr" style="margin-top:4px"><button type="button" id="ndCam">📷 Take photo</button><button type="button" id="ndPh">🖼 Choose from gallery</button><div id="ndPt"></div></div>
 <div class="row" style="margin-top:12px"><button type="submit" class="p" id="ndSv">Save note</button><button type="button" id="ndCx" class="hide">Cancel edit</button></div>
 <p id="ndM" class="mut" aria-live="polite"></p>
 </form></div>
@@ -601,7 +603,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v57",CACHE_VERSION="l19hours-v57"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v58",CACHE_VERSION="l19hours-v58"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -781,6 +783,21 @@ function needText(n){const t=x=>String(x||"").trim();return["Local 19 – Today'
 function needsClean(a){const o=[],seen=new Set();for(const n of Array.isArray(a)?a:[]){if(!n||typeof n!=="object"||!/^\d{4}-\d{2}-\d{2}$/.test(n.date||""))continue;const id=String(n.id||"").slice(0,40);if(!id||seen.has(id))continue;seen.add(id);
  o.push({id,date:n.date,shift:NEED_SHIFTS.includes(n.shift)?n.shift:"1st",port:NEED_PORTS.includes(n.port)?n.port:"Other",pier:String(n.pier||"").slice(0,80),out:String(n.out||"").slice(0,2000),gang:String(n.gang||"").slice(0,2000),created:String(n.created||"").slice(0,30)});}return o;}
 function needsMerge(cur,inc){const m=new Map(needsClean(cur).map(n=>[n.id,n]));needsClean(inc).forEach(n=>m.set(n.id,n));return[...m.values()];}
+/* v58: the unsaved needs/gang form is kept as a draft so a photo added before Save survives reloads and app restarts */
+function ndDraftClean(d){if(!d||typeof d!=="object")return null;const sl=(v,m)=>String(v==null?"":v).slice(0,m),id=sl(d.id,40).replace(/[^\w-]/g,"");if(!id)return null;
+ return{id,edit:sl(d.edit,40).replace(/[^\w-]/g,""),date:/^\d{4}-\d{2}-\d{2}$/.test(d.date||"")?d.date:"",shift:NEED_SHIFTS.includes(d.shift)?d.shift:"1st",port:NEED_PORTS.includes(d.port)?d.port:"Seattle",pier:sl(d.pier,80),out:sl(d.out,2000),gang:sl(d.gang,2000)};}
+function ndDraftEmpty(d){return !d||!(String(d.pier||"").trim()||String(d.out||"").trim()||String(d.gang||"").trim());}
+/* need ids that have photos in IndexedDB but no saved note and are not the current draft (v57 lost these on reload) */
+function needOrphans(keys,noteIds,draftId){const ok=new Set(noteIds||[]),o=[];for(const k of keys||[]){const m=/^need\|(.+)$/.exec(String(k));if(!m)continue;const id=m[1];if(id===draftId||ok.has(id)||o.includes(id))continue;o.push(id);}return o;}
+function needPhotoName(n,i,ext){const b=("Gang_allocation_"+String(n&&n.port||"")+"_"+String(n&&n.date||"")).replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"_").replace(/_+$/,"");return b+(i?"_"+i:"")+"."+(ext||"jpg");}
+function pegSnapName(name,now){now=now instanceof Date&&!isNaN(now)?now:new Date();return(String(name||"Peg board").replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"_")||"Peg_board")+"_"+pegLocalDay(now)+".png";}
+/* v58: drawing model for the shareable board picture. Slip names and pegs only: registration numbers and "my peg" stay on this phone. */
+function pegSnapModel(name,b,gOn,now){b=b||pegBoardNew();now=now instanceof Date&&!isNaN(now)?now:new Date();const cols=pegDim(b.cols,PEG_DEF.cols),rows=pegDim(b.rows,PEG_DEF.rows),at={},legend=[];
+ const where=k=>{const m=String(k||"").split("-");return m.length===2?"col "+m[1]+", slip "+m[0]:"not placed";};
+ for(const j of b.jobs||[]){const p={label:pegAbbr(j.name),name:String(j.name),color:PEG_COLORS[j.color]||PEG_COLORS[0],g:false};legend.push({...p,where:j.pos?where(j.pos):"not placed"});if(j.pos)(at[j.pos]=at[j.pos]||[]).push(p);}
+ for(const g of gOn||[]){if(!g||!g.pos)continue;const p={label:pegAbbr(g.name),name:String(g.name),g:true};legend.push({...p,where:where(g.pos)});(at[g.pos]=at[g.pos]||[]).push(p);}
+ const cells=[];for(let c=1;c<=cols;c++)for(let r=1;r<=rows;r++){const k=pegKey(r,c),v=b.pegs&&b.pegs[k];cells.push({r,c,k,n:v&&v.n?String(v.n):"",pegs:at[k]||[]});}
+ return{title:String(name||"Peg board"),cols,rows,cells,legend,cw:Math.max(72,Math.min(150,Math.floor(4200/cols))),ch:58,when:pegWhen(now),updated:pegWhen(b.updated)};}
 function needsGroups(a){const g={};for(const n of needsClean(a))(g[n.date]=g[n.date]||[]).push(n);return Object.keys(g).sort().reverse().map(k=>({key:k,items:g[k].sort((x,y)=>(y.created||"")>(x.created||"")?1:-1)}));}
 /* ===== Peg boards (pure helpers; manual entries only, no seniority logic) ===== */
 const PEG_BOARDS=["Bull board","Wheat board","Trucker board","Crane board","Stevedore board","Sling board","Little crane board"];
@@ -1349,7 +1366,9 @@ async function lSave(inp,src){const fs=[...inp.files],c=lctx;inp.value="";if(!fs
   for(const f of fs){const b=await downsize(f);
    await lPut({id:rep||uid(),k:c.k,vessel:c.vs,eta:c.eta,etd:c.etd,added:new Date().toISOString(),src:src,blob:b});rep=null;}
   if(c.replaceId)await lDel(c.replaceId).catch(()=>{});
- }catch(e){alert("Couldn't save letter photo: "+(e&&e.message||"storage unavailable"));}
+ }catch(e){alert("Couldn't save photo: "+(e&&e.message||"storage unavailable"));}
+ if(String(c.k).startsWith("need|")&&typeof ndDraftSave==="function")ndDraftSave();
+ try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});}catch(e){}
  await refreshLetters();if(lv.open)viewer(c.k,c.vs,c.eta,c.etd,lv.i);}
 function pick(c){lctx=c;lfile.click();}
 function pickCam(c){lctx=c;lcam.click();}
@@ -1359,6 +1378,12 @@ function dlFiles(fs){fs.forEach((f,i)=>setTimeout(()=>{const u=URL.createObjectU
 async function shareLetters(blobs,vs,eta){const fs=blobs.map((b,i)=>letterFile(b,vs,eta,blobs.length>1?i+1:0)),title=letterTitle(vs,eta);
  try{if(navigator.share&&navigator.canShare&&navigator.canShare({files:fs})){await navigator.share({files:fs,title});return;}}catch(e){if(e&&e.name==="AbortError")return;}
  dlFiles(fs);}
+/* v58: share image files (+ optional text). Web Share with files when the phone supports it; otherwise download the pictures and copy the text. */
+async function shareImgs(files,title,text,m){const say=t=>{if(m)m.textContent=t;};
+ try{if(navigator.share&&navigator.canShare){if(text&&navigator.canShare({files,title,text})){await navigator.share({files,title,text});say("Shared.");return "shared";}
+  if(navigator.canShare({files})){await navigator.share({files,title});say("Shared.");return "shared";}}}catch(e){if(e&&e.name==="AbortError")return "cancel";}
+ dlFiles(files);let ok=false;if(text){try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}}
+ say("Sharing pictures isn't available here, so "+(files.length>1?"they were":"it was")+" downloaded"+(ok?" and the text was copied to your clipboard.":"."));return "downloaded";}
 function lvTeardown(){const d=$("lv");if(d)d.remove();if(lv.off){lv.off();lv.off=null;}if(lv.url){URL.revokeObjectURL(lv.url);lv.url=null;}}
 function lvClose(){if(!lv.open&&!$("lv"))return;lvTeardown();lv.open=false;if(history.state&&history.state.l19lv){try{history.back();}catch(e){}}refreshLetters();}
 window.addEventListener("popstate",()=>{if(lv.open||$("lv")){lvTeardown();lv.open=false;refreshLetters();}});
@@ -1445,13 +1470,29 @@ $("dpCall").onclick=e=>{if($("dpCall").classList.contains("off"))e.preventDefaul
 let ndEdit=null,ndPend=null;
 const ndKey=id=>"need|"+id;
 function ndCtx(){return{k:ndKey(ndPend),vs:"Needs "+($("ndP").value||""),eta:$("ndD").value,etd:""};}
+const NDDR="l19.needDraft";
+function ndDraftSave(){if(!ndPend)return;LSset(NDDR,JSON.stringify({id:ndPend,edit:ndEdit||"",date:$("ndD").value,shift:$("ndS").value,port:$("ndP").value,pier:$("ndT2").value,out:$("ndO").value,gang:$("ndG").value}));}
 function ndReset(){if(ndPend&&!needsList().some(n=>n.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});
+ try{localStorage.removeItem(NDDR);}catch(e){}
  ndEdit=null;ndPend=uid();$("ndD").value=todayS();$("ndS").value="1st";$("ndP").value="Seattle";$("ndT2").value="";$("ndO").value="";$("ndG").value="";
- $("ndT").textContent="Today's needs";$("ndSv").textContent="Save note";$("ndCx").classList.add("hide");$("ndPt").innerHTML="";if(typeof renderNdShips==="function")renderNdShips();}
+ $("ndT").textContent="Today's needs";$("ndSv").textContent="Save note";$("ndCx").classList.add("hide");$("ndPt").innerHTML="";if(typeof renderNdShips==="function")renderNdShips();ndDraftSave();}
+/* on start: bring back the unsaved draft (text + photos) and re-attach any photos v57 orphaned on reload */
+async function ndRestore(){const d=ndDraftClean(lsJson(NDDR,null)),ids=needsList().map(n=>n.id);ndPend=null;ndReset();
+ if(d){const editOk=!!d.edit&&ids.includes(d.edit);ndPend=editOk?d.edit:d.id;ndEdit=editOk?d.edit:null;
+  if(!ndDraftEmpty(d)||editOk){$("ndD").value=d.date||todayS();$("ndS").value=d.shift;$("ndP").value=d.port;$("ndT2").value=d.pier;$("ndO").value=d.out;$("ndG").value=d.gang;}
+  if(editOk){$("ndT").textContent="Edit needs note";$("ndSv").textContent="Update note";$("ndCx").classList.remove("hide");}}
+ let all=[];if(ldbOk){try{all=await lAll()||[];}catch(e){}}
+ const orph=needOrphans(all.map(r=>r.k),ids,ndPend);let n=0,first=null;
+ for(const r of all){const m=/^need\|(.+)$/.exec(String(r.k));if(!m||!orph.includes(m[1]))continue;try{await lPut({...r,k:ndKey(ndPend)});n++;if(!first)first=r;}catch(e){}}
+ if(n&&!ndEdit&&ndDraftEmpty(ndDraftClean({id:ndPend,pier:$("ndT2").value,out:$("ndO").value,gang:$("ndG").value}))){
+  if(first&&/^\d{4}-\d{2}-\d{2}$/.test(first.eta||""))$("ndD").value=first.eta;const pm=/^Needs (.+)$/.exec(first&&first.vessel||"");if(pm&&NEED_PORTS.includes(pm[1]))$("ndP").value=pm[1];}
+ ndDraftSave();renderNdShips();await refreshNeedPics();
+ if(n)$("ndM").textContent="Found "+n+" unsaved photo"+(n===1?"":"s")+" from before and put "+(n===1?"it":"them")+" back in the form. Tap "+(ndEdit?"Update":"Save")+" note to keep "+(n===1?"it":"them")+" with a note.";}
 async function ndPics(){let all=[];if(ldbOk){try{all=await lAll()||[];}catch(e){}}const by={};for(const r of all)if(String(r.k).startsWith("need|"))(by[r.k]=by[r.k]||[]).push(r);return by;}
 async function refreshNeedPics(){const by=await ndPics();
  const fill=(el,id)=>{const a=(by[ndKey(id)]||[]).sort((x,y)=>x.added<y.added?-1:1);if(!a.length){el.innerHTML="";return;}const url=URL.createObjectURL(a[a.length-1].blob);
-  el.innerHTML=`<button type="button" class="th" data-pic="${esc(id)}" aria-label="Open photos"><img alt="" src="${url}"><span>Photo${a.length>1?" · ×"+a.length:""}</span></button>`;};
+  const draft=el.id==="ndPt"&&!needsList().some(n=>n.id===id);
+  el.innerHTML=`<button type="button" class="th" data-pic="${esc(id)}" aria-label="Open photos"><img alt="" src="${url}"><span>Photo${a.length>1?" · ×"+a.length:""} · tap to view full screen</span></button><button type="button" class="nsp" data-shp="${esc(id)}">📤 Share photo${a.length>1?"s":""}</button>${draft?'<span class="mut ndft">Not saved to a note yet. It stays here (even if you close the app) until you tap Save note.</span>':""}`;};
  document.querySelectorAll("#ndL .npic").forEach(el=>fill(el,el.dataset.id));const f=$("ndPt");if(f&&ndPend)fill(f,ndPend);}
 /* v56: quick reference = ships AT BERTH RIGHT NOW at the chosen port (always the current time, not the note's date). */
 function renderNdShips(){const el=$("ndSh");if(!el)return;const port=$("ndP").value||"Seattle",h4=`<h4>At berth now · ${esc(port)}</h4>`;
@@ -1468,7 +1509,11 @@ $("ndP").addEventListener("change",renderNdShips);$("ndT2").addEventListener("in
 function renderNeeds(){const g=needsGroups(needsList()),L=$("ndL");
  L.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(needDateLong(r.key))}</h4>${r.items.map(n=>`<div class="nd"><div class="nh">${esc(n.shift)} shift · ${esc(n.port)}${n.pier?" · "+esc(n.pier):""}</div><div class="nl">Out-of-port needs</div><pre>${esc(n.out||"—")}</pre><div class="nl">Gang allocation</div><pre>${esc(n.gang||"—")}</pre><div class="nb"><button type="button" class="p" data-a="share" data-id="${esc(n.id)}">Share</button><button type="button" data-a="edit" data-id="${esc(n.id)}">Edit</button><button type="button" class="d" data-a="del" data-id="${esc(n.id)}">Delete</button><span class="npic" data-id="${esc(n.id)}"></span></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No needs logged yet. Call dispatch, then save what you hear above.</div>';
  refreshNeedPics();}
+async function needBlobs(id){if(!ldbOk)return[];try{return(await lByKey(ndKey(id))).map(r=>r.blob);}catch(e){return[];}}
+function needFiles(n,blobs){return blobs.map((b,i)=>{const t=b.type||"image/jpeg",ext=t.includes("png")?"png":t.includes("webp")?"webp":"jpg";return new File([b],needPhotoName(n,blobs.length>1?i+1:0,ext),{type:t});});}
+async function shareNeedPics(n){const bl=await needBlobs(n.id);if(!bl.length)return;await shareImgs(needFiles(n,bl),"Gang allocation – "+n.port+" "+n.date,"",$("ndM"));}
 async function shareNeed(n){const text=needText(n),m=$("ndM");
+ {const bl=await needBlobs(n.id);if(bl.length){await shareImgs(needFiles(n,bl),"Local 19 – Today's needs",text,m);return;}}
  try{if(navigator.share){await navigator.share({title:"Local 19 – Today's needs",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
  let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
  if(!ok){try{const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();}catch(e){}}
@@ -1477,15 +1522,19 @@ $("ndF").onsubmit=e=>{e.preventDefault();const d=$("ndD").value;if(!/^\d{4}-\d{2
  const list=needsList(),old=ndEdit&&list.find(n=>n.id===ndEdit),n={id:ndEdit||ndPend,date:d,shift:$("ndS").value,port:$("ndP").value,pier:$("ndT2").value.trim(),out:$("ndO").value.trim(),gang:$("ndG").value.trim(),created:old?old.created:new Date().toISOString()};
  LSset(NDK,JSON.stringify(needsMerge(list,[n])));const ed=!!old;ndPend=null;ndReset();renderNeeds();$("ndM").textContent=ed?"Note updated.":"Note saved.";};
 $("ndCx").onclick=()=>{ndReset();$("ndM").textContent="";};
-$("ndPh").onclick=()=>{if(!ldbOk){$("ndM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pick(ndCtx());};
-$("ndPt").addEventListener("click",e=>{if(!e.target.closest(".th"))return;const c=ndCtx();viewer(c.k,c.vs,c.eta,c.etd);});
+$("ndPh").onclick=()=>{if(!ldbOk){$("ndM").textContent="Photos unavailable (private storage not supported in this browser).";return;}ndDraftSave();pick(ndCtx());};
+$("ndCam").onclick=()=>{if(!ldbOk){$("ndM").textContent="Photos unavailable (private storage not supported in this browser).";return;}ndDraftSave();pickCam(ndCtx());};
+$("ndF").addEventListener("input",ndDraftSave);$("ndF").addEventListener("change",ndDraftSave);
+$("ndPt").addEventListener("click",e=>{if(e.target.closest(".nsp")){shareNeedPics({id:ndPend,port:$("ndP").value,date:$("ndD").value});return;}if(!e.target.closest(".th"))return;const c=ndCtx();viewer(c.k,c.vs,c.eta,c.etd);});
 $("ndL").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
  if(b.dataset.pic){const id=b.dataset.pic,n=needsList().find(x=>x.id===id);if(n)viewer(ndKey(id),"Needs "+n.port,n.date,"");return;}
+ if(b.dataset.shp){const n=needsList().find(x=>x.id===b.dataset.shp);if(n)shareNeedPics(n);return;}
  const id=b.dataset.id,n=needsList().find(x=>x.id===id);if(!n)return;
  if(b.dataset.a==="share")shareNeed(n);
- else if(b.dataset.a==="edit"){if(ndPend&&ndPend!==id&&!needsList().some(x=>x.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});ndEdit=id;ndPend=id;$("ndD").value=n.date;$("ndS").value=n.shift;$("ndP").value=n.port;$("ndT2").value=n.pier;$("ndO").value=n.out;$("ndG").value=n.gang;$("ndT").textContent="Edit needs note";$("ndSv").textContent="Update note";$("ndCx").classList.remove("hide");$("ndM").textContent="";refreshNeedPics();renderNdShips();$("ndT").scrollIntoView({block:"start"});}
+ else if(b.dataset.a==="edit"){if(ndPend&&ndPend!==id&&!needsList().some(x=>x.id===ndPend)){const hp=(await needBlobs(ndPend)).length,ht=!ndDraftEmpty({pier:$("ndT2").value,out:$("ndO").value,gang:$("ndG").value});if((hp||ht)&&!confirm("You have an unsaved note"+(hp?" with a photo":"")+" in the form. Discard it and edit this note instead?"))return;}
+  if(ndPend&&ndPend!==id&&!needsList().some(x=>x.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});ndEdit=id;ndPend=id;$("ndD").value=n.date;$("ndS").value=n.shift;$("ndP").value=n.port;$("ndT2").value=n.pier;$("ndO").value=n.out;$("ndG").value=n.gang;$("ndT").textContent="Edit needs note";$("ndSv").textContent="Update note";$("ndCx").classList.remove("hide");$("ndM").textContent="";ndDraftSave();refreshNeedPics();renderNdShips();$("ndT").scrollIntoView({block:"start"});}
  else if(b.dataset.a==="del"&&confirm("Delete this needs note?")){LSset(NDK,JSON.stringify(needsList().filter(x=>x.id!==id)));try{(await lByKey(ndKey(id))).forEach(r=>lDel(r.id));}catch(_){}if(ndEdit===id)ndReset();renderNeeds();}});
-ndReset();renderNeeds();renderDispatch();
+ndRestore();renderNeeds();renderDispatch();
 /* --- banners (backup + shift reminder) --- */
 function remCfg(){const c=lsJson(REM,{});return {on:!!c.on,time:/^\d{2}:\d{2}$/.test(c.time||"")?c.time:"18:00"};}
 function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=todayS();
@@ -1977,8 +2026,36 @@ async function refreshPegPic(){const el=$("pgPic");if(!el)return;const c=pgCur()
  $("pgCam").textContent=a.length?"📷 Take another photo":"📷 Take photo";
  const pn=$("pgPane");if(!a.length){el.innerHTML="";if(pn&&!pn.classList.contains("hide"))pn.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';return;}const last=a[a.length-1];pgBlob=URL.createObjectURL(last.blob);
  if(pn&&!pn.classList.contains("hide")){pn.innerHTML=`<img alt="Photo of the ${esc(c)} to compare (tap to open full screen)" src="${pgBlob}">`;pn.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
- el.innerHTML=`<button type="button" class="pgp" aria-label="Open photos of ${esc(c)}"><img alt="Photo of ${esc(c)}" src="${pgBlob}"></button><p class="mut pgpl" style="margin:0 0 8px"><b>${last.src==="gal"?"Photo added":"Photo taken"} ${esc(pegWhen(last.added))}</b>${a.length>1?" · "+a.length+" photos (tap to view all, share or delete)":" · tap to view full size, share or delete"}</p>`;
- el.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
+ el.innerHTML=`<button type="button" class="pgp" aria-label="Open photos of ${esc(c)}"><img alt="Photo of ${esc(c)}" src="${pgBlob}"></button><p class="mut pgpl" style="margin:0 0 8px"><b>${last.src==="gal"?"Photo added":"Photo taken"} ${esc(pegWhen(last.added))}</b>${a.length>1?" · "+a.length+" photos (tap to view all, share or delete)":" · tap to view full size, share or delete"}</p><div class="row" style="margin:0 0 8px"><button type="button" id="pgPhS">📤 Share photo</button></div>`;
+ el.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};
+ $("pgPhS").onclick=()=>shareImgs([letterFile(last.blob,"Peg board "+c,pegLocalDay(new Date(last.added)),0)],c+" – board photo","",$("pgM"));}
+/* v58: draw the digital board (slips + pegs) to a PNG for sharing */
+function pegSnapBlob(m){return new Promise((res,rej)=>{try{const pad=16,hh=72,colH=28,F="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif";
+ const W=Math.max(360,m.cols*m.cw+pad*2),cv=document.createElement("canvas"),x=cv.getContext("2d");
+ const fit=(t,w)=>{t=String(t);if(x.measureText(t).width<=w)return t;while(t.length>1&&x.measureText(t+"…").width>w)t=t.slice(0,-1);return t+"…";};
+ /* legend layout */x.font="700 15px "+F;const items=m.legend.map(l=>{const tx=l.name+": "+l.where;return{...l,tx,w:Math.min(W-pad*2,34+x.measureText(tx).width+16)};});
+ let lx=pad,ly=0;const pos=[];for(const it of items){if(lx+it.w>W-pad&&lx>pad){lx=pad;ly+=32;}pos.push({it,x:lx,y:ly});lx+=it.w;}
+ const legH=items.length?ly+32+14:0,top=hh+legH,H=top+colH+m.rows*m.ch+pad+26;
+ const sc=W*H*4<=16e6?2:1;cv.width=W*sc;cv.height=H*sc;x.scale(sc,sc);
+ x.fillStyle="#ffffff";x.fillRect(0,0,W,H);x.fillStyle="#00214e";x.fillRect(0,0,W,hh);
+ x.fillStyle="#ffd23f";x.font="800 26px "+F;x.textBaseline="alphabetic";x.fillText(fit(m.title,W-pad*2),pad,34);
+ x.fillStyle="#e6ecf3";x.font="500 15px "+F;x.fillText(fit("Snapshot "+m.when+(m.updated?" · board updated "+m.updated:""),W-pad*2),pad,58);
+ const chip=(p,cx,cy,r)=>{x.save();x.beginPath();if(p.g){const s=r*2;x.rect(cx-r,cy-r,s,s);x.fillStyle="#10151c";}else{x.arc(cx,cy,r,0,Math.PI*2);x.fillStyle=p.color[1];}x.fill();
+  x.lineWidth=2;x.strokeStyle=p.g?"#ffffff":pegRing(p.color);if(!p.g&&p.color[4])x.setLineDash([3,2]);x.stroke();x.setLineDash([]);x.lineWidth=1;x.strokeStyle="#000";x.beginPath();if(p.g)x.rect(cx-r-1,cy-r-1,r*2+2,r*2+2);else x.arc(cx,cy,r+1.5,0,Math.PI*2);x.stroke();
+  x.fillStyle=p.g?"#ffffff":p.color[2];x.font="800 "+Math.round(r*0.95)+"px "+F;x.textAlign="center";x.textBaseline="middle";x.fillText(p.label,cx,cy+1);x.restore();};
+ x.textBaseline="middle";for(const q of pos){chip(q.it,q.x+14,hh+14+q.y+12,12);x.fillStyle="#14202e";x.font="700 15px "+F;x.textAlign="left";x.fillText(fit(q.it.tx,q.it.w-46),q.x+32,hh+14+q.y+13);}
+ x.fillStyle="#e6ecf3";x.fillRect(pad,top,m.cols*m.cw,colH);x.fillStyle="#00214e";x.font="800 14px "+F;x.textAlign="center";
+ for(let c=1;c<=m.cols;c++)x.fillText("Col "+c,pad+(c-0.5)*m.cw,top+colH/2+1);
+ for(const ce of m.cells){const cx=pad+(ce.c-1)*m.cw,cy=top+colH+(ce.r-1)*m.ch;x.fillStyle=ce.n?"#ffffff":"#f3f6f9";x.fillRect(cx,cy,m.cw,m.ch);x.strokeStyle="#9fb0c2";x.lineWidth=1;x.strokeRect(cx+0.5,cy+0.5,m.cw-1,m.ch-1);
+  x.textAlign="left";x.textBaseline="alphabetic";x.fillStyle="#5b6b7d";x.font="700 11px "+F;x.fillText(String(ce.r),cx+5,cy+14);const nx=cx+5+x.measureText(String(ce.r)).width+5;
+  x.fillStyle=ce.n?"#14202e":"#8a99a8";x.font=(ce.n?"700 ":"italic 500 ")+"13px "+F;x.fillText(fit(ce.n||"(blank)",cx+m.cw-6-nx),nx,cy+16);
+  const pr=10,need=ce.pegs.length*(pr*2+4);let px=cx+m.cw-6-pr-(Math.max(0,need-(m.cw-12)));ce.pegs.slice().reverse().forEach((p,i)=>chip(p,Math.max(cx+pr+4,px-i*(pr*2+4)),cy+m.ch-pr-6,pr));}
+ x.fillStyle="#5b6b7d";x.font="500 12px "+F;x.textAlign="left";x.textBaseline="alphabetic";x.fillText("Shared from ILWU LIFE · slip names and pegs only",pad,H-10);
+ cv.toBlob(b=>b?res(b):rej(new Error("encode")),"image/png");}catch(e){rej(e);}});}
+async function pegShareSnap(name,b,gOn,m){const now=new Date();if(m)m.textContent="Making the board picture…";let bl;
+ try{bl=await pegSnapBlob(pegSnapModel(name,b,gOn,now));}catch(e){if(m)m.textContent="Couldn't draw the board picture on this phone.";return;}
+ const r=await shareImgs([new File([bl],pegSnapName(name,now),{type:"image/png"})],name+" – board picture",name+" – board picture, "+pegWhen(now)+" (ILWU LIFE)",m);if(r==="cancel"&&m)m.textContent="";}
+$("pgSnap").onclick=()=>{const name=pgCur();pegShareSnap(name,pgBoard(name),pegGlobalsOn(pgD,name),$("pgM"));};
 
 $("pgJC").innerHTML=PEG_COLORS.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
 $("pgJA").onclick=()=>{const name=pgCur(),b=pgBoard(name),cv=$("pgJC").value,r=pegJobAdd(b,$("pgJN").value,new Date(),cv===""?undefined:cv);if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);$("pgJN").value="";$("pgM").textContent="Added peg “"+r.job.name+"” to "+name+". Tap it in the legend, then tap a slip circle.";pgRender();};
@@ -2061,9 +2138,10 @@ function shRender(){const el=$("pgSh"),sh=shGet(pgShared);if(!sh){el.innerHTML="
  h+=gr+`</div></div>`;
  const days=pegTakeDays({takes:sh.takes});
  h+=`<details style="margin-top:8px"><summary>Who took what (${sh.takes.length})</summary>${days.length?days.map(g=>`<p><b>${esc(pegDateLong(g.d))}</b></p>`+g.items.slice().reverse().map(t=>`<p style="margin:2px 0">${esc(t.job)} – <b>${esc(t.person)}</b>${t.num?" (#"+t.num+")":""}</p>`).join("")).join(""):'<p class="mut">No takes logged.</p>'}</details>`;
- h+=`<p class="mut" style="margin:8px 0 0">Only board data is shared (slip names, pegs, who took what). Photos, notes, your hours and pay stay on each phone.</p>`;
+ h+=`<div class="row"><button type="button" id="shSnap">📤 Share board picture</button></div><p class="mut" style="margin:8px 0 0">Only board data is shared (slip names, pegs, who took what). Photos, notes, your hours and pay stay on each phone.</p>`;
  if(shAdmin())h+=`<div class="row"><button type="button" class="p" id="shEdit">Edit on this device (copy to my boards)</button></div><div class="row"><button type="button" class="d" id="shStop">Stop sharing (delete the shared copy)</button></div>`;
  el.innerHTML=h;
+ if($("shSnap"))$("shSnap").onclick=()=>pegShareSnap(sh.name,shareToBoard(sh),sh.gl.map(g=>({id:g.id,name:g.name,pos:sh.pl["g:"+g.id]||""})),$("pgM"));
  if($("shEdit"))$("shEdit").onclick=()=>shAdopt(sh);
  if($("shStop"))$("shStop").onclick=async()=>{if(!confirm("Stop sharing “"+sh.name+"”? Everyone in the room loses the shared copy. Local copies stay."))return;
   try{const F=window.l19Fb,f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",sh.id));const m=shMap();for(const k of Object.keys(m))if(m[k]===sh.id)delete m[k];shMapSet(m);pgShared=null;$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Couldn't stop sharing. "+shFriendly(e);}pgRender();};}
@@ -2236,7 +2314,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
