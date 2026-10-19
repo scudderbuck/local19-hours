@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-19T11:45:05-07:00",
+ "updated": "2026-10-19T13:45:06-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -65,39 +65,6 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "9174490"
-  },
-  {
-   "vessel": "Canvasback",
-   "service": "",
-   "terminal": "T2",
-   "agent": "",
-   "eta": "2026-10-17T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false,
-   "imo": "1033535"
-  },
-  {
-   "vessel": "Spike",
-   "service": "",
-   "terminal": "T2",
-   "agent": "",
-   "eta": "2026-10-17T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false,
-   "imo": "9976628"
-  },
-  {
-   "vessel": "IRIS ACE",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-17T03:00",
-   "etd": "2026-10-17T16:00",
-   "port": "Tacoma",
-   "vessel_type": "Ro-Ro",
-   "imo": "9515474"
   },
   {
    "vessel": "MAERSK TORINO",
@@ -182,6 +149,39 @@
    "imo": "9741449"
   },
   {
+   "vessel": "MODERN LINK",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-19T21:00",
+   "etd": "2026-10-20T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9188829"
+  },
+  {
+   "vessel": "Canvasback",
+   "service": "",
+   "terminal": "T2",
+   "agent": "",
+   "eta": "2026-10-20T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "1033535"
+  },
+  {
+   "vessel": "Spike",
+   "service": "",
+   "terminal": "T2",
+   "agent": "",
+   "eta": "2026-10-20T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "9976628"
+  },
+  {
    "vessel": "Century Cosmos",
    "service": "",
    "terminal": "T2",
@@ -191,17 +191,6 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "1074137"
-  },
-  {
-   "vessel": "MODERN LINK",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-20T05:00",
-   "etd": "2026-10-20T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9188829"
   },
   {
    "vessel": "EVER ELITE",
@@ -390,17 +379,6 @@
    "imo": "9002037"
   },
   {
-   "vessel": "Anafi",
-   "service": "",
-   "terminal": "T2",
-   "agent": "",
-   "eta": "2026-10-24T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false,
-   "imo": "9978602"
-  },
-  {
    "vessel": "POLARIS MILA",
    "service": "",
    "terminal": "EB1",
@@ -443,16 +421,6 @@
    "imo": "9278088"
   },
   {
-   "vessel": "Aristeia",
-   "service": "",
-   "terminal": "T2",
-   "agent": "",
-   "eta": "2026-10-25T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false
-  },
-  {
    "vessel": "Soo Shin",
    "service": "",
    "terminal": "T4",
@@ -482,6 +450,17 @@
    "etd": "2026-10-29T14:15",
    "port": "Seattle",
    "imo": "9966764"
+  },
+  {
+   "vessel": "Anafi",
+   "service": "",
+   "terminal": "T2",
+   "agent": "",
+   "eta": "2026-10-26T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "9978602"
   },
   {
    "vessel": "COSCO VENICE",
@@ -554,6 +533,16 @@
    "etd": "2026-10-30T18:00",
    "port": "Tacoma",
    "imo": "9450442"
+  },
+  {
+   "vessel": "Aristeia",
+   "service": "",
+   "terminal": "T2",
+   "agent": "",
+   "eta": "2026-10-28T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false
   },
   {
    "vessel": "PATARA",
