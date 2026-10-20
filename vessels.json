@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-20T05:45:08-07:00",
+ "updated": "2026-10-20T08:45:06-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -55,16 +55,6 @@
   }
  },
  "vessels": [
-  {
-   "vessel": "MAERSK TORINO",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-17T07:30",
-   "etd": "2026-10-20T00:30",
-   "port": "Tacoma",
-   "imo": "1040863"
-  },
   {
    "vessel": "CMA CGM ALMAVIVA",
    "service": "CPNW",
@@ -1168,6 +1158,16 @@
    "imo": "9304459"
   },
   {
+   "vessel": "MATSON ANCHORAGE",
+   "service": "Matson - AK",
+   "terminal": "WST",
+   "agent": "",
+   "eta": "2026-11-11T08:00",
+   "etd": "2026-11-11T20:00",
+   "port": "Tacoma",
+   "imo": "8419142"
+  },
+  {
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
@@ -1199,14 +1199,14 @@
    "imo": "9978951"
   },
   {
-   "vessel": "OOCL OAKLAND",
-   "service": "PNW1",
-   "terminal": "T18",
+   "vessel": "YM MANDATE",
+   "service": "PN1",
+   "terminal": "WUT",
    "agent": "",
-   "eta": "2026-11-12T19:00",
-   "etd": "2026-11-14T04:00",
-   "port": "Seattle",
-   "imo": "9367190"
+   "eta": "2026-11-12T23:00",
+   "etd": "2026-11-16T05:00",
+   "port": "Tacoma",
+   "imo": "9438523"
   },
   {
    "vessel": "XIN ZHAN JIANG",
@@ -1217,6 +1217,16 @@
    "etd": "2026-11-14T07:00",
    "port": "Seattle",
    "imo": "9378814"
+  },
+  {
+   "vessel": "OOCL OAKLAND",
+   "service": "PNW1",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-13T07:00",
+   "etd": "2026-11-14T16:00",
+   "port": "Seattle",
+   "imo": "9367190"
   }
  ]
 }
