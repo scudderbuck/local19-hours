@@ -714,7 +714,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v65",CACHE_VERSION="l19hours-v65"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v66",CACHE_VERSION="l19hours-v66"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1548,7 +1548,7 @@ function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHi
  {const dp=LS(DPIER,""),dj=LS(DJOB,"");if(dp&&PIERS.includes(dp))$("pier").value=dp;if(dj&&[...$("job").options].some(o=>o.value===dj))$("job").value=dj;upShow();}
  $("tier").value=curTier();
  rateDirty=false;applyDefaults();hrsAuto=null;pierHrs();refreshQuick();}
-$("cancel").onclick=()=>{resetForm();show(retTo);retTo="week";};
+$("cancel").onclick=()=>{resetForm();show(retTo,"back");retTo="week";};
 $("f").onsubmit=ev=>{ev.preventDefault();
  const pier=$("pier").value==="__c"?$("pierC").value.trim():$("pier").value;
  const job=$("job").value==="__c"?$("jobC").value.trim():$("job").value;
@@ -1562,8 +1562,8 @@ $("f").onsubmit=ev=>{ev.preventDefault();
   if(num(e.miles)>0)e.mileRate=old&&hasV(old.mileRate)?old.mileRate:r4(CFG.mileRate);}
  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
  save();localStorage.setItem(lastKey,JSON.stringify({rate:e.rate,otRate:e.otRate}));
- wk=weekStart(e.date);selDate=null;refreshEmp();resetForm();if(retTo==="hist"){ha=e.date;}show(retTo);retTo="week";};
-function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";show("add");editId=id;$("qpW").classList.add("hide");
+ wk=weekStart(e.date);selDate=null;refreshEmp();resetForm();if(retTo==="hist"){ha=e.date;}show(retTo,"back");retTo="week";};
+function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";const by=from&&curV===from?window.pageYOffset:null;show("add");backY=by;editId=id;$("qpW").classList.add("hide");
  $("date").value=e.date;
  if(PIERS.includes(e.pier)||!e.pier){$("pier").value=e.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=e.pier;$("pierC").classList.remove("hide");}
  const known=[...$("job").options].some(o=>o.value===e.job&&e.job);
@@ -1572,7 +1572,7 @@ function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retT
  $("emp").value=e.employer||"";$("ves").value=e.vessel||"";$("shift").value=e.shift;$("st").value=e.start||"";$("en").value=e.end||"";
  rateDirty=true;$("hrs").value=e.hours;$("ot").value=(e.otManual!=null?e.otManual:num(e.ot)>0)?e.ot:"";$("rate").value=e.rate||"";$("otrate").value=e.otRate||"";$("trv").value=e.travel||"";$("mi").value=e.miles||"";$("note").value=e.note||"";
  tmHint();setX(!!(e.travel||e.miles||e.note||e.employer||e.vessel||e.start||e.end||(e.otManual!=null?e.otManual:num(e.ot)>0)));otHint();
- $("ftitle").textContent="Edit shift";$("save").textContent="Update shift";$("cancel").classList.remove("hide");scrollTo(0,0);}
+ $("ftitle").textContent="Edit shift";$("save").textContent="Update shift";$("cancel").classList.remove("hide");pageTop();}
 function renderWeek(){const list=weekEntries(entries,wk),t=summarize(list),we=addDays(wk,6);
  const grp=o=>Object.keys(o).map(k=>`<tr><td>${esc(k)}</td><td>${r2(o[k].hours)}h${o[k].ot?` (OT ${r2(o[k].ot)})`:""}${o[k].anyPay?" "+money(o[k].pay):""}</td></tr>`).join("");
 $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previous week">◀</button><div class="t">${wk.slice(5)} → ${we.slice(5)}<div class="mut">Sat–Fri · ${wk.slice(0,4)}</div></div><button id="nw" aria-label="Next week">▶</button></div>
@@ -1597,10 +1597,22 @@ $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0=""
  if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(o&&o.equip&&typeof o.equip==="object"){LSset(EQK,JSON.stringify($("merge").checked?eqMerge(lsJson(EQK,null),o.equip):eqClean(o.equip)));if(typeof eqB!=="undefined"){eqB=eqLoad();pgRender();}}if(o&&o.gear&&typeof o.gear==="object"){try{localStorage.setItem("l19.gear",JSON.stringify({v:1,cards:gearStoreMerge((lsJson("l19.gear",null)||{}).cards,o.gear)}));}catch(_){}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");try{localStorage.removeItem(PGK);}catch(e){}pgD=pegsLoad();pgClose();pgRender();lAll().then(a=>(a||[]).filter(r=>String(r.k).startsWith("peg|")).forEach(r=>lDel(r.id))).then(refreshPegPic).catch(()=>{});renderNeeds();$("msg").textContent="All data deleted.";}};
-function show(v){curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);if(v==="pegs"&&window.l19Sh)window.l19Sh.open();}
+/* v66: every page, sheet and overlay opens at the top of the screen. pageTop() resets the window (and the
+   scrolling element), overlays added to <body> get their own scroll box reset, and Chrome's own scroll
+   restoration is off so a relaunch/reload does not land halfway down the previous page. */
+try{if("scrollRestoration" in history)history.scrollRestoration="manual";}catch(e){}
+function pageTop(){try{window.scrollTo({top:0,left:0,behavior:"instant"});}catch(e){window.scrollTo(0,0);}const se=document.scrollingElement||document.documentElement;if(se)se.scrollTop=0;if(document.body)document.body.scrollTop=0;}
+function pageTo(y){y=Math.max(0,Math.round(y||0));try{window.scrollTo({top:y,left:0,behavior:"instant"});}catch(e){window.scrollTo(0,y);}}
+window.l19Top=pageTop;
+const OVL_SEL=".sheet,.cpop,#ysum,#setup,#tour,#lock,#lv,#gear";
+function ovlTop(n){if(!n||n.nodeType!==1||!n.matches||!n.matches(OVL_SEL))return;const f=()=>{n.scrollTop=0;for(const k of n.children)if(k.scrollTop)k.scrollTop=0;const g=n.querySelector("#gearB");if(g)g.scrollTop=0;};f();requestAnimationFrame(f);}
+try{new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(ovlTop))).observe(document.body,{childList:true});}catch(e){}
+let backY=null;
+function show(v,how){const from=curV;if(how!=="back")backY=null;curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);if(v==="pegs"&&window.l19Sh)window.l19Sh.open();
+ if(how==="back"&&backY!=null){const y=backY;backY=null;pageTo(y);requestAnimationFrame(()=>pageTo(y));}else pageTop();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
-function addOn(d){selDate=d;resetForm();retTo="hist";show("add");}
+function addOn(d){selDate=d;resetForm();retTo="hist";const by=curV==="hist"?window.pageYOffset:null;show("add");backY=by;}
 function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
  return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${esc([e.pier,e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}</div>${trvLine(e)}</button>`;}
 function trvLine(e){const th=num(e.travel),mi=num(e.miles);if(!(th>0||mi>0))return "";const tp=travelPay(e),mp=mileagePay(e);
@@ -2025,7 +2037,7 @@ function setupShow(){if($("setup")){if(!$("lock"))setInert(true);return;}if($("l
  $("suGo").onclick=()=>{const h=Math.max(0,num($("suH").value));LSset(STH,String(h));$("sth").value=h?h:"";LSset(TMODE,"auto");
   if($("suP").value)LSset(DPIER,$("suP").value);if($("suJ").value)LSset(DJOB,$("suJ").value);resetForm();done();};
  $("suSkip").onclick=done;
- setTimeout(()=>{try{$("suH").focus();}catch(e){}},50);}
+ setTimeout(()=>{try{$("suH").focus({preventScroll:true});}catch(e){}},50);}
 /* --- 7. PIN lock --- */
 function pinCfg(){const o=lsJson(PINK,null);return o&&o.salt&&o.hash?o:null;}
 const subtleOk=()=>!!(globalThis.crypto&&globalThis.crypto.subtle);
@@ -2097,7 +2109,7 @@ function openReport(){if($("rpSheet"))return;const o=document.createElement("div
  const close=()=>{o.remove();};$("rpCx").onclick=close;o.onclick=ev=>{if(ev.target===o)close();};
  $("rpGo").onclick=async()=>{const t=reportText({kind:$("rpK").value,job:$("rpJ").value,pier:$("rpP").value,shift:$("rpS").value,tier:$("rpT2").value,text:$("rpX").value,ua:navigator.userAgent});
   const r=await sendText("ILWU LIFE problem report",t);$("rpM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Report shared. Paste it to the beta organizer if needed.":r==="copied"?"Report copied. Paste it to the beta organizer.":"Copy the report from the box, then paste it to the beta organizer.";};
- setTimeout(()=>{try{$("rpK").focus();}catch(e){}},50);}
+ setTimeout(()=>{try{$("rpK").focus({preventScroll:true});}catch(e){}},50);}
 $("rpBtn").onclick=$("rpFt").onclick=openReport;
 /* --- year summary --- */
 function ysYears(){const y=histYears(histMonths(entries,todayS()));return y.length?y:[todayS().slice(0,4)];}
@@ -2119,16 +2131,16 @@ function openYear(year,nopay){if($("ysum"))return;const d=document.createElement
  $("ysCl").onclick=()=>{d.remove();ovInert(false);};$("ysPr").onclick=()=>{try{window.print();}catch(e){$("ysM").textContent="Printing isn't available here.";}};
  $("ysSh").onclick=async()=>{const r=await sendText("ILWU LIFE year summary "+year,yearText(entries,year,{noPay:nopay}));$("ysM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Shared.":r==="copied"?"Summary copied to clipboard.":"Copy the text from the box.";};
  $("ysCs").onclick=async()=>{const r=await shareFile("local19-year-"+year+(nopay?"-hours-only":"")+".csv","text/csv",yearCSV(entries,year,{noPay:nopay}));$("ysM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Shared CSV.":"CSV downloaded.";};
- setTimeout(()=>{try{$("ysCl").focus();}catch(e){}},50);}
+ setTimeout(()=>{try{$("ysCl").focus({preventScroll:true});}catch(e){}},50);}
 ysFill();$("ysN").checked=hidePay;
 $("ysGo").onclick=()=>openYear($("ysY").value,$("ysN").checked);
-{const _sv=show;show=function(v){_sv(v);if(v==="data"){ysFill();$("ysN").checked=hidePay;}};}
+{const _sv=show;show=function(v,how){_sv(v,how);if(v==="data"){ysFill();$("ysN").checked=hidePay;}};}
 /* --- first-run tour --- */
 function tourOpen(){if($("tour"))return;let i=0;const d=document.createElement("div");d.id="tour";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-labelledby","tourT");document.body.appendChild(d);ovInert(true);
  const fin=()=>{LSset(TOURK,"1");d.remove();ovInert(false);};
  const paint=()=>{const c=TOUR_CARDS[i],last=i===TOUR_CARDS.length-1;
   d.innerHTML=`<div class="tc"><div class="tn">Tip ${i+1} of ${TOUR_CARDS.length}</div><h2 id="tourT">${esc(c[0])}</h2><p>${esc(c[1])}</p><div class="row">${i?'<button type="button" id="tBk">Back</button>':""}<button type="button" class="p" id="tNx">${last?"Done":"Next"}</button></div><div class="row"><button type="button" class="link" id="tSk">Skip tour</button></div></div>`;
-  $("tNx").onclick=()=>{if(last)fin();else{i++;paint();}};if($("tBk"))$("tBk").onclick=()=>{i--;paint();};$("tSk").onclick=fin;$("tNx").focus();};
+  $("tNx").onclick=()=>{if(last)fin();else{i++;paint();}};if($("tBk"))$("tBk").onclick=()=>{i--;paint();};$("tSk").onclick=fin;$("tNx").focus({preventScroll:true});};
  paint();}
 function tourMaybe(){if(!tourDue(LS(TOURK,""),!!$("setup")||setupNeeded(entries.length,LS(SUD,"")),!!$("lock")))return;tourOpen();}
 $("tourBtn").onclick=()=>{if($("lock")||$("setup"))return;tourOpen();};
@@ -2177,7 +2189,7 @@ function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=
   if(d.x){if(!confirm("Delete this log entry?"))return;const r=pegTakeDelete(pgBoard(name),d.x,new Date());if(r.ok){pgStore(name,r.board);pgRender();}o.remove();pgLogOpen();}
   if(d.e){const t=pgBoard(name).takes.find(x=>x.id===d.e);if(!t)return;const row=ev.target.parentNode;row.innerHTML=`<input aria-label="Person" id="lgP" maxlength="80" value="${esc(t.person)}"><button type="button" class="p" id="lgS">Save</button>`;$("lgP").focus();
    $("lgS").onclick=()=>{const r=pegTakeEdit(pgBoard(name),d.e,$("lgP").value,new Date());if(!r.ok){$("lgP").setAttribute("aria-invalid","true");return;}pgStore(name,r.board);pgRender();o.remove();pgLogOpen();};}};
- $("lgDn").onclick=()=>o.remove();$("lgDn").focus();}
+ $("lgDn").onclick=()=>o.remove();$("lgDn").focus({preventScroll:true});}
 function pgRender(){if(pgShared&&!shGet(pgShared))pgShared=null;if(pgShared&&shGet(pgShared).eq){pgShared=null;pgEq=true;} /* v61: the live equipment board opens under its own entry */$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
  if(pgEq){eqRender();return;}$("pgGrid").setAttribute("aria-label","Peg board slips (scrolls sideways)");const name=pgCur(),b=pgBoard(name);
  $("pgCols").value=b.cols;$("pgRows").value=b.rows;
@@ -2398,6 +2410,13 @@ $("bbFile").addEventListener("change",async e=>{const f=e.target.files&&e.target
 $("pgBb").addEventListener("click",pgBbClick);$("pgBb2").addEventListener("click",pgBbClick);
 $("pgSel").onchange=()=>{const v=$("pgSel").value;pgClose();$("pgM").textContent="";if(v.slice(0,3)==="sh:"){pgShared=v.slice(3);pgRender();return;}pgShared=null;
  if(v.slice(0,3)==="eq:"){pgEq=true;pgHeld=null;pgMoving=null;LSset("l19.eqSel","1");pgRender();return;}pgEq=false;LSset("l19.eqSel","");pgD.sel=v;pegsSave(pgD);pgRender();};
+/* v66: a board switch (picker, ‹ › or swipe) opens the new board from its top: the grid's own scroll goes back to the
+   top-left and the page scrolls so the "Board" picker/name sits at the top of the screen (the card's long intro is above it).
+   While carrying a name to the equipment board the Day/Night slot bar is put at the top instead, as when carrying starts. */
+function pgTopBoard(){if($("v-pegs").classList.contains("hide"))return;["pgGrid","pgSh","pgPane"].forEach(i=>{const e=$(i);if(e){e.scrollTop=0;e.scrollLeft=0;}});
+ const t=pgCarry&&pgEq&&$("pgBb")&&!$("pgBb").classList.contains("hide")?$("pgBb"):document.querySelector('label[for="pgSel"]')||$("pgSel");if(!t)return;
+ const go=()=>pageTo(t.getBoundingClientRect().top+window.pageYOffset-(t===$("pgBb")?0:8));go();requestAnimationFrame(go);}
+{const _oc=$("pgSel").onchange;$("pgSel").onchange=function(){_oc.apply(this,arguments);pgTopBoard();};}
 /* ===== v62: swipe left/right between boards (same order as the picker; no wrap) ===== */
 function pgNavList(){const o=[...$("pgSel").options];return{vals:o.map(x=>x.value),names:o.map(x=>x.textContent.replace(/ [★🔗]+$/u,"").replace(/^🔗 /u,"").trim())};}
 function pgNavRender(){const el=$("pgPos");if(!el)return;const L=pgNavList(),cur=$("pgSel").value,i=L.vals.indexOf(cur);
@@ -2490,7 +2509,7 @@ function pgGLogOpen(){if($("pgGLogS"))return;const o=pgSheet("pgGLogS"),days=peg
  ${days.length?days.map(g=>`<div class="rlg"><p><b>${esc(pegDateLong(g.d))}</b></p>${g.items.slice().reverse().map(t=>`<p>◆ ${esc(t.peg)} – <b>${esc(t.person)}</b><br><span class="mut">${esc(t.board)}${t.num?" · position #"+t.num:""}</span></p><div class="row"><button type="button" class="d" data-x="${esc(t.id)}">Delete</button></div>`).join("")}</div>`).join(""):'<p class="mut">No global pegs taken yet.</p>'}
  <p class="mut" style="margin:0">Newest first; the last ${PEG_TAKES} are kept. Job-peg takes are in each board's “Who took what” log.</p><button type="button" class="p" id="glDn">Close</button></div>`;
  o.onclick=ev=>{if(ev.target===o){o.remove();return;}const d=ev.target.dataset||{};if(d.x){if(!confirm("Delete this log entry?"))return;const r=pegGlobalDeleteTake(pgD,d.x);o.remove();if(pgGApply(r,""))pgGLogOpen();}};
- $("glDn").onclick=()=>o.remove();$("glDn").focus();}
+ $("glDn").onclick=()=>o.remove();$("glDn").focus({preventScroll:true});}
 function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="gmT" class="rot"><h3 id="gmT">Manage global pegs</h3>
  ${pgD.globals.map(g=>`<div class="rlg"><label style="margin-top:0" for="gn-${esc(g.id)}">Name</label><input id="gn-${esc(g.id)}" maxlength="40" autocomplete="off" value="${esc(g.name)}"><div class="row"><button type="button" class="p" data-s="${esc(g.id)}">Rename</button><button type="button" class="d" data-r="${esc(g.id)}">Remove</button></div></div>`).join("")}
@@ -2502,7 +2521,7 @@ function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
   if(d.r){const g=pegGlobal(pgD,d.r);if(!g||!confirm("Remove the global peg “"+g.name+"”? Its past takes stay in the log."))return;const r=pegGlobalRemove(pgD,d.r);pgGApply(r,"Removed “"+g.name+"”.");redo("Removed.");}};
  $("gnAdd").onclick=()=>{const r=pegGlobalAdd(pgD,$("gnNew").value,new Date());if(!r.ok){$("gmM").textContent=r.error;return;}pgGApply(r,"Added global peg “"+r.peg.name+"”.");redo("Added.");};
  $("gnNew").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("gnAdd").click();}});
- $("gmDn").onclick=()=>o.remove();$("gmDn").focus();}
+ $("gmDn").onclick=()=>o.remove();$("gmDn").focus({preventScroll:true});}
 $("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if(!r.added){$("pgM").textContent="All preset jobs are already on the Bull board.";return;}pgStore(name,r.board);$("pgM").textContent="Added "+r.added+" preset job"+(r.added===1?"":"s")+".";pgRender();};
 /* ===== v60/v61: Equipment reserve board UI ===== */
 function eqLoad(){const raw=lsJson(EQK,null);let b=eqClean(raw);
@@ -2598,7 +2617,7 @@ function eqEditSlot(i,s){if($("eqSS"))return;const v0=eqView(),r=v0.b.rows[i];if
   if(q.undo){eqCommit(q.board,"");eqToast("Removed "+q.undo.slot.n+" from "+r.u+" "+lab+".",{u:r.u,side:s,prev:q.undo.slot,cur:null});return;}
   eqCommit(q.board,"Reserved "+r.u+" "+lab+" for "+eqS(nv,40)+".");if(cur)eqToast("Changed "+r.u+" "+lab+" to "+eqS(nv,40)+".",{u:r.u,side:s,prev:cur,cur:q.board.rows[i][s]});};
  $("eqSv").onclick=save;$("eqN").onkeydown=$("eqO").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();save();}};
- if($("eqCl"))$("eqCl").onclick=()=>{o.remove();eqDel(i,s);};$("eqCx").onclick=()=>o.remove();$("eqN").focus();}
+ if($("eqCl"))$("eqCl").onclick=()=>{o.remove();eqDel(i,s);};$("eqCx").onclick=()=>o.remove();$("eqN").focus({preventScroll:true});}
 function eqEditRow(i){if($("eqRS"))return;const v=eqView(),B=v.b,r=B.rows[i];if(!r)return;if(v.sh&&!shAdmin()){$("pgM").textContent="Only admins can change the unit list.";return;}
  const secs=[...new Set(B.rows.map(x=>x.s).concat(["Units","Sidepicks"]))],o=pgSheet("eqRS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="eqRT" class="rot"><h3 id="eqRT">Unit ${esc(r.u)}</h3>
@@ -2617,7 +2636,7 @@ function eqEditRow(i){if($("eqRS"))return;const v=eqView(),B=v.b,r=B.rows[i];if(
  $("eqRDn").onclick=()=>{const q=eqRowMove(eqView().b,i,1,new Date());done(q,"Moved "+r.u+" down.",q.ok?q.i:null);};
  $("eqRIns").onclick=()=>done(eqRowAdd(eqView().b,$("eqRNew").value,r.s,i,new Date()),"Added unit "+eqS($("eqRNew").value,12)+".");
  $("eqRRm").onclick=()=>{if(!confirm("Remove unit "+r.u+(r.d||r.n?" and its reservations":"")+" from the board?"))return;done(eqRowRemove(eqView().b,i,new Date()),"Removed unit "+r.u+".");};
- $("eqRU").focus();}
+ $("eqRU").focus({preventScroll:true});}
 $("pgGrid").addEventListener("click",e=>{if(!pgEq||pgShared)return;const x=e.target.closest(".eqdel,.eqs,.equ");if(!x)return;const i=+x.dataset.i,s=x.dataset.s;
  if(pgCarry){if(x.classList.contains("equ")){$("pgM").textContent="Tap the Day or Night slot next to the unit to reserve it for "+pgCarry.n+".";return;}eqDrop(i,s);return;}
  if(x.classList.contains("eqdel")){eqDel(i,s);return;}
@@ -3000,8 +3019,8 @@ function paintSetup(){const c=g("chCard");c.innerHTML=head()+'<label for="chN">Y
  '<h4>My ID (uid)</h4><code id="chUid">Loading…</code><div class="row"><button type="button" id="chCp">Copy</button></div><p class="mut" id="chCpM" aria-live="polite" style="margin:0"></p><p class="mut" id="chRl" style="margin:4px 0 0"></p>'+
  '<details open><summary>Owner: make the first admin</summary><ol><li>Tap Copy above.</li><li>Open the Firebase console, project ilwu-life-chat, Firestore Database, Data.</li><li>Go to rooms, your room code (for example LOCAL19), then roles. Add a document: Document ID = your ID (paste), field <b>role</b> (string) = <b>admin</b>.</li><li>Come back here and open Chat again. You now see ADMIN, People and Reports.</li></ol><p class="mut">Your ID belongs to this phone and browser. If site data is cleared or you use a new device you get a new ID, so keep a second admin.</p></details>';
  g("chGo").onclick=()=>{const n=chatName(g("chN").value),k=chatCode(g("chC").value);if(!n){g("chSt").textContent="Please enter a display name.";return;}if(!k){g("chSt").textContent="The code needs 3–30 letters or numbers.";return;}
-  const ch=k!==ls(KC,"");lss(KN,n);lss(KC,k);settings=false;note="";if(ch){msgs=[];rolesStop();}stop();open();};
- if(g("chBk"))g("chBk").onclick=()=>{settings=false;note="";open();};
+  const ch=k!==ls(KC,"");lss(KN,n);lss(KC,k);settings=false;note="";if(ch){msgs=[];rolesStop();}stop();open();toTop();};
+ if(g("chBk"))g("chBk").onclick=()=>{settings=false;note="";open();toTop();};
  g("chCp").onclick=async()=>{const u=uid();if(!u){g("chCpM").textContent="Your ID isn't ready yet (needs internet).";return;}
   try{await navigator.clipboard.writeText(u);g("chCpM").textContent="Copied.";}catch(e){try{const r=document.createRange();r.selectNodeContents(g("chUid"));const sl=window.getSelection();sl.removeAllRanges();sl.addRange(r);g("chCpM").textContent=document.execCommand&&document.execCommand("copy")?"Copied.":"Selected: press and hold to copy.";}catch(x){g("chCpM").textContent="Press and hold the ID to copy it.";}}};
  fillId();if(!FB)load().then(()=>{if(ls(KC,""))rolesStart();fillId();}).catch(e=>{if(g("chUid"))g("chUid").textContent="Not available: "+friendly(e);});}
@@ -3012,22 +3031,23 @@ function paintMain(){const c=g("chCard");if(!g("chL")){
  '<p id="chSt" aria-live="polite"></p><div class="chlist" id="chL" role="log" aria-live="polite" tabindex="0"></div>'+
  '<form class="chsend" id="chF" autocomplete="off"><textarea id="chT" maxlength="500" rows="2" aria-label="Message" placeholder="Message to #'+E(chan)+'"></textarea><button type="submit" class="p" id="chS">Send</button></form>'+
  '<p class="mut" style="margin:6px 0 0">Report any message that is abusive. Moderators and admins can remove messages.</p>';
- g("chSet").onclick=()=>{settings=true;stop();paint();};
- c.querySelectorAll(".chtabs button").forEach(b=>b.onclick=()=>{chan=b.dataset.c;lss(KH,chan);paintMain();});
+ g("chSet").onclick=()=>{settings=true;stop();paint();toTop();};
+ c.querySelectorAll(".chtabs button").forEach(b=>b.onclick=()=>{chan=b.dataset.c;lss(KH,chan);const L0=g("chL");if(L0)delete L0.dataset.s;paintMain();toTop();});
  g("chF").onsubmit=ev=>{ev.preventDefault();send();};
  g("chT").onkeydown=ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();send();}};}
  g("chRm").textContent=ls(KC,"");g("chMe").textContent=ls(KN,"")+(roleLabel(role())?" ("+roleLabel(role())+")":"");
  const rb=g("chRb"),bt=[];if(staff())bt.push('<button type="button" id="chRp">Reports</button>');if(isAdm())bt.push('<button type="button" id="chPp">People</button>');
  rb.innerHTML=bt.join("");rb.classList.toggle("hide",!bt.length);
- if(g("chRp"))g("chRp").onclick=()=>{panel="reports";reps=null;repErr="";repsLoad();paint();};
- if(g("chPp"))g("chPp").onclick=()=>{panel="people";pnote="";paint();};
+ if(g("chRp"))g("chRp").onclick=()=>{panel="reports";reps=null;repErr="";repsLoad();paint();toTop();};
+ if(g("chPp"))g("chPp").onclick=()=>{panel="people";pnote="";paint();toTop();};
  document.querySelectorAll(".chtabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===chan)));
  g("chT").placeholder="Message to #"+chan;g("chSt").textContent=err;
  const me=uid(),L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,list=msgs.filter(m=>m.channel===chan),rl=role();
  L.innerHTML=list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me);return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+E(m.name)+badge(m.uid)+'</div><div class="tx">'+E(m.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep">Report</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>';
  L.querySelectorAll("button[data-a]").forEach(b=>b.onclick=()=>act(b.dataset.a,b.closest(".chm").dataset.id));
  if(near||!L.dataset.s){L.scrollTop=L.scrollHeight;L.dataset.s="1";}}
-function back(){panel="";pnote="";open();}
+function back(){panel="";pnote="";open();toTop();}
+function toTop(){if(window.l19Top)window.l19Top();}
 async function repsLoad(){try{await load();rolesStart();const f=FB.fs,s=await f.getDocs(f.query(f.collection(FB.db,"reports"),f.where("room","==",ls(KC,"")),f.limit(100)));
   reps=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,messageId:String(x.messageId||""),reason:String(x.reason||""),reporter:String(x.reporter||""),ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).sort((a,b)=>b.ms-a.ms);repErr="";}
  catch(e){reps=[];repErr=/permission/.test(e&&e.code||"")?"Couldn't load reports. The server rules may not be updated yet, or you aren't a moderator or admin.":friendly(e);}
