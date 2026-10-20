@@ -94,6 +94,27 @@ button,input,select{font-size:1rem}
 .chat h4{color:#ffd23f;margin:12px 0 4px}.chwarn{border-left:4px solid #ff8a80;padding:6px 10px;margin:8px 0;background:#3a1020;border-radius:6px}
 .chp .row button,.chr .row button{flex:1 1 100%}
 #pgCard.shv .shx{display:none!important}
+#pgCard.eqv .eqx{display:none!important}
+.eqb{width:380px;font-size:calc(17px*var(--bz,1));color:#f2f6ff;background:#07153a;padding-bottom:6px}
+.eqhd,.eqr{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(0,1fr);gap:4px}
+.eqhd{position:sticky;top:0;z-index:2;background:#00214e;color:#ffd23f;font-weight:900;padding:8px 4px;border-bottom:3px solid #ffd23f;font-size:1em}
+.eqsec{background:#ffd23f;color:#00214e;font-weight:900;padding:4px 10px;margin:6px 0 2px;letter-spacing:.06em;text-transform:uppercase;font-size:.9em}
+.eqr{padding:3px 4px;border-bottom:1px solid #2a4a8a;align-items:stretch}
+.eqb .equ{display:block;margin:0;min-height:50px;min-width:0;padding:4px 6px;text-align:left;background:#00214e;color:#fff;border:1px solid #4a6bb5;border-radius:8px;font:inherit;font-weight:900;font-size:1.06em;line-height:1.15;font-variant-numeric:tabular-nums}
+.eqb .equ small{display:block;font-size:.6em;color:#ffd23f;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqc{display:flex;min-width:0;gap:3px}
+.eqb .eqs{flex:1 1 auto;display:block;margin:0;min-width:0;min-height:50px;padding:4px 6px;text-align:left;background:#0d2a66;color:#fff;border:1px dashed #4a6bb5;border-radius:8px;font:inherit;line-height:1.15;overflow:hidden}
+.eqb .eqs.f{background:#123a85;border:2px solid #ffd23f}
+.eqs .nm{display:block;font-weight:800;font-size:.95em;white-space:nowrap;overflow:hidden;line-height:1.12}.eqs .nm.sm{font-size:.8em}.eqs .nm.w2{white-space:normal;overflow-wrap:break-word}
+.eqs .no{display:block;font-size:.72em;color:#ffe58a;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqs .st{display:block;font-size:.68em;color:#c3d1ee;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eqs .ph{color:#8fa6d6;font-weight:600;font-size:.85em}
+.eqb .eqdel{flex:0 0 40px;width:40px;min-width:40px;min-height:44px;margin:0;padding:0;background:#3a0d1c;color:#fff;border:2px solid #ff9b9b;border-radius:8px;font-size:1.1em;font-weight:900;line-height:1}
+.eqro{overflow:hidden;border:2px solid #ffd23f;border-radius:10px;background:#07153a;margin:6px 0}
+.eqsum{margin:4px 0;color:inherit}.eqman{margin-top:8px}.eqman summary{min-height:44px;line-height:44px;font-weight:800;cursor:pointer}
+.eqadd input{flex:1 1 90px;min-width:0}.eqadd select{flex:1 1 100px;min-width:0}
+#eqToast{position:fixed;left:8px;right:8px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:80;max-width:544px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 14px;border-radius:12px;background:#00214e;color:#fff;border:2px solid #ffd23f;font-weight:700;box-shadow:0 4px 18px rgba(0,0,0,.45)}
+#eqToast span{flex:1}#eqToast button{min-height:44px;min-width:80px;background:#ffd23f;color:#00214e;border:0;border-radius:10px;font-weight:900}
 .pgshc{margin:8px 0;font-size:.9375rem}.pgshc .chip{display:inline-block;min-height:44px;margin:4px 6px 0 0;padding:0 12px;border-radius:22px;border:2px solid var(--fg);background:var(--card);font-weight:700}.pgshc .chip[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc)}
 .shban{background:#ffd23f;color:#1a1400;font-weight:800;border-radius:8px;padding:10px 12px;margin:8px 0}
 .shg{display:grid;gap:4px;min-width:min-content}.shgw{overflow:auto;max-height:70vh;border:1px solid var(--bd);border-radius:10px;padding:6px;background:var(--bg)}
@@ -269,9 +290,9 @@ html,body{background:#00214e}
 #splash img{width:50%;max-width:320px;height:auto;display:block}
 #splash b{font-size:1.5rem;letter-spacing:.14em;color:#fff}#splash b i{font-style:normal;color:#ffd23f}
 @keyframes spf{0%,70%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
-body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden;animation:spa 1.2s step-end forwards}
+body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){visibility:hidden;animation:spa 1.2s step-end forwards}
 @keyframes spa{0%,69%{visibility:hidden}70%,100%{visibility:visible}}
-@media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){animation:spb 0s .4s forwards}@keyframes spb{to{visibility:visible}}}
+@media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){animation:spb 0s .4s forwards}@keyframes spb{to{visibility:visible}}}
 </style></head><body style="background:#00214e">
 <div id="splash" aria-hidden="true"><img src="data:image/png;base64,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" alt="" width="160" height="160"><b>ILWU <i>LIFE</i></b></div>
 <header>ILWU LIFE</header>
@@ -373,29 +394,29 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt){visibility:hidden
 <section id="v-pegs" class="hide">
 <div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards</h3>
 <p class="mut" style="margin-top:0">Your own record of the physical peg boards (admins can also share a board live with the whole chat room; shared boards are read-only for everyone else). Pick a board, tap a peg in the legend (or a peg already on a slip) and then tap a slip circle to put it there. The app never decides who gets a job. To move a slip itself, press and hold it, then drag; or open the slip and use Move.</p>
-<div class="gstrip shx" id="pgGl" role="region" aria-label="Global pegs"></div>
+<div class="gstrip shx eqx" id="pgGl" role="region" aria-label="Global pegs"></div>
 <label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
 <div id="pgShC" class="pgshc" aria-live="polite"></div><div id="pgSh" class="hide"></div>
 <div class="row shx" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
-<p id="pgMine" class="mut pgmine shx" aria-live="polite"></p>
+<p id="pgMine" class="mut pgmine shx eqx" aria-live="polite"></p>
 <div id="pgPic" class="shx"></div>
 <div class="row shx"><button type="button" class="p" id="pgCam">📷 Take photo</button><button type="button" id="pgPh">🖼 Choose from gallery</button></div>
 <div class="row shx"><button type="button" class="p" id="pgShare">Post board update (share)</button></div>
 <div class="row shx"><button type="button" id="pgSnap">📤 Share board picture</button></div>
 <div id="pgShr" class="hide shx"><div class="row"><button type="button" id="pgShB">Share this board</button></div><p id="pgShS" class="mut" aria-live="polite"></p></div>
 <p id="pgUp" class="mut shx"></p>
-<h4 class="pgjh shx">Add peg to this board</h4>
-<div class="row pgap shx"><input id="pgJN" maxlength="40" placeholder="Peg name, e.g. Bull 1" aria-label="New peg name" autocomplete="off"><select id="pgJC" aria-label="New peg color"></select><button type="button" id="pgJA" style="flex:0 0 auto">Add peg</button></div>
-<div id="pgPreset" class="hide shx"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
-<div class="row pgsz shx"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
-<div class="row shx" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button></div>
+<h4 class="pgjh shx eqx">Add peg to this board</h4>
+<div class="row pgap shx eqx"><input id="pgJN" maxlength="40" placeholder="Peg name, e.g. Bull 1" aria-label="New peg name" autocomplete="off"><select id="pgJC" aria-label="New peg color"></select><button type="button" id="pgJA" style="flex:0 0 auto">Add peg</button></div>
+<div id="pgPreset" class="hide shx eqx"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
+<div class="row pgsz shx eqx"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
+<div class="row shx eqx" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button></div>
 <div id="pgBb" class="bbbar hide shx"></div><input type="file" id="bbFile" class="hide" accept=".json,application/json,text/plain">
 <div id="pgZb" class="bbzb hide shx" role="group" aria-label="Board zoom"><button type="button" id="bbZm" aria-label="Zoom out">−</button><input type="range" id="bbZs" min="10" max="250" step="1" value="100" aria-label="Board zoom percent"><button type="button" id="bbZa" aria-label="Zoom in">+</button><output id="bbZl" for="bbZs" aria-live="off">100%</output><button type="button" id="bbZf" aria-label="Fit whole board on screen">Fit</button><button type="button" id="bbZ1" aria-label="Zoom to 100 percent">100%</button></div>
 <div id="pgWrap" class="shx"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board slips (scrolls sideways)"></div></div>
 <div id="pgBb2" class="bbbar hide shx"></div>
 <div id="pgEd" class="pged hide shx"></div>
 <p id="pgM" class="mut" aria-live="polite"></p>
-<button type="button" class="d hide shx" id="pgDel" style="width:100%">Remove this custom board</button></div>
+<button type="button" class="d hide shx eqx" id="pgDel" style="width:100%">Remove this custom board</button></div>
 </section>
 <section id="v-chat" class="hide">
 <div class="card chat" id="chCard"></div>
@@ -620,7 +641,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v59",CACHE_VERSION="l19hours-v59"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v60",CACHE_VERSION="l19hours-v60"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1113,6 +1134,76 @@ function pegText(name,b,now){const ks=Object.keys(b.pegs).sort((x,y)=>{const p=x
  if(!f.length)L.push("No positions filled in.");else{L.push("Positions (reading order, left to right, top to bottom):");
   for(const k of f){const v=b.pegs[k];L.push(pegWhere(k,b.cols)+": "+(v.n||"(no name)")+(v.note?" – "+v.note:"")+(v.me?" ★ me":""));}}
  L.push("","Shared "+pegWhen(now)+" from ILWU LIFE");return L.join("\n");}
+/* ===== v60: Equipment reserve board (rows = equipment unit numbers in sections; each row has a Day and a Night name slot). Stored in localStorage "l19.equip", separate from the peg boards. ===== */
+const EQ_NAME="Equipment reserve — Pier 18",EQ_ID="equipment-reserve-pier-18",EQK="l19.equip",EQ_MAX=60,EQ_MARK="eq:type",EQ_KIND="equip-v1",EQ_PHOTO="photo";
+/* transcribed from the photo of the Pier 18 board (Oct 2026). "?" = not fully legible. Tags are copied as written; their meaning is not guessed. */
+const EQ_SEED=[["Units",[["80276"],["80277"],["80278","X"],["80279","X"],["80280"],["80934","crossed out?"],["80935","DAY"],["80937","RAIL / FLIP"],["80938","RAIL / FLIP"],["80939"],["80940"],["80941"],["80944"],["80945"],["80947","RAIL / FLIP"],["80949","RAIL / FLIP"],["80950"],["80951","RAIL / FLIP"],["80952"],["80953","RAIL / FLIP"],["80954","RAIL / FLIP"],["80955"],["80956"],["80957"],["80958"],["80959"],["80960"],["80963"],["80964"],["80965"],["80966"],["80991"],["80992"],["80993"],["928","handwritten"],["962?","handwritten"],["961?","handwritten"]]],
+ ["Sidepicks",[["15906"],["15907"],["15908"],["20900"],["20901"],["20902"],["20903"],["20904"]]]];
+/* names written on the board in the photo: unit -> {d:[name,note]} / {n:[name,note]}. No time stamp (they came from the photo). */
+const EQ_SEED_RES={"80280":{n:["D. Vawsn?","faint"]},"80952":{d:["Mey","CMA"]},"80959":{d:["Eubanks","Floor?"]},"80964":{d:["Jefferson","Floor?"]},"80992":{d:["Wanderich?","Floor"]},"20901":{d:["C. Yanez",""]},"20902":{d:["D. White",""]}};
+function eqS(v,m){return String(v==null?"":v).replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim().slice(0,m);}
+function eqSlot(v){if(!v||typeof v!=="object")return null;const n=eqS(v.n,40);if(!n)return null;let at=Math.floor(Number(v.at));if(!isFinite(at)||at<0)at=0;return{n:n,o:eqS(v.o,24),at:at,by:eqS(v.by,30)};}
+function eqRowClean(x){if(!x||typeof x!=="object")return null;const u=eqS(x.u,12);if(!u)return null;return{u:u,s:eqS(x.s,20)||"Units",t:eqS(x.t,16),d:eqSlot(x.d),n:eqSlot(x.n)};}
+function eqSeed(){const rows=[];for(const [s,list] of EQ_SEED)for(const [u,t] of list){const r={u:u,s:s,t:t||"",d:null,n:null},res=EQ_SEED_RES[u];
+  if(res){for(const k of ["d","n"])if(res[k])r[k]={n:res[k][0],o:res[k][1]||"",at:0,by:EQ_PHOTO};}rows.push(r);}
+ return{name:EQ_NAME,rows:rows,updated:"",seeded:true};}
+function eqClean(b){if(!b||typeof b!=="object"||!Array.isArray(b.rows))return eqSeed();const rows=[],seen=new Set();
+ for(const x of b.rows){if(rows.length>=EQ_MAX)break;const r=eqRowClean(x);if(!r||seen.has(r.u.toLowerCase()))continue;seen.add(r.u.toLowerCase());rows.push(r);}
+ return{name:EQ_NAME,rows:rows,updated:typeof b.updated==="string"?b.updated.slice(0,40):"",seeded:true};}
+function eqSections(b){const out=[],at={};(b.rows||[]).forEach((r,i)=>{if(!at[r.s]){at[r.s]={name:r.s,rows:[]};out.push(at[r.s]);}at[r.s].rows.push({i:i,r:r});});return out;}
+function eqNowMs(now){return now instanceof Date&&!isNaN(now)?now.getTime():(typeof now==="number"&&isFinite(now)?now:Date.now());}
+function eqTouch(b,rows,now){return{...b,rows:rows,updated:new Date(eqNowMs(now)).toISOString()};}
+function eqSide(s){return s==="n"?"n":"d";}
+/* set (or clear, when name is empty) a reservation; any change stamps it with the time and who set it */
+function eqSet(b,i,side,name,note,now,by){side=eqSide(side);const r=b.rows[i];if(!r)return{ok:false,error:"That unit no longer exists."};
+ const n=eqS(name,40),o=eqS(note,24),cur=r[side];
+ if(!n){if(!cur)return{ok:true,board:b,changed:false};return eqClearSlot(b,i,side,now);}
+ if(cur&&cur.n===n&&cur.o===o)return{ok:true,board:b,changed:false};
+ const rows=b.rows.slice();rows[i]={...r,[side]:{n:n,o:o,at:eqNowMs(now),by:eqS(by,30)}};return{ok:true,board:eqTouch(b,rows,now),changed:true,prev:cur||null};}
+function eqClearSlot(b,i,side,now){side=eqSide(side);const r=b.rows[i];if(!r||!r[side])return{ok:false,error:"Nothing to remove."};
+ const rows=b.rows.slice();rows[i]={...r,[side]:null};return{ok:true,board:eqTouch(b,rows,now),changed:true,undo:{i:i,u:r.u,side:side,slot:{...r[side]}}};}
+/* undo a one-tap delete: puts the old name (and its original stamp) back if the slot is still empty */
+function eqRestore(b,u,now){if(!u||!u.slot)return{ok:false,error:"Nothing to undo."};let i=b.rows[u.i]&&b.rows[u.i].u===u.u?u.i:b.rows.findIndex(r=>r.u===u.u);
+ if(i<0)return{ok:false,error:"That unit no longer exists."};if(b.rows[i][u.side])return{ok:false,error:"That slot was filled again, so it was not restored."};
+ const rows=b.rows.slice();rows[i]={...rows[i],[u.side]:eqSlot(u.slot)};return{ok:true,board:eqTouch(b,rows,now)};}
+function eqClear(b,which,now){let c=0;const sides=which==="d"?["d"]:which==="n"?["n"]:["d","n"];const rows=b.rows.map(r=>{let x=r;for(const s of sides)if(x[s]){x={...x,[s]:null};c++;}return x;});
+ return{board:c?eqTouch(b,rows,now):b,count:c};}
+function eqCount(b){let d=0,n=0;for(const r of b.rows){if(r.d)d++;if(r.n)n++;}return{d:d,n:n,units:b.rows.length};}
+function eqUnitOk(b,u,skip){u=eqS(u,12);if(!u)return{ok:false,error:"Type a unit number."};if(b.rows.some((r,j)=>j!==skip&&r.u.toLowerCase()===u.toLowerCase()))return{ok:false,error:"Unit "+u+" is already on the board."};return{ok:true,u:u};}
+function eqRowAdd(b,unit,section,after,now){if(b.rows.length>=EQ_MAX)return{ok:false,error:"The board is full ("+EQ_MAX+" units)."};const q=eqUnitOk(b,unit,-1);if(!q.ok)return q;
+ const s=eqS(section,20)||"Units",rows=b.rows.slice(),r={u:q.u,s:s,t:"",d:null,n:null};let at;
+ if(typeof after==="number"&&after>=0&&after<rows.length){r.s=rows[after].s;at=after+1;}else{let last=-1;rows.forEach((x,j)=>{if(x.s===s)last=j;});at=last<0?rows.length:last+1;}
+ rows.splice(at,0,r);return{ok:true,board:eqTouch(b,rows,now),i:at};}
+function eqRowEdit(b,i,unit,tag,section,now){const r=b.rows[i];if(!r)return{ok:false,error:"That unit no longer exists."};const q=eqUnitOk(b,unit,i);if(!q.ok)return q;
+ const s=eqS(section,20)||r.s,rows=b.rows.slice(),nr={...r,u:q.u,t:eqS(tag,16),s:s};if(s===r.s){rows[i]=nr;return{ok:true,board:eqTouch(b,rows,now),i:i};}
+ rows.splice(i,1);let last=-1;rows.forEach((x,j)=>{if(x.s===s)last=j;});const at=last<0?rows.length:last+1;rows.splice(at,0,nr);return{ok:true,board:eqTouch(b,rows,now),i:at};}
+function eqRowRemove(b,i,now){if(!b.rows[i])return{ok:false,error:"That unit no longer exists."};const rows=b.rows.slice();const gone=rows.splice(i,1)[0];return{ok:true,board:eqTouch(b,rows,now),removed:gone};}
+function eqRowMove(b,i,dir,now){const j=i+(dir<0?-1:1);if(!b.rows[i]||!b.rows[j])return{ok:false,error:"Can't move further."};const rows=b.rows.slice(),a=rows[i],c=rows[j];
+ if(a.s!==c.s){rows[i]={...a,s:c.s};return{ok:true,board:eqTouch(b,rows,now),i:i};} /* at a section edge the unit crosses into the next section */
+ rows[i]=c;rows[j]=a;return{ok:true,board:eqTouch(b,rows,now),i:j};}
+/* compact local stamp, e.g. "10/19 4:52p"; seeded names say "from photo" */
+function eqStamp(sl){if(!sl)return"";if(!sl.at)return sl.by===EQ_PHOTO?"from photo":"";const d=new Date(sl.at);if(isNaN(d))return"";let h=d.getHours();const ap=h<12?"a":"p";h=h%12||12;
+ return(d.getMonth()+1)+"/"+d.getDate()+" "+h+":"+String(d.getMinutes()).padStart(2,"0")+ap+(sl.by&&sl.by!==EQ_PHOTO?" · "+sl.by:"");}
+/* Firestore shape: fits the existing rooms/{room}/boards/{board} rules (no rules change). cols=3: col 1 = unit (+section, tag), col 2 = Day, col 3 = Night; the marker lives in placements (older app versions ignore it and just show a 3-column board). */
+function eqShareBuild(b){const slips={};b.rows.slice(0,EQ_MAX).forEach((r,j)=>{const k=j+1;slips[k+"-1"]={n:r.u,s:r.s,t:r.t};
+  if(r.d)slips[k+"-2"]={n:r.d.n,o:r.d.o,at:r.d.at,by:r.d.by};if(r.n)slips[k+"-3"]={n:r.n.n,o:r.n.o,at:r.n.at,by:r.n.by};});
+ return{name:EQ_NAME,cols:3,rows:Math.max(1,Math.min(EQ_MAX,b.rows.length)),slips:slips,jobs:[],gl:[],placements:{[EQ_MARK]:EQ_KIND},takes:[]};}
+function eqIsDoc(x){return!!(x&&typeof x==="object"&&x.placements&&typeof x.placements==="object"&&x.placements[EQ_MARK]===EQ_KIND);}
+function eqFromDoc(x){if(!eqIsDoc(x))return null;const sp=x.slips&&typeof x.slips==="object"?x.slips:{},n=Math.max(0,Math.min(EQ_MAX,Math.floor(Number(x.rows))||0)),rows=[];
+ for(let k=1;k<=n;k++){const u=sp[k+"-1"];if(!u)continue;rows.push({u:u.n,s:u.s,t:u.t,d:sp[k+"-2"]||null,n:sp[k+"-3"]||null});}
+ const ms=x.updatedAt&&typeof x.updatedAt.toMillis==="function"?x.updatedAt.toMillis():(typeof x.updatedAt==="number"?x.updatedAt:0);
+ return eqClean({rows:rows,updated:ms?new Date(ms).toISOString():""});}
+function eqMerge(cur,inc){const a=eqClean(cur),b=eqClean(inc),rows=a.rows.map(r=>({...r})),idx={};rows.forEach((r,j)=>{idx[r.u.toLowerCase()]=j;});
+ for(const r of b.rows){const j=idx[r.u.toLowerCase()];if(j===undefined){if(rows.length<EQ_MAX){idx[r.u.toLowerCase()]=rows.length;rows.push({...r});}continue;}
+  for(const s of ["d","n"]){const x=rows[j][s],y=r[s];if(y&&(!x||y.at>x.at))rows[j][s]=y;}}
+ return{...a,rows:rows,updated:a.updated>b.updated?a.updated:b.updated};}
+function eqText(b,now){now=now instanceof Date&&!isNaN(now)?now:new Date();const L=[EQ_NAME+" – reservations","Updated: "+(pegWhen(b.updated)||pegWhen(now)),""],c=eqCount(b);
+ const line=(r,s,lab)=>{const v=r[s];if(!v)return;const st=eqStamp(v);L.push("  "+r.u+" "+lab+": "+v.n+(v.o?" ("+v.o+")":"")+(st?" ["+st+"]":""));};
+ if(!c.d&&!c.n)L.push("No units reserved.");
+ for(const sec of eqSections(b)){const has=sec.rows.some(x=>x.r.d||x.r.n);if(!has)continue;L.push(sec.name+":");for(const x of sec.rows){line(x.r,"d","Day");line(x.r,"n","Night");}}
+ L.push("",c.d+" Day, "+c.n+" Night reserved of "+c.units+" units.","Shared "+pegWhen(now)+" from ILWU LIFE");return L.join("\n");}
+function eqSnapModel(b,now){now=now instanceof Date&&!isNaN(now)?now:new Date();const sl=v=>v?{n:v.n,o:v.o,st:eqStamp(v)}:null;
+ return{title:EQ_NAME,when:pegWhen(now),updated:b.updated?pegWhen(b.updated):"",count:eqCount(b),sections:eqSections(b).map(s=>({name:s.name,rows:s.rows.map(x=>({u:x.r.u,t:x.r.t,d:sl(x.r.d),n:sl(x.r.n)}))}))};}
 function letterTitle(vs,eta){return (String(vs||"Ship letter").trim()+" "+(eta||"")).trim();}
 function fitSize(w,h,max){max=max||1600;return w>max?{w:max,h:Math.round(h*max/w)}:{w:w,h:h};}
 /* v54 photo viewer math. Scale s is CSS px per image px; fit = whole image visible. */
@@ -1236,7 +1327,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==b.dataset.x);save();renderWeek();}});}
 function download(name,type,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
 $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0="";try{txt0=await f.text();const inc=validImport(JSON.parse(txt0));
- if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
+ if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(o&&o.equip&&typeof o.equip==="object"){LSset(EQK,JSON.stringify($("merge").checked?eqMerge(lsJson(EQK,null),o.equip):eqClean(o.equip)));if(typeof eqB!=="undefined"){eqB=eqLoad();pgRender();}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");try{localStorage.removeItem(PGK);}catch(e){}pgD=pegsLoad();pgClose();pgRender();lAll().then(a=>(a||[]).filter(r=>String(r.k).startsWith("peg|")).forEach(r=>lDel(r.id))).then(refreshPegPic).catch(()=>{});renderNeeds();$("msg").textContent="All data deleted.";}};
 function show(v){curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
@@ -1480,7 +1571,7 @@ async function shareFile(name,type,text){const f=new File([text],name,{type});
 /* --- 1. backup reminder + export --- */
 function setLastBackup(){LSset(BK,new Date().toISOString());renderBanners();renderLastBk();}
 function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b>"+esc(backupAgo(LS(BK,""),todayS()))+"</b>";}
-async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),dispatch:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),equip:eqClean(lsJson(EQK,null)),dispatch:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
 
@@ -1791,13 +1882,13 @@ function pegsLoad(){const rawTxt=LS(PGK,""),raw=lsJson(PGK,null);if(rawTxt&&!LS(
  if(LS(PGFR,"")!=="1"){const fr=pegFlexRemove(d);d=fr.data;LSset(PGFR,"1");dirty=true;} /* v52: raw data was copied to l19.pegs.v51raw above */
  if(dirty){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
 function pegsSave(d){LSset(PGK,JSON.stringify(d));if(typeof shTouch==="function")shTouch();}
-let pgShared=null,pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
+let pgEq=LS("l19.eqSel","")==="1",eqB=eqLoad(),pgShared=null,pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
 function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
 function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
 function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
 function pgBoard(name){return pgD.boards[name]||pegBoardNew();}
 function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
-function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`;}).join("")+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
+function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared&&!pgEq?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`;}).join("")+`<optgroup label="Reserve boards"><option value="eq:${EQ_ID}"${pgEq&&!pgShared?" selected":""}>🚜 ${esc(EQ_NAME)}${lk[EQ_NAME]?" 🔗":""}</option></optgroup>`+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
  $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));}
 function pgSheet(id){const o=document.createElement("div");o.className="sheet";o.id=id;o.addEventListener("keydown",e=>{if(e.key==="Escape")o.remove();});document.body.appendChild(o);return o;}
 function pgJobEdit(id){if($("pgJobS"))return;const name=pgCur(),b=pgBoard(name),j=pegJob(b,id);if(!j)return;let col=j.color;const o=pgSheet("pgJobS");
@@ -1817,7 +1908,8 @@ function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=
   if(d.e){const t=pgBoard(name).takes.find(x=>x.id===d.e);if(!t)return;const row=ev.target.parentNode;row.innerHTML=`<input aria-label="Person" id="lgP" maxlength="80" value="${esc(t.person)}"><button type="button" class="p" id="lgS">Save</button>`;$("lgP").focus();
    $("lgS").onclick=()=>{const r=pegTakeEdit(pgBoard(name),d.e,$("lgP").value,new Date());if(!r.ok){$("lgP").setAttribute("aria-invalid","true");return;}pgStore(name,r.board);pgRender();o.remove();pgLogOpen();};}};
  $("lgDn").onclick=()=>o.remove();$("lgDn").focus();}
-function pgRender(){if(pgShared&&!shGet(pgShared))pgShared=null;$("pgCard").classList.toggle("shv",!!pgShared);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();const name=pgCur(),b=pgBoard(name);
+function pgRender(){if(pgShared&&!shGet(pgShared))pgShared=null;$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
+ if(pgEq){eqRender();return;}$("pgGrid").setAttribute("aria-label","Peg board slips (scrolls sideways)");const name=pgCur(),b=pgBoard(name);
  $("pgCols").value=b.cols;$("pgRows").value=b.rows;
  $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
  const mine=Object.keys(pgD.boards).filter(k=>Object.values(pgD.boards[k].pegs).some(v=>v.me)).map(k=>{const bb=pgD.boards[k],pk=Object.keys(bb.pegs).find(x=>bb.pegs[x].me),m=pk.split("-");return(k===name?"<b>"+esc(k)+"</b>":esc(k))+": column "+m[1]+", slip "+m[0];});
@@ -1883,18 +1975,18 @@ function pgBarRender(name,b){const el=$("pgBb");if(!el)return;el.classList.remov
  h+=`<p class="mut" style="margin:6px 0 0">${tot.n?tot.n+" names, "+tot.b+" blank slips. ":"No names loaded yet: all slips are blank. Use Import names to load a board file, or tap a slip to type a name. "}Names are never part of the app or website; they stay on this device (and in your own backups).${tot.u?" “?” marks "+tot.u+" name"+(tot.u===1?"":"s")+" that weren't fully legible.":""}</p>`;
  const e2=$("pgBb2");e2.classList.remove("hide");e2.innerHTML=h;}
 /* ===== v50: board zoom (CSS zoom on the .bbz wrapper: real layout, so taps hit the right circle) ===== */
-const PGV="l19.bullZoom";let pgZc=1,pgTouchAt=0,pgEditT=0;
-function pgZPref(){return bullZoomPref(LS(PGV,""),window.innerWidth<=700);}
+const PGV0="l19.bullZoom",PGVE="l19.eqZoom";let pgZc=1,pgTouchAt=0,pgEditT=0;
+function pgZPref(){return bullZoomPref(LS(pgEq?PGVE:PGV0,""),window.innerWidth<=700);}
 function pgZFit(){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return null;const cs=getComputedStyle(g),pad=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0),pv=(parseFloat(cs.paddingTop)||0)+(parseFloat(cs.paddingBottom)||0),prev=bz.style.zoom;
  bz.style.zoom="1";const bb=bz.firstChild,nw=bb.offsetWidth,nh=bb.offsetHeight;bz.style.zoom=prev;
- return bullFitScale(nw,nh,g.clientWidth-pad-2,Math.min(window.innerHeight*0.8,g.clientHeight||1e9)-pv-2);}
+ return bullFitScale(nw,nh,g.clientWidth-pad-2,pgEq?0:Math.min(window.innerHeight*0.8,g.clientHeight||1e9)-pv-2);} /* v60: the equipment board fits its width and scrolls down */
 function pgZUpdate(){const l=$("bbZl"),sl=$("bbZs"),pc=Math.round(pgZc*100);if(l)l.textContent=pc+"%";if(sl&&+sl.value!==pc)sl.value=String(pc);const f=$("bbZf");if(f)f.setAttribute("aria-pressed",String(pgZPref()==="fit"));}
 function pgZApply(){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return;const v=pgZPref();let z;
  if(v==="fit"){z=pgZFit();if(z==null)return;}else z=v;
  bz.style.zoom=String(z);bz.classList.toggle("mini",z<0.6);pgZc=z;pgZUpdate();}
 /* val: number or "fit". ax/ay: point in the grid viewport that should stay put */
 function pgZoomTo(val,ax,ay,persist){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return;const old=pgZc;
- if(persist!==false)LSset(PGV,val==="fit"?"fit":String(bullZoomClamp(val)));
+ if(persist!==false)LSset(pgEq?PGVE:PGV0,val==="fit"?"fit":String(bullZoomClamp(val)));
  let z;if(val==="fit"){z=pgZFit();if(z==null)return;}else z=bullZoomClamp(val);
  if(ax==null){ax=g.clientWidth/2;ay=g.clientHeight/2;}
  const cx=(g.scrollLeft+ax)/old,cy=(g.scrollTop+ay)/old;
@@ -1915,12 +2007,12 @@ window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{
    pgZoomTo(pz.z*dist(t)/pz.d,(t[0].clientX+t[1].clientX)/2-r.left,(t[0].clientY+t[1].clientY)/2-r.top,false);}
   else if(tp&&e.touches.length===1&&Math.hypot(e.touches[0].clientX-tp.x,e.touches[0].clientY-tp.y)>10)tp.mv=true;},{passive:false});
  g.addEventListener("touchend",e=>{
-  if(pz){if(e.touches.length<2){LSset(PGV,String(bullZoomClamp(pgZc)));pz=null;pgZUpdate();}return;}
+  if(pz){if(e.touches.length<2){LSset(pgEq?PGVE:PGV0,String(bullZoomClamp(pgZc)));pz=null;pgZUpdate();}return;}
   pgTouchAt=Date.now();if(pgDrag||Date.now()-pgDragEnd<400){tp=null;last=null;return;}if(!tp||tp.mv||e.touches.length)return;const now=Date.now();
   if(last&&now-tp.t<400&&now-last.t<350&&Math.hypot(tp.x-last.x,tp.y-last.y)<30&&!last.held){
    e.preventDefault();clearTimeout(pgEditT);const r=g.getBoundingClientRect(),ax=tp.x-r.left,ay=tp.y-r.top;last=null;tp=null;
    pgHeld=null;pgClose();$("pgM").textContent="";const to=Math.abs(pgZc-1)<0.02?"fit":1;
-   LSset(PGV,to==="fit"?"fit":"1");const oldz=pgZc,cx=(g.scrollLeft+ax)/oldz,cy=(g.scrollTop+ay)/oldz;pgRender();
+   LSset(pgEq?PGVE:PGV0,to==="fit"?"fit":"1");const oldz=pgZc,cx=(g.scrollLeft+ax)/oldz,cy=(g.scrollTop+ay)/oldz;pgRender();
    if(to===1){g.scrollLeft=cx-ax;g.scrollTop=cy-ay;}return;}
   last={x:tp.x,y:tp.y,t:now,held:tp.held};tp=null;},{passive:false});
  g.addEventListener("touchcancel",()=>{pz=null;tp=null;});
@@ -2030,7 +2122,8 @@ $("bbFile").addEventListener("change",async e=>{const f=e.target.files&&e.target
  if(f.size>500000){$("pgM").textContent="Import failed: that file is too big to be a names file.";return;}
  let t="";try{t=await f.text();}catch(_){$("pgM").textContent="Import failed: couldn't read that file.";return;}pgImportNames(t);});
 $("pgBb").addEventListener("click",pgBbClick);$("pgBb2").addEventListener("click",pgBbClick);
-$("pgSel").onchange=()=>{const v=$("pgSel").value;pgClose();$("pgM").textContent="";if(v.slice(0,3)==="sh:"){pgShared=v.slice(3);pgRender();return;}pgShared=null;pgD.sel=v;pegsSave(pgD);pgRender();};
+$("pgSel").onchange=()=>{const v=$("pgSel").value;pgClose();$("pgM").textContent="";if(v.slice(0,3)==="sh:"){pgShared=v.slice(3);pgRender();return;}pgShared=null;
+ if(v.slice(0,3)==="eq:"){pgEq=true;pgHeld=null;pgMoving=null;LSset("l19.eqSel","1");pgRender();return;}pgEq=false;LSset("l19.eqSel","");pgD.sel=v;pegsSave(pgD);pgRender();};
 $("pgAdd").onclick=()=>{const n=$("pgNew").value.trim().slice(0,40);if(!n){$("pgM").textContent="Type a board name first.";return;}
  const ex=pgNames().find(x=>x.toLowerCase()===n.toLowerCase());if(ex){pgD.sel=ex;pegsSave(pgD);$("pgNew").value="";$("pgM").textContent="That board already exists – switched to it.";pgClose();pgRender();return;}
  if(pgD.custom.length>=30){$("pgM").textContent="Custom board limit reached (30).";return;}
@@ -2043,11 +2136,11 @@ $("pgSz").onclick=()=>{const name=pgCur(),b=pgBoard(name),rv=Number($("pgRows").
  pgClose();pgStore(name,{...r.board,updated:b.updated});$("pgM").textContent="Board size set to "+cv+" columns × "+rv+" rows"+(r.dropped.length?" ("+r.dropped.length+" removed).":".");pgRender();};
 $("pgDel").onclick=async()=>{const n=pgCur();if(PEG_BOARDS.includes(n)||!confirm("Remove the custom board “"+n+"” with all its pegs and photo?"))return;
  pgD=pegBoardDeleted(pgD,n);pgD.custom=pgD.custom.filter(x=>x!==n);delete pgD.boards[n];pgD.sel="";pegsSave(pgD);try{(await lByKey("peg|"+n)).forEach(r=>lDel(r.id));}catch(e){}pgClose();$("pgM").textContent="Removed “"+n+"”.";pgRender();};
-function pgCtx(){const n=pgCur();return{k:"peg|"+n,vs:"Peg board: "+n,eta:"",etd:""};}
+function pgCtx(){const n=pgSelName();return{k:"peg|"+n,vs:"Peg board: "+n,eta:"",etd:""};}
 $("pgPh").onclick=()=>{if(!ldbOk){$("pgM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pick(pgCtx());};
 $("pgCam").onclick=()=>{if(!ldbOk){$("pgM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pickCam(pgCtx());};
-async function refreshPegPic(){const el=$("pgPic");if(!el)return;const c=pgCur();let a=[];if(ldbOk){try{a=await lByKey("peg|"+c);}catch(e){}}
- if(c!==pgCur())return;if(pgBlob){URL.revokeObjectURL(pgBlob);pgBlob=null;}
+async function refreshPegPic(){const el=$("pgPic");if(!el)return;const c=pgSelName();let a=[];if(ldbOk){try{a=await lByKey("peg|"+c);}catch(e){}}
+ if(c!==pgSelName())return;if(pgBlob){URL.revokeObjectURL(pgBlob);pgBlob=null;}
  $("pgCam").textContent=a.length?"📷 Take another photo":"📷 Take photo";
  const pn=$("pgPane");if(!a.length){el.innerHTML="";if(pn&&!pn.classList.contains("hide"))pn.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';return;}const last=a[a.length-1];pgBlob=URL.createObjectURL(last.blob);
  if(pn&&!pn.classList.contains("hide")){pn.innerHTML=`<img alt="Photo of the ${esc(c)} to compare (tap to open full screen)" src="${pgBlob}">`;pn.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
@@ -2080,13 +2173,13 @@ function pegSnapBlob(m){return new Promise((res,rej)=>{try{const pad=16,hh=72,co
 async function pegShareSnap(name,b,gOn,m){const now=new Date();if(m)m.textContent="Making the board picture…";let bl;
  try{bl=await pegSnapBlob(pegSnapModel(name,b,gOn,now));}catch(e){if(m)m.textContent="Couldn't draw the board picture on this phone.";return;}
  const r=await shareImgs([new File([bl],pegSnapName(name,now),{type:"image/png"})],name+" – board picture",name+" – board picture, "+pegWhen(now)+" (ILWU LIFE)",m);if(r==="cancel"&&m)m.textContent="";}
-$("pgSnap").onclick=()=>{const name=pgCur();pegShareSnap(name,pgBoard(name),pegGlobalsOn(pgD,name),$("pgM"));};
+$("pgSnap").onclick=()=>{if(pgEq){eqShareSnap(eqB,$("pgM"));return;}const name=pgCur();pegShareSnap(name,pgBoard(name),pegGlobalsOn(pgD,name),$("pgM"));};
 
 $("pgJC").innerHTML=PEG_COLORS.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
 $("pgJA").onclick=()=>{const name=pgCur(),b=pgBoard(name),cv=$("pgJC").value,r=pegJobAdd(b,$("pgJN").value,new Date(),cv===""?undefined:cv);if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);$("pgJN").value="";$("pgM").textContent="Added peg “"+r.job.name+"” to "+name+". Tap it in the legend, then tap a slip circle.";pgRender();};
 $("pgJN").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("pgJA").click();}});
 function pgUndo(){const name=pgCur(),r=pegUndo(pgBoard(name),new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);pgClose();pgRender();$("pgM").textContent="Undid: "+r.undone.label+".";}
-$("pgShare").onclick=async()=>{const name=pgCur(),text=pegBoardText(name,pgBoard(name),new Date(),pgD),m=$("pgM");
+$("pgShare").onclick=async()=>{const name=pgSelName(),text=pgEq?eqText(eqB,new Date()):pegBoardText(name,pgBoard(name),new Date(),pgD),m=$("pgM");
  try{if(navigator.share){await navigator.share({title:name+" – board update",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
  let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
  if(!ok){try{const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();}catch(e){}}
@@ -2118,6 +2211,111 @@ function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
  $("gnNew").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("gnAdd").click();}});
  $("gmDn").onclick=()=>o.remove();$("gmDn").focus();}
 $("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if(!r.added){$("pgM").textContent="All preset jobs are already on the Bull board.";return;}pgStore(name,r.board);$("pgM").textContent="Added "+r.added+" preset job"+(r.added===1?"":"s")+".";pgRender();};
+/* ===== v60: Equipment reserve board UI ===== */
+function eqLoad(){const raw=lsJson(EQK,null),b=eqClean(raw);if(!raw){try{LSset(EQK,JSON.stringify(b));}catch(e){}}return b;}
+function eqSave(b){eqB=b;LSset(EQK,JSON.stringify(b));if(typeof shTouch==="function")shTouch();}
+function eqBy(){let n="";try{n=window.l19Fb&&window.l19Fb.name?window.l19Fb.name():"";}catch(e){}if(!n)n=LS("l19.chatName","");return chatName(n);}
+function pgSelName(){return pgEq?EQ_NAME:pgCur();}
+function eqSlotHtml(r,i,s,ro){const v=r[s],lab=s==="d"?"Day":"Night",st=eqStamp(v);
+ const inner=v?`<span class="nm">${esc(v.n)}</span>${v.o?`<span class="no">${esc(v.o)}</span>`:""}${st?st.split(" · ").map(x=>`<span class="st">${esc(x)}</span>`).join(""):""}`:`<span class="ph">${ro?"":"+ "}${lab}</span>`;
+ if(ro)return`<div class="eqc"><div class="eqs${v?" f":""}">${inner}</div></div>`;
+ return`<div class="eqc"><button type="button" class="eqs${v?" f":""}" data-i="${i}" data-s="${s}" aria-label="Unit ${esc(r.u)} ${lab}: ${v?esc(v.n)+(v.o?", "+esc(v.o):"")+(st?", "+esc(st):"")+". Tap to edit":"open. Tap to reserve"}">${inner}</button>${v?`<button type="button" class="eqdel" data-i="${i}" data-s="${s}" aria-label="Remove ${esc(v.n)} from unit ${esc(r.u)} ${lab}">✕</button>`:""}</div>`;}
+function eqBoardHtml(b,ro){let t=`<div class="eqb" style="--bz:${pgZoom()}"><div class="eqhd" aria-hidden="true"><span>Unit</span><span>☀ Day</span><span>☾ Night</span></div>`;
+ for(const sec of eqSections(b)){t+=`<div class="eqsec" role="heading" aria-level="4">${esc(sec.name)}</div>`;
+  for(const x of sec.rows){const r=x.r,u=`<span class="un">${esc(r.u)}</span>${r.t?`<small>${esc(r.t)}</small>`:""}`;
+   t+=`<div class="eqr">${ro?`<div class="equ">${u}</div>`:`<button type="button" class="equ" data-i="${x.i}" aria-label="Unit ${esc(r.u)}${r.t?" ("+esc(r.t)+")":""}. Tap to rename, move or remove">${u}</button>`}${eqSlotHtml(r,x.i,"d",ro)}${eqSlotHtml(r,x.i,"n",ro)}</div>`;}}
+ if(!b.rows.length)t+=`<p class="mut" style="padding:8px;color:#dfe8ff">No units yet. Use “Add unit” below.</p>`;
+ return t+"</div>";}
+/* long names shrink a step first, and only wrap if they still do not fit */
+function eqNameFit(g){g.querySelectorAll(".eqs .nm").forEach(e=>{if(e.scrollWidth>e.clientWidth+1){e.classList.add("sm");if(e.scrollWidth>e.clientWidth+1)e.classList.add("w2");}});}
+function eqRender(){const b=eqB,c=eqCount(b),g=$("pgGrid");g.classList.add("bbg");g.setAttribute("aria-label",EQ_NAME+" (scrolls)");
+ $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet (names from the board photo).";
+ const side=LS(PGP,"0")==="1";$("pgWrap").classList.toggle("side",side);$("pgPane").classList.toggle("hide",!side);$("pgZb").classList.remove("hide");
+ const bb=$("pgBb");bb.classList.remove("hide");
+ bb.innerHTML=`<p class="eqsum" role="status"><b>${c.d}</b> Day · <b>${c.n}</b> Night reserved · ${c.units} units</p><div class="row"><button type="button" id="bbPhoto" aria-pressed="${side}">Photo beside board: ${side?"on":"off"}</button><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button></div>`;
+ const secs=[...new Set(b.rows.map(r=>r.s).concat(["Units","Sidepicks"]))];
+ $("pgBb2").classList.remove("hide");
+ $("pgBb2").innerHTML=`<p class="mut" style="margin:6px 0 0">Tap Day or Night to type a name (first initial + last name). Each reservation gets a time stamp. Tap ✕ to remove one (Undo for 5 seconds). Tap a unit number to rename, move or remove it. Pinch or use − / + / Fit to zoom.</p>
+ <details class="eqman"${eqManOpen?" open":""}><summary>Manage units &amp; clear (admin)</summary>
+ <div class="row eqadd"><input id="eqAU" maxlength="12" inputmode="numeric" placeholder="Unit #" aria-label="New unit number" autocomplete="off"><select id="eqAS" aria-label="Section">${secs.map(s=>`<option>${esc(s)}</option>`).join("")}</select><button type="button" id="eqAdd" style="flex:0 0 auto">Add unit</button></div>
+ <div class="row"><button type="button" class="d" id="eqClD">Clear Day</button><button type="button" class="d" id="eqClN">Clear Night</button><button type="button" class="d" id="eqClA">Clear all</button></div>
+ <p class="mut" style="margin:6px 0 0">${shJoined()?(shAdmin()?"You're an admin: use “Share this board with the room” above so everyone sees it live (read-only for them).":"This is your own copy on this phone. Only room admins can change the shared live copy."):"This copy is on this phone. Room admins can share it live from Chat rooms."}</p></details>`;
+ const dm=$("pgBb2").querySelector(".eqman");if(dm)dm.ontoggle=()=>{eqManOpen=dm.open;};
+ g.innerHTML=`<div class="bbz">${eqBoardHtml(b,false)}</div>`;eqNameFit(g);pgZApply();
+ const pane=$("pgPane");if(pane&&!pane.classList.contains("hide")&&!pane.firstChild)pane.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';
+ refreshPegPic();}
+let eqUndoT=0,eqManOpen=false;
+function eqToast(msg,undo){let t=$("eqToast");if(t)t.remove();t=document.createElement("div");t.id="eqToast";t.setAttribute("role","status");
+ t.innerHTML=`<span>${esc(msg)}</span>`+(undo?'<button type="button" id="eqUndo">Undo</button>':"");document.body.appendChild(t);clearTimeout(eqUndoT);
+ if(undo)$("eqUndo").onclick=()=>{clearTimeout(eqUndoT);t.remove();const r=eqRestore(eqB,undo,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}eqSave(r.board);$("pgM").textContent="Restored "+undo.slot.n+" on "+undo.u+".";pgRender();};
+ eqUndoT=setTimeout(()=>{if(t.parentNode)t.remove();},5000);}
+function eqDel(i,s){const r=eqClearSlot(eqB,i,s,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}eqSave(r.board);pgRender();
+ eqToast("Removed "+r.undo.slot.n+" from "+r.undo.u+" "+(s==="n"?"Night":"Day")+".",r.undo);}
+function eqEditSlot(i,s){if($("eqSS"))return;const r=eqB.rows[i];if(!r)return;const v=r[s]||{n:"",o:""},lab=s==="n"?"Night":"Day",st=eqStamp(r[s]),o=pgSheet("eqSS");
+ o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="eqST" class="rot"><h3 id="eqST">Unit ${esc(r.u)} · ${lab}</h3>
+ <label for="eqN" style="margin-top:0">Name (first initial + last name)</label><input id="eqN" maxlength="40" autocomplete="off" autocapitalize="words" value="${esc(v.n)}" enterkeyhint="done">
+ <label for="eqO">Note / shift <span class="mut">(optional)</span></label><input id="eqO" maxlength="24" autocomplete="off" value="${esc(v.o)}" placeholder="e.g. Floor, CMA">
+ <p class="mut" style="margin:6px 0 0">${st?"Set "+esc(st)+". ":""}Saving stamps it with the time${eqBy()?" and “"+esc(eqBy())+"”":""}.</p>
+ <div class="row"><button type="button" class="p" id="eqSv">Save</button>${r[s]?'<button type="button" class="d" id="eqCl">✕ Remove</button>':""}<button type="button" id="eqCx">Cancel</button></div></div>`;
+ o.onclick=ev=>{if(ev.target===o)o.remove();};
+ const save=()=>{const nv=$("eqN").value,q=eqSet(eqB,i,s,nv,$("eqO").value,new Date(),eqBy());o.remove();if(!q.ok){$("pgM").textContent=q.error;return;}
+  if(q.changed){if(q.undo){eqSave(q.board);pgRender();eqToast("Removed "+q.undo.slot.n+" from "+q.undo.u+" "+lab+".",q.undo);return;}eqSave(q.board);$("pgM").textContent="Reserved "+r.u+" "+lab+" for "+eqS(nv,40)+".";}pgRender();
+  const c=document.querySelector('#pgGrid .eqs[data-i="'+i+'"][data-s="'+s+'"]');if(c)c.scrollIntoView({block:"nearest",inline:"nearest"});};
+ $("eqSv").onclick=save;$("eqN").onkeydown=$("eqO").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();save();}};
+ if($("eqCl"))$("eqCl").onclick=()=>{o.remove();eqDel(i,s);};$("eqCx").onclick=()=>o.remove();$("eqN").focus();}
+function eqEditRow(i){if($("eqRS"))return;const r=eqB.rows[i];if(!r)return;const secs=[...new Set(eqB.rows.map(x=>x.s).concat(["Units","Sidepicks"]))],o=pgSheet("eqRS");
+ o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="eqRT" class="rot"><h3 id="eqRT">Unit ${esc(r.u)}</h3>
+ <label for="eqRU" style="margin-top:0">Unit number</label><input id="eqRU" maxlength="12" autocomplete="off" value="${esc(r.u)}">
+ <label for="eqRG">Tag <span class="mut">(optional, e.g. RAIL / FLIP)</span></label><input id="eqRG" maxlength="16" autocomplete="off" value="${esc(r.t)}">
+ <label for="eqRSec">Section</label><select id="eqRSec">${secs.map(s=>`<option${s===r.s?" selected":""}>${esc(s)}</option>`).join("")}</select>
+ <p id="eqRM" class="mut" aria-live="polite" style="margin:6px 0 0"></p>
+ <div class="row"><button type="button" class="p" id="eqRSv">Save</button><button type="button" id="eqRCx">Cancel</button></div>
+ <div class="row"><button type="button" id="eqRUp">▲ Move up</button><button type="button" id="eqRDn">▼ Move down</button></div>
+ <div class="row"><input id="eqRNew" maxlength="12" placeholder="New unit #" aria-label="Unit number to insert below" autocomplete="off"><button type="button" id="eqRIns" style="flex:0 0 auto">Insert below</button></div>
+ <button type="button" class="d" id="eqRRm" style="width:100%;margin-top:8px">Remove unit ${esc(r.u)}</button></div>`;
+ const done=(q,msg)=>{if(!q.ok){$("eqRM").textContent=q.error;return false;}eqSave(q.board);o.remove();$("pgM").textContent=msg;pgRender();return true;};
+ o.onclick=ev=>{if(ev.target===o)o.remove();};$("eqRCx").onclick=()=>o.remove();
+ $("eqRSv").onclick=()=>done(eqRowEdit(eqB,i,$("eqRU").value,$("eqRG").value,$("eqRSec").value,new Date()),"Saved unit "+eqS($("eqRU").value,12)+".");
+ $("eqRUp").onclick=()=>{const q=eqRowMove(eqB,i,-1,new Date());if(done(q,"Moved "+r.u+" up."))eqEditRow(q.i);};
+ $("eqRDn").onclick=()=>{const q=eqRowMove(eqB,i,1,new Date());if(done(q,"Moved "+r.u+" down."))eqEditRow(q.i);};
+ $("eqRIns").onclick=()=>done(eqRowAdd(eqB,$("eqRNew").value,r.s,i,new Date()),"Added unit "+eqS($("eqRNew").value,12)+".");
+ $("eqRRm").onclick=()=>{if(!confirm("Remove unit "+r.u+(r.d||r.n?" and its reservations":"")+" from the board?"))return;done(eqRowRemove(eqB,i,new Date()),"Removed unit "+r.u+".");};
+ $("eqRU").focus();}
+$("pgGrid").addEventListener("click",e=>{if(!pgEq||pgShared)return;const x=e.target.closest(".eqdel,.eqs,.equ");if(!x)return;const i=+x.dataset.i,s=x.dataset.s;
+ if(x.classList.contains("eqdel")){eqDel(i,s);return;}
+ const go=()=>x.classList.contains("eqs")?eqEditSlot(i,s):eqEditRow(i);
+ if(pgTouchAt&&Date.now()-pgTouchAt<700){clearTimeout(pgEditT);pgEditT=setTimeout(go,300);return;}go();});
+$("pgBb2").addEventListener("click",e=>{if(!pgEq)return;const b=e.target.closest("button");if(!b)return;const id=b.id,pm=$("pgM");
+ if(id==="eqAdd"){const q=eqRowAdd(eqB,$("eqAU").value,$("eqAS").value,undefined,new Date());if(!q.ok){pm.textContent=q.error;return;}eqSave(q.board);pm.textContent="Added unit "+q.board.rows[q.i].u+".";pgRender();return;}
+ const w=id==="eqClD"?"d":id==="eqClN"?"n":id==="eqClA"?"all":"";if(!w)return;const c=eqCount(eqB),n=w==="d"?c.d:w==="n"?c.n:c.d+c.n;
+ if(!n){pm.textContent="Nothing to clear.";return;}
+ if(!confirm("Clear "+n+" "+(w==="d"?"Day":w==="n"?"Night":"Day and Night")+" reservation"+(n===1?"":"s")+" on "+EQ_NAME+"?"+(shMap()[EQ_NAME]?" The shared live copy updates too.":"")))return;
+ const q=eqClear(eqB,w,new Date());eqSave(q.board);pm.textContent="Cleared "+q.count+" reservation"+(q.count===1?"":"s")+".";pgRender();});
+/* v60: equipment board picture (PNG) */
+function eqSnapBlob(m){return new Promise((res,rej)=>{try{const pad=16,hh=78,F="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif",uw=130,sw=290,rh=46,shH=30,colH=32;
+ const W=pad*2+uw+sw*2,nr=m.sections.reduce((a,s)=>a+s.rows.length,0),H=hh+colH+m.sections.length*shH+nr*rh+pad+28;
+ const cv=document.createElement("canvas"),x=cv.getContext("2d"),sc=W*H*4<=16e6?2:1;cv.width=W*sc;cv.height=H*sc;x.scale(sc,sc);
+ const fit=(t,w)=>{t=String(t);if(x.measureText(t).width<=w)return t;while(t.length>1&&x.measureText(t+"…").width>w)t=t.slice(0,-1);return t+"…";};
+ x.fillStyle="#07153a";x.fillRect(0,0,W,H);x.fillStyle="#00214e";x.fillRect(0,0,W,hh);x.fillStyle="#ffd23f";x.fillRect(0,hh-3,W,3);
+ x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle="#ffd23f";x.font="800 26px "+F;x.fillText(fit(m.title,W-pad*2),pad,36);
+ x.fillStyle="#e6ecf3";x.font="500 15px "+F;x.fillText(fit("Snapshot "+m.when+(m.updated?" · updated "+m.updated:"")+" · "+m.count.d+" Day, "+m.count.n+" Night reserved",W-pad*2),pad,62);
+ let y=hh;x.fillStyle="#00214e";x.fillRect(pad,y,W-pad*2,colH);x.fillStyle="#ffd23f";x.font="800 16px "+F;x.textBaseline="middle";
+ x.fillText("Unit",pad+8,y+colH/2);x.fillText("Day",pad+uw+8,y+colH/2);x.fillText("Night",pad+uw+sw+8,y+colH/2);y+=colH;
+ const slot=(v,x0,y0)=>{x.fillStyle=v?"#123a85":"#0d2a66";x.fillRect(x0+2,y0+2,sw-4,rh-4);if(v){x.strokeStyle="#ffd23f";x.lineWidth=2;x.strokeRect(x0+3,y0+3,sw-6,rh-6);}
+  x.textBaseline="alphabetic";if(!v)return;x.fillStyle="#ffffff";x.font="800 17px "+F;x.fillText(fit(v.n+(v.o?" · "+v.o:""),sw-18),x0+9,y0+21);
+  if(v.st){x.fillStyle="#b9c8e6";x.font="500 12px "+F;x.fillText(fit(v.st,sw-18),x0+9,y0+38);}};
+ for(const s of m.sections){x.fillStyle="#ffd23f";x.fillRect(pad,y,W-pad*2,shH);x.fillStyle="#00214e";x.font="900 15px "+F;x.textBaseline="middle";x.fillText(s.name.toUpperCase(),pad+8,y+shH/2+1);y+=shH;
+  for(const r of s.rows){x.fillStyle="#00214e";x.fillRect(pad+2,y+2,uw-4,rh-4);x.textBaseline="alphabetic";x.fillStyle="#ffffff";x.font="900 18px "+F;x.fillText(fit(r.u,uw-14),pad+8,y+(r.t?21:29));
+   if(r.t){x.fillStyle="#ffd23f";x.font="700 11px "+F;x.fillText(fit(r.t,uw-14),pad+8,y+37);}
+   slot(r.d,pad+uw,y);slot(r.n,pad+uw+sw,y);x.strokeStyle="#2a4a8a";x.lineWidth=1;x.beginPath();x.moveTo(pad,y+rh-0.5);x.lineTo(W-pad,y+rh-0.5);x.stroke();y+=rh;}}
+ x.fillStyle="#b9c8e6";x.font="500 12px "+F;x.textBaseline="alphabetic";x.fillText("Shared from ILWU LIFE · unit reservations only",pad,H-10);
+ cv.toBlob(b=>b?res(b):rej(new Error("encode")),"image/png");}catch(e){rej(e);}});}
+async function eqShareSnap(b,m){const now=new Date();if(m)m.textContent="Making the board picture…";let bl;
+ try{bl=await eqSnapBlob(eqSnapModel(b,now));}catch(e){if(m)m.textContent="Couldn't draw the board picture on this phone.";return;}
+ const r=await shareImgs([new File([bl],pegSnapName(EQ_NAME,now),{type:"image/png"})],EQ_NAME+" – board picture",EQ_NAME+" – board picture, "+pegWhen(now)+" (ILWU LIFE)",m);if(r==="cancel"&&m)m.textContent="";}
+/* read-only shared view: scale the board to the card width */
+function eqRoFit(){const w=document.querySelector("#pgSh .eqro");if(!w)return;const b=w.querySelector(".eqb");if(!b)return;b.style.zoom="1";const z=Math.min(1,Math.max(0.5,(w.clientWidth-2)/b.offsetWidth));b.style.zoom=String(Math.floor(z*100)/100);}
+window.addEventListener("resize",()=>{if(pgShared)eqRoFit();});
 /* ===== v53: shared boards (admins publish a board to rooms/{room}/boards/{id}; everyone in the room sees a live read-only copy). Board data only: no hours, pay, photos, notes or "my peg" flags. ===== */
 const SHK="l19.shared",SHL="l19.shareMap";
 let shUnsub=null,shCode="",shErr="",shCached=false,shT=0,shLast={},shBusy=false,shMsgT="",shPushErr="";
@@ -2128,7 +2326,7 @@ function shAdmin(){return !!(window.l19Fb&&window.l19Fb.isAdmin());}
 function shAll(){const c=lsJson(SHK,null);if(!shJoined()||!c||typeof c!=="object"||c.code!==window.l19Fb.code()||!c.boards||typeof c.boards!=="object")return[];
  return Object.keys(c.boards).map(k=>shareFromDoc(k,{...c.boards[k],updatedAt:c.boards[k].ms})).filter(Boolean).sort((a,b)=>a.name.localeCompare(b.name));}
 function shGet(id){return shAll().find(x=>x.id===id)||null;}
-function shListUi(){const all=shAll();if(!shAdmin())return all;const lk=shMap(),ids=new Set(Object.keys(lk).filter(n=>pgNames().includes(n)).map(n=>lk[n]));return all.filter(x=>!ids.has(x.id));}
+function shListUi(){const all=shAll();if(!shAdmin())return all;const lk=shMap(),ids=new Set(Object.keys(lk).filter(n=>pgNames().includes(n)||n===EQ_NAME).map(n=>lk[n]));return all.filter(x=>!ids.has(x.id));}
 function shFriendly(e){if(typeof navigator!=="undefined"&&navigator.onLine===false)return"You're offline.";const c=e&&e.code||"";if(/permission/.test(c))return"Shared boards aren't open yet (the server rules haven't been updated) or you aren't allowed.";if(/unavailable|network/.test(c))return"Can't reach the server right now.";return"Couldn't reach shared boards.";}
 function shWhenBy(sh){return sh.ms?"Last updated "+pegWhen(new Date(sh.ms))+(sh.byName?" by "+sh.byName:""):"Last updated: just now (waiting for the server)";}
 function shOffline(){return typeof navigator!=="undefined"&&navigator.onLine===false||!!shErr||shCached;}
@@ -2151,7 +2349,7 @@ function shChips(){const el=$("pgShC");if(!el)return;
  if(shErr)h+='<div class="mut" role="status">'+esc(shErr)+(all.length?" Showing the last saved copy.":"")+'</div>';
  else if(shOffline()&&all.length)h+='<div class="mut" role="status">Offline: showing the last saved copy.</div>';
  el.innerHTML=h;el.querySelectorAll("button[data-s]").forEach(b=>b.onclick=()=>{pgClose();$("pgM").textContent="";pgShared=b.dataset.s;pgRender();});}
-function shRender(){const el=$("pgSh"),sh=shGet(pgShared);if(!sh){el.innerHTML="";return;}
+function shRender(){const el=$("pgSh"),sh=shGet(pgShared);if(!sh){el.innerHTML="";return;}if(sh.eq){shRenderEq(el,sh);return;}
  const lines=shOffline()?"Offline, last updated "+(sh.ms?pegWhen(new Date(sh.ms)):"unknown")+(sh.byName?" by "+sh.byName:"")+".":shWhenBy(sh)+".";
  let h=`<div class="shban" role="status">Shared by admins, read-only</div><p class="mut" style="margin:4px 0">${esc(sh.name)} · ${esc(lines)}</p>`;
  h+=`<div class="shl2" role="group" aria-label="Pegs">`+sh.jobs.map(j=>`<span class="lg"><span class="pk" style="${pegSty(PEG_COLORS[j.color]||PEG_COLORS[0])}">${esc(j.label)}</span>${esc(j.name)}: ${esc(shareWhere(sh,"j:"+j.id))}</span>`).join("")+sh.gl.map(g=>`<span class="lg"><span class="pk g">${esc(pegAbbr(g.name))}</span>${esc(g.name)}: ${esc(shareWhere(sh,"g:"+g.id))}</span>`).join("")+`</div>`;
@@ -2170,27 +2368,37 @@ function shRender(){const el=$("pgSh"),sh=shGet(pgShared);if(!sh){el.innerHTML="
  if($("shEdit"))$("shEdit").onclick=()=>shAdopt(sh);
  if($("shStop"))$("shStop").onclick=async()=>{if(!confirm("Stop sharing “"+sh.name+"”? Everyone in the room loses the shared copy. Local copies stay."))return;
   try{const F=window.l19Fb,f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",sh.id));const m=shMap();for(const k of Object.keys(m))if(m[k]===sh.id)delete m[k];shMapSet(m);pgShared=null;$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Couldn't stop sharing. "+shFriendly(e);}pgRender();};}
+function shRenderEq(el,sh){const lines=shOffline()?"Offline, last updated "+(sh.ms?pegWhen(new Date(sh.ms)):"unknown")+(sh.byName?" by "+sh.byName:"")+".":shWhenBy(sh)+".",c=eqCount(sh.eq);
+ let h=`<div class="shban" role="status">Shared by admins, read-only</div><p class="mut" style="margin:4px 0">${esc(sh.name)} · ${esc(lines)}</p><p class="mut" style="margin:4px 0"><b>${c.d}</b> Day · <b>${c.n}</b> Night reserved · ${c.units} units</p>`;
+ h+=`<div class="eqro" role="group" aria-label="${esc(sh.name)} (read-only)">${eqBoardHtml(sh.eq,true)}</div>`;
+ h+=`<div class="row"><button type="button" id="shSnap">📤 Share board picture</button></div><p class="mut" style="margin:8px 0 0">Only the unit list and reservation names with their time stamps are shared. Ask an admin to reserve or remove a unit.</p>`;
+ if(shAdmin())h+=`<div class="row"><button type="button" class="p" id="shEdit">Edit on this device (copy to my boards)</button></div><div class="row"><button type="button" class="d" id="shStop">Stop sharing (delete the shared copy)</button></div>`;
+ el.innerHTML=h;eqNameFit(el);eqRoFit();
+ $("shSnap").onclick=()=>eqShareSnap(sh.eq,$("pgM"));
+ if($("shEdit"))$("shEdit").onclick=()=>{if(!confirm("Replace your "+EQ_NAME+" with the shared copy and keep it synced from this device?"))return;const m=shMap();eqSave(sh.eq);m[EQ_NAME]=sh.id;shMapSet(m);shLast[EQ_NAME]=JSON.stringify(eqShareBuild(eqB));pgShared=null;pgEq=true;LSset("l19.eqSel","1");$("pgM").textContent="Copied to your boards. Your edits will sync to the shared copy.";pgRender();};
+ if($("shStop"))$("shStop").onclick=async()=>{if(!confirm("Stop sharing “"+sh.name+"”? Everyone in the room loses the shared copy. Local copies stay."))return;
+  try{const F=window.l19Fb,f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",sh.id));const m=shMap();for(const k of Object.keys(m))if(m[k]===sh.id)delete m[k];shMapSet(m);pgShared=null;$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Couldn't stop sharing. "+shFriendly(e);}pgRender();};}
 function shAdopt(sh){const name=sh.name,m=shMap();if(!pgNames().includes(name)){if(name==="__proto__"){return;}}
  if(pgNames().includes(name)&&!confirm("Replace your board “"+name+"” with the shared copy and keep it synced from this device?"))return;
  if(!pgNames().includes(name))pgD.custom.push(name);
  pgD.boards[name]=shareToBoard(sh);pgD.sel=name;m[name]=sh.id;shMapSet(m);shLast[name]=JSON.stringify(shareBuild(name,pgD.boards[name],pegGlobalsOn(pgD,name)));pegsSave(pgD);pgShared=null;$("pgM").textContent="Copied to your boards. Your edits will sync to the shared copy.";pgRender();}
 function shLocalUi(){const box=$("pgShr");if(!box)return;const show=shJoined()&&shAdmin();box.classList.toggle("hide",!show);if(!show)return;
- const name=pgCur(),m=shMap(),id=m[name],sh=id?shGet(id):null;
+ const name=pgSelName(),m=shMap(),id=m[name],sh=id?shGet(id):null;
  $("pgShB").textContent=id?"🔗 Shared live: tap to stop sharing":"Share this board with the room";$("pgShB").setAttribute("aria-pressed",String(!!id));
- $("pgShS").textContent=shPushErr?shPushErr:id?("Shared in room "+window.l19Fb.code()+". Others see a read-only copy. "+(sh?shWhenBy(sh)+".":"Syncing…")):"Admins only. Shares slip names, pegs and the take log with everyone in the room. Photos, notes and ★ stay on your phone.";}
-async function shPush(name,force){const F=window.l19Fb,id=shMap()[name];if(!F||!id||!F.isAdmin()||!pgNames().includes(name))return;
- const doc=shareBuild(name,pgBoard(name),pegGlobalsOn(pgD,name)),ser=JSON.stringify(doc);if(!force&&ser===shLast[name])return;
+ $("pgShS").textContent=shPushErr?shPushErr:id?("Shared in room "+window.l19Fb.code()+". Others see a read-only copy. "+(sh?shWhenBy(sh)+".":"Syncing…")):(pgEq?"Admins only. Shares the unit list and reservations (names, notes, time stamps) with everyone in the room, read-only. Photos stay on your phone.":"Admins only. Shares slip names, pegs and the take log with everyone in the room. Photos, notes and ★ stay on your phone.");}
+async function shPush(name,force){const F=window.l19Fb,id=shMap()[name],isEq=name===EQ_NAME;if(!F||!id||!F.isAdmin()||!(isEq||pgNames().includes(name)))return;
+ const doc=isEq?eqShareBuild(eqB):shareBuild(name,pgBoard(name),pegGlobalsOn(pgD,name)),ser=JSON.stringify(doc);if(!force&&ser===shLast[name])return;
  if(ser.length>SHARE_MAX_JSON){shPushErr="This board is too big to share.";shLocalUi();return;}
  try{await F.ready();const f=F.fs();await f.setDoc(f.doc(F.db(),"rooms",F.code(),"boards",id),{...doc,updatedAt:f.serverTimestamp(),updatedBy:F.uid(),updatedByName:chatName(F.name())||"?"});shLast[name]=ser;shPushErr="";}
  catch(e){shPushErr="Couldn't sync to the room. "+shFriendly(e)+" Your own board is safe; it will retry on your next change.";}shLocalUi();}
 async function shFlush(){if(shBusy)return;shBusy=true;try{const m=shMap();for(const n of Object.keys(m))await shPush(n,false);}finally{shBusy=false;}}
 function shTouch(){if(!window.l19Fb||!shJoined())return;if(!Object.keys(shMap()).length)return;clearTimeout(shT);shT=setTimeout(shFlush,1000);}
-$("pgShB").onclick=async()=>{const name=pgCur(),m=shMap(),F=window.l19Fb;if(!shAdmin())return;
+$("pgShB").onclick=async()=>{const name=pgSelName(),m=shMap(),F=window.l19Fb;if(!shAdmin())return;
  if(m[name]){if(!confirm("Stop sharing “"+name+"”? Everyone in the room loses the shared copy. Your own board stays."))return;const id=m[name];delete m[name];shMapSet(m);
   try{const f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",id));$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Unlinked here, but the shared copy could not be deleted. "+shFriendly(e);}shPushErr="";pgRender();return;}
  const id=shareId(name);if(!id){$("pgM").textContent="Give the board a name with letters or numbers first.";return;}
  if(Object.keys(m).some(k=>m[k]===id)){$("pgM").textContent="Another of your boards already shares as that name.";return;}
- if(!confirm("Share “"+name+"” with everyone in room "+F.code()+"? They will see slip names, pegs and the take log (read-only). Photos, notes, ★ and your hours/pay are never shared."))return;
+ if(!confirm("Share “"+name+"” with everyone in room "+F.code()+"? "+(pgEq?"They will see the unit list and reservation names with time stamps (read-only).":"They will see slip names, pegs and the take log (read-only).")+" Photos, notes, ★ and your hours/pay are never shared."))return;
  m[name]=id;shMapSet(m);$("pgM").textContent="Sharing…";await shPush(name,true);$("pgM").textContent=shPushErr?"":"Shared. Changes you make are sent to the room within a second.";pgRender();};
 window.l19Sh={open:shOpen};
 window.addEventListener("online",()=>{shCached=false;if(!$("v-pegs").classList.contains("hide"))shOpen();shTouch();});
@@ -2221,7 +2429,7 @@ function shareFromDoc(id,x){if(!x||typeof x!=="object")return null;const sl=(v,m
  for(const g of Array.isArray(x.gl)?x.gl:[]){if(!g||o.gl.length>=PEG_GLOBALS)continue;const gid=sl(g.id,24).replace(/[^\w-]/g,""),nm=sl(g.name,40).trim();if(gid&&nm)o.gl.push({id:gid,name:nm});}
  const pl=x.placements&&typeof x.placements==="object"?x.placements:{};for(const k of Object.keys(pl)){if(!/^[jg]:[\w-]{1,24}$/.test(k)||!okPos(pl[k]))continue;o.pl[k]=pl[k];}
  for(const t of (Array.isArray(x.takes)?x.takes:[]).slice(-SHARE_TAKES)){if(!t||typeof t!=="object")continue;o.takes.push({id:sl(t.id,40),at:sl(t.at,40),d:/^\d{4}-\d{2}-\d{2}$/.test(t.d)?t.d:"",jid:sl(t.jid,24),job:sl(t.job,40),person:sl(t.person,80),pos:/^\d{1,2}-\d{1,2}$/.test(t.pos)?t.pos:"",num:Math.max(0,Math.floor(Number(t.num))||0)});}
- const u=x.updatedAt;o.ms=u&&typeof u.toMillis==="function"?u.toMillis():(typeof u==="number"?u:0);return o;}
+ const u=x.updatedAt;o.ms=u&&typeof u.toMillis==="function"?u.toMillis():(typeof u==="number"?u:0);o.eq=eqFromDoc(x); /* v60: equipment reserve board */return o;}
 function shareToBoard(sh){const b=pegBoardNew();b.cols=sh.cols;b.rows=sh.rows;for(const k of Object.keys(sh.slips))b.pegs[k]={n:sh.slips[k].n,note:"",me:false};
  b.jobs=sh.jobs.map(j=>({id:j.id,name:j.name,color:j.color,pos:sh.pl["j:"+j.id]||""}));b.takes=sh.takes.slice();b.updated=sh.ms?new Date(sh.ms).toISOString():"";return pegBoardClean({...b,pv:49});}
 function shareWhere(sh,key){const p=sh.pl[key];if(!p)return"not placed";const m=p.split("-");return"column "+m[1]+", slip "+m[0];}
@@ -2339,7 +2547,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_SEED_RES,eqSlot,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
