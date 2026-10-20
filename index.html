@@ -113,6 +113,11 @@ button,input,select{font-size:1rem}
 .eqro{overflow:hidden;border:2px solid #ffd23f;border-radius:10px;background:#07153a;margin:6px 0}
 .eqsum{margin:4px 0;color:inherit}.eqman{margin-top:8px}.eqman summary{min-height:44px;line-height:44px;font-weight:800;cursor:pointer}
 .eqadd input{flex:1 1 90px;min-width:0}.eqadd select{flex:1 1 100px;min-width:0}
+.eqcarry{position:sticky;top:0;z-index:20;background:#ffd23f!important;color:#00214e!important;border:3px solid #00214e!important;font-weight:800;font-size:1.0625rem;padding:10px;border-radius:12px;margin:6px 0}
+.eqcarry button{min-height:44px;margin-left:6px;font-weight:900}
+.eqwarn{margin:6px 0;padding:8px 10px;border-radius:10px;background:#3a0d1c;color:#fff;border:2px solid #ff9b9b;font-weight:700}
+.eqb .eqs.drop{border:2px dashed #ffd23f;background:#1b3f8f}
+#pgDt .dteq{background:#ffd23f;color:#00214e;font-weight:900}
 #eqToast{position:fixed;left:8px;right:8px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:80;max-width:544px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 14px;border-radius:12px;background:#00214e;color:#fff;border:2px solid #ffd23f;font-weight:700;box-shadow:0 4px 18px rgba(0,0,0,.45)}
 #eqToast span{flex:1}#eqToast button{min-height:44px;min-width:80px;background:#ffd23f;color:#00214e;border:0;border-radius:10px;font-weight:900}
 .pgshc{margin:8px 0;font-size:.9375rem}.pgshc .chip{display:inline-block;min-height:44px;margin:4px 6px 0 0;padding:0 12px;border-radius:22px;border:2px solid var(--fg);background:var(--card);font-weight:700}.pgshc .chip[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc)}
@@ -641,7 +646,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v60",CACHE_VERSION="l19hours-v60"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v61",CACHE_VERSION="l19hours-v61"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1135,17 +1140,18 @@ function pegText(name,b,now){const ks=Object.keys(b.pegs).sort((x,y)=>{const p=x
   for(const k of f){const v=b.pegs[k];L.push(pegWhere(k,b.cols)+": "+(v.n||"(no name)")+(v.note?" – "+v.note:"")+(v.me?" ★ me":""));}}
  L.push("","Shared "+pegWhen(now)+" from ILWU LIFE");return L.join("\n");}
 /* ===== v60: Equipment reserve board (rows = equipment unit numbers in sections; each row has a Day and a Night name slot). Stored in localStorage "l19.equip", separate from the peg boards. ===== */
+const EQSK="l19.eqSlots",EQMIG="l19.eqUnseed61",EQ_RULES_MSG="Reservations need the new server rules — ask an admin.";
 const EQ_NAME="Equipment reserve — Pier 18",EQ_ID="equipment-reserve-pier-18",EQK="l19.equip",EQ_MAX=60,EQ_MARK="eq:type",EQ_KIND="equip-v1",EQ_PHOTO="photo";
 /* transcribed from the photo of the Pier 18 board (Oct 2026). "?" = not fully legible. Tags are copied as written; their meaning is not guessed. */
 const EQ_SEED=[["Units",[["80276"],["80277"],["80278","X"],["80279","X"],["80280"],["80934","crossed out?"],["80935","DAY"],["80937","RAIL / FLIP"],["80938","RAIL / FLIP"],["80939"],["80940"],["80941"],["80944"],["80945"],["80947","RAIL / FLIP"],["80949","RAIL / FLIP"],["80950"],["80951","RAIL / FLIP"],["80952"],["80953","RAIL / FLIP"],["80954","RAIL / FLIP"],["80955"],["80956"],["80957"],["80958"],["80959"],["80960"],["80963"],["80964"],["80965"],["80966"],["80991"],["80992"],["80993"],["928","handwritten"],["962?","handwritten"],["961?","handwritten"]]],
  ["Sidepicks",[["15906"],["15907"],["15908"],["20900"],["20901"],["20902"],["20903"],["20904"]]]];
-/* names written on the board in the photo: unit -> {d:[name,note]} / {n:[name,note]}. No time stamp (they came from the photo). */
-const EQ_SEED_RES={"80280":{n:["D. Vawsn?","faint"]},"80952":{d:["Mey","CMA"]},"80959":{d:["Eubanks","Floor?"]},"80964":{d:["Jefferson","Floor?"]},"80992":{d:["Wanderich?","Floor"]},"20901":{d:["C. Yanez",""]},"20902":{d:["D. White",""]}};
+/* v61: no names are seeded. This is only the list v60 seeded from the photo, kept so v61 can remove those exact untouched seeds from phones (at 0, by "photo"). */
+const EQ_V60_SEED={"80280":{n:["D. Vawsn?","faint"]},"80952":{d:["Mey","CMA"]},"80959":{d:["Eubanks","Floor?"]},"80964":{d:["Jefferson","Floor?"]},"80992":{d:["Wanderich?","Floor"]},"20901":{d:["C. Yanez",""]},"20902":{d:["D. White",""]}};
 function eqS(v,m){return String(v==null?"":v).replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim().slice(0,m);}
 function eqSlot(v){if(!v||typeof v!=="object")return null;const n=eqS(v.n,40);if(!n)return null;let at=Math.floor(Number(v.at));if(!isFinite(at)||at<0)at=0;return{n:n,o:eqS(v.o,24),at:at,by:eqS(v.by,30)};}
 function eqRowClean(x){if(!x||typeof x!=="object")return null;const u=eqS(x.u,12);if(!u)return null;return{u:u,s:eqS(x.s,20)||"Units",t:eqS(x.t,16),d:eqSlot(x.d),n:eqSlot(x.n)};}
-function eqSeed(){const rows=[];for(const [s,list] of EQ_SEED)for(const [u,t] of list){const r={u:u,s:s,t:t||"",d:null,n:null},res=EQ_SEED_RES[u];
-  if(res){for(const k of ["d","n"])if(res[k])r[k]={n:res[k][0],o:res[k][1]||"",at:0,by:EQ_PHOTO};}rows.push(r);}
+function eqSeed(){const rows=[];for(const [s,list] of EQ_SEED)for(const [u,t] of list){const r={u:u,s:s,t:t||"",d:null,n:null};
+  rows.push(r);}
  return{name:EQ_NAME,rows:rows,updated:"",seeded:true};}
 function eqClean(b){if(!b||typeof b!=="object"||!Array.isArray(b.rows))return eqSeed();const rows=[],seen=new Set();
  for(const x of b.rows){if(rows.length>=EQ_MAX)break;const r=eqRowClean(x);if(!r||seen.has(r.u.toLowerCase()))continue;seen.add(r.u.toLowerCase());rows.push(r);}
@@ -1181,9 +1187,9 @@ function eqRowRemove(b,i,now){if(!b.rows[i])return{ok:false,error:"That unit no 
 function eqRowMove(b,i,dir,now){const j=i+(dir<0?-1:1);if(!b.rows[i]||!b.rows[j])return{ok:false,error:"Can't move further."};const rows=b.rows.slice(),a=rows[i],c=rows[j];
  if(a.s!==c.s){rows[i]={...a,s:c.s};return{ok:true,board:eqTouch(b,rows,now),i:i};} /* at a section edge the unit crosses into the next section */
  rows[i]=c;rows[j]=a;return{ok:true,board:eqTouch(b,rows,now),i:j};}
-/* compact local stamp, e.g. "10/19 4:52p"; seeded names say "from photo" */
-function eqStamp(sl){if(!sl)return"";if(!sl.at)return sl.by===EQ_PHOTO?"from photo":"";const d=new Date(sl.at);if(isNaN(d))return"";let h=d.getHours();const ap=h<12?"a":"p";h=h%12||12;
- return(d.getMonth()+1)+"/"+d.getDate()+" "+h+":"+String(d.getMinutes()).padStart(2,"0")+ap+(sl.by&&sl.by!==EQ_PHOTO?" · "+sl.by:"");}
+/* compact local stamp, e.g. "10/19 4:52p · T. Admin" */
+function eqStamp(sl){if(!sl||!sl.at)return"";const d=new Date(sl.at);if(isNaN(d))return"";let h=d.getHours();const ap=h<12?"a":"p";h=h%12||12;
+ return(d.getMonth()+1)+"/"+d.getDate()+" "+h+":"+String(d.getMinutes()).padStart(2,"0")+ap+(sl.by?" · "+sl.by:"");}
 /* Firestore shape: fits the existing rooms/{room}/boards/{board} rules (no rules change). cols=3: col 1 = unit (+section, tag), col 2 = Day, col 3 = Night; the marker lives in placements (older app versions ignore it and just show a 3-column board). */
 function eqShareBuild(b){const slips={};b.rows.slice(0,EQ_MAX).forEach((r,j)=>{const k=j+1;slips[k+"-1"]={n:r.u,s:r.s,t:r.t};
   if(r.d)slips[k+"-2"]={n:r.d.n,o:r.d.o,at:r.d.at,by:r.d.by};if(r.n)slips[k+"-3"]={n:r.n.n,o:r.n.o,at:r.n.at,by:r.n.by};});
@@ -1192,11 +1198,33 @@ function eqIsDoc(x){return!!(x&&typeof x==="object"&&x.placements&&typeof x.plac
 function eqFromDoc(x){if(!eqIsDoc(x))return null;const sp=x.slips&&typeof x.slips==="object"?x.slips:{},n=Math.max(0,Math.min(EQ_MAX,Math.floor(Number(x.rows))||0)),rows=[];
  for(let k=1;k<=n;k++){const u=sp[k+"-1"];if(!u)continue;rows.push({u:u.n,s:u.s,t:u.t,d:sp[k+"-2"]||null,n:sp[k+"-3"]||null});}
  const ms=x.updatedAt&&typeof x.updatedAt.toMillis==="function"?x.updatedAt.toMillis():(typeof x.updatedAt==="number"?x.updatedAt:0);
- return eqClean({rows:rows,updated:ms?new Date(ms).toISOString():""});}
+ return eqUnseed(eqClean({rows:rows,updated:ms?new Date(ms).toISOString():""})).board;}
 function eqMerge(cur,inc){const a=eqClean(cur),b=eqClean(inc),rows=a.rows.map(r=>({...r})),idx={};rows.forEach((r,j)=>{idx[r.u.toLowerCase()]=j;});
  for(const r of b.rows){const j=idx[r.u.toLowerCase()];if(j===undefined){if(rows.length<EQ_MAX){idx[r.u.toLowerCase()]=rows.length;rows.push({...r});}continue;}
   for(const s of ["d","n"]){const x=rows[j][s],y=r[s];if(y&&(!x||y.at>x.at))rows[j][s]=y;}}
  return{...a,rows:rows,updated:a.updated>b.updated?a.updated:b.updated};}
+/* v61: remove the v60 photo seeds that nobody touched (same name and note, at 0, by "photo"); anything a person typed is kept */
+function eqUnseed(b){let removed=0;const rows=b.rows.map(r=>{const sd=EQ_V60_SEED[r.u];if(!sd)return r;let x=r;
+  for(const k of ["d","n"]){const v=x[k],s=sd[k];if(v&&s&&!v.at&&v.by===EQ_PHOTO&&v.n===s[0]&&v.o===(s[1]||"")){x={...x,[k]:null};removed++;}}return x;});
+ return{board:removed?{...b,rows:rows}:b,removed:removed};}
+/* v61: live reservation slots (rooms/{room}/boards/{board}/slots/{unitKey_day|unitKey_night}) */
+function eqUnitKey(u){return String(u==null?"":u).replace(/[^A-Za-z0-9]/g,"-").slice(0,20)||"u";}
+function eqSlotId(u,side){return eqUnitKey(u)+"_"+(side==="n"?"night":"day");}
+function eqSlotDoc(sl,uid){let at=Math.floor(Number(sl&&sl.at));if(!isFinite(at)||at<1700000000000)at=Date.now();const o={name:eqS(sl&&sl.n,40),at:at,by:String(uid||"")};
+ const no=eqS(sl&&sl.o,24),bn=eqS(sl&&sl.by,30);if(no)o.note=no;if(bn)o.byName=bn;return o;}
+function eqSlotFromDoc(x){if(!x||typeof x!=="object")return null;return eqSlot({n:x.name,o:x.note,at:typeof x.at==="number"?x.at:0,by:x.byName});}
+function eqWithSlots(b,slots){slots=slots&&typeof slots==="object"?slots:{};return{...b,rows:b.rows.map(r=>({...r,d:eqSlotFromDoc(slots[eqSlotId(r.u,"d")]),n:eqSlotFromDoc(slots[eqSlotId(r.u,"n")])}))};}
+function eqStructKey(b){return JSON.stringify(b.rows.map(r=>[r.u,r.s,r.t]));}
+/* which slots differ between two boards (by unit), for writing only what changed */
+function eqDiff(a,b){const out=[],am={},bm={},same=(x,y)=>(!x&&!y)||(!!x&&!!y&&x.n===y.n&&x.o===y.o&&x.at===y.at);
+ for(const r of a.rows)for(const s of ["d","n"])am[eqSlotId(r.u,s)]={u:r.u,side:s,v:r[s]};
+ for(const r of b.rows)for(const s of ["d","n"])bm[eqSlotId(r.u,s)]={u:r.u,side:s,v:r[s]};
+ for(const id of Object.keys(bm))if(!same(am[id]&&am[id].v,bm[id].v))out.push({u:bm[id].u,side:bm[id].side,slot:bm[id].v||null});
+ for(const id of Object.keys(am))if(!bm[id]&&am[id].v)out.push({u:am[id].u,side:am[id].side,slot:null});return out;}
+/* undo for a set, replace or delete: puts u.prev back only if the slot still holds u.cur */
+function eqRevert(b,u,now){if(!u||!u.u)return{ok:false,error:"Nothing to undo."};const i=b.rows.findIndex(r=>r.u===u.u);if(i<0)return{ok:false,error:"That unit no longer exists."};
+ const side=eqSide(u.side),cur=b.rows[i][side],want=u.cur||null,match=want?!!cur&&cur.n===want.n&&cur.at===want.at:!cur;
+ if(!match)return{ok:false,error:"That slot changed since, so it was not undone."};const rows=b.rows.slice();rows[i]={...rows[i],[side]:u.prev?eqSlot(u.prev):null};return{ok:true,board:eqTouch(b,rows,now)};}
 function eqText(b,now){now=now instanceof Date&&!isNaN(now)?now:new Date();const L=[EQ_NAME+" – reservations","Updated: "+(pegWhen(b.updated)||pegWhen(now)),""],c=eqCount(b);
  const line=(r,s,lab)=>{const v=r[s];if(!v)return;const st=eqStamp(v);L.push("  "+r.u+" "+lab+": "+v.n+(v.o?" ("+v.o+")":"")+(st?" ["+st+"]":""));};
  if(!c.d&&!c.n)L.push("No units reserved.");
@@ -1882,13 +1910,13 @@ function pegsLoad(){const rawTxt=LS(PGK,""),raw=lsJson(PGK,null);if(rawTxt&&!LS(
  if(LS(PGFR,"")!=="1"){const fr=pegFlexRemove(d);d=fr.data;LSset(PGFR,"1");dirty=true;} /* v52: raw data was copied to l19.pegs.v51raw above */
  if(dirty){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
 function pegsSave(d){LSset(PGK,JSON.stringify(d));if(typeof shTouch==="function")shTouch();}
-let pgEq=LS("l19.eqSel","")==="1",eqB=eqLoad(),pgShared=null,pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
+let eqManOpen=false,pgCarry=null,eqSlUnsub=null,eqSlCode="",pgEq=LS("l19.eqSel","")==="1",eqB=eqLoad(),pgShared=null,pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
 function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
 function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
 function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
 function pgBoard(name){return pgD.boards[name]||pegBoardNew();}
 function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
-function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared&&!pgEq?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`;}).join("")+`<optgroup label="Reserve boards"><option value="eq:${EQ_ID}"${pgEq&&!pgShared?" selected":""}>🚜 ${esc(EQ_NAME)}${lk[EQ_NAME]?" 🔗":""}</option></optgroup>`+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
+function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared&&!pgEq?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`;}).join("")+`<optgroup label="Reserve boards"><option value="eq:${EQ_ID}"${pgEq&&!pgShared?" selected":""}>🚜 ${esc(EQ_NAME)}${eqSh()?" 🔗":""}</option></optgroup>`+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
  $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));}
 function pgSheet(id){const o=document.createElement("div");o.className="sheet";o.id=id;o.addEventListener("keydown",e=>{if(e.key==="Escape")o.remove();});document.body.appendChild(o);return o;}
 function pgJobEdit(id){if($("pgJobS"))return;const name=pgCur(),b=pgBoard(name),j=pegJob(b,id);if(!j)return;let col=j.color;const o=pgSheet("pgJobS");
@@ -1908,7 +1936,7 @@ function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=
   if(d.e){const t=pgBoard(name).takes.find(x=>x.id===d.e);if(!t)return;const row=ev.target.parentNode;row.innerHTML=`<input aria-label="Person" id="lgP" maxlength="80" value="${esc(t.person)}"><button type="button" class="p" id="lgS">Save</button>`;$("lgP").focus();
    $("lgS").onclick=()=>{const r=pegTakeEdit(pgBoard(name),d.e,$("lgP").value,new Date());if(!r.ok){$("lgP").setAttribute("aria-invalid","true");return;}pgStore(name,r.board);pgRender();o.remove();pgLogOpen();};}};
  $("lgDn").onclick=()=>o.remove();$("lgDn").focus();}
-function pgRender(){if(pgShared&&!shGet(pgShared))pgShared=null;$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
+function pgRender(){if(pgShared&&!shGet(pgShared))pgShared=null;if(pgShared&&shGet(pgShared).eq){pgShared=null;pgEq=true;} /* v61: the live equipment board opens under its own entry */$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
  if(pgEq){eqRender();return;}$("pgGrid").setAttribute("aria-label","Peg board slips (scrolls sideways)");const name=pgCur(),b=pgBoard(name);
  $("pgCols").value=b.cols;$("pgRows").value=b.rows;
  $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
@@ -1929,6 +1957,7 @@ ${slip?`<p class="mut" style="margin:12px 0 0">Slips in this column (pegs move w
 <div class="row mvr"><div><label for="mvB" style="margin-top:0">Board</label><select id="mvB">${pgNames().map(n=>`<option value="${esc(n)}"${n===name?" selected":""}>${esc(n)}</option>`).join("")}</select></div><div><label for="mvC" style="margin-top:0">Column</label><input id="mvC" type="number" inputmode="numeric" min="1" max="60" value="${c}"></div><div><label for="mvR" style="margin-top:0">Slip (row)</label><input id="mvR" type="number" inputmode="numeric" min="1" max="60" value="${r}"></div></div>
 <div class="row"><button type="button" id="mvMode" aria-pressed="${pgMoveMode()==="swap"}">${pgMoveModeText()}</button><button type="button" class="p" id="mvGo">Move to column/row</button></div>
 <div class="row"><button type="button" id="mvTap">Move by tapping the new place…</button></div>
+${v.n?`<div class="row"><button type="button" id="pgEqC">🚜 Reserve equipment with this name</button></div>`:""}
 <div class="row" style="margin-top:12px"><button type="button" class="p" id="pgSv">Save</button><button type="button" id="pgCl" class="d">Clear</button><button type="button" id="pgCx">Cancel</button></div>`;
  e.querySelectorAll("[data-co]").forEach(x=>x.onclick=()=>{const op=x.dataset.co;if(op==="remove"&&!confirm("Remove this slip and move the ones below it up? Pegs on it stay at this spot."))return;
   const q=pegColOp(pgD,name,op,r,c);if(!q.ok){$("pgM").textContent=q.error;return;}pgD={...q.data,sel:pgD.sel};pegsSave(pgD);$("pgM").textContent=op==="insert"?"Inserted a blank slip.":op==="remove"?"Removed the slip.":"Moved the slip "+op+".";
@@ -1944,6 +1973,7 @@ ${slip?`<p class="mut" style="margin:12px 0 0">Slips in this column (pegs move w
  $("mvB").onchange=()=>{const bb=pgBoard($("mvB").value);$("mvC").max=bb.cols;$("mvR").max=bb.rows;};
  $("mvGo").onclick=()=>{const tc=Number($("mvC").value),tr=Number($("mvR").value),bn=$("mvB").value,bb=pgBoard(bn);if(!(Number.isInteger(tc)&&Number.isInteger(tr)&&tc>=1&&tr>=1&&tc<=bb.cols&&tr<=bb.rows)){$("pgM").textContent=bn+" has columns 1–"+bb.cols+" and slips 1–"+bb.rows+". Enter whole numbers in that range.";return;}
   pgMoveDo({board:name,key:k},{board:bn,key:pegKey(tr,tc)},pgMoveMode());};
+ if($("pgEqC"))$("pgEqC").onclick=()=>eqCarry(v.n); /* v61: copies the name; this slip stays where it is */
  $("mvTap").onclick=()=>{pgMoving={board:name,key:k};pgHeld=null;pgClose();$("pgM").textContent="Moving "+(v.n||"this slip")+". Tap the slip where it should go (you can change the board first).";pgRender();};
  pgRender();e.scrollIntoView({block:"nearest"});$("pgN").focus({preventScroll:true});}
 function pgClose(){pgSelKey=null;$("pgEd").classList.add("hide");$("pgEd").innerHTML="";}
@@ -1961,6 +1991,7 @@ function pgBarRender(name,b){const el=$("pgBb");if(!el)return;el.classList.remov
  if(pgMoving&&!(pgD.boards[pgMoving.board]&&pgD.boards[pgMoving.board].pegs[pgMoving.key]))pgMoving=null;
  const where=pos=>pos&&b.pegs[pos]?(b.pegs[pos].n||"(no name)"):pos?"(blank slip)":"not placed";
  let h="";
+ if(pgCarry)h+=`<div class="hold eqcarry" role="status">Carrying <b>${esc(pgCarry.n)}</b> for the ${esc(EQ_NAME)}. <div class="row" style="margin-top:6px"><button type="button" id="bbEqGo" class="p">Open reserve board</button><button type="button" id="bbEqX">Cancel</button></div></div>`;
  if(pgMoving){const mb=pgD.boards[pgMoving.board],mm=pgMoving.key.split("-");h+=`<div class="hold" role="status">Moving ${esc(mb.pegs[pgMoving.key].n||"slip")} (${esc(pgMoving.board)}, column ${mm[1]}, slip ${mm[0]}) – tap the slip where it should go. You can change the board first. <div class="row" style="margin-top:6px"><button type="button" id="bbMm2">${pgMoveModeText()}</button><button type="button" id="bbMvX">Cancel move</button></div></div>`;}
  h+=`<div class="lgd" role="group" aria-label="Peg legend">`+b.jobs.map(j=>`<span class="lcw">`+pgChip("j",j.id,j.name,j.color,where(j.pos),!!(pgHeld&&pgHeld.t==="j"&&pgHeld.id===j.id))+`<button type="button" class="lce" data-e="${esc(j.id)}" aria-label="Edit peg ${esc(j.name)}">✎</button></span>`).join("")+pgD.globals.map(g=>pgChip("g",g.id,g.name,0,g.board&&g.pos?(g.board===name?where(g.pos):g.board):"not placed",!!(pgHeld&&pgHeld.t==="g"&&pgHeld.id===g.id))).join("")+`</div>`;
  if(!b.jobs.length)h+=`<p class="mut" style="margin:0 0 6px">This board has no job pegs yet. Use “Add peg to this board” (name and color) below.</p>`;
@@ -2027,18 +2058,19 @@ window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{
   const sl=g.querySelector('.slip[data-k="'+k+'"]');if(sl)sl.classList.add("dragsrc");
   ghost=document.createElement("div");ghost.id="pgGh";ghost.setAttribute("aria-hidden","true");ghost.textContent=v.n||"(slip)";document.body.appendChild(ghost);
   bar=document.createElement("div");bar.id="pgDt";bar.setAttribute("role","group");bar.setAttribute("aria-label","Drop on a board to send the slip there");
-  bar.innerHTML='<span>Send to board:</span>'+pgNames().filter(n=>n!==pgCur()).map(n=>`<button type="button" class="dtb" data-b="${esc(n)}" tabindex="-1">${esc(n)}</button>`).join("");document.body.appendChild(bar);
+  bar.innerHTML='<span>Send to board:</span><button type="button" class="dtb dteq" data-b="__eq" tabindex="-1">🚜 Equipment reserve (copy name)</button>'+pgNames().filter(n=>n!==pgCur()).map(n=>`<button type="button" class="dtb" data-b="${esc(n)}" tabindex="-1">${esc(n)}</button>`).join("");document.body.appendChild(bar);
   document.body.classList.add("pgdrag");try{if(touch&&navigator.vibrate)navigator.vibrate(15);}catch(e){}
   $("pgM").textContent="Dragging "+(v.n||"slip")+". Drop on a slip to put it there ("+(pgMoveMode()==="swap"?"swap":"insert")+"), or on a board name below to send it to another board. Move off the board to cancel.";over(x,y);}
  function over(x,y){if(!pgDrag)return;lx=x;ly=y;clearMarks();ghost.style.left=Math.min(Math.max(x,110),window.innerWidth-110)+"px";ghost.style.top=y+"px";
   const el=document.elementFromPoint(x,y),sl=slipOf(el),bt=el&&el.closest?el.closest(".dtb"):null;pgDrag.to=null;
-  if(bt){bt.classList.add("on");pgDrag.to={b:bt.dataset.b};ghost.dataset.t="Send to "+bt.dataset.b;}
+  if(bt){bt.classList.add("on");pgDrag.to={b:bt.dataset.b};ghost.dataset.t=bt.dataset.b==="__eq"?"Reserve equipment (copy)":"Send to "+bt.dataset.b;}
   else if(sl&&sl.dataset.k!==pgDrag.key){const t=pgBoard(pgCur()).pegs[sl.dataset.k],sw=pgMoveMode()==="swap"&&t&&(t.n||t.note);pgDrag.to={key:sl.dataset.k};sl.classList.add(sw?"dt-swap":"dt-ins");ghost.dataset.t=!t||!(t.n||t.note)?"Place here":sw?"Swap with "+(t.n||"slip"):"Insert here";}
   else ghost.dataset.t="";
   const r=g.getBoundingClientRect(),m=36;if(y<r.top+m)g.scrollTop-=14;else if(y>r.bottom-m&&y<r.bottom+m)g.scrollTop+=14;if(x<r.left+m)g.scrollLeft-=14;else if(x>r.right-m)g.scrollLeft+=14;}
  function end(commit){if(!pgDrag)return;const d=pgDrag,to=d.to;pgDrag=null;pgDragEnd=Date.now();pend=null;clearMarks();
   if(ghost){ghost.remove();ghost=null;}if(bar){bar.remove();bar=null;}document.body.classList.remove("pgdrag");const sl=g.querySelector(".dragsrc");if(sl)sl.classList.remove("dragsrc");
   if(!commit||!to){$("pgM").textContent=commit?"Not moved. Drop it on a slip to move it.":"Move cancelled.";return;}
+  if(to.b==="__eq"){const sv=pgBoard(d.board).pegs[d.key];eqCarry(sv&&sv.n);return;} /* v61: copy the name, the slip stays */
   if(to.b){pgMoving={board:d.board,key:d.key};pgD.sel=to.b;pegsSave(pgD);pgClose();$("pgM").textContent="Now tap the slip on "+to.b+" where it should go.";pgRender();return;}
   pgMoveDo({board:d.board,key:d.key},{board:d.board,key:to.key},pgMoveMode());}
  /* touch: press and hold ~0.45 s without moving, then drag; two fingers (pinch) always win */
@@ -2173,13 +2205,13 @@ function pegSnapBlob(m){return new Promise((res,rej)=>{try{const pad=16,hh=72,co
 async function pegShareSnap(name,b,gOn,m){const now=new Date();if(m)m.textContent="Making the board picture…";let bl;
  try{bl=await pegSnapBlob(pegSnapModel(name,b,gOn,now));}catch(e){if(m)m.textContent="Couldn't draw the board picture on this phone.";return;}
  const r=await shareImgs([new File([bl],pegSnapName(name,now),{type:"image/png"})],name+" – board picture",name+" – board picture, "+pegWhen(now)+" (ILWU LIFE)",m);if(r==="cancel"&&m)m.textContent="";}
-$("pgSnap").onclick=()=>{if(pgEq){eqShareSnap(eqB,$("pgM"));return;}const name=pgCur();pegShareSnap(name,pgBoard(name),pegGlobalsOn(pgD,name),$("pgM"));};
+$("pgSnap").onclick=()=>{if(pgEq){eqShareSnap(eqView().b,$("pgM"));return;}const name=pgCur();pegShareSnap(name,pgBoard(name),pegGlobalsOn(pgD,name),$("pgM"));};
 
 $("pgJC").innerHTML=PEG_COLORS.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
 $("pgJA").onclick=()=>{const name=pgCur(),b=pgBoard(name),cv=$("pgJC").value,r=pegJobAdd(b,$("pgJN").value,new Date(),cv===""?undefined:cv);if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);$("pgJN").value="";$("pgM").textContent="Added peg “"+r.job.name+"” to "+name+". Tap it in the legend, then tap a slip circle.";pgRender();};
 $("pgJN").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("pgJA").click();}});
 function pgUndo(){const name=pgCur(),r=pegUndo(pgBoard(name),new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgStore(name,r.board);pgClose();pgRender();$("pgM").textContent="Undid: "+r.undone.label+".";}
-$("pgShare").onclick=async()=>{const name=pgSelName(),text=pgEq?eqText(eqB,new Date()):pegBoardText(name,pgBoard(name),new Date(),pgD),m=$("pgM");
+$("pgShare").onclick=async()=>{const name=pgSelName(),text=pgEq?eqText(eqView().b,new Date()):pegBoardText(name,pgBoard(name),new Date(),pgD),m=$("pgM");
  try{if(navigator.share){await navigator.share({title:name+" – board update",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
  let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
  if(!ok){try{const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();}catch(e){}}
@@ -2211,59 +2243,103 @@ function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
  $("gnNew").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("gnAdd").click();}});
  $("gmDn").onclick=()=>o.remove();$("gmDn").focus();}
 $("pgPre").onclick=()=>{const name="Bull board",r=pegPresetAdd(pgBoard(name));if(!r.added){$("pgM").textContent="All preset jobs are already on the Bull board.";return;}pgStore(name,r.board);$("pgM").textContent="Added "+r.added+" preset job"+(r.added===1?"":"s")+".";pgRender();};
-/* ===== v60: Equipment reserve board UI ===== */
-function eqLoad(){const raw=lsJson(EQK,null),b=eqClean(raw);if(!raw){try{LSset(EQK,JSON.stringify(b));}catch(e){}}return b;}
-function eqSave(b){eqB=b;LSset(EQK,JSON.stringify(b));if(typeof shTouch==="function")shTouch();}
+/* ===== v60/v61: Equipment reserve board UI ===== */
+function eqLoad(){const raw=lsJson(EQK,null);let b=eqClean(raw);
+ if(raw&&LS(EQMIG,"")!=="1"){const u=eqUnseed(b);b=u.board;LSset(EQMIG,"1");if(u.removed){try{LSset(EQK,JSON.stringify(b));}catch(e){}}} /* v61: drop untouched v60 photo seeds */
+ else if(!raw){LSset(EQMIG,"1");try{LSset(EQK,JSON.stringify(b));}catch(e){}}return b;}
+function eqSave(b){eqB=b;LSset(EQK,JSON.stringify(b));}
 function eqBy(){let n="";try{n=window.l19Fb&&window.l19Fb.name?window.l19Fb.name():"";}catch(e){}if(!n)n=LS("l19.chatName","");return chatName(n);}
 function pgSelName(){return pgEq?EQ_NAME:pgCur();}
+/* shared live mode: an admin has shared the board in this chat room. Structure from the board doc; reservations from the slots subcollection (or, before the new rules are live, from the board doc). */
+function eqSh(){if(!shJoined())return null;return shAll().find(x=>x.id===EQ_ID&&x.eq)||null;}
+function eqSlC(){const c=lsJson(EQSK,null);return c&&typeof c==="object"&&window.l19Fb&&c.code===window.l19Fb.code()&&c.slots&&typeof c.slots==="object"?c:null;}
+function eqSlSave(c){try{LSset(EQSK,JSON.stringify(c));}catch(e){}}
+function eqView(){const sh=eqSh();if(!sh)return{b:eqB,sh:null,live:false};const c=eqSlC();if(c&&c.ok)return{b:eqWithSlots(sh.eq,c.slots),sh:sh,live:true};return{b:sh.eq,sh:sh,live:false,denied:!!(c&&c.denied)};}
+function eqSlStart(){const F=window.l19Fb;if(!F||!shJoined())return;const code=F.code();if(eqSlUnsub&&eqSlCode===code)return;if(eqSlUnsub){try{eqSlUnsub();}catch(e){}eqSlUnsub=null;}
+ const f=F.fs(),db=F.db();if(!f||!db)return;eqSlCode=code;
+ eqSlUnsub=f.onSnapshot(f.collection(db,"rooms",code,"boards",EQ_ID,"slots"),snap=>{const s={};snap.docs.forEach(d=>{s[d.id]=d.data();});eqSlSave({code:code,ok:true,at:Date.now(),slots:s});shRepaint();},
+  e=>{const den=/permission/.test(e&&e.code||"");if(den)eqSlSave({code:code,ok:false,denied:true,slots:{}});eqSlUnsub=null;eqSlCode="";shRepaint();});}
+async function eqRemote(sets){const F=window.l19Fb,code=F.code(),c=eqSlC()||{code:code,ok:false,slots:{}},prev={};
+ for(const x of sets){const id=eqSlotId(x.u,x.side);prev[id]=c.slots[id];if(x.slot)c.slots[id]=eqSlotDoc(x.slot,F.uid()||"");else delete c.slots[id];}eqSlSave(c); /* optimistic: shows at once, even offline */
+ try{await F.ready();const f=F.fs(),db=F.db(),me=F.uid();
+  await Promise.all(sets.map(x=>{const ref=f.doc(db,"rooms",code,"boards",EQ_ID,"slots",eqSlotId(x.u,x.side));return x.slot?f.setDoc(ref,eqSlotDoc(x.slot,me)):f.deleteDoc(ref);}));return{ok:true};}
+ catch(e){const c2=eqSlC()||c;for(const id of Object.keys(prev)){if(prev[id])c2.slots[id]=prev[id];else delete c2.slots[id];}eqSlSave(c2);return{ok:false,denied:/permission/.test(e&&e.code||""),e:e};}}
+async function eqPushDoc(b){const F=window.l19Fb,c=lsJson(SHK,null);
+ if(c&&c.boards&&c.boards[EQ_ID]&&c.code===F.code()){c.boards[EQ_ID]={...c.boards[EQ_ID],...eqShareBuild(b)};try{LSset(SHK,JSON.stringify(c));}catch(e){}} /* optimistic */
+ await F.ready();const f=F.fs();await f.setDoc(f.doc(F.db(),"rooms",F.code(),"boards",EQ_ID),{...eqShareBuild(b),updatedAt:f.serverTimestamp(),updatedBy:F.uid(),updatedByName:chatName(F.name())||"?"});}
+/* one place that saves a change: local board, or the live room board (members: Day/Night slots only; admins: also units) */
+async function eqCommit(nb,msg){const v=eqView(),pm=$("pgM");
+ if(!v.sh){eqSave(nb);pm.textContent=msg||"";pgRender();return true;}
+ const st=eqStructKey(v.b)!==eqStructKey(nb),adm=shAdmin(),diffs=eqDiff(v.b,nb);
+ if(st&&!adm){pm.textContent="Only admins can change the unit list.";pgRender();return false;}
+ pm.textContent=msg||"";let ok=true;const pDoc=st&&adm?eqPushDoc(nb).then(()=>null,e=>e||{}):null;
+ if(diffs.length){const p=eqRemote(diffs);pgRender();const r=await p;
+  if(!r.ok){if(r.denied&&adm){try{await eqPushDoc(nb);pm.textContent=(msg?msg+" ":"")+"(Saved in the shared board doc: the new reservation rules aren't live yet.)";}catch(e){ok=false;pm.textContent="Couldn't save to the room. "+shFriendly(e);}}
+   else{ok=false;eqSave(nb);pm.textContent=r.denied?EQ_RULES_MSG+" Kept on this phone only.":"Couldn't reach the room. "+shFriendly(r.e)+" Kept on this phone only.";}}}
+ if(pDoc){const e=await pDoc;if(e){ok=false;pm.textContent="Couldn't update the unit list in the room. "+shFriendly(e);}}
+ pgRender();return ok;}
 function eqSlotHtml(r,i,s,ro){const v=r[s],lab=s==="d"?"Day":"Night",st=eqStamp(v);
  const inner=v?`<span class="nm">${esc(v.n)}</span>${v.o?`<span class="no">${esc(v.o)}</span>`:""}${st?st.split(" · ").map(x=>`<span class="st">${esc(x)}</span>`).join(""):""}`:`<span class="ph">${ro?"":"+ "}${lab}</span>`;
  if(ro)return`<div class="eqc"><div class="eqs${v?" f":""}">${inner}</div></div>`;
- return`<div class="eqc"><button type="button" class="eqs${v?" f":""}" data-i="${i}" data-s="${s}" aria-label="Unit ${esc(r.u)} ${lab}: ${v?esc(v.n)+(v.o?", "+esc(v.o):"")+(st?", "+esc(st):"")+". Tap to edit":"open. Tap to reserve"}">${inner}</button>${v?`<button type="button" class="eqdel" data-i="${i}" data-s="${s}" aria-label="Remove ${esc(v.n)} from unit ${esc(r.u)} ${lab}">✕</button>`:""}</div>`;}
-function eqBoardHtml(b,ro){let t=`<div class="eqb" style="--bz:${pgZoom()}"><div class="eqhd" aria-hidden="true"><span>Unit</span><span>☀ Day</span><span>☾ Night</span></div>`;
+ return`<div class="eqc"><button type="button" class="eqs${v?" f":""}${pgCarry?" drop":""}" data-i="${i}" data-s="${s}" aria-label="Unit ${esc(r.u)} ${lab}: ${v?esc(v.n)+(v.o?", "+esc(v.o):"")+(st?", "+esc(st):"")+(pgCarry?". Tap to replace with "+esc(pgCarry.n):". Tap to edit"):(pgCarry?"open. Tap to reserve for "+esc(pgCarry.n):"open. Tap to reserve")}">${inner}</button>${v&&!pgCarry?`<button type="button" class="eqdel" data-i="${i}" data-s="${s}" aria-label="Remove ${esc(v.n)} from unit ${esc(r.u)} ${lab}">✕</button>`:""}</div>`;}
+function eqBoardHtml(b,ro,canU){let t=`<div class="eqb" style="--bz:${pgZoom()}"><div class="eqhd" aria-hidden="true"><span>Unit</span><span>☀ Day</span><span>☾ Night</span></div>`;
  for(const sec of eqSections(b)){t+=`<div class="eqsec" role="heading" aria-level="4">${esc(sec.name)}</div>`;
   for(const x of sec.rows){const r=x.r,u=`<span class="un">${esc(r.u)}</span>${r.t?`<small>${esc(r.t)}</small>`:""}`;
-   t+=`<div class="eqr">${ro?`<div class="equ">${u}</div>`:`<button type="button" class="equ" data-i="${x.i}" aria-label="Unit ${esc(r.u)}${r.t?" ("+esc(r.t)+")":""}. Tap to rename, move or remove">${u}</button>`}${eqSlotHtml(r,x.i,"d",ro)}${eqSlotHtml(r,x.i,"n",ro)}</div>`;}}
+   t+=`<div class="eqr">${ro||!canU?`<div class="equ">${u}</div>`:`<button type="button" class="equ" data-i="${x.i}" aria-label="Unit ${esc(r.u)}${r.t?" ("+esc(r.t)+")":""}. Tap to rename, move or remove">${u}</button>`}${eqSlotHtml(r,x.i,"d",ro)}${eqSlotHtml(r,x.i,"n",ro)}</div>`;}}
  if(!b.rows.length)t+=`<p class="mut" style="padding:8px;color:#dfe8ff">No units yet. Use “Add unit” below.</p>`;
  return t+"</div>";}
-/* long names shrink a step first, and only wrap if they still do not fit */
-function eqNameFit(g){g.querySelectorAll(".eqs .nm").forEach(e=>{if(e.scrollWidth>e.clientWidth+1){e.classList.add("sm");if(e.scrollWidth>e.clientWidth+1)e.classList.add("w2");}});}
-function eqRender(){const b=eqB,c=eqCount(b),g=$("pgGrid");g.classList.add("bbg");g.setAttribute("aria-label",EQ_NAME+" (scrolls)");
- $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet (names from the board photo).";
+function eqRender(){const v=eqView(),b=v.b,c=eqCount(b),g=$("pgGrid"),adm=!v.sh||shAdmin();g.classList.add("bbg");g.setAttribute("aria-label",EQ_NAME+" (scrolls)");
+ $("pgUp").innerHTML=v.sh?"🔗 <b>Live room board</b> · "+esc(shOffline()?"offline copy, last updated "+(v.sh.ms?pegWhen(new Date(v.sh.ms)):"unknown"):shWhenBy(v.sh)):(b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"No reservations yet.");
  const side=LS(PGP,"0")==="1";$("pgWrap").classList.toggle("side",side);$("pgPane").classList.toggle("hide",!side);$("pgZb").classList.remove("hide");
  const bb=$("pgBb");bb.classList.remove("hide");
- bb.innerHTML=`<p class="eqsum" role="status"><b>${c.d}</b> Day · <b>${c.n}</b> Night reserved · ${c.units} units</p><div class="row"><button type="button" id="bbPhoto" aria-pressed="${side}">Photo beside board: ${side?"on":"off"}</button><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button></div>`;
+ bb.innerHTML=(pgCarry?`<div class="hold eqcarry" role="status">Carrying <b>${esc(pgCarry.n)}</b>. Tap a Day/Night slot to reserve. <button type="button" id="eqCarryX">Cancel</button></div>`:"")+
+  (v.sh&&!v.live?`<p class="eqwarn" role="status">${v.denied?esc(EQ_RULES_MSG)+(shAdmin()?" Until then, your reservations are saved in the shared board doc.":" Until then you can view only."):"Connecting to live reservations…"}</p>`:"")+
+  `<p class="eqsum" role="status"><b>${c.d}</b> Day · <b>${c.n}</b> Night reserved · ${c.units} units</p><div class="row"><button type="button" id="bbPhoto" aria-pressed="${side}">Photo beside board: ${side?"on":"off"}</button><button type="button" id="bbZo" aria-label="Smaller text">A−</button><button type="button" id="bbZi" aria-label="Larger text">A+</button></div>`;
  const secs=[...new Set(b.rows.map(r=>r.s).concat(["Units","Sidepicks"]))];
  $("pgBb2").classList.remove("hide");
- $("pgBb2").innerHTML=`<p class="mut" style="margin:6px 0 0">Tap Day or Night to type a name (first initial + last name). Each reservation gets a time stamp. Tap ✕ to remove one (Undo for 5 seconds). Tap a unit number to rename, move or remove it. Pinch or use − / + / Fit to zoom.</p>
- <details class="eqman"${eqManOpen?" open":""}><summary>Manage units &amp; clear (admin)</summary>
+ $("pgBb2").innerHTML=`<p class="mut" style="margin:6px 0 0">Tap Day or Night to type a name (first initial + last name). Each reservation gets a time stamp. Tap ✕ to remove one (Undo for 5 seconds). To use a name from the Bull board: open its slip there and tap “🚜 Reserve equipment”, or drag the slip onto “🚜 Equipment reserve”. The Bull board keeps the name.${adm?" Tap a unit number to rename, move or remove it.":""} Pinch or use − / + / Fit to zoom.</p>
+ ${adm?`<details class="eqman"${eqManOpen?" open":""}><summary>Manage units &amp; clear (admin)</summary>
  <div class="row eqadd"><input id="eqAU" maxlength="12" inputmode="numeric" placeholder="Unit #" aria-label="New unit number" autocomplete="off"><select id="eqAS" aria-label="Section">${secs.map(s=>`<option>${esc(s)}</option>`).join("")}</select><button type="button" id="eqAdd" style="flex:0 0 auto">Add unit</button></div>
- <div class="row"><button type="button" class="d" id="eqClD">Clear Day</button><button type="button" class="d" id="eqClN">Clear Night</button><button type="button" class="d" id="eqClA">Clear all</button></div>
- <p class="mut" style="margin:6px 0 0">${shJoined()?(shAdmin()?"You're an admin: use “Share this board with the room” above so everyone sees it live (read-only for them).":"This is your own copy on this phone. Only room admins can change the shared live copy."):"This copy is on this phone. Room admins can share it live from Chat rooms."}</p></details>`;
+ <div class="row"><button type="button" class="d" id="eqClD">Clear Day</button><button type="button" class="d" id="eqClN">Clear Night</button><button type="button" class="d" id="eqClA">Clear all</button></div></details>`:""}
+ <p class="mut" style="margin:6px 0 0">${v.sh?"Live in room "+esc(window.l19Fb.code())+": anyone in the chat room can reserve or remove a Day/Night name; only admins change units or clear the board.":shJoined()?(shAdmin()?"You're an admin: use “Share this board with the room” above so everyone in the room can reserve live.":"This copy is on this phone. When a room admin shares the board, everyone in the room can reserve on it live."):"This copy is on this phone. Join Chat to use a room's live board."}</p>`;
  const dm=$("pgBb2").querySelector(".eqman");if(dm)dm.ontoggle=()=>{eqManOpen=dm.open;};
- g.innerHTML=`<div class="bbz">${eqBoardHtml(b,false)}</div>`;eqNameFit(g);pgZApply();
+ g.innerHTML=`<div class="bbz">${eqBoardHtml(b,false,adm)}</div>`;eqNameFit(g);pgZApply();
  const pane=$("pgPane");if(pane&&!pane.classList.contains("hide")&&!pane.firstChild)pane.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';
  refreshPegPic();}
-let eqUndoT=0,eqManOpen=false;
+/* long names shrink a step first, and only wrap if they still do not fit */
+function eqNameFit(g){g.querySelectorAll(".eqs .nm").forEach(e=>{if(e.scrollWidth>e.clientWidth+1){e.classList.add("sm");if(e.scrollWidth>e.clientWidth+1)e.classList.add("w2");}});}
+let eqUndoT=0;
 function eqToast(msg,undo){let t=$("eqToast");if(t)t.remove();t=document.createElement("div");t.id="eqToast";t.setAttribute("role","status");
  t.innerHTML=`<span>${esc(msg)}</span>`+(undo?'<button type="button" id="eqUndo">Undo</button>':"");document.body.appendChild(t);clearTimeout(eqUndoT);
- if(undo)$("eqUndo").onclick=()=>{clearTimeout(eqUndoT);t.remove();const r=eqRestore(eqB,undo,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}eqSave(r.board);$("pgM").textContent="Restored "+undo.slot.n+" on "+undo.u+".";pgRender();};
+ if(undo)$("eqUndo").onclick=()=>{clearTimeout(eqUndoT);t.remove();const r=eqRevert(eqView().b,undo,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}eqCommit(r.board,"Undone.");};
  eqUndoT=setTimeout(()=>{if(t.parentNode)t.remove();},5000);}
-function eqDel(i,s){const r=eqClearSlot(eqB,i,s,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}eqSave(r.board);pgRender();
- eqToast("Removed "+r.undo.slot.n+" from "+r.undo.u+" "+(s==="n"?"Night":"Day")+".",r.undo);}
-function eqEditSlot(i,s){if($("eqSS"))return;const r=eqB.rows[i];if(!r)return;const v=r[s]||{n:"",o:""},lab=s==="n"?"Night":"Day",st=eqStamp(r[s]),o=pgSheet("eqSS");
+function eqLab(s){return s==="n"?"Night":"Day";}
+function eqDel(i,s){const v=eqView(),row=v.b.rows[i],r=eqClearSlot(v.b,i,s,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}
+ eqCommit(r.board,"");eqToast("Removed "+r.undo.slot.n+" from "+row.u+" "+eqLab(s)+".",{u:row.u,side:s,prev:r.undo.slot,cur:null});}
+/* v61: carry a name from the Bull board (or any peg board) to a Day/Night slot. Copies the name; the peg board is not changed. */
+function eqCarry(n){n=eqS(n,40);if(!n){$("pgM").textContent="That slip has no name to carry.";return;}pgCarry={n:n};pgEq=true;LSset("l19.eqSel","1");pgHeld=null;pgMoving=null;pgShared=null;pgClose();pgRender();
+ $("pgM").textContent="Carrying "+n+". Tap a Day/Night slot to reserve, or Cancel.";const bn=$("pgBb");if(bn&&bn.scrollIntoView)bn.scrollIntoView({block:"start"});}
+function eqCarryX(){pgCarry=null;$("pgM").textContent="Stopped carrying the name.";pgRender();}
+function eqDrop(i,s){const v=eqView(),row=v.b.rows[i];if(!row||!pgCarry)return;const n=pgCarry.n,cur=row[s];
+ if(cur&&cur.n===n){pgCarry=null;$("pgM").textContent=n+" already has "+row.u+" "+eqLab(s)+".";pgRender();return;}
+ if(cur&&!confirm("Replace "+cur.n+" on "+row.u+" "+eqLab(s)+" with "+n+"?"))return;
+ const q=eqSet(v.b,i,s,n,"",new Date(),eqBy());if(!q.ok){$("pgM").textContent=q.error;return;}pgCarry=null;
+ eqCommit(q.board,"Reserved "+row.u+" "+eqLab(s)+" for "+n+".");eqToast("Reserved "+row.u+" "+eqLab(s)+" for "+n+".",{u:row.u,side:s,prev:cur||null,cur:q.board.rows[i][s]});}
+function eqEditSlot(i,s){if($("eqSS"))return;const v0=eqView(),r=v0.b.rows[i];if(!r)return;const v=r[s]||{n:"",o:""},lab=eqLab(s),st=eqStamp(r[s]),o=pgSheet("eqSS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="eqST" class="rot"><h3 id="eqST">Unit ${esc(r.u)} · ${lab}</h3>
  <label for="eqN" style="margin-top:0">Name (first initial + last name)</label><input id="eqN" maxlength="40" autocomplete="off" autocapitalize="words" value="${esc(v.n)}" enterkeyhint="done">
  <label for="eqO">Note / shift <span class="mut">(optional)</span></label><input id="eqO" maxlength="24" autocomplete="off" value="${esc(v.o)}" placeholder="e.g. Floor, CMA">
  <p class="mut" style="margin:6px 0 0">${st?"Set "+esc(st)+". ":""}Saving stamps it with the time${eqBy()?" and “"+esc(eqBy())+"”":""}.</p>
  <div class="row"><button type="button" class="p" id="eqSv">Save</button>${r[s]?'<button type="button" class="d" id="eqCl">✕ Remove</button>':""}<button type="button" id="eqCx">Cancel</button></div></div>`;
  o.onclick=ev=>{if(ev.target===o)o.remove();};
- const save=()=>{const nv=$("eqN").value,q=eqSet(eqB,i,s,nv,$("eqO").value,new Date(),eqBy());o.remove();if(!q.ok){$("pgM").textContent=q.error;return;}
-  if(q.changed){if(q.undo){eqSave(q.board);pgRender();eqToast("Removed "+q.undo.slot.n+" from "+q.undo.u+" "+lab+".",q.undo);return;}eqSave(q.board);$("pgM").textContent="Reserved "+r.u+" "+lab+" for "+eqS(nv,40)+".";}pgRender();
-  const c=document.querySelector('#pgGrid .eqs[data-i="'+i+'"][data-s="'+s+'"]');if(c)c.scrollIntoView({block:"nearest",inline:"nearest"});};
+ const save=()=>{const nv=$("eqN").value,b=eqView().b,cur=b.rows[i]&&b.rows[i].u===r.u?b.rows[i][s]:r[s],q=eqSet(b,i,s,nv,$("eqO").value,new Date(),eqBy());o.remove();if(!q.ok){$("pgM").textContent=q.error;return;}
+  if(!q.changed){pgRender();return;}
+  if(q.undo){eqCommit(q.board,"");eqToast("Removed "+q.undo.slot.n+" from "+r.u+" "+lab+".",{u:r.u,side:s,prev:q.undo.slot,cur:null});return;}
+  eqCommit(q.board,"Reserved "+r.u+" "+lab+" for "+eqS(nv,40)+".");if(cur)eqToast("Changed "+r.u+" "+lab+" to "+eqS(nv,40)+".",{u:r.u,side:s,prev:cur,cur:q.board.rows[i][s]});};
  $("eqSv").onclick=save;$("eqN").onkeydown=$("eqO").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();save();}};
  if($("eqCl"))$("eqCl").onclick=()=>{o.remove();eqDel(i,s);};$("eqCx").onclick=()=>o.remove();$("eqN").focus();}
-function eqEditRow(i){if($("eqRS"))return;const r=eqB.rows[i];if(!r)return;const secs=[...new Set(eqB.rows.map(x=>x.s).concat(["Units","Sidepicks"]))],o=pgSheet("eqRS");
+function eqEditRow(i){if($("eqRS"))return;const v=eqView(),B=v.b,r=B.rows[i];if(!r)return;if(v.sh&&!shAdmin()){$("pgM").textContent="Only admins can change the unit list.";return;}
+ const secs=[...new Set(B.rows.map(x=>x.s).concat(["Units","Sidepicks"]))],o=pgSheet("eqRS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="eqRT" class="rot"><h3 id="eqRT">Unit ${esc(r.u)}</h3>
  <label for="eqRU" style="margin-top:0">Unit number</label><input id="eqRU" maxlength="12" autocomplete="off" value="${esc(r.u)}">
  <label for="eqRG">Tag <span class="mut">(optional, e.g. RAIL / FLIP)</span></label><input id="eqRG" maxlength="16" autocomplete="off" value="${esc(r.t)}">
@@ -2273,25 +2349,38 @@ function eqEditRow(i){if($("eqRS"))return;const r=eqB.rows[i];if(!r)return;const
  <div class="row"><button type="button" id="eqRUp">▲ Move up</button><button type="button" id="eqRDn">▼ Move down</button></div>
  <div class="row"><input id="eqRNew" maxlength="12" placeholder="New unit #" aria-label="Unit number to insert below" autocomplete="off"><button type="button" id="eqRIns" style="flex:0 0 auto">Insert below</button></div>
  <button type="button" class="d" id="eqRRm" style="width:100%;margin-top:8px">Remove unit ${esc(r.u)}</button></div>`;
- const done=(q,msg)=>{if(!q.ok){$("eqRM").textContent=q.error;return false;}eqSave(q.board);o.remove();$("pgM").textContent=msg;pgRender();return true;};
+ const done=(q,msg,again)=>{if(!q.ok){$("eqRM").textContent=q.error;return;}o.remove();eqCommit(q.board,msg);if(again!=null)eqEditRow(again);};
  o.onclick=ev=>{if(ev.target===o)o.remove();};$("eqRCx").onclick=()=>o.remove();
- $("eqRSv").onclick=()=>done(eqRowEdit(eqB,i,$("eqRU").value,$("eqRG").value,$("eqRSec").value,new Date()),"Saved unit "+eqS($("eqRU").value,12)+".");
- $("eqRUp").onclick=()=>{const q=eqRowMove(eqB,i,-1,new Date());if(done(q,"Moved "+r.u+" up."))eqEditRow(q.i);};
- $("eqRDn").onclick=()=>{const q=eqRowMove(eqB,i,1,new Date());if(done(q,"Moved "+r.u+" down."))eqEditRow(q.i);};
- $("eqRIns").onclick=()=>done(eqRowAdd(eqB,$("eqRNew").value,r.s,i,new Date()),"Added unit "+eqS($("eqRNew").value,12)+".");
- $("eqRRm").onclick=()=>{if(!confirm("Remove unit "+r.u+(r.d||r.n?" and its reservations":"")+" from the board?"))return;done(eqRowRemove(eqB,i,new Date()),"Removed unit "+r.u+".");};
+ $("eqRSv").onclick=()=>done(eqRowEdit(eqView().b,i,$("eqRU").value,$("eqRG").value,$("eqRSec").value,new Date()),"Saved unit "+eqS($("eqRU").value,12)+".");
+ $("eqRUp").onclick=()=>{const q=eqRowMove(eqView().b,i,-1,new Date());done(q,"Moved "+r.u+" up.",q.ok?q.i:null);};
+ $("eqRDn").onclick=()=>{const q=eqRowMove(eqView().b,i,1,new Date());done(q,"Moved "+r.u+" down.",q.ok?q.i:null);};
+ $("eqRIns").onclick=()=>done(eqRowAdd(eqView().b,$("eqRNew").value,r.s,i,new Date()),"Added unit "+eqS($("eqRNew").value,12)+".");
+ $("eqRRm").onclick=()=>{if(!confirm("Remove unit "+r.u+(r.d||r.n?" and its reservations":"")+" from the board?"))return;done(eqRowRemove(eqView().b,i,new Date()),"Removed unit "+r.u+".");};
  $("eqRU").focus();}
 $("pgGrid").addEventListener("click",e=>{if(!pgEq||pgShared)return;const x=e.target.closest(".eqdel,.eqs,.equ");if(!x)return;const i=+x.dataset.i,s=x.dataset.s;
+ if(pgCarry){if(x.classList.contains("equ")){$("pgM").textContent="Tap the Day or Night slot next to the unit to reserve it for "+pgCarry.n+".";return;}eqDrop(i,s);return;}
  if(x.classList.contains("eqdel")){eqDel(i,s);return;}
  const go=()=>x.classList.contains("eqs")?eqEditSlot(i,s):eqEditRow(i);
  if(pgTouchAt&&Date.now()-pgTouchAt<700){clearTimeout(pgEditT);pgEditT=setTimeout(go,300);return;}go();});
-$("pgBb2").addEventListener("click",e=>{if(!pgEq)return;const b=e.target.closest("button");if(!b)return;const id=b.id,pm=$("pgM");
- if(id==="eqAdd"){const q=eqRowAdd(eqB,$("eqAU").value,$("eqAS").value,undefined,new Date());if(!q.ok){pm.textContent=q.error;return;}eqSave(q.board);pm.textContent="Added unit "+q.board.rows[q.i].u+".";pgRender();return;}
- const w=id==="eqClD"?"d":id==="eqClN"?"n":id==="eqClA"?"all":"";if(!w)return;const c=eqCount(eqB),n=w==="d"?c.d:w==="n"?c.n:c.d+c.n;
+$("pgBb").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.id==="eqCarryX"||b.id==="bbEqX")eqCarryX();else if(b.id==="bbEqGo"&&pgCarry)eqCarry(pgCarry.n);});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&pgCarry&&!document.querySelector(".sheet"))eqCarryX();});
+$("pgBb2").addEventListener("click",e=>{if(!pgEq)return;const b=e.target.closest("button");if(!b)return;const id=b.id,pm=$("pgM"),V=eqView().b;
+ if(id==="eqAdd"){const q=eqRowAdd(V,$("eqAU").value,$("eqAS").value,undefined,new Date());if(!q.ok){pm.textContent=q.error;return;}eqCommit(q.board,"Added unit "+q.board.rows[q.i].u+".");return;}
+ const w=id==="eqClD"?"d":id==="eqClN"?"n":id==="eqClA"?"all":"";if(!w)return;const c=eqCount(V),n=w==="d"?c.d:w==="n"?c.n:c.d+c.n;
  if(!n){pm.textContent="Nothing to clear.";return;}
- if(!confirm("Clear "+n+" "+(w==="d"?"Day":w==="n"?"Night":"Day and Night")+" reservation"+(n===1?"":"s")+" on "+EQ_NAME+"?"+(shMap()[EQ_NAME]?" The shared live copy updates too.":"")))return;
- const q=eqClear(eqB,w,new Date());eqSave(q.board);pm.textContent="Cleared "+q.count+" reservation"+(q.count===1?"":"s")+".";pgRender();});
+ if(!confirm("Clear "+n+" "+(w==="d"?"Day":w==="n"?"Night":"Day and Night")+" reservation"+(n===1?"":"s")+" on "+EQ_NAME+"?"+(eqSh()?" Everyone in the room sees this.":"")))return;
+ const q=eqClear(V,w,new Date());eqCommit(q.board,"Cleared "+q.count+" reservation"+(q.count===1?"":"s")+".");});
+/* v61: admins share / stop sharing the live room board */
+async function eqShareToggle(){const F=window.l19Fb,pm=$("pgM");if(!shAdmin())return;const sh=eqSh();
+ if(sh){if(!confirm("Stop sharing “"+EQ_NAME+"”? Everyone in the room loses the live board and its reservations. Your own copy stays."))return;
+  const keep=eqView().b;try{await F.ready();const f=F.fs(),db=F.db(),c=eqSlC();for(const id of Object.keys(c&&c.slots||{})){try{await f.deleteDoc(f.doc(db,"rooms",F.code(),"boards",EQ_ID,"slots",id));}catch(e){}}
+   await f.deleteDoc(f.doc(db,"rooms",F.code(),"boards",EQ_ID));eqSave(keep);pm.textContent="Stopped sharing. A copy stays on this phone.";}catch(e){pm.textContent="Couldn't stop sharing. "+shFriendly(e);}pgRender();return;}
+ if(!confirm("Share “"+EQ_NAME+"” live with everyone in room "+F.code()+"? Anyone in the room can then reserve or remove Day/Night names (with time stamps). Only admins change units. Photos stay on your phone."))return;
+ pm.textContent="Sharing…";try{await eqPushDoc(eqB);}catch(e){pm.textContent="Couldn't share. "+shFriendly(e);return;}
+ const sets=[];for(const r of eqB.rows)for(const s of ["d","n"])if(r[s])sets.push({u:r.u,side:s,slot:r[s]});
+ const r=sets.length?await eqRemote(sets):{ok:true};pm.textContent="Shared. Anyone in the room can now reserve."+(r.ok?"":r.denied?" "+EQ_RULES_MSG+" (Your current names are in the shared board doc.)":"");pgRender();}
 /* v60: equipment board picture (PNG) */
+
 function eqSnapBlob(m){return new Promise((res,rej)=>{try{const pad=16,hh=78,F="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif",uw=130,sw=290,rh=46,shH=30,colH=32;
  const W=pad*2+uw+sw*2,nr=m.sections.reduce((a,s)=>a+s.rows.length,0),H=hh+colH+m.sections.length*shH+nr*rh+pad+28;
  const cv=document.createElement("canvas"),x=cv.getContext("2d"),sc=W*H*4<=16e6?2:1;cv.width=W*sc;cv.height=H*sc;x.scale(sc,sc);
@@ -2326,7 +2415,7 @@ function shAdmin(){return !!(window.l19Fb&&window.l19Fb.isAdmin());}
 function shAll(){const c=lsJson(SHK,null);if(!shJoined()||!c||typeof c!=="object"||c.code!==window.l19Fb.code()||!c.boards||typeof c.boards!=="object")return[];
  return Object.keys(c.boards).map(k=>shareFromDoc(k,{...c.boards[k],updatedAt:c.boards[k].ms})).filter(Boolean).sort((a,b)=>a.name.localeCompare(b.name));}
 function shGet(id){return shAll().find(x=>x.id===id)||null;}
-function shListUi(){const all=shAll();if(!shAdmin())return all;const lk=shMap(),ids=new Set(Object.keys(lk).filter(n=>pgNames().includes(n)||n===EQ_NAME).map(n=>lk[n]));return all.filter(x=>!ids.has(x.id));}
+function shListUi(){const all=shAll().filter(x=>!x.eq);if(!shAdmin())return all;const lk=shMap(),ids=new Set(Object.keys(lk).filter(n=>pgNames().includes(n)||n===EQ_NAME).map(n=>lk[n]));return all.filter(x=>!ids.has(x.id));}
 function shFriendly(e){if(typeof navigator!=="undefined"&&navigator.onLine===false)return"You're offline.";const c=e&&e.code||"";if(/permission/.test(c))return"Shared boards aren't open yet (the server rules haven't been updated) or you aren't allowed.";if(/unavailable|network/.test(c))return"Can't reach the server right now.";return"Couldn't reach shared boards.";}
 function shWhenBy(sh){return sh.ms?"Last updated "+pegWhen(new Date(sh.ms))+(sh.byName?" by "+sh.byName:""):"Last updated: just now (waiting for the server)";}
 function shOffline(){return typeof navigator!=="undefined"&&navigator.onLine===false||!!shErr||shCached;}
@@ -2336,6 +2425,7 @@ async function shOpen(){shRepaint();if(!shJoined()){return;}
  if(typeof navigator!=="undefined"&&navigator.onLine===false){shErr="";shCached=true;shRepaint();return;}
  try{await window.l19Fb.ready();}catch(e){shErr=shFriendly(e);shRepaint();return;}
  if(!shReg){shReg=true;window.l19Fb.on(()=>shRepaint());}
+ try{eqSlStart();}catch(e){} /* v61: live equipment reservations */
  const code=window.l19Fb.code();if(shUnsub&&shCode===code)return;if(shUnsub){try{shUnsub();}catch(e){}shUnsub=null;}
  shCode=code;const f=window.l19Fb.fs(),db=window.l19Fb.db();
  shUnsub=f.onSnapshot(f.collection(db,"rooms",code,"boards"),snap=>{const boards={};snap.docs.forEach(d=>{const x=d.data({serverTimestamps:"estimate"}),ms=x&&x.updatedAt&&x.updatedAt.toMillis?x.updatedAt.toMillis():0;boards[d.id]={name:x.name,cols:x.cols,rows:x.rows,slips:x.slips,jobs:x.jobs,gl:x.gl,placements:x.placements,takes:x.takes,ms:ms,updatedBy:x.updatedBy,updatedByName:x.updatedByName};});
@@ -2383,17 +2473,19 @@ function shAdopt(sh){const name=sh.name,m=shMap();if(!pgNames().includes(name)){
  if(!pgNames().includes(name))pgD.custom.push(name);
  pgD.boards[name]=shareToBoard(sh);pgD.sel=name;m[name]=sh.id;shMapSet(m);shLast[name]=JSON.stringify(shareBuild(name,pgD.boards[name],pegGlobalsOn(pgD,name)));pegsSave(pgD);pgShared=null;$("pgM").textContent="Copied to your boards. Your edits will sync to the shared copy.";pgRender();}
 function shLocalUi(){const box=$("pgShr");if(!box)return;const show=shJoined()&&shAdmin();box.classList.toggle("hide",!show);if(!show)return;
+ if(pgEq){const es=eqSh(),ev=eqView();$("pgShB").textContent=es?"🔗 Shared live: tap to stop sharing":"Share this board with the room";$("pgShB").setAttribute("aria-pressed",String(!!es));
+  $("pgShS").textContent=shPushErr?shPushErr:es?("Shared in room "+window.l19Fb.code()+". Anyone in the room can reserve or remove names; only admins change units. "+shWhenBy(es)+"."+(ev.denied?" "+EQ_RULES_MSG:"")):"Admins only. Shares the unit list live; then anyone in the room can reserve Day/Night (names, notes, time stamps). Photos stay on your phone.";return;}
  const name=pgSelName(),m=shMap(),id=m[name],sh=id?shGet(id):null;
  $("pgShB").textContent=id?"🔗 Shared live: tap to stop sharing":"Share this board with the room";$("pgShB").setAttribute("aria-pressed",String(!!id));
  $("pgShS").textContent=shPushErr?shPushErr:id?("Shared in room "+window.l19Fb.code()+". Others see a read-only copy. "+(sh?shWhenBy(sh)+".":"Syncing…")):(pgEq?"Admins only. Shares the unit list and reservations (names, notes, time stamps) with everyone in the room, read-only. Photos stay on your phone.":"Admins only. Shares slip names, pegs and the take log with everyone in the room. Photos, notes and ★ stay on your phone.");}
-async function shPush(name,force){const F=window.l19Fb,id=shMap()[name],isEq=name===EQ_NAME;if(!F||!id||!F.isAdmin()||!(isEq||pgNames().includes(name)))return;
- const doc=isEq?eqShareBuild(eqB):shareBuild(name,pgBoard(name),pegGlobalsOn(pgD,name)),ser=JSON.stringify(doc);if(!force&&ser===shLast[name])return;
+async function shPush(name,force){const F=window.l19Fb,id=shMap()[name];if(name===EQ_NAME||!F||!id||!F.isAdmin()||!pgNames().includes(name))return; /* v61: the equipment board writes the room directly (eqCommit) */
+ const doc=shareBuild(name,pgBoard(name),pegGlobalsOn(pgD,name)),ser=JSON.stringify(doc);if(!force&&ser===shLast[name])return;
  if(ser.length>SHARE_MAX_JSON){shPushErr="This board is too big to share.";shLocalUi();return;}
  try{await F.ready();const f=F.fs();await f.setDoc(f.doc(F.db(),"rooms",F.code(),"boards",id),{...doc,updatedAt:f.serverTimestamp(),updatedBy:F.uid(),updatedByName:chatName(F.name())||"?"});shLast[name]=ser;shPushErr="";}
  catch(e){shPushErr="Couldn't sync to the room. "+shFriendly(e)+" Your own board is safe; it will retry on your next change.";}shLocalUi();}
 async function shFlush(){if(shBusy)return;shBusy=true;try{const m=shMap();for(const n of Object.keys(m))await shPush(n,false);}finally{shBusy=false;}}
 function shTouch(){if(!window.l19Fb||!shJoined())return;if(!Object.keys(shMap()).length)return;clearTimeout(shT);shT=setTimeout(shFlush,1000);}
-$("pgShB").onclick=async()=>{const name=pgSelName(),m=shMap(),F=window.l19Fb;if(!shAdmin())return;
+$("pgShB").onclick=async()=>{if(pgEq){await eqShareToggle();return;}const name=pgSelName(),m=shMap(),F=window.l19Fb;if(!shAdmin())return;
  if(m[name]){if(!confirm("Stop sharing “"+name+"”? Everyone in the room loses the shared copy. Your own board stays."))return;const id=m[name];delete m[name];shMapSet(m);
   try{const f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",id));$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Unlinked here, but the shared copy could not be deleted. "+shFriendly(e);}shPushErr="";pgRender();return;}
  const id=shareId(name);if(!id){$("pgM").textContent="Give the board a name with letters or numbers first.";return;}
@@ -2547,7 +2639,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_SEED_RES,eqSlot,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
