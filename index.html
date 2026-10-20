@@ -34,6 +34,15 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .locd{margin:4px 0 0;font-weight:600}
 @media (max-width:339px){.locseg{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .chh{margin:0 0 2px;font-size:1.375rem;line-height:1.2;padding:8px 10px;border-radius:10px;background:var(--pri);color:var(--prifg)}.chh .chhl{color:#ffd23f}.chhs{margin:0 0 6px;overflow-wrap:anywhere}
+.holb{margin:6px 0 2px;padding:8px 10px;border-radius:10px;border:2px solid #b8860b;background:#fff4cc;color:#3d2c00;font-size:max(14px,.9375rem);line-height:1.35}.holb b{font-size:1.0625rem}
+.badge.hol,.hbad{display:inline-block;font-size:max(12px,.875rem);font-weight:800;border:1px solid #b8860b;border-radius:8px;padding:0 8px;margin-left:4px;background:#fff4cc;color:#3d2c00}
+.cal button.cd.hol{background:#fff4cc;color:#3d2c00;border-color:#b8860b}.cal button.cd.hol .hm{font-size:.75rem;line-height:1;font-weight:800}
+.cal button.cd.hol.sel{background:var(--pri);color:var(--prifg)}
+.holl{list-style:none;margin:0;padding:0}.holl li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}.holl li:last-child{border-bottom:0}.holl .hn{font-weight:700;min-width:0;overflow-wrap:anywhere}.holl .hd{white-space:nowrap;text-align:right}
+.swb{margin:6px 0 2px;padding:8px 10px;border-radius:10px;border:2px solid #5b3fa0;background:#ece4ff;color:#2a1658;font-size:max(14px,.9375rem);line-height:1.35}
+.badge.sw{display:inline-block;font-size:max(12px,.875rem);font-weight:800;border:1px solid #5b3fa0;border-radius:8px;padding:0 8px;margin-left:4px;background:#ece4ff;color:#2a1658}
+.cal button.cd.sw{border:2px dashed #5b3fa0}.cal button.cd .swm{font-size:.75rem;line-height:1;font-weight:800;color:#5b3fa0}.cal button.cd.sel .swm{color:var(--prifg)}
+.card.swb{background:#ece4ff;border:2px solid #5b3fa0;color:#2a1658}.card.holb{background:#fff4cc;border:2px solid #b8860b;color:#3d2c00}.card.holb .holl li{border-color:#d9c27a}.card.holb .mut,.card.swb .mut{color:inherit}
 .lb19{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;background:var(--bg);border:1px solid var(--bd);font-size:max(12px,.8125rem);font-weight:700;vertical-align:middle}
 main{max-width:560px;margin:0 auto;padding:var(--s)}
 h3,h4{margin:0 0 8px;font-size:1.125rem}h4{font-size:.875rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-top:16px}
@@ -420,7 +429,7 @@ body.gopen{overflow:hidden}
 <h3 id="ftitle">Add shift</h3>
 <div id="cbW"><button type="button" id="cb" class="p cbb">↩ Call back <span>same job again</span></button><div class="mut cbl" id="cbL" aria-live="polite"></div></div>
 <div id="qpW" class="hide"><label style="margin-top:0">Recent <span class="mut">(tap to fill pier, job, shift)</span></label><div class="ltr" id="qp"></div><button type="button" id="rep" style="width:100%;margin-top:8px">↻ Repeat last shift…</button></div>
-<label for="date">Date</label><div class="row dategrp"><button type="button" id="dprev" aria-label="Previous day">◀</button><input type="date" id="date" required min="2000-01-01" max="2099-12-31"><button type="button" id="dnext" aria-label="Next day">▶</button><button type="button" id="dtoday" class="p">Today</button></div>
+<label for="date">Date</label><div class="row dategrp"><button type="button" id="dprev" aria-label="Previous day">◀</button><input type="date" id="date" required min="2000-01-01" max="2099-12-31"><button type="button" id="dnext" aria-label="Next day">▶</button><button type="button" id="dtoday" class="p">Today</button></div><div id="holB" class="holb hide" role="status" aria-live="polite"></div><div id="swB" class="swb hide" role="status" aria-live="polite"></div>
 <label for="pier">Pier</label><select id="pier"></select>
 <input id="pierC" class="hide" placeholder="Custom pier / terminal" style="margin-top:8px">
 <label for="job">Job</label><select id="job"></select>
@@ -727,12 +736,69 @@ function toMin(t){if(!/^\d{1,2}:\d{2}$/.test(t||""))return null;const [h,m]=t.sp
 const OT_THRESH=s=>s==="3rd"?5:8; /* OT starts after 8h (1st/2nd) or 5h (3rd) */
 /* v44: Sat/Sun (by entry date) = every paid hour at the OT rate, all shifts */
 function isWknd(d){if(typeof d==="object"&&d)d=d.date;if(!/^\d{4}-\d{2}-\d{2}/.test(d||""))return false;const g=parseDate(String(d).slice(0,10)).getDay();return g===0||g===6;}
+/* v75: ILWU contract holidays. Source: PCLCD 2022-2028 Section 5 (5.1 recognized, 5.2 work schedule, 5.21 Sat/Sun -> observed Monday,
+   5.3 paid holidays, 5.32 8h straight-time holiday pay); Section 2.1 + 4.151-4.153: all work on Agreement Holidays is overtime.
+   PCCCD (clerks, Local 52) Section 5 is word-for-word the same; WBF (Local 98) Section 5 is the same list/schedule (Juneteenth added by the 2022 WBF MOU).
+   Juneteenth: added by the 2022 MOU (effective July 1, 2022), so the first one in this contract is June 19, 2023.
+   March 31 holiday: the 2022-2028 contract texts name it after Chavez (5.1, 5.2 "Normal work day", 5.3 paid). Date and pay rules are kept exactly.
+   Display name follows the March 2026 rename of the March 31 holiday to "Farmworkers Day" (California AB 2156, Gov. Code 6700(a)(7));
+   no PMA/ILWU rename notice was found, so this name is the app's choice at the owner's request. HOL_CHAVEZ=false would hide the day. */
+const HOL_TERM={from:"2022-07-01",to:"2028-06-30"},HOL_CHAVEZ=true;
+const HOL_NW="Normal work day.",HOL_EXC=" Passenger ships, essential military cargo and emergencies excepted (5.24).";
+const HOL_DEFS=[ /* [key, name, rule, paid (5.3), work schedule (5.2)]; rule: [month,day] or ["nth",month,weekday,n] (n=-1: last) */
+ ["ny","New Year's Day",[1,1],true,"No work 3 p.m. Dec 31 to 7 a.m. Jan 2."+HOL_EXC],
+ ["mlk","Martin Luther King's Birthday",["nth",1,1,3],true,HOL_NW],
+ ["lin","Lincoln's Birthday",[2,12],false,HOL_NW],
+ ["was","Washington's Birthday",["nth",2,1,3],true,HOL_NW],
+ ["cc","Farmworkers Day",[3,31],true,HOL_NW+" (The March 31 contract holiday, Sec. 5.1.)"],
+ ["mem","Memorial Day",["nth",5,1,-1],true,HOL_NW],
+ ["jun","Juneteenth",[6,19],true,"No work on the first shift (07:00-17:00); work resumes on the second shift."+HOL_EXC],
+ ["ind","Independence Day",[7,4],true,HOL_NW],
+ ["bt","Bloody Thursday",[7,5],false,"No work 8 a.m. July 5 to 7 a.m. July 6."],
+ ["hb","Harry Bridges' Birthday",[7,28],true,HOL_NW],
+ ["lab","Labor Day",["nth",9,1,1],true,"No work 8 a.m. Labor Day to 7 a.m. the next day."+HOL_EXC],
+ ["vet","Veterans' Day",[11,11],true,HOL_NW],
+ ["tg","Thanksgiving Day",["nth",11,4,4],true,"No work 8 a.m. Thanksgiving to 7 a.m. the next day."+HOL_EXC],
+ ["cxe","Christmas Eve Day",[12,24],true,"No work 3 p.m. Dec 24 to 7 a.m. Dec 26 (an extended shift to 5 p.m. may finish a ship). Day-shift guarantee 6h on an 8 a.m. start, 5h on 9 a.m. (5.23)."+HOL_EXC],
+ ["cx","Christmas Day",[12,25],true,"No work 3 p.m. Dec 24 to 7 a.m. Dec 26."+HOL_EXC],
+ ["nye","New Year's Eve Day",[12,31],true,"No work 3 p.m. Dec 31 to 7 a.m. Jan 2 (an extended shift to 5 p.m. may finish a ship). Day-shift guarantee 6h on an 8 a.m. start, 5h on 9 a.m. (5.23)."+HOL_EXC]];
+function holRuleDate(y,r){if(r[0]!=="nth")return fmtDate(new Date(y,r[0]-1,r[1]));const [,m,wd,n]=r;
+ if(n>0){const f=new Date(y,m-1,1),o=(wd-f.getDay()+7)%7;return fmtDate(new Date(y,m-1,1+o+7*(n-1)));}
+ const l=new Date(y,m,0),o=(l.getDay()-wd+7)%7;return fmtDate(new Date(y,m-1,l.getDate()-o));}
+const HOL_CACHE={};
+/* all holidays whose actual date is in year y and inside the contract term; observed = Monday when it falls on Sat/Sun (5.21) */
+function holidaysInYear(y){y=+y;if(HOL_CACHE[y])return HOL_CACHE[y];const out=[];
+ for(const [key,name,rule,paid,sched] of HOL_DEFS){if(key==="cc"&&!HOL_CHAVEZ)continue;const date=holRuleDate(y,rule);
+  if(date<HOL_TERM.from||date>HOL_TERM.to)continue;const g=parseDate(date).getDay(),observed=g===6?addDays(date,2):g===0?addDays(date,1):date;
+  out.push({key,name,date,observed,paid,sched});}
+ return HOL_CACHE[y]=out.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);}
+/* holidays touching a date: kind "day" (the holiday itself) or "observed" (the Monday it is observed on) */
+function holidaysOn(d){if(typeof d==="object"&&d)d=d.date;d=String(d||"").slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return[];const y=+d.slice(0,4),r=[];
+ for(const yy of [y-1,y])for(const h of holidaysInYear(yy)){if(h.date===d)r.push({...h,kind:"day"});else if(h.observed===d)r.push({...h,kind:"observed"});}return r;}
+/* Agreement Holiday for pay (2.1, 4.15): the holiday itself, or its observed Monday */
+function isHol(d){return holidaysOn(d).length>0;}
+function holLabel(d){return holidaysOn(d).map(h=>h.name+(h.kind==="observed"?" (observed)":"")).join(" + ");}
+function holShort(d){const l=holidaysOn(d);return l.length?l.map(h=>h.name.replace(/'s Birthday|' Birthday/,"").replace(/ Day$/,"")+(h.kind==="observed"?" (obs.)":"")).join(" + "):"";}
+function upcomingHolidays(from,n){const y=+String(from).slice(0,4),out=[];for(const yy of [y,y+1,y+2])for(const h of holidaysInYear(yy))if(h.observed>=from||h.date>=from)out.push(h);return out.slice(0,n||5);}
+/* v75: Local 19 monthly stop-work meeting: first Thursday of each month, night side (no 2nd/3rd shift work). PCLCD 12.31 lets each local hold
+   1 regularly scheduled stop-work meeting a month during overtime hours on the second shift; the date is set locally, so it is shown for Local 19 only.
+   Information only: saving is not blocked and pay is not changed. */
+const SW_LOCALS=["19"];
+function isStopWork(d,loc){d=String(d||"").slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;if(!SW_LOCALS.includes(String(loc==null?"19":loc)))return false;return parseDate(d).getDay()===4&&+d.slice(8,10)<=7;}
+function firstThursday(y,m){const f=new Date(y,m-1,1);return fmtDate(new Date(y,m-1,1+(4-f.getDay()+7)%7));}
+function nextStopWork(from,loc,n){if(!SW_LOCALS.includes(String(loc==null?"19":loc)))return[];const out=[];let y=+from.slice(0,4),m=+from.slice(5,7);while(out.length<(n||1)){const d=firstThursday(y,m);if(d>=from)out.push(d);m++;if(m>12){m=1;y++;}}return out;}
+const SW_LABEL="Stop work · night side",SW_WARN="Stop work meeting night — no night-side work";
+function swNight(shift){return shift==="2nd"||shift==="3rd";}
+function holNoWork(h){return !!h&&/^No work/.test(h.sched);}
+/* pay: a shift SAVED (v75+) on a holiday carries e.hol. Unless OT was typed by hand, every paid hour is at the entry's OT rate
+   (1st/2nd: 1.5x basic; 3rd: the 3rd-shift OT rate, 1.8x basic, 4.153). Older saved shifts keep their stored pay. */
+function holAuto(e){if(!e||!e.hol||isWknd(e))return false;const m=e.otManual!=null?e.otManual:num(e.ot)>0;return !m;}
 const WKND_NOTE="Weekend: all hours OT; 3rd shift paid 8h at 1.5x";function wkndNote(sh){return sh==="3rd"?WKND_NOTE:"Weekend: all hours OT";}
 /* v45: weekend 3rd shift = 1.5x BASE (1st-shift ST) = 3rd ST rate x 1.5/1.6, min 8 paid hrs on Basic; 1st/2nd weekend unchanged (OT rate) */
 function wkndRate(e,r,o){return e.shift==="3rd"?r*1.5/1.6:o;}
-function autoOT(hours,shift,date){if(isWknd(date))return Math.round(num(hours)*100)/100;return Math.round(Math.max(0,num(hours)-OT_THRESH(shift))*100)/100;}
+function autoOT(hours,shift,date){if(isWknd(date)||isHol(date))return Math.round(num(hours)*100)/100;return Math.round(Math.max(0,num(hours)-OT_THRESH(shift))*100)/100;}
 /* typed/stored override wins; legacy entries (no flag) with OT>0 are treated as manual */
-function effOT(e){if(isWknd(e))return num(e.hours);const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
+function effOT(e){if(isWknd(e)||holAuto(e))return num(e.hours);const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
 function calcHours(s,e){const a=toMin(s),b=toMin(e);if(a==null||b==null)return null;let d=b-a;if(d<=0)d+=1440;return Math.round(d/60*100)/100;}
 function parseDate(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
 function fmtDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -744,7 +810,7 @@ function guarMin(e){return e&&jobClass(e.job)==="Basic"?(e.shift==="3rd"&&isWknd
 function paidHours(e){return Math.max(num(e.hours),guarMin(e));}
 function guarNote(e){const m=guarMin(e);return m&&num(e.hours)<m?"guarantee: paid "+m+"h":"";}
 function entryPay(e){const r=e.rate==null||e.rate===""?null:num(e.rate);if(r==null)return null;
- const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);if(isWknd(e))return Math.round(paidHours(e)*wkndRate(e,r,o)*100)/100;const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
+ const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);if(isWknd(e))return Math.round(paidHours(e)*wkndRate(e,r,o)*100)/100;if(holAuto(e))return Math.round(paidHours(e)*o*100)/100;const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
  return Math.round((reg*r+ot*o)*100)/100;}
 /* hours = total paid hours incl. OT; OT is the portion of hours that is overtime */
 function summarize(list){const t={hours:0,ot:0,pay:0,anyPay:false,travel:0,miles:0,travelPay:0,milePay:0,byPier:{},byJob:{},count:list.length};
@@ -805,7 +871,7 @@ function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekE
  const L=["ILWU LIFE – Hours, week of "+ws+" to "+we,""];
  if(!list.length)L.push("No shifts logged.");
  for(const e of list){const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][parseDate(e.date).getDay()];
-  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(isWknd(e))s+=" [Weekend: all hours OT"+(e.shift==="3rd"?"; 3rd shift paid 8h at 1.5x":"")+"]";
+  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(isWknd(e))s+=" [Weekend: all hours OT"+(e.shift==="3rd"?"; 3rd shift paid 8h at 1.5x":"")+"]";else if(holAuto(e))s+=" [Holiday: "+e.hol+", all hours OT]";else if(isHol(e))s+=" [Holiday: "+holLabel(e.date)+"]";if(isStopWork(e.date,curLocal())&&swNight(e.shift))s+=" [Stop work meeting night]";
   s+=" – "+[e.pier,e.employer,e.vessel,jobLabel(e.job)].filter(Boolean).join(", ");
   if(num(e.travel)>0||num(e.miles)>0)s+=" ["+[num(e.travel)>0?"travel "+r2(num(e.travel))+"h":"",num(e.miles)>0?r2(num(e.miles))+" mi":""].filter(Boolean).join(", ")+"]";
   if(upApplies(e.job)&&upLabel(e.upSlot))s+=" ["+upLabel(e.upSlot)+"]";
@@ -831,7 +897,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v74",CACHE_VERSION="l19hours-v74"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v75",CACHE_VERSION="l19hours-v75"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -869,10 +935,10 @@ function yearSummary(all,year){const y=String(year),l=(all||[]).filter(e=>e&&typ
  const top=o=>Object.keys(o).map(k=>({name:k==="?"?"(none)":k,hours:rd2(o[k].hours),pay:rd2(o[k].pay),anyPay:o[k].anyPay})).sort((a,b)=>b.hours-a.hours||(a.name<b.name?-1:a.name>b.name?1:0)).slice(0,5);
  return {year:y,shifts:l.length,hours:rd2(t.hours),ot:rd2(t.ot),straight:rd2(t.hours-t.ot),days:new Set(l.map(e=>e.date)).size,
   wages:rd2(t.pay),anyPay:t.anyPay,travelHours:rd2(t.travel),travelPay:t.travelPay,miles:rd2(t.miles),milePay:t.milePay,total:payTotal(t),hasPay:hasPay(t),
-  topJobs:top(t.byJob),topPiers:top(t.byPier),months};}
+  topJobs:top(t.byJob),topPiers:top(t.byPier),months,holShifts:l.filter(e=>isHol(e)).length,holHours:rd2(l.filter(e=>isHol(e)).reduce((x,e)=>x+num(e.hours),0))};}
 function yearText(all,year,opts){const nopay=!!(opts&&opts.noPay),y=yearSummary(all,year),L=["ILWU LIFE – Year summary "+y.year,""];
  if(!y.shifts){L.push("No shifts logged in "+y.year+".");return L.join("\n");}
- L.push("Total hours: "+r2(y.hours),"Straight / OT: "+r2(y.straight)+" / "+r2(y.ot),"Days worked: "+y.days,"Shifts: "+y.shifts);
+ L.push("Total hours: "+r2(y.hours),"Straight / OT: "+r2(y.straight)+" / "+r2(y.ot),"Days worked: "+y.days,"Shifts: "+y.shifts);if(y.holShifts)L.push("Holiday shifts: "+y.holShifts+" ("+r2(y.holHours)+"h)");
  if(!nopay&&y.hasPay){L.push("Total pay (entered rates, gross est.): "+money(y.total));if(y.anyPay)L.push("  Shift wages: "+money(y.wages));if(y.travelPay)L.push("  Travel pay: "+money(y.travelPay));}
  if(y.travelHours)L.push("Travel hours: "+r2(y.travelHours));
  if(y.miles)L.push("Miles: "+r2(y.miles)+(!nopay&&y.milePay?" – mileage reimbursement (not wages): "+money(y.milePay):""));
@@ -919,7 +985,7 @@ function topCombos(all,n){n=n||6;const m=new Map();
  const rest=a.filter(c=>c!==rec).sort((x,y)=>y.count-x.count||(y.last<x.last?-1:y.last>x.last?1:0));return [rec,...rest].slice(0,n);}
 function lastShift(all){let b=null;for(const e of all)if(!b||e.date>b.date||(e.date===b.date&&e.shift>=b.shift))b=e;return b;}
 function repeatDefaultDate(e,today){return e&&e.date<today?today:addDays(e?e.date:today,1);}
-function repeatCopy(e,date,id){const c={...e,id:id||uid(),date};return rateForDate(c,e.date);}
+function repeatCopy(e,date,id){const c={...e,id:id||uid(),date};delete c.hol;{const hl=holLabel(date);if(hl)c.hol=hl;}if(!c.otManual&&c.otManual!=null)c.ot=autoOT(c.hours,c.shift,date);return rateForDate(c,e.date);}
 /* v72: if the copied rate was the contract default for the old date (any tier), use the default for the new date (wage periods change each summer). Typed rates stay. */
 function rateForDate(c,oldDate){for(const [t] of TIERS){const a=defaultRates(c.job,c.shift,t,oldDate);if(!a||num(a.rate)!==num(c.rate)||(c.otRate!=null&&c.otRate!==""&&num(a.otRate)!==num(c.otRate)))continue;
  const b=defaultRates(c.job,c.shift,t,c.date);if(b&&b.rate!=null){c.rate=b.rate.toFixed(2);if(c.otRate!=null&&c.otRate!=="")c.otRate=b.otRate.toFixed(2);}break;}return c;}
@@ -1668,7 +1734,16 @@ $("job").addEventListener("change",upShow);
 function setX(o){$("extras").classList.toggle("hide",!o);$("xt").setAttribute("aria-expanded",o);$("xt").textContent="More details "+(o?"▴":"▾");}
 $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
 function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value,$("date").value);
- guarHint();if(isWknd($("date").value)){$("othint").textContent=($("shift").value==="3rd"?WKND_NOTE+" (1.5x base for Basic min 8h; no straight time).":"Weekend: all hours OT (every paid hour at the OT rate; no straight time).");return;}$("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
+ guarHint();holUI();if(isWknd($("date").value)){$("othint").textContent=($("shift").value==="3rd"?WKND_NOTE+" (1.5x base for Basic min 8h; no straight time).":"Weekend: all hours OT (every paid hour at the OT rate; no straight time).");return;}
+ if(isHol($("date").value)){$("othint").textContent=$("ot").value===""?"Contract holiday: all hours OT (every paid hour at the OT rate"+($("shift").value==="3rd"?", 3rd shift OT = 1.8x basic":"")+"). Type a value to override.":"Manual override on a holiday (auto would be all "+a+"h OT). Clear to return to auto.";return;}
+ $("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
+/* v75: holiday badge under the Add-page date */
+function holHtml(d,old){const l=holidaysOn(d);if(!l.length)return"";const wk=isWknd(d);
+ return l.map(h=>`<div><b>🎉 Holiday: ${esc(h.name)}</b>${h.kind==="observed"?` (observed; falls on ${esc(shDate(h.date))})`:h.observed!==h.date?` (falls on a weekend; observed ${esc(shDate(h.observed))})`:""}</div><div>${h.paid?"Paid holiday (8h straight time if you qualify, Sec. 5.3).":"Recognized holiday, not a paid holiday (Sec. 5.1/5.3)."} ${esc(h.sched)}</div>`).join("")+
+ `<div>${wk?"Weekend rules apply to work today.":"Work today is paid at the OT rate (Sec. 2.1, 4.15)."}${old?" <b>This shift was saved before holiday pay was added: tap Save to apply it.</b>":""}</div>`;}
+function swUI(){const el=$("swB");if(!el)return;const d=$("date").value,on=isStopWork(d,curLocal());
+ el.innerHTML=on?(swNight($("shift").value)?`<b>⚠ ${SW_WARN}.</b> Local 19 stop-work meeting (first Thursday of the month). You can still save this shift.`:`<b>${SW_LABEL}</b>: Local 19 stop-work meeting tonight, no night-side work. Day shift unaffected.`):"";el.classList.toggle("hide",!on);}
+function holUI(){swUI();const el=$("holB");if(!el)return;const d=$("date").value,o=editId?entries.find(x=>x.id===editId):null,old=!!(o&&o.date===d&&!o.hol&&isHol(d)&&!isWknd(d));const h=holHtml(d,old);el.innerHTML=h;el.classList.toggle("hide",!h);}
 function guarHint(){const el=$("guarhint");if(!el)return;const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const n=guarNote({job:$("job").value==="__c"?$("jobC").value:$("job").value,shift:$("shift").value,hours:h==null?0:h});el.textContent=h==null||h===0?"":n;}
 function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null){$("hrs").value=h;hrsAuto=null;const el=$("hrsHint");if(el)el.textContent="";}otHint();}
 $("st").onchange=$("en").onchange=autoHrs;
@@ -1693,6 +1768,7 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  const otManual=$("ot").value.trim()!=="";const ot=otManual?num($("ot").value):autoOT(hours,$("shift").value,$("date").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
  const e={id:editId||uid(),date:$("date").value,pier,employer:$("emp").value.trim(),vessel:$("ves").value.trim(),job,shift:$("shift").value,upSlot:upApplies(job)?upSlot:"",
   start:$("st").value,end:$("en").value,hours,ot,otManual,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
+ {const hl=holLabel(e.date);if(hl)e.hol=hl;}
  {const old=editId?entries.find(x=>x.id===editId):null;
   if(num(e.travel)>0)e.travelRate=old&&hasV(old.travelRate)?old.travelRate:r4(travelRateFor($("tier").value,e.date));
   if(num(e.miles)>0)e.mileRate=old&&hasV(old.mileRate)?old.mileRate:r4(CFG.mileRate);}
@@ -1714,9 +1790,10 @@ function renderWeek(){const list=weekEntries(entries,wk),t=summarize(list),we=ad
 $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previous week">◀</button><div class="t">${wk.slice(5)} → ${we.slice(5)}<div class="mut">Sat–Fri · ${wk.slice(0,4)}</div></div><button id="nw" aria-label="Next week">▶</button></div>
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${hasPay(t)?money(payTotal(t)).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">${[t.travel?"Travel "+r2(t.travel)+"h"+(!hidePay&&t.travelPay?" · "+money(t.travelPay):""):"",t.miles?r2(t.miles)+" mi"+(!hidePay&&t.milePay?" · "+money(t.milePay)+" reimbursement (not wages)":""):""].filter(Boolean).join(" · ")}</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
- <div class="row" style="margin-bottom:12px"><button class="p" id="sh">Share week</button><button id="tw">This week</button></div>
- ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}${isWknd(e)?` <span class="badge">Wknd OT</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
+ ${weekHolHtml(wk)}${weekSwHtml(wk)}<div class="row" style="margin-bottom:12px"><button class="p" id="sh">Share week</button><button id="tw">This week</button></div>
+ ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}${isWknd(e)?` <span class="badge">Wknd OT</span>`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}${isStopWork(e.date,curLocal())&&swNight(e.shift)?` <span class="badge sw">Stop work night</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
+ $("v-week").insertAdjacentHTML("beforeend",upHolHtml(todayS()));
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
  $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};
  async function doShare(noPay){const text=weekText(entries,wk,{noPay});
@@ -1749,8 +1826,17 @@ function show(v,how){const from=curV;if(how!=="back")backY=null;curV=v;for(const
  if(how==="back"&&backY!=null){const y=backY;backY=null;pageTo(y);requestAnimationFrame(()=>pageTo(y));}else pageTop();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
 function addOn(d){selDate=d;resetForm();retTo="hist";const by=curV==="hist"?window.pageYOffset:null;show("add");backY=by;}
+/* v75: holiday lists */
+function holItem(h){const ob=h.observed!==h.date;return `<li><span class="hn">${esc(h.name)}${h.paid?"":` <span class="mut">(not paid)</span>`}${holNoWork(h)?` <span class="mut">· no-work hours</span>`:""}</span><span class="hd">${esc(shDate(h.date))}${ob?`<br><span class="mut">obs. ${esc(shDate(h.observed))}</span>`:""}</span></li>`;}
+function weekSwHtml(ws){let d=null;for(let i=0;i<7;i++)if(isStopWork(addDays(ws,i),curLocal()))d=addDays(ws,i);
+ return d?`<div class="card swb" id="wkSw"><b>◆ ${SW_LABEL}: ${esc(shDate(d))}</b><div>Local 19 stop-work meeting (first Thursday). No night-side work (2nd/3rd shift). Day shift unaffected.</div></div>`:"";}
+function weekHolHtml(ws){const we=addDays(ws,6),l=[];for(let i=0;i<7;i++){const d=addDays(ws,i);for(const h of holidaysOn(d))if(!l.some(x=>x.key===h.key&&x.date===h.date))l.push(h);}
+ if(!l.length)return"";return `<div class="card holb" id="wkHol"><b>🎉 Contract holiday${l.length>1?"s":""} this week</b><ul class="holl">${l.map(holItem).join("")}</ul><div>Shifts saved on a holiday (or its observed Monday) pay all hours at the OT rate.</div></div>`;}
+function upHolHtml(today){const l=upcomingHolidays(today,4),sw=nextStopWork(today,curLocal(),2);return `<div class="card" id="upHol"><h3 style="margin-top:0">Upcoming contract holidays</h3>${l.length?`<ul class="holl">${l.map(holItem).join("")}</ul>`:`<p class="mut">No holidays left in the 2022-2028 contract.</p>`}${sw.length?`<div class="swb" id="upSw"><b>◆ ${SW_LABEL}</b> (Local 19, first Thursday): ${sw.map(d=>esc(shDate(d))).join(", ")}. No 2nd/3rd shift work; day shift unaffected.</div>`:""}<p class="mut" style="margin:6px 0 0">Holidays on a Saturday or Sunday are observed on Monday (Sec. 5.21). Work on a holiday is overtime (Sec. 2.1). Paid holiday = 8h straight time if you qualify (Sec. 5.31: registration, 1-week vacation hours, available 2 of 5 weekdays); that pay is not added to the app's totals.</p></div>`;}
+function monthHolHtml(m){const y=m.slice(0,4),l=holidaysInYear(y).filter(h=>h.date.slice(0,7)===m||h.observed.slice(0,7)===m),sw=SW_LOCALS.includes(curLocal())?firstThursday(+y,+m.slice(5,7)):"";
+ return (sw?`<div class="mut" style="margin-top:10px"><b>◆ ${SW_LABEL}:</b> ${esc(shDate(sw))} (Local 19 stop-work meeting)</div>`:"")+(l.length?`<div class="mut" style="margin-top:10px"><b>★ Contract holidays:</b> ${l.map(h=>esc(shDate(h.date))+" "+esc(h.name)+(h.observed!==h.date?" (obs. "+esc(shDate(h.observed))+")":"")).join("; ")}</div>`:"");}
 function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
- return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${esc([e.pier,e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}</div>${trvLine(e)}</button>`;}
+ return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${esc([e.pier,e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}</div>${trvLine(e)}</button>`;}
 function trvLine(e){const th=num(e.travel),mi=num(e.miles);if(!(th>0||mi>0))return "";const tp=travelPay(e),mp=mileagePay(e);
  return `<div class="l2">${[th>0?"Travel "+r2(th)+"h"+(!hidePay&&tp!=null?" · "+money(tp):""):"",mi>0?r2(mi)+" mi"+(!hidePay&&mp!=null?" · "+money(mp)+" reimb.":""):""].filter(Boolean).join(" · ")}</div>`;}
 function entPayLines(e){const w=entryPay(e),tp=travelPay(e),mp=mileagePay(e),th=num(e.travel),mi=num(e.miles);if(w==null&&!(th>0)&&!(mi>0))return "";
@@ -1774,9 +1860,9 @@ function wireMonthSel(id,cb){const mS=$(id+"m"),yS=$(id+"y");if(!mS||!yS)return;
 let pm=null,pd=null,popEl=null;
 function calPopHtml(){const y=+pm.slice(0,4),mo=+pm.slice(5)-1,wk=monthGrid(y,mo),dt=dayTotals(entries),today=fmtDate(new Date());
  const head=["Sat","Sun","Mon","Tue","Wed","Thu","Fri"].map(d=>`<div class="wdh" aria-hidden="true">${d}</div>`).join("");
- const cells=wk.map(r=>r.map(c=>{const t=dt[c.date];return `<button type="button" class="cd${c.inMonth?"":" out"}${c.date===today?" today":""}${c.date===pd?" sel":""}" data-pd="${c.date}" aria-pressed="${c.date===pd}" aria-label="${esc(shDate(c.date))}${c.date===today?", today":""}${t?", "+r2(t.hours)+" hours":""}"><span>${c.day}</span>${t?`<small><span class="dot"></span>${r2(t.hours)}</small>`:""}</button>`}).join("")).join("");
+ const cells=wk.map(r=>r.map(c=>{const t=dt[c.date],hl=holLabel(c.date);return `<button type="button" class="cd${c.inMonth?"":" out"}${c.date===today?" today":""}${c.date===pd?" sel":""}${hl?" hol":""}${isStopWork(c.date,curLocal())?" sw":""}" data-pd="${c.date}" aria-pressed="${c.date===pd}" aria-label="${esc(shDate(c.date))}${c.date===today?", today":""}${hl?", holiday: "+esc(hl):""}${isStopWork(c.date,curLocal())?", "+SW_LABEL:""}${t?", "+r2(t.hours)+" hours":""}"><span>${c.day}${hl?'<span class="hm" aria-hidden="true"> ★</span>':""}${isStopWork(c.date,curLocal())?'<span class="swm" aria-hidden="true"> ◆</span>':""}</span>${t?`<small><span class="dot"></span>${r2(t.hours)}</small>`:""}</button>`}).join("")).join("");
  let foot="";if(pd){const l=entries.filter(e=>e.date===pd),h=l.reduce((x,e)=>x+num(e.hours),0);
-  foot=`<div class="pf" aria-live="polite"><b>${esc(shDate(pd))}${l.length?" · "+r2(h)+"h":""}</b><div class="mut">${l.length?"List scrolled to this day.":"No shifts this day. List shows the nearest earlier day."}</div><div class="row"><button type="button" class="p" id="pAdd">＋ Add</button><button type="button" id="pDone">Done</button></div></div>`;}
+  foot=`<div class="pf" aria-live="polite">${isHol(pd)?`<div class="hbad">🎉 ${esc(holLabel(pd))}</div>`:""}<b>${esc(shDate(pd))}${l.length?" · "+r2(h)+"h":""}</b><div class="mut">${l.length?"List scrolled to this day.":"No shifts this day. List shows the nearest earlier day."}</div><div class="row"><button type="button" class="p" id="pAdd">＋ Add</button><button type="button" id="pDone">Done</button></div></div>`;}
  return `<div role="dialog" aria-modal="true" aria-labelledby="pT"><div class="ph"><h3 id="pT">Calendar</h3><button type="button" id="pX" aria-label="Close calendar">✕</button></div>
  <div class="card nav"><button type="button" id="pP" aria-label="Previous month">◀</button><div class="t">${MON[mo]} ${y}</div><button type="button" id="pN" aria-label="Next month">▶</button></div>
  <div class="cal">${head}${cells}</div>${foot}</div>`;}
@@ -1797,19 +1883,19 @@ function searchResults(){if(!searchActive(sf))return "";const l=searchEntries(en
  return `<div class="card" aria-live="polite"><h3 style="margin-top:0">${l.length} match${l.length===1?"":"es"}</h3><div class="mut">${r2(t.hours)}h total${hidePay?"":" · pay est. "+(pay?money(payTotal(t)):"–")}</div></div>`+l.map(e=>`<div class="mut" style="margin:6px 2px 2px;font-weight:700">${esc(shDate(e.date))}</div>`+entRow(e)).join("");}
 function calView(){const y=+cm.slice(0,4),mo=+cm.slice(5)-1,wk=monthGrid(y,mo),dt=dayTotals(entries),today=fmtDate(new Date());
  const head=["Sat","Sun","Mon","Tue","Wed","Thu","Fri"].map(d=>`<div class="wdh" aria-hidden="true">${d}</div>`).join("");
- const cells=wk.map(r=>r.map(c=>{const t=dt[c.date];return `<button type="button" class="cd${c.inMonth?"":" out"}${c.date===today?" today":""}${c.date===cd?" sel":""}" data-cd="${c.date}" aria-pressed="${c.date===cd}" aria-label="${esc(shDate(c.date))}${c.date===today?", today":""}${t?", "+r2(t.hours)+" hours":""}"><span>${c.day}</span>${t?`<small><span class="dot"></span>${r2(t.hours)}</small>`:""}</button>`}).join("")).join("");
+ const cells=wk.map(r=>r.map(c=>{const t=dt[c.date],hl=holLabel(c.date);return `<button type="button" class="cd${c.inMonth?"":" out"}${c.date===today?" today":""}${c.date===cd?" sel":""}${hl?" hol":""}${isStopWork(c.date,curLocal())?" sw":""}" data-cd="${c.date}" aria-pressed="${c.date===cd}" aria-label="${esc(shDate(c.date))}${c.date===today?", today":""}${hl?", holiday: "+esc(hl):""}${isStopWork(c.date,curLocal())?", "+SW_LABEL:""}${t?", "+r2(t.hours)+" hours":""}"><span>${c.day}${hl?'<span class="hm" aria-hidden="true"> ★</span>':""}${isStopWork(c.date,curLocal())?'<span class="swm" aria-hidden="true"> ◆</span>':""}</span>${t?`<small><span class="dot"></span>${r2(t.hours)}</small>`:""}</button>`}).join("")).join("");
  const mt=entries.filter(e=>e.date.slice(0,7)===cm).reduce((x,e)=>x+num(e.hours),0);
  let det="";if(cd){const l=entries.filter(e=>e.date===cd).sort((a,b)=>a.shift<b.shift?1:-1);
-  det=`<div class="card"><div class="row" style="align-items:center"><h3 style="margin:0">${esc(shDate(cd))}${l.length?" · "+r2(l.reduce((x,e)=>x+num(e.hours),0))+"h":""}</h3><button type="button" class="p" id="cadd">＋ Add</button></div>${l.length?"":'<p class="mut" style="margin:8px 0 0">No shifts this day.</p>'}</div>`+l.map(entRow).join("")+(l.length?`<div class="card"><button type="button" id="cgo">Show in list</button></div>`:"");}
+  det=`<div class="card"><div class="row" style="align-items:center"><h3 style="margin:0">${esc(shDate(cd))}${l.length?" · "+r2(l.reduce((x,e)=>x+num(e.hours),0))+"h":""}</h3><button type="button" class="p" id="cadd">＋ Add</button></div>${isHol(cd)?`<div class="holb">${holHtml(cd,false)}</div>`:""}${isStopWork(cd,curLocal())?`<div class="swb"><b>◆ ${SW_LABEL}</b>: Local 19 stop-work meeting, no night-side work.</div>`:""}${l.length?"":'<p class="mut" style="margin:8px 0 0">No shifts this day.</p>'}</div>`+l.map(entRow).join("")+(l.length?`<div class="card"><button type="button" id="cgo">Show in list</button></div>`:"");}
  return `<div class="card nav"><button id="cp" aria-label="Previous month">◀</button><div class="t">${MON[mo]} ${y}<div class="mut">${r2(mt)}h this month</div></div><button id="cn" aria-label="Next month">▶</button></div>
- <div class="card"><div class="cal">${head}${cells}</div><div class="jump" style="margin-top:10px">${monthSel("cj",cm)}</div><button type="button" id="cto" class="full" style="margin-top:10px;width:100%">Today</button></div>${det}`;}
+ <div class="card"><div class="cal">${head}${cells}</div><div class="jump" style="margin-top:10px">${monthSel("cj",cm)}</div><button type="button" id="cto" class="full" style="margin-top:10px;width:100%">Today</button>${monthHolHtml(cm)}</div>${det}`;}
 function upSR(){const el=$("hsr");if(el){el.innerHTML=searchResults();el.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>openEntry(b.dataset.h));}}
 function renderHist(){const kinds=[["week","Week"],["month","Month"],["quarter","Quarter"],["year","Year"]];
  const r=periodRange(hk,ha),t=periodTotals(entries,hk,ha),pay=hasPay(t)&&!hidePay;
  const grp=o=>Object.keys(o).sort((a,b)=>o[b].hours-o[a].hours).map(k=>`<tr><td>${esc(k)}</td><td>${r2(o[k].hours)}h${o[k].anyPay&&!hidePay?" "+money(o[k].pay):""}</td></tr>`).join("");
  const groups=histGroups(entries);let list="",mk="";const cur=fmtDate(new Date()).slice(0,7);
  for(const g of groups){const m=g.date.slice(0,7);if(m!==mk){mk=m;const mh=entries.filter(e=>e.date.slice(0,7)===m).reduce((x,e)=>x+num(e.hours),0);list+=`<div class="mh" id="m-${m}"><span>${MON[+m.slice(5)-1]} ${m.slice(0,4)}</span><span>${r2(mh)}h</span></div>`;}
-  list+=`<div class="dh" id="d-${g.date}"><span>${WD[parseDate(g.date).getDay()].slice(0,3)} ${g.date.slice(5).replace("-","/")}/${g.date.slice(2,4)} <span class="tot">· ${r2(g.hours)}h</span></span><button type="button" class="link" data-a="${g.date}">＋ Add</button></div>`+g.items.map(entRow).join("");}
+  list+=`<div class="dh" id="d-${g.date}"><span>${WD[parseDate(g.date).getDay()].slice(0,3)} ${g.date.slice(5).replace("-","/")}/${g.date.slice(2,4)} <span class="tot">· ${r2(g.hours)}h</span>${isHol(g.date)?` <span class="badge hol">🎉 ${esc(holShort(g.date))}</span>`:""}${isStopWork(g.date,curLocal())?` <span class="badge sw">◆ Stop work night</span>`:""}</span><button type="button" class="link" data-a="${g.date}">＋ Add</button></div>`+g.items.map(entRow).join("");}
  $("v-hist").innerHTML=`<div class="card"><div class="vt" id="hv"><button type="button" data-hv="list" aria-pressed="${hv==="list"}">☰ List</button><button type="button" data-hv="cal" aria-pressed="${hv==="cal"}">📅 Calendar</button></div></div>${searchCard()}<div id="hsr">${searchResults()}</div>${hv==="cal"?calView():`<div class="card"><h3>Jump to</h3><div class="jump">${monthSel("jm",cur)}</div><div class="jb"><button type="button" id="jc">📅 Calendar</button><button type="button" id="jt">Today</button><button type="button" id="jn" class="p">＋ Add</button></div></div>
 <div class="card"><div class="seg" id="hk">${kinds.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${k===hk}">${l}</button>`).join("")}</div></div>
  <div class="card nav"><button id="hp" aria-label="Previous ${hk}">◀</button><div class="t">${periodLabel(hk,ha)}<div class="mut">${hk==="week"?"Sat–Fri pay week":r.start+" to "+r.end}</div></div><button id="hn" aria-label="Next ${hk}">▶</button></div>
@@ -2304,7 +2390,7 @@ function ysYears(){const y=histYears(histMonths(entries,todayS()));return y.leng
 function ysFill(){const ys=ysYears(),cur=$("ysY").value;$("ysY").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("ysY").value=ys.includes(cur)?cur:ys[0];}
 function yearHtml(y,nopay){const tb=(a,f)=>a.map(f).join("");
  return `<h2>Year summary ${esc(y.year)}</h2><div class="mut">ILWU LIFE · generated ${esc(todayS())}${nopay?" · hours only":""}</div>
- ${y.shifts?`<div class="stats" style="margin-top:12px"><div class="stat pri"><b>${r2(y.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(y.straight)}/${r2(y.ot)}</b><span>Straight/OT</span></div><div class="stat"><b>${y.days}</b><span>Days</span></div></div>
+ ${y.shifts?`<div class="stats" style="margin-top:12px"><div class="stat pri"><b>${r2(y.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(y.straight)}/${r2(y.ot)}</b><span>Straight/OT</span></div><div class="stat"><b>${y.days}</b><span>Days</span></div></div>${y.holShifts?`<p class="mut">Holiday shifts: ${y.holShifts} (${r2(y.holHours)}h)</p>`:""}
  ${nopay?"":`<div class="card"><span class="mut">Total pay est. (wages + travel)</span><div class="big">${y.hasPay?money(y.total):"–"}</div>${y.hasPay?`<div class="mut">${y.anyPay?"Shift wages "+money(y.wages):""}${y.travelPay?(y.anyPay?" · ":"")+"Travel pay "+money(y.travelPay):""}</div>`:""}</div>`}
  ${y.travelHours||y.miles?`<div class="card"><h4 style="margin-top:0">Travel &amp; mileage</h4><table>${y.travelHours?`<tr><td>Travel hours</td><td>${r2(y.travelHours)}h${nopay?"":" · "+money(y.travelPay)}</td></tr>`:""}${y.miles?`<tr><td>Miles</td><td>${r2(y.miles)} mi${nopay?"":" · "+money(y.milePay)}</td></tr>`:""}</table>${!nopay&&y.miles?`<div class="mut">Mileage is a reimbursement, not wages.</div>`:""}</div>`:""}
  <div class="card"><h4 style="margin-top:0">Top jobs</h4><table>${tb(y.topJobs,j=>`<tr><td>${esc(j.name)}</td><td>${r2(j.hours)}h${!nopay&&j.anyPay?" "+money(j.pay):""}</td></tr>`)}</table>
@@ -3294,7 +3380,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chat
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
