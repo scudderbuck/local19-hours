@@ -95,6 +95,15 @@ button,input,select{font-size:1rem}
 .chp .row button,.chr .row button{flex:1 1 100%}
 #pgCard.shv .shx{display:none!important}
 #pgCard.eqv .eqx{display:none!important}
+html,body{overscroll-behavior-x:none} /* v62: a sideways board swipe must not trigger browser back/forward */
+#pgWrap,#pgSh{overscroll-behavior-x:contain}
+.pgnav{display:flex;align-items:center;gap:8px;margin:8px 0 2px}.pgnav button{flex:0 0 48px;min-width:48px;min-height:48px;font-size:1.6rem;font-weight:900;line-height:1;padding:0;border-radius:12px;background:#00214e;color:#ffd23f;border:2px solid #ffd23f}
+.pgnav button:disabled{opacity:.35}.pgpos{flex:1;min-width:0;text-align:center;font-weight:800;font-size:1rem}.pgpos span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#pgPos{display:flex;justify-content:center}#pgPos .pgpn{display:block;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#pgPos .pgpc{display:block;flex:0 0 auto;white-space:pre}
+#pgDots{margin-top:4px;line-height:0}#pgDots i{display:inline-block;width:8px;height:8px;margin:0 3px;border-radius:50%;background:#9fb0c2}#pgDots i.on{background:#ffd23f;outline:2px solid #00214e;width:10px;height:10px}
+.swl{animation:pgswl .28s ease-out}.swr{animation:pgswr .28s ease-out}.bnl{animation:pgbnl .3s ease-out}.bnr{animation:pgbnr .3s ease-out}
+@keyframes pgswl{from{transform:translateX(40px);opacity:.3}to{transform:none;opacity:1}}@keyframes pgswr{from{transform:translateX(-40px);opacity:.3}to{transform:none;opacity:1}}
+@keyframes pgbnl{40%{transform:translateX(-14px)}to{transform:none}}@keyframes pgbnr{40%{transform:translateX(14px)}to{transform:none}}
+@media(prefers-reduced-motion:reduce){.swl,.swr,.bnl,.bnr{animation:none}}
 .eqb{width:380px;font-size:calc(17px*var(--bz,1));color:#f2f6ff;background:#07153a;padding-bottom:6px}
 .eqhd,.eqr{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(0,1fr);gap:4px}
 .eqhd{position:sticky;top:0;z-index:2;background:#00214e;color:#ffd23f;font-weight:900;padding:8px 4px;border-bottom:3px solid #ffd23f;font-size:1em}
@@ -401,6 +410,7 @@ body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){vis
 <p class="mut" style="margin-top:0">Your own record of the physical peg boards (admins can also share a board live with the whole chat room; shared boards are read-only for everyone else). Pick a board, tap a peg in the legend (or a peg already on a slip) and then tap a slip circle to put it there. The app never decides who gets a job. To move a slip itself, press and hold it, then drag; or open the slip and use Move.</p>
 <div class="gstrip shx eqx" id="pgGl" role="region" aria-label="Global pegs"></div>
 <label for="pgSel" style="margin-top:0">Board</label><select id="pgSel"></select>
+<div id="pgNav" class="pgnav" role="group" aria-label="Switch board (or swipe left/right on the board)"><button type="button" id="pgPrev" aria-label="Previous board">‹</button><div class="pgpos"><span id="pgPos" aria-live="polite"></span><span id="pgDots" aria-hidden="true"></span></div><button type="button" id="pgNext" aria-label="Next board">›</button></div>
 <div id="pgShC" class="pgshc" aria-live="polite"></div><div id="pgSh" class="hide"></div>
 <div class="row shx" style="margin-top:8px"><input id="pgNew" maxlength="40" placeholder="Custom board name" aria-label="Custom board name" autocomplete="off"><button type="button" id="pgAdd" style="flex:0 0 auto">Add board</button></div>
 <p id="pgMine" class="mut pgmine shx eqx" aria-live="polite"></p>
@@ -646,7 +656,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v61",CACHE_VERSION="l19hours-v61"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v62",CACHE_VERSION="l19hours-v62"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1225,6 +1235,13 @@ function eqDiff(a,b){const out=[],am={},bm={},same=(x,y)=>(!x&&!y)||(!!x&&!!y&&x
 function eqRevert(b,u,now){if(!u||!u.u)return{ok:false,error:"Nothing to undo."};const i=b.rows.findIndex(r=>r.u===u.u);if(i<0)return{ok:false,error:"That unit no longer exists."};
  const side=eqSide(u.side),cur=b.rows[i][side],want=u.cur||null,match=want?!!cur&&cur.n===want.n&&cur.at===want.at:!cur;
  if(!match)return{ok:false,error:"That slot changed since, so it was not undone."};const rows=b.rows.slice();rows[i]={...rows[i],[side]:u.prev?eqSlot(u.prev):null};return{ok:true,board:eqTouch(b,rows,now)};}
+/* v62: swipe between Pegs boards. dir +1 = next (swipe left), -1 = previous (swipe right), 0 = not a board swipe */
+function pegSwipeDir(g){if(!g||g.multi||g.dragged)return 0;const dx=+g.dx||0,dy=+g.dy||0,dt=+g.dt||0,ax=Math.abs(dx);
+ if(ax<60||ax<Math.abs(dy)*1.5||dt>700||dt<0)return 0;const dir=dx<0?1:-1,max=Math.max(0,(+g.sw||0)-(+g.cw||0)),sl=+g.sl||0;
+ if(max>2){if(dir===1&&sl<max-2)return 0;if(dir===-1&&sl>2)return 0;} /* zoomed in: only from the edge in the swipe direction, otherwise it is a pan */
+ return dir;}
+function pegSwipeTarget(list,cur,dir){const i=(list||[]).indexOf(cur);if(i<0||!dir)return null;const j=i+dir;return j>=0&&j<list.length?list[j]:null;} /* no wrap */
+function pegNavLabel(names,list,cur){const i=list.indexOf(cur);return i<0?"":(names[i]||cur)+" · "+(i+1)+" of "+list.length;}
 function eqText(b,now){now=now instanceof Date&&!isNaN(now)?now:new Date();const L=[EQ_NAME+" – reservations","Updated: "+(pegWhen(b.updated)||pegWhen(now)),""],c=eqCount(b);
  const line=(r,s,lab)=>{const v=r[s];if(!v)return;const st=eqStamp(v);L.push("  "+r.u+" "+lab+": "+v.n+(v.o?" ("+v.o+")":"")+(st?" ["+st+"]":""));};
  if(!c.d&&!c.n)L.push("No units reserved.");
@@ -1916,8 +1933,9 @@ function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return p
 function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
 function pgBoard(name){return pgD.boards[name]||pegBoardNew();}
 function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
-function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();$("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared&&!pgEq?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`;}).join("")+`<optgroup label="Reserve boards"><option value="eq:${EQ_ID}"${pgEq&&!pgShared?" selected":""}>🚜 ${esc(EQ_NAME)}${eqSh()?" 🔗":""}</option></optgroup>`+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
- $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));}
+function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();const eqO=`<option value="eq:${EQ_ID}"${pgEq&&!pgShared?" selected":""}>🚜 ${esc(EQ_NAME)}${eqSh()?" 🔗":""}</option>`; /* v62: right after the Bull board, so a swipe goes Bull ⇄ Equipment */
+ $("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared&&!pgEq?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`+(n===BULL_BOARD?eqO:"");}).join("")+(pgNames().includes(BULL_BOARD)?"":eqO)+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
+ $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));pgNavRender();}
 function pgSheet(id){const o=document.createElement("div");o.className="sheet";o.id=id;o.addEventListener("keydown",e=>{if(e.key==="Escape")o.remove();});document.body.appendChild(o);return o;}
 function pgJobEdit(id){if($("pgJobS"))return;const name=pgCur(),b=pgBoard(name),j=pegJob(b,id);if(!j)return;let col=j.color;const o=pgSheet("pgJobS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="jeT" class="rot"><h3 id="jeT">Edit job peg</h3><label for="jeN" style="margin-top:0">Job name</label><input id="jeN" maxlength="40" autocomplete="off" value="${esc(j.name)}">
@@ -2156,6 +2174,25 @@ $("bbFile").addEventListener("change",async e=>{const f=e.target.files&&e.target
 $("pgBb").addEventListener("click",pgBbClick);$("pgBb2").addEventListener("click",pgBbClick);
 $("pgSel").onchange=()=>{const v=$("pgSel").value;pgClose();$("pgM").textContent="";if(v.slice(0,3)==="sh:"){pgShared=v.slice(3);pgRender();return;}pgShared=null;
  if(v.slice(0,3)==="eq:"){pgEq=true;pgHeld=null;pgMoving=null;LSset("l19.eqSel","1");pgRender();return;}pgEq=false;LSset("l19.eqSel","");pgD.sel=v;pegsSave(pgD);pgRender();};
+/* ===== v62: swipe left/right between boards (same order as the picker; no wrap) ===== */
+function pgNavList(){const o=[...$("pgSel").options];return{vals:o.map(x=>x.value),names:o.map(x=>x.textContent.replace(/ [★🔗]+$/u,"").replace(/^🔗 /u,"").trim())};}
+function pgNavRender(){const el=$("pgPos");if(!el)return;const L=pgNavList(),cur=$("pgSel").value,i=L.vals.indexOf(cur);
+ const t=pegNavLabel(L.names,L.vals,cur),k=t.lastIndexOf(" · ");el.textContent="";if(k<0)el.textContent=t;else{const a=document.createElement("span"),b=document.createElement("span");a.className="pgpn";b.className="pgpc";a.textContent=t.slice(0,k);b.textContent=t.slice(k);el.append(a,b);}$("pgPrev").disabled=i<=0;$("pgNext").disabled=i<0||i>=L.vals.length-1;
+ $("pgDots").innerHTML=L.vals.length<=14?L.vals.map((v,j)=>`<i class="${j===i?"on":""}"></i>`).join(""):"";}
+function pgGo(dir){const L=pgNavList(),cur=$("pgSel").value,t=pegSwipeTarget(L.vals,cur,dir),w=$("pgWrap");
+ const anim=(el,c)=>{if(!el)return;el.classList.remove("swl","swr","bnl","bnr");void el.offsetWidth;el.classList.add(c);setTimeout(()=>el.classList.remove(c),400);};
+ if(!t){anim(pgShared?$("pgSh"):w,dir>0?"bnl":"bnr");$("pgM").textContent=dir>0?"That's the last board.":"That's the first board.";return false;}
+ $("pgSel").value=t;$("pgSel").onchange();anim(pgShared?$("pgSh"):w,dir>0?"swl":"swr");if(pgCarry&&!pgEq)$("pgM").textContent="Still carrying "+pgCarry.n+". Swipe to the reserve board, or Cancel.";return true;}
+$("pgPrev").onclick=()=>pgGo(-1);$("pgNext").onclick=()=>pgGo(1);
+(function(){let g0=null;const skip=t=>!!(t&&t.closest&&t.closest("input,select,textarea,.bbzb,.sheet,#pgEd,.eqcarry"));
+ const start=(e,scroller)=>{if(e.touches.length!==1||skip(e.target)){g0=null;return;}const t=e.touches[0],s=scroller();
+  g0={x:t.clientX,y:t.clientY,t:Date.now(),sl:s?s.scrollLeft:0,sw:s?s.scrollWidth:0,cw:s?s.clientWidth:0,multi:false};};
+ const move=e=>{if(g0&&e.touches.length>1)g0.multi=true;};
+ const end=e=>{if(!g0)return;const g=g0;g0=null;if(e.touches&&e.touches.length)return;const t=e.changedTouches&&e.changedTouches[0];if(!t)return;
+  const dir=pegSwipeDir({dx:t.clientX-g.x,dy:t.clientY-g.y,dt:Date.now()-g.t,sl:g.sl,sw:g.sw,cw:g.cw,multi:g.multi,dragged:!!pgDrag||Date.now()-pgDragEnd<500||!!document.querySelector(".sheet")});
+  if(dir)pgGo(dir);};
+ const wire=(el,scroller)=>{el.addEventListener("touchstart",e=>start(e,scroller),{passive:true});el.addEventListener("touchmove",move,{passive:true});el.addEventListener("touchend",end,{passive:true});el.addEventListener("touchcancel",()=>{g0=null;},{passive:true});};
+ wire($("pgWrap"),()=>$("pgGrid"));wire($("pgSh"),()=>document.querySelector("#pgSh .shgw"));wire($("pgNav"),()=>null);})();
 $("pgAdd").onclick=()=>{const n=$("pgNew").value.trim().slice(0,40);if(!n){$("pgM").textContent="Type a board name first.";return;}
  const ex=pgNames().find(x=>x.toLowerCase()===n.toLowerCase());if(ex){pgD.sel=ex;pegsSave(pgD);$("pgNew").value="";$("pgM").textContent="That board already exists – switched to it.";pgClose();pgRender();return;}
  if(pgD.custom.length>=30){$("pgM").textContent="Custom board limit reached (30).";return;}
@@ -2639,7 +2676,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
