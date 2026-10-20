@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- ILWU LIFE. Copyright (c) 2026 Daniel White. All rights reserved. No permission is granted to copy, modify, distribute, or use this software or its source code, in whole or in part, without prior written permission from the copyright holder. See LICENSE. -->
 <html lang="en" style="background:#00214e"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -178,6 +179,9 @@ html,body{overscroll-behavior-x:none} /* v62: a sideways board swipe must not tr
 #ysum table td:first-child{padding-right:8px}#ysum .sub{font-weight:400;color:var(--mut);font-size:.875rem}
 .rem{font-weight:600}
 footer#ft{text-align:center;color:var(--mut);font-size:.875rem;padding:8px 0 4px}footer#ft button.link{font-size:.875rem;display:inline;min-height:44px}
+/* v73: footer sits on the navy page background: light text + yellow link (the old grey text / navy link were hard or impossible to read) */
+footer#ft{color:#d5e0f0}footer#ft button.link{color:#ffd23f;text-decoration:underline}
+#ftc{display:block;font-size:max(12px,.8125rem);line-height:1.35;padding:2px 8px 0;overflow-wrap:anywhere}
 @media print{body>*:not(#ysum){display:none!important}#ysum{position:static!important;overflow:visible!important;background:#fff!important;color:#000!important;padding:0!important}#ysum .noprint{display:none!important}#ysum *{color:#000!important;border-color:#888!important;background:transparent!important}.stat{break-inside:avoid}}
 
 #upW button[aria-pressed=true],#tsz button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
@@ -445,6 +449,7 @@ body.gopen{overflow:hidden}
 <p class="mut" style="margin-bottom:0">Travel time is paid at one-half the basic straight-time hourly rate for your rate tier (Supp. IV 5.11, same rule as the Time Book workbook). Mileage is a reimbursement and is always shown apart from wages.</p></div>
 <div class="card"><h3>Rates &amp; app</h3>
 <p class="mut" id="verInfo" style="margin-top:0"></p>
+<p class="mut" id="aboutOwn">ILWU LIFE is an independent app by Daniel White. Not affiliated with or endorsed by the ILWU or PMA.<br>© 2026 Daniel White. All rights reserved.</p>
 <div class="row"><button type="button" id="rpBtn">Report a problem</button><button type="button" id="tourBtn">Replay tour</button></div>
 <p class="mut" style="margin-bottom:0">Reports are text you paste to the beta organizer. Nothing is sent from this app.</p></div>
 <div class="card"><h3>Year summary</h3>
@@ -557,7 +562,7 @@ body.gopen{overflow:hidden}
 <div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). <b>Ships coming</b> lists Seattle container terminals only (T5, T18); T91 is cruise, no container calls. The Needs <b>At berth now</b> box covers more ports. <b>⚙️ Gear</b> opens a lashing/cone/catwalk card for that ship, filled in by coworkers and shared in your chat room (photos stay on your phone).</p>
 <p class="mut" style="margin:8px 0 0"><b>Sources:</b> Seattle and Tacoma: Northwest Seaport Alliance Vessel Schedule Forecast (Tacoma includes car ships and breakbulk). Aberdeen: Port of Grays Harbor vessel schedule (dates only). Olympia: Port of Olympia vessel announcements (dates only). Everett: Port of Everett shipping schedule. Port Angeles: Port of Port Angeles ship schedule. Longview and Vancouver WA: no public schedule; Columbia River Pilots dispatch is used only when it is current. "leaves ?" means the source gives no departure time.</p></div>
 </section>
-<footer id="ft">ILWU LIFE <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button></footer>
+<footer id="ft">ILWU LIFE <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button><small id="ftc">© 2026 Daniel White. All rights reserved.</small></footer>
 </main>
 <div id="bbar"><nav class="tabs" aria-label="Main"><button type="button" data-v="add" class="on" aria-label="Add shift"><span class="ti" aria-hidden="true">➕</span><span class="tl">Add</span></button><button type="button" data-v="ships" aria-label="Ships"><span class="ti" aria-hidden="true">🚢</span><span class="tl">Ships</span></button><button type="button" data-v="pegs" aria-label="Pegs"><span class="ti" aria-hidden="true">📌</span><span class="tl">Pegs</span></button><button type="button" data-v="chat" aria-label="Chat"><span class="ti" aria-hidden="true">💬</span><span class="tl">Chat</span></button><button type="button" data-v="week" aria-label="Week"><span class="ti" aria-hidden="true">📅</span><span class="tl">Week</span></button><button type="button" data-v="hist" aria-label="History"><span class="ti" aria-hidden="true">🕘</span><span class="tl lg">History</span><span class="ts" aria-hidden="true">Hist.</span></button><button type="button" data-v="data" aria-label="Backup"><span class="ti" aria-hidden="true">💾</span><span class="tl lg">Backup</span><span class="ts" aria-hidden="true">Bkup</span></button></nav><nav class="docs" aria-label="Documents"><a id="docSafety" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Marine_Safety_Code_2022.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Marine Safety Code, 2022 Revision (PDF on pmanet.org)" aria-label="ILWU Safety Handbook: Pacific Coast Marine Safety Code, 2022 Revision, PDF, opens in a new tab"><b aria-hidden="true">⛑️</b><span>ILWU Safety Handbook</span></a><a id="docContract" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Longshore_Contract_Document_2022-2028.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Longshore Contract Document, July 1, 2022 – July 1, 2028 (PDF on pmanet.org)" aria-label="Current Contract: Pacific Coast Longshore Contract Document 2022 to 2028, PDF, opens in a new tab"><b aria-hidden="true">📄</b><span>Current Contract</span></a></nav></div>
 <script>
@@ -764,7 +769,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v72",CACHE_VERSION="l19hours-v72"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v73",CACHE_VERSION="l19hours-v73"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
