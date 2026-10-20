@@ -714,7 +714,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v64",CACHE_VERSION="l19hours-v64"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v65",CACHE_VERSION="l19hours-v65"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1324,7 +1324,7 @@ const GEAR_MAX={coneTiers:200,coneColor:80,coneNote:300,lashNote:300,bridgeHt:20
 const GEAR_LISTS={cones:[["fat","Fully automatic (FAT, auto cone)"],["sat","Semi-automatic (SAT)"],["single","Single pull (MacGregor)"],["double","Double pull (MacGregor)"],["manual","Manual twistlock"],["stack","Stacking cone"],["midlock","Midlock / C-lock"],["chinese","Chinese cone"],["mixed","Mixed"]],
  coneStay:[["onbox","Cones stay on box"],["ships","Ship's cones"],["bins","Cone bins"]],
  lash:[["standard","Standard (to deck under its own stack)"],["chinese","Chinese (to deck under the next stack)"],["equalash","Equalash"],["none","No lashing (cell guides)"]],
- bars:[["long","Long bars"],["short","Short bars"]],
+ bars:[["a","A bars (to 1st tier)"],["b","B bars (to 2nd tier)"],["c","C bars (to 3rd tier, wings)"]],
  tb:[["plain","Plain turnbuckles"],["locking","Locking turnbuckles"]],
  lashFrom:[["hatch","From hatch cover"],["bridge","From lashing bridge"]],
  bridgeAccess:[["ladder","Ladder"],["stairs","Stairs"]],
@@ -1340,7 +1340,11 @@ const GEAR_KEY_RE=/^(imo-\d{7}|n-[a-z0-9-]{1,60})$/;
 function gearHidden(k){return/^n-zz-rule-test/.test(String(k||""));}
 /* v64: v63 put single/double pull under Lashing; they are MacGregor pull cones, so move them to Cones */
 const GEAR_PULL=["single","double"];
-function gearMigrate(x){if(!x||typeof x!=="object"||!Array.isArray(x.lash)||!x.lash.some(k=>GEAR_PULL.includes(k)))return x;
+/* v65: bars are A / B / C bars. v63/v64 short bar (to the 2nd tier's bottom = top of the 1st box) -> A, long bar (to the 3rd tier's bottom) -> B */
+const GEAR_BARS_OLD={short:"a",long:"b"};
+function gearMigrate(x){if(!x||typeof x!=="object")return x;
+ if(Array.isArray(x.bars)&&x.bars.some(k=>k in GEAR_BARS_OLD)){const b=[];for(const k of x.bars){const v=GEAR_BARS_OLD[k]||k;if(!b.includes(v))b.push(v);}x={...x,bars:b};}
+ if(!Array.isArray(x.lash)||!x.lash.some(k=>GEAR_PULL.includes(k)))return x;
  return{...x,cones:[...(Array.isArray(x.cones)?x.cones:[]),...x.lash.filter(k=>GEAR_PULL.includes(k))],lash:x.lash.filter(k=>!GEAR_PULL.includes(k))};}
 function gearNorm(s){return String(s==null?"":s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60).replace(/-+$/,"");}
 function gearKey(vessel,imo){if(/^\d{7}$/.test(String(imo||"")))return"imo-"+imo;const n=gearNorm(vessel);return n?"n-"+n:"";}
@@ -1358,6 +1362,7 @@ const GEAR_SHORT={fat:"FAT",sat:"SAT",single:"Single-pull",double:"Double-pull",
 function gearSummary(d){d=gearClean(d);const p=[];
  if(d.cones)p.push(d.cones.map(k=>GEAR_SHORT[k]).join("/")+" cones");
  if(d.lash)p.push(d.lash.map(k=>GEAR_LSHORT[k]).join(" + "));
+ if(d.bars)p.push(d.bars.map(k=>k.toUpperCase()).join("/")+" bars");
  if(d.bridgeTiers)p.push(d.bridgeTiers==="none"?"No bridge":"Bridge "+d.bridgeTiers+" tier"+(d.bridgeTiers==="1"?"":"s"));
  else if(d.bridgeHt)p.push("Bridge "+d.bridgeHt);
  return p.join(" · ");}
@@ -1378,15 +1383,35 @@ function gearConeSvg(x,kind,label){const c=x+40;let s=`<rect x="${x+8}" y="12" w
  if(kind==="sat")s+=`<path d="M${c+15} 57 q14 4 10 26" fill="none" stroke="#b3261e" stroke-width="2.5"/><circle cx="${c+25}" cy="88" r="5" fill="none" stroke="#b3261e" stroke-width="2.5"/>`;
  if(kind==="fat")s+=`<line x1="${c-5}" y1="64" x2="${c+5}" y2="72" stroke="#00214e" stroke-width="2"/><line x1="${c-6}" y1="70" x2="${c+4}" y2="78" stroke="#00214e" stroke-width="2"/>`;
  return s+`<text x="${c}" y="124" text-anchor="middle" font-size="12" font-weight="700" fill="#00214e">${label}</text>`;}
-/* end view of three stacks; the middle one is "this stack". std: rods go to the deck points under its own stack; else under the next stacks */
-function gearLashSvg(x0,std){const W=44,G=8,xs=[x0+6,x0+6+W+G,x0+6+2*(W+G)],y=[151,121,91],D=181,L=xs[1],R=xs[1]+W;let s="";
- s+=`<rect x="${L}" y="${D}" width="${W}" height="7" fill="#7f93b5"/><line x1="${x0+2}" y1="${D}" x2="${x0+162}" y2="${D}" stroke="#00214e" stroke-width="3"/>`;
+/* v65: end view of three stacks, 3 tiers; the middle one is "this stack". Bars from its corner castings: A to the top of the 1st-tier box, B to the 2nd, C (dashed, wing rows) to the 3rd.
+   std: bars land on the deck under its own stack; else on the deck under the next stack. Higher bars land farther out, so the bars on one side never cross. */
+function gearBarMark(x,y,k){return`<circle cx="${x}" cy="${y}" r="6" fill="#b3261e" stroke="#fff" stroke-width="1"/><text x="${x}" y="${y+3.5}" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">${k}</text>`;}
+function gearBar(x1,y1,x2,y2,k){return`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#b3261e" stroke-width="2.5"${k==="C"?' stroke-dasharray="5 3"':""}/>`;}
+function gearLashSvg(x0,std){const W=48,G=10,xs=[x0+2,x0+2+W+G,x0+2+2*(W+G)],y=[151,121,91],D=181,L=xs[1],R=xs[1]+W,K=["A","B","C"];let s="";
+ s+=`<line x1="${x0+1}" y1="${D}" x2="${x0+167}" y2="${D}" stroke="#00214e" stroke-width="3"/>`;
  xs.forEach((x,i)=>{for(let t=0;t<3;t++)s+=`<rect x="${x}" y="${y[t]}" width="${W}" height="30" ${i===1?GEAR_SVG_BOX:'fill="#eef2f8" stroke="#7f93b5" stroke-width="1.5"'}/>`;});
- const pts=std?[[L,y[0],R-7,D],[R,y[0],L+7,D]]:[[L,y[0],xs[0]+W-7,D],[R,y[0],xs[2]+7,D]];
- pts.forEach(([a,b,c,d])=>{s+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#b3261e" stroke-width="3"/><rect x="${c-5}" y="${d-6}" width="10" height="6" ${GEAR_SVG_Y}/><circle cx="${a}" cy="${b}" r="3.5" fill="#b3261e"/>`;});
+ const lx=std?[L+26,L+34,L+42]:[L-16,L-24,L-32],rx=std?[R-26,R-34,R-42]:[R+16,R+24,R+32];
+ s+=std?`<rect x="${L+3}" y="${D}" width="${W-6}" height="5" ${GEAR_SVG_Y}/>`:`<rect x="${L-36}" y="${D}" width="24" height="5" ${GEAR_SVG_Y}/><rect x="${R+12}" y="${D}" width="24" height="5" ${GEAR_SVG_Y}/>`;
+ for(let t=2;t>=0;t--)s+=gearBar(L,y[t],lx[t],D,K[t])+gearBar(R,y[t],rx[t],D,K[t]);
+ for(let t=0;t<3;t++)s+=gearBarMark(L,y[t],K[t])+gearBarMark(R,y[t],K[t]);
  s+=`<text x="${x0+84}" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#00214e">${std?"Standard":"Chinese"}</text>`;
  s+=`<text x="${x0+84}" y="34" text-anchor="middle" font-size="10.5" fill="#00214e">${std?"to the deck under its own stack":"to the deck under the next stack"}</text>`;
- s+=`<text x="${x0+84}" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="#00214e">this stack</text>`;
+ s+=`<text x="${x0+84}" y="80" text-anchor="middle" font-size="10" font-weight="700" fill="#00214e">this stack</text>`;
+ return s;}
+/* v65: hatch end view: inboard rows get A + B bars, the wing (outboard) rows also get C bars */
+function gearBarsSvg(){const W=44,G=8,x0=38,y=[136,106,76],D=166,K=["A","B","C"];let s=`<line x1="4" y1="${D}" x2="332" y2="${D}" stroke="#00214e" stroke-width="3"/><rect x="${x0-6}" y="${D}" width="${5*W+4*G+12}" height="7" fill="#7f93b5"/>`;
+ for(let i=0;i<5;i++){const L=x0+i*(W+G),R=L+W,wing=i===0||i===4,n=wing?3:2;
+  for(let t=0;t<3;t++)s+=`<rect x="${L}" y="${y[t]}" width="${W}" height="30" ${wing?GEAR_SVG_BOX:'fill="#eef2f8" stroke="#7f93b5" stroke-width="1.5"'}/>`;
+  s+=`<rect x="${L+3}" y="${D}" width="${W-6}" height="4" ${GEAR_SVG_Y}/>`;
+  for(let t=n-1;t>=0;t--)s+=`<line x1="${L}" y1="${y[t]}" x2="${L+24+t*8}" y2="${D}" stroke="#b3261e" stroke-width="2.5"/><line x1="${R}" y1="${y[t]}" x2="${R-24-t*8}" y2="${D}" stroke="#b3261e" stroke-width="2.5"/>`;
+  const o=i===0?L:i===4?R:0;
+  if(wing)for(let t=0;t<3;t++)s+=gearBarMark(o,y[t],K[t]);
+  else if(i===2)for(let t=0;t<2;t++)s+=gearBarMark(L,y[t],K[t])+gearBarMark(R,y[t],K[t]);
+  else for(let t=0;t<2;t++)s+=`<circle cx="${L}" cy="${y[t]}" r="3" fill="#b3261e"/><circle cx="${R}" cy="${y[t]}" r="3" fill="#b3261e"/>`;
+  if(wing)for(let t=0;t<3;t++){const c=i===0?R:L;s+=`<circle cx="${c}" cy="${y[t]}" r="3" fill="#b3261e"/>`;}}
+ s+=`<text x="168" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#00214e">Most rows: A + B bars</text><text x="168" y="36" text-anchor="middle" font-size="11" fill="#00214e">Wing rows (outboard): A + B + C bars</text>`;
+ s+=`<text x="${x0+22}" y="66" text-anchor="middle" font-size="10" font-weight="700" fill="#00214e">wing</text><text x="${x0+4*(W+G)+22}" y="66" text-anchor="middle" font-size="10" font-weight="700" fill="#00214e">wing</text><text x="168" y="66" text-anchor="middle" font-size="10" fill="#00214e">inboard rows</text>`;
+ s+=`<text x="8" y="${y[0]+19}" font-size="9" fill="#00214e">1st</text><text x="8" y="${y[1]+19}" font-size="9" fill="#00214e">2nd</text><text x="8" y="${y[2]+19}" font-size="9" fill="#00214e">3rd</text><text x="168" y="186" text-anchor="middle" font-size="10" fill="#00214e">hatch cover · tiers counted up from the deck</text>`;
  return s;}
 const GEAR_PHOTOS={
  twistlocks:["img/gear-twistlocks.jpg",480,360,"Bottom twistlocks on the deck fittings of a container ship","Danny Cornelissen","Attribution licence","https://commons.wikimedia.org/wiki/Template:Attribution","https://commons.wikimedia.org/wiki/File:First_level_of_twistlocks_on_a_containership_deck.jpg"],
@@ -1428,13 +1453,21 @@ ${gearFig("twistlocks")}
 <p><b>Chinese cone:</b> a waterfront name that doesn't mean the same thing everywhere. Pick it if that's what your gang calls the cones on this ship, and add a note on how they lock and unlock. (Chinese <i>lashing</i> is a different thing; see Lashing.)</p>
 <p><b>Cones stay on box / ship's cones / bins:</b> whether the cones leave with the box (pulled on the dock), belong to the ship's own gear, or go into cone bins on board.</p>
 ${gearFig("manualcone")}${gearLinksHtml("cones")}`],
- ["lash","Lashing: standard vs Chinese",`<svg viewBox="0 0 336 196" role="img" aria-label="End view of three stacks. Standard: the rods from this stack go to the deck lashing points directly under this stack. Chinese: they go to the deck lashing points under the next stacks."><title>Standard vs Chinese lashing</title>${gearLashSvg(0,1)}${gearLashSvg(168,0)}<line x1="168" y1="8" x2="168" y2="190" stroke="#7f93b5" stroke-width="1" stroke-dasharray="4 3"/></svg>
-<p class="gmut" style="margin-top:0">End view. Red = lashing rod from this stack's corner casting, yellow = lashing point on the deck or hatch cover.</p>
+ ["lash","Lashing: standard vs Chinese",`<svg viewBox="0 0 336 206" role="img" aria-label="End view of three stacks, three tiers high. Standard: the A, B and C bars from this stack go to the deck lashing points directly under this stack. Chinese: they go to the deck lashing points under the next stacks. A bars reach the 1st tier, B bars the 2nd, C bars the 3rd."><title>Standard vs Chinese lashing with A, B and C bars</title>${gearLashSvg(0,1)}${gearLashSvg(168,0)}<line x1="168" y1="8" x2="168" y2="190" stroke="#7f93b5" stroke-width="1" stroke-dasharray="4 3"/><text x="168" y="201" text-anchor="middle" font-size="10.5" fill="#00214e">A = 1st tier · B = 2nd tier · C = 3rd tier (dashed: wings)</text></svg>
+<p class="gmut" style="margin-top:0">End view. Red = lashing bar from this stack's corner castings, marked A, B or C by the tier it reaches. Yellow = lashing points on the deck or hatch cover. C bars (dashed) are usually only on the wing rows.</p>
 <p>Lashing bars (rods) run from a corner casting of a box down to a lashing point on the hatch cover, deck or lashing bridge. A turnbuckle at the bottom pulls them tight. As Local 19 uses the words:</p>
 <p><b>Standard lashing:</b> the rod connects to the lashing point on the deck (or hatch cover) <b>directly under that container's own stack</b>.</p>
 <p><b>Chinese lashing:</b> the rod connects to the lashing point on the deck <b>under the adjacent stack</b>, the next containers over, instead of under its own.</p>
-<p>Either way the rods usually cross the end of the box (official guides call this cross lashing). Ships lash the bottom 1, 2 or 3 tiers, or up to bridge level: use <b>Tiers lashed</b> on the card. <b>Long / short bars:</b> different lengths for 2nd or 3rd tier and for standard or high-cube boxes.</p>
+<p>Either way the rods usually cross the end of the box (official guides call this cross lashing). Ships lash the bottom 1, 2 or 3 tiers, or up to bridge level: use <b>Tiers lashed</b> on the card. Bars come in A, B and C lengths, one for each tier; see <b>A, B and C bars</b>.</p>
 ${gearFig("lashing")}${gearLinksHtml("lash")}`],
+ ["bars","A, B and C bars",`<svg viewBox="0 0 336 192" role="img" aria-label="End view of a hatch with five stacks three tiers high. Inboard stacks have A and B bars. The two wing stacks also have C bars reaching the 3rd tier."><title>A, B and C bars: C bars on the wings</title>${gearBarsSvg()}</svg>
+<p class="gmut" style="margin-top:0">End view of one hatch. Lashing bars (red) on every stack; the wing (outboard) stacks get a third bar.</p>
+<p>Lashing bars come in lengths, named by how high they reach. Tiers are counted up from the deck or hatch cover:</p>
+<p><b>A bar</b> (shortest): reaches the <b>1st tier</b>. It hooks into the corner casting at the top of the bottom box, where the 2nd-tier box sits on it.</p>
+<p><b>B bar</b>: reaches the <b>2nd tier</b>, the corner casting at the top of the 2nd box (under the 3rd-tier box).</p>
+<p><b>C bar</b> (longest): reaches the <b>3rd tier</b>, the top of the 3rd box. Usually only on the <b>wings</b>, the outboard rows that take the most wind and roll.</p>
+<p><b>Most ships use A and B bars, with C bars on the wings.</b> On the card, tap every bar type the ship uses. Lengths also change with box height (standard or high cube), and bars often have several knobs or eyes so one bar fits more than one height; note anything unusual. Older cards that said "short bars" now show as A bars and "long bars" as B bars.</p>
+<p class="gmut">Supplier catalogues name only a short bar (about 2.5 m, to the bottom of the 2nd tier) and a long bar (about 4.5 to 5 m, to the bottom of the 3rd tier). The A / B / C names, and the C bar as the "3 high bar", are longshore usage.</p>`],
  ["equalash","Equalash",`<svg viewBox="0 0 300 190" role="img" aria-label="One turnbuckle holding a pair of lashing bars"><title>Equalash idea</title><line x1="20" y1="181" x2="280" y2="181" stroke="#00214e" stroke-width="4"/>${[0,1,2,3].map(t=>`<rect x="100" y="${144-t*36}" width="110" height="36" ${GEAR_SVG_BOX}/>`).join("")}<line x1="70" y1="164" x2="208" y2="144" stroke="#b3261e" stroke-width="3"/><line x1="70" y1="164" x2="208" y2="108" stroke="#b3261e" stroke-width="3"/><rect x="62" y="162" width="16" height="18" rx="3" ${GEAR_SVG_Y}/><text x="14" y="140" font-size="12" font-weight="700" fill="#00214e">1 turnbuckle</text><text x="250" y="126" text-anchor="middle" font-size="12" font-weight="700" fill="#00214e">2 bars</text></svg>
 <p><b>Equalash</b> is a lashing system sold under that name (MacGregor). Its main idea is that one turnbuckle takes a <b>pair</b> of lashing bars, so there are fewer turnbuckles to work than with one turnbuckle per bar. Gear differs from model to model and ship to ship, so describe what you see in the note.</p>
 <p class="gmut">No openly licensed photo of Equalash was found, so there's no photo here; the MacGregor catalogue pages below show the real gear.</p>${gearLinksHtml("equalash")}`],
@@ -2772,7 +2805,7 @@ const gSec=(n,t,guide,body)=>`<section class="gsec" aria-labelledby="gs-${n}"><h
 function gearForm(d){return`<div id="gearM" class="gmsg" role="status" aria-live="polite"></div><p class="gmut" id="gearR"></p>
 <button type="button" class="gqb" data-guide="cones">❓ Reference guide: cones, lashing, bridges</button>
 ${gSec(1,"Cones / twistlocks","cones",gChips("cones",d,0,"Cone type (tap all that apply). Single and double pull are cone types, not lashing.")+gIn("coneTiers","Deck vs hold, which tier uses which",d,"e.g. FAT on deck, stacking cones in hold")+gChips("coneStay",d,0,"Where the cones go")+gIn("coneColor","Cone colour or brand",d,"e.g. orange SAT, brand on the cone")+gTa("coneNote","Note",d,"Anything else about the cones"))}
-${gSec(2,"Lashing","lash",gChips("lash",d,0,"Lashing type (where the rod goes to the deck)")+`<p class="gmut" style="margin:6px 0 0"><button type="button" class="gql" data-guide="lash">Standard vs Chinese?</button> <button type="button" class="gql" data-guide="equalash">What's Equalash?</button></p>`+gChips("bars",d,0,"Bars")+gChips("tb",d,0,"Turnbuckles (bottle screws)")+gChips("lashTiers",d,1,"Tiers lashed")+gChips("lashFrom",d,0,"Lashing from")+gTa("lashNote","Note",d,"e.g. outboard rows lashed to bridge, ABC bars fwd bays"))}
+${gSec(2,"Lashing","lash",gChips("lash",d,0,"Lashing type (where the rod goes to the deck)")+`<p class="gmut" style="margin:6px 0 0"><button type="button" class="gql" data-guide="lash">Standard vs Chinese?</button> <button type="button" class="gql" data-guide="equalash">What's Equalash?</button></p>`+gChips("bars",d,0,"Bars (tap all that apply)")+`<p class="gmut" style="margin:4px 0 0">Most ships: A and B bars. C bars usually only on the wings (outboard rows). <button type="button" class="gql" data-guide="bars">A, B, C bars?</button></p>`+gChips("tb",d,0,"Turnbuckles (bottle screws)")+gChips("lashTiers",d,1,"Tiers lashed")+gChips("lashFrom",d,0,"Lashing from")+gTa("lashNote","Note",d,"e.g. outboard rows lashed to bridge, ABC bars fwd bays"))}
 ${gSec(3,"Lashing bridge / catwalk","bridge",gChips("bridgeTiers",d,1,"Bridge height in tiers")+gIn("bridgeHt","Height in feet or metres (optional)",d,"e.g. 18 ft / 5.5 m")+gChips("bridgeAccess",d,0,"Access")+gTa("bridgeNote","Fall protection / access notes",d,"e.g. tie-off points, gaps, open manholes"))}
 ${gSec(4,"Hatch covers","hatch",gChips("hatch",d,0,"Hatch cover type")+gChips("cellGuides",d,1,"Cell guides in hold")+gTa("hatchNote","Note",d,""))}
 ${gSec(5,"Other useful info","",gIn("deckTiers","Tiers on deck (number)",d,"e.g. 7",1)+gChips("bays",d,0,"Bay sizes")+gIn("reefer","Reefer plugs (where, deck or hold, about how many)",d,"e.g. aft bays deck + hold, ~400")+gIn("binLoc","Gear bins / cone box location",d,"e.g. fwd of the house, port side")+gChips("gwSide",d,1,"Gangway side")+gIn("gwType","Gangway type",d,"e.g. accommodation ladder, shore gangway")+gChips("geared",d,1,"Ship's own cranes?")+gIn("craneNote","Crane-to-ship notes",d,"e.g. boom clearance, crane rail, house position")+gIn("askWho","Who to ask",d,"e.g. Chief mate, bosun")+gTa("safety","Safety notes and hazards",d,"Anything the next gang should watch for")+gTa("notes","General notes",d,""))}
