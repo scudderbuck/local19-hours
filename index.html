@@ -19,7 +19,7 @@ html{font-size:16px}html[data-ts=large]{font-size:19px}html[data-ts=xl]{font-siz
 ::placeholder{color:var(--mut);opacity:1}
 button:disabled,input:disabled,select:disabled{opacity:1;color:var(--mut);background:var(--bd);cursor:not-allowed}
 button.p:disabled{background:#3b4a63;color:#fff;border-color:#3b4a63}
-body{margin:0;background:var(--bg);color:var(--fg);font:1rem/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:90px}
+body{margin:0;background:var(--bg);color:var(--fg);font:1rem/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:calc(140px + env(safe-area-inset-bottom))} /* v68: room for the 2-row bottom bar */
 header{background:var(--pri);color:var(--prifg);padding:14px 16px;padding-top:max(14px,env(safe-area-inset-top));font-weight:700;font-size:1.25rem}
 main{max-width:560px;margin:0 auto;padding:var(--s)}
 h3,h4{margin:0 0 8px;font-size:1.125rem}h4{font-size:.875rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-top:16px}
@@ -39,11 +39,18 @@ label .mut{font-weight:400}
 /* v67: bottom bar. All 7 buttons fit on one row at any width with a 4px gap between them (no touching, no sideways scroll).
    Buttons size to their label (flex:1 1 auto) and share the spare room; label size follows the screen width (3.6vw, 12px floor,
    never bigger than .8125rem) so the app's Large / Extra large text or a phone's text zoom can't push them off the screen. */
-.tabs{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;gap:4px;padding:4px 4px calc(4px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--bd);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* v68: the bottom bar is one fixed block: the 7 tab buttons, then a row of two document links (safety code, contract) */
+#bbar{position:fixed;bottom:0;left:0;right:0;z-index:5;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.tabs{display:flex;gap:4px;padding:4px 4px 0}
+.docs{display:flex;gap:4px;padding:4px}
+.docs a{flex:1 1 0;min-width:0;min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;padding:2px 6px;border-radius:8px;background:var(--pri);color:var(--prifg);box-shadow:inset 0 0 0 1px var(--acc);text-decoration:none;font-weight:700;font-size:max(12px,min(.875rem,3.6vw));line-height:1.2;text-align:center;overflow:hidden}
+.docs a span{min-width:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.docs a:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+@media(prefers-color-scheme:dark){.docs a{background:#0b3170;color:#fff;box-shadow:inset 0 0 0 1px #7f9cd0}}
 .tabs button{flex:1 1 auto;min-width:0;min-height:52px;padding:2px 2px;margin:0;border:0;border-radius:10px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--bd);color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:max(12px,min(.8125rem,3.6vw));font-weight:600;line-height:1.1;white-space:nowrap}
 .tabs .ti{font-size:max(16px,min(1.125rem,5vw));line-height:1}.tabs .ts{display:none}
 .tabs button.on{background:var(--pri);color:var(--prifg);box-shadow:inset 0 0 0 2px var(--acc),inset 0 -3px #ffd23f}
-@media (max-width:299px){.tabs{padding-left:2px;padding-right:2px}.tabs button{padding:2px 0}}
+@media (max-width:299px){.tabs,.docs{padding-left:2px;padding-right:2px}.tabs button{padding:2px 0}}
 @media (max-width:259px){.tabs .tl.lg{display:none}.tabs .ts{display:inline}}
 .ent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--bd)}
 .ent:first-child{border-top:0;padding-top:0}.ent:last-child{padding-bottom:0}
@@ -133,7 +140,7 @@ html,body{overscroll-behavior-x:none} /* v62: a sideways board swipe must not tr
 .eqwarn{margin:6px 0;padding:8px 10px;border-radius:10px;background:#3a0d1c;color:#fff;border:2px solid #ff9b9b;font-weight:700}
 .eqb .eqs.drop{border:2px dashed #ffd23f;background:#1b3f8f}
 #pgDt .dteq{background:#ffd23f;color:#00214e;font-weight:900}
-#eqToast{position:fixed;left:8px;right:8px;bottom:calc(80px + env(safe-area-inset-bottom));z-index:80;max-width:544px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 14px;border-radius:12px;background:#00214e;color:#fff;border:2px solid #ffd23f;font-weight:700;box-shadow:0 4px 18px rgba(0,0,0,.45)}
+#eqToast{position:fixed;left:8px;right:8px;bottom:calc(132px + env(safe-area-inset-bottom));z-index:80;max-width:544px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 14px;border-radius:12px;background:#00214e;color:#fff;border:2px solid #ffd23f;font-weight:700;box-shadow:0 4px 18px rgba(0,0,0,.45)}
 #eqToast span{flex:1}#eqToast button{min-height:44px;min-width:80px;background:#ffd23f;color:#00214e;border:0;border-radius:10px;font-weight:900}
 .pgshc{margin:8px 0;font-size:.9375rem}.pgshc .chip{display:inline-block;min-height:44px;margin:4px 6px 0 0;padding:0 12px;border-radius:22px;border:2px solid var(--fg);background:var(--card);font-weight:700}.pgshc .chip[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc)}
 .shban{background:#ffd23f;color:#1a1400;font-weight:800;border-radius:8px;padding:10px 12px;margin:8px 0}
@@ -546,7 +553,7 @@ body.gopen{overflow:hidden}
 </section>
 <footer id="ft">ILWU LIFE <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button></footer>
 </main>
-<nav class="tabs" aria-label="Main"><button type="button" data-v="add" class="on" aria-label="Add shift"><span class="ti" aria-hidden="true">➕</span><span class="tl">Add</span></button><button type="button" data-v="ships" aria-label="Ships"><span class="ti" aria-hidden="true">🚢</span><span class="tl">Ships</span></button><button type="button" data-v="pegs" aria-label="Pegs"><span class="ti" aria-hidden="true">📌</span><span class="tl">Pegs</span></button><button type="button" data-v="chat" aria-label="Chat"><span class="ti" aria-hidden="true">💬</span><span class="tl">Chat</span></button><button type="button" data-v="week" aria-label="Week"><span class="ti" aria-hidden="true">📅</span><span class="tl">Week</span></button><button type="button" data-v="hist" aria-label="History"><span class="ti" aria-hidden="true">🕘</span><span class="tl lg">History</span><span class="ts" aria-hidden="true">Hist.</span></button><button type="button" data-v="data" aria-label="Backup"><span class="ti" aria-hidden="true">💾</span><span class="tl lg">Backup</span><span class="ts" aria-hidden="true">Bkup</span></button></nav>
+<div id="bbar"><nav class="tabs" aria-label="Main"><button type="button" data-v="add" class="on" aria-label="Add shift"><span class="ti" aria-hidden="true">➕</span><span class="tl">Add</span></button><button type="button" data-v="ships" aria-label="Ships"><span class="ti" aria-hidden="true">🚢</span><span class="tl">Ships</span></button><button type="button" data-v="pegs" aria-label="Pegs"><span class="ti" aria-hidden="true">📌</span><span class="tl">Pegs</span></button><button type="button" data-v="chat" aria-label="Chat"><span class="ti" aria-hidden="true">💬</span><span class="tl">Chat</span></button><button type="button" data-v="week" aria-label="Week"><span class="ti" aria-hidden="true">📅</span><span class="tl">Week</span></button><button type="button" data-v="hist" aria-label="History"><span class="ti" aria-hidden="true">🕘</span><span class="tl lg">History</span><span class="ts" aria-hidden="true">Hist.</span></button><button type="button" data-v="data" aria-label="Backup"><span class="ti" aria-hidden="true">💾</span><span class="tl lg">Backup</span><span class="ts" aria-hidden="true">Bkup</span></button></nav><nav class="docs" aria-label="Documents"><a id="docSafety" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Marine_Safety_Code_2022.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Marine Safety Code, 2022 Revision (PDF on pmanet.org)" aria-label="ILWU Safety Handbook: Pacific Coast Marine Safety Code, 2022 Revision, PDF, opens in a new tab"><b aria-hidden="true">⛑️</b><span>ILWU Safety Handbook</span></a><a id="docContract" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Longshore_Contract_Document_2022-2028.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Longshore Contract Document, July 1, 2022 – July 1, 2028 (PDF on pmanet.org)" aria-label="Current Contract: Pacific Coast Longshore Contract Document 2022 to 2028, PDF, opens in a new tab"><b aria-hidden="true">📄</b><span>Current Contract</span></a></nav></div>
 <script>
 function splashMs(reduced){return reduced?400:1200}
 (function(){if(typeof document==="undefined")return;var e=document.getElementById("splash");if(!e)return;var d=function(){if(e&&e.parentNode)e.parentNode.removeChild(e);e=null};
@@ -730,7 +737,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v67",CACHE_VERSION="l19hours-v67"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v68",CACHE_VERSION="l19hours-v68"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1662,13 +1669,13 @@ function calPopHtml(){const y=+pm.slice(0,4),mo=+pm.slice(5)-1,wk=monthGrid(y,mo
  <div class="cal">${head}${cells}</div>${foot}</div>`;}
 function openCalPop(){if(popEl)return;pm=(pd||selDate||fmtDate(new Date())).slice(0,7);if(!pd)pd=null;popEl=document.createElement("div");popEl.className="cpop";popEl.onclick=ev=>{if(ev.target===popEl)closeCalPop();};
  document.body.appendChild(popEl);try{history.pushState({l19cal:1},"");}catch(e){}
- ["main","nav.tabs","header"].forEach(q=>{const el=document.querySelector(q);if(el)el.setAttribute("inert","");});paintCalPop();}
+ ["main","#bbar","header"].forEach(q=>{const el=document.querySelector(q);if(el)el.setAttribute("inert","");});paintCalPop();}
 function paintCalPop(foc){popEl.innerHTML=calPopHtml();
  popEl.querySelectorAll("[data-pd]").forEach(b=>b.onclick=()=>{pd=b.dataset.pd;pm=pd.slice(0,7);jumpTo(pd);paintCalPop("pAdd");});
  $("pP").onclick=()=>{pm=fmtDate(new Date(+pm.slice(0,4),+pm.slice(5)-2,1)).slice(0,7);paintCalPop("pP");};$("pN").onclick=()=>{pm=fmtDate(new Date(+pm.slice(0,4),+pm.slice(5),1)).slice(0,7);paintCalPop("pN");};
  $("pX").onclick=closeCalPop;if($("pDone"))$("pDone").onclick=closeCalPop;if($("pAdd"))$("pAdd").onclick=()=>{const d=pd;closeCalPop();addOn(d);};
  const f=$(foc||"pX");if(f)f.focus({preventScroll:true});}
-function removeCalPop(){if(!popEl)return false;popEl.remove();popEl=null;["main","nav.tabs","header"].forEach(q=>{const el=document.querySelector(q);if(el&&!$("lock")&&!$("setup"))el.removeAttribute("inert");});return true;}
+function removeCalPop(){if(!popEl)return false;popEl.remove();popEl=null;["main","#bbar","header"].forEach(q=>{const el=document.querySelector(q);if(el&&!$("lock")&&!$("setup"))el.removeAttribute("inert");});return true;}
 function closeCalPop(){if(removeCalPop()&&history.state&&history.state.l19cal){try{history.back();}catch(e){}}}
 window.addEventListener("popstate",()=>{removeCalPop();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&popEl)closeCalPop();});
@@ -2060,7 +2067,7 @@ const subtleOk=()=>!!(globalThis.crypto&&globalThis.crypto.subtle);
 function eraseAll(){try{Object.keys(localStorage).filter(k=>k.indexOf("l19")===0).forEach(k=>localStorage.removeItem(k));}catch(e){}
  try{indexedDB.deleteDatabase("l19letters");}catch(e){}location.reload();}
 let lockFails=0,lockWait=0;
-function setInert(on){["main","nav.tabs","header"].forEach(s=>{const el=document.querySelector(s);if(el){if(on)el.setAttribute("inert","");else el.removeAttribute("inert");el.setAttribute("aria-hidden",String(on));}});}
+function setInert(on){["main","#bbar","header"].forEach(s=>{const el=document.querySelector(s);if(el){if(on)el.setAttribute("inert","");else el.removeAttribute("inert");el.setAttribute("aria-hidden",String(on));}});}
 function lockNow(){if(!pinCfg()||$("lock"))return;const d=document.createElement("div");d.id="lock";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-label","App locked");
  d.innerHTML=`<div class="lk"><div class="big" style="margin-bottom:8px">ILWU LIFE is locked</div><label for="lpin" style="margin-top:0">Enter your 4-digit PIN</label><input id="lpin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" style="text-align:center;font-size:1.5rem;letter-spacing:.5em"><div id="lmsg" class="mut" aria-live="polite" style="min-height:1.4em;margin-top:6px"></div><button type="button" class="p" id="lgo" style="width:100%;margin-top:8px">Unlock</button><button type="button" class="link" id="lforgot" style="margin-top:10px">Forgot PIN?</button></div>`;
  document.body.appendChild(d);setInert(true);
