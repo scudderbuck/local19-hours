@@ -584,8 +584,9 @@ const SEATTLE_JOBS=[
 ["Extra Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned"],
 ["Bull","0029","Skill 1","user","User-stated code 0029 Lift Truck Operator, Skill 1 (PMA list); rates from Skill 1 schedule"],
 ["Semi","0029","Skill 1","user","User-stated code 0029 Lift Truck Operator, Skill 1 (PMA list; same as Bull); rates from Skill 1 schedule"],
-["Top pick","","Skill 2","user","User-stated Skill 2 pay rates (same scale as Bus/Heavy bull, code 0055 group); no occupation code assigned"],
-["Mobile crane","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
+["Top pick","0061","Skill 3","direct","v72: PCLCD 4.32 lists Tophandler Driver under Skill III (PMA 0061 Top Handler); was Skill 2 before v72"],
+["Mobile crane","0085","Skill 2","direct","v72: PCLCD 4.32 Skill II = Shore-based Whirley & Mobile Crane Operators (PMA 0085 Crane Mobile; Pier 66 cruise sheet: Mobile Crane 085 Skill II). Mobile harbor cranes over 60 metric tons are Skill III: pick Mobile harbor crane (over 60t)"],
+["Mobile harbor crane (over 60t)","0065","Skill 3","direct","PCLCD 4.32 Skill III: Mobile Harbor Crane Operator (over 60 metric tons rated) (PMA 0065 Mobile Crane SK3)"],
 ["Crane op","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
 ["RTG","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
 ["Bus","0055","Skill 2","user","User-stated code 0055 Lift Truck-Heavy, Skill 2 (PMA list); rates from Skill 2 schedule"],
@@ -601,7 +602,7 @@ const SEATTLE_JOBS=[
 ["Button pusher (conveyor)","0023","Skill 1","direct","0023 Button Pusher, conveyor (Pier 66 cruise sheet: 023 Skill I)"],
 ["Gangway operator","0085","Skill 2","user","T91 cruise sheet: Gangway operators 085 Skill II; new job, Skill 2 rates from sheet (gangway is not treated as a crane)"],
 ["Ramp","0085","Skill 2","user","Pier 66 cruise sheet: Ramp 085 Skill II; new job, Skill 2 rates from sheet"],
-["Jib operator","0085","Skill 3","user","T91 cruise sheet: Jib operators 085 Skill II; a jib is crane equipment, so it follows the user rule all crane jobs = Skill 3 (same as Crane op)"],
+["Jib operator","0085","Skill 2","direct","v72: T91 cruise sheet: Jib operators 085 Skill II. PCLCD 4.32: Shore-based Whirley & Mobile Crane Operators = Skill II (PMA 0085 Crane Mobile); only Mobile Harbor Cranes over 60 metric tons and container cranes are Skill III"],
 ["Lokey","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Switch","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
 ["Deckman","","","none","Pier 86 (wheat terminal) job, separate contract; code/rate to be supplied"],
@@ -611,7 +612,17 @@ const SEATTLE_JOBS=[
 ["Checker","","Basic","inferred","Ex-Local 52 job. INFERRED as Basic clerk (no separate Checker class in PCCCD). Same rates as Basic schedule; Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
 ["EC (Exception clerk)","","Chief/Supercargo (30%)","user","User-stated EC is a 30% job (Automation Clerk, PCCCD 1.255) = Chief/Supercargo skill rate. Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."],
 ["Supercargo","","Chief/Supercargo (30%)","inferred","Ex-Local 52 job. Chief Supervisor & Supercargo skill rate (PCCCD 4.33). Rates: PCCCD 2022-2028 coastwise, printed p.141 (clerks' no-cargo-penalty schedule 2026-27)."]];
-function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||null;}
+/* v72: PCLCD 4.32 skill jobs that have no entry in the PMA occupation-code list above (same row format; no code). Shown in their own picker group. */
+const PCL_JOBS=[
+["Boom man","","Skill 1","direct","PCLCD 4.32 Skill I (footnote 1: may be shifted, keeps the skill differential)"],
+["Burton man","","Skill 1","direct","PCLCD 4.32 Skill I"],
+["Guy man","","Skill 1","direct","PCLCD 4.32 Skill I"],
+["Sack turner","","Skill 1","direct","PCLCD 4.32 Skill I"],
+["Side runner","","Skill 1","direct","PCLCD 4.32 Skill I (footnote 1)"],
+["Log stacker operator","","Skill 2","direct","PCLCD 4.32 Skill II"],
+["Shipboard Munck crane operator","","Skill 2","direct","PCLCD 4.32 Skill II"],
+["9.43 Equipment operator","","Skill 3","direct","PCLCD 4.32 Skill III (9.43 Equipment Operator; PMA 9.43 codes 0185-0197 are under Other)"]];
+function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||PCL_JOBS.find(j=>j[0]===v)||null;}
 /* ===== PIER DEFAULT HOURS (cruise work sheets) — EDIT HERE =====
    Prefills the Hours box when you pick the pier + job on a new shift; you can always edit it. Keys = job value in the picker.
    P91 = Terminal 91 cruise sheet (stevedore co. Metro); P66 = Pier 66 sheet (Norwegian Bliss/Encore Sat-Sun 2023). Pay class is NOT changed by this. */
@@ -627,11 +638,21 @@ function pierHours(pier,job){const k=pierKey(pier),t=k&&PIER_HOURS[k];return t&&
 const RATES_YEAR="2026-27 (eff. Jul 4 2026)";
 const TIERS=[["4001+","4,001+ hrs (full rate)"],["2001-4000","2,001–4,000 hrs"],["1001-2000","1,001–2,000 hrs"],["0-1000","0–1,000 hrs"]];
 const RATES={"Basic":{"4001+":[58.85,78.47,94.16,88.28,88.28,105.93],"2001-4000":[45.4,60.53,72.64,68.1,68.1,81.72],"1001-2000":[43.4,57.87,69.44,65.1,65.1,78.12],"0-1000":[42.4,56.53,67.84,63.6,63.6,76.32]},"Skill 1":{"4001+":[61.25,81.67,98.0,91.88,91.88,110.25],"2001-4000":[47.8,63.73,76.48,71.7,71.7,86.04],"1001-2000":[45.8,61.07,73.28,68.7,68.7,82.44],"0-1000":[44.8,59.73,71.68,67.2,67.2,80.64]},"Skill 2":{"4001+":[63.52,84.69,101.63,95.28,95.28,114.34],"2001-4000":[50.07,66.76,80.11,75.11,75.11,90.13],"1001-2000":[48.07,64.09,76.91,72.11,72.11,86.53],"0-1000":[47.07,62.76,75.31,70.61,70.61,84.73]},"Skill 3":{"4001+":[64.65,86.2,103.44,96.98,96.98,116.37],"2001-4000":[51.2,68.27,81.92,76.8,76.8,92.16],"1001-2000":[49.2,65.6,78.72,73.8,73.8,88.56],"0-1000":[48.2,64.27,77.12,72.3,72.3,86.76]},"Clerk Supervisor":{"4001+":[61.25,81.67,98.0,91.88,91.88,110.25],"2001-4000":[47.8,null,null,null,null,null],"1001-2000":[45.8,null,null,null,null,null],"0-1000":[44.8,null,null,null,null,null]},"Chief/Supercargo (30%)":{"4001+":[64.65,86.2,103.44,96.98,96.98,116.37],"2001-4000":[51.2,null,null,null,null,null],"1001-2000":[49.2,null,null,null,null,null],"0-1000":[48.2,null,null,null,null,null]}};
+/* v72: PCLCD 2022-2028 wage schedules by effective date (8:00 a.m. on the date; Contract 4.32 / Wage Schedules pp.145-170, "No Cargo Penalty" tables).
+   A shift's default rate comes from the period its DATE falls in. 2026-27 = RATES above (incl. clerk classes); other periods have longshore classes only. */
+const RATE_PERIODS=[
+{id:"2022-07-02",label:"2022-23",t:{"Basic":{"4001+":[50.85,67.8,81.36,76.28,76.28,91.53],"2001-4000":[39.64,52.85,63.42,59.46,59.46,71.35],"1001-2000":[37.64,50.19,60.22,56.46,56.46,67.75],"0-1000":[36.64,48.85,58.62,54.96,54.96,65.95]},"Skill 1":{"4001+":[53.25,71,85.2,79.88,79.88,95.85],"2001-4000":[42.04,56.05,67.26,63.06,63.06,75.67],"1001-2000":[40.04,53.39,64.06,60.06,60.06,72.07],"0-1000":[39.04,52.05,62.46,58.56,58.56,70.27]},"Skill 2":{"4001+":[55.52,74.03,88.83,83.28,83.28,99.94],"2001-4000":[44.31,59.08,70.9,66.47,66.47,79.76],"1001-2000":[42.31,56.41,67.7,63.47,63.47,76.16],"0-1000":[41.31,55.08,66.1,61.97,61.97,74.36]},"Skill 3":{"4001+":[56.65,75.53,90.64,84.98,84.98,101.97],"2001-4000":[45.44,60.59,72.7,68.16,68.16,81.79],"1001-2000":[43.44,57.92,69.5,65.16,65.16,78.19],"0-1000":[42.44,56.59,67.9,63.66,63.66,76.39]}}},
+{id:"2023-07-01",label:"2023-24",t:{"Basic":{"4001+":[52.85,70.47,84.56,79.28,79.28,95.13],"2001-4000":[41.08,54.77,65.73,61.62,61.62,73.94],"1001-2000":[39.08,52.11,62.53,58.62,58.62,70.34],"0-1000":[38.08,50.77,60.93,57.12,57.12,68.54]},"Skill 1":{"4001+":[55.25,73.67,88.4,82.88,82.88,99.45],"2001-4000":[43.48,57.97,69.57,65.22,65.22,78.26],"1001-2000":[41.48,55.31,66.37,62.22,62.22,74.66],"0-1000":[40.48,53.97,64.77,60.72,60.72,72.86]},"Skill 2":{"4001+":[57.52,76.69,92.03,86.28,86.28,103.54],"2001-4000":[45.75,61,73.2,68.63,68.63,82.35],"1001-2000":[43.75,58.33,70,65.63,65.63,78.75],"0-1000":[42.75,57,68.4,64.13,64.13,76.95]},"Skill 3":{"4001+":[58.65,78.2,93.84,87.98,87.98,105.57],"2001-4000":[46.88,62.51,75.01,70.32,70.32,84.38],"1001-2000":[44.88,59.84,71.81,67.32,67.32,80.78],"0-1000":[43.88,58.51,70.21,65.82,65.82,78.98]}}},
+{id:"2024-06-29",label:"2024-25",t:{"Basic":{"4001+":[54.85,73.13,87.76,82.28,82.28,98.73],"2001-4000":[42.52,56.69,68.03,63.78,63.78,76.54],"1001-2000":[40.52,54.03,64.83,60.78,60.78,72.94],"0-1000":[39.52,52.69,63.23,59.28,59.28,71.14]},"Skill 1":{"4001+":[57.25,76.33,91.6,85.88,85.88,103.05],"2001-4000":[44.92,59.89,71.87,67.38,67.38,80.86],"1001-2000":[42.92,57.23,68.67,64.38,64.38,77.26],"0-1000":[41.92,55.89,67.07,62.88,62.88,75.46]},"Skill 2":{"4001+":[59.52,79.36,95.23,89.28,89.28,107.14],"2001-4000":[47.19,62.92,75.5,70.79,70.79,84.94],"1001-2000":[45.19,60.25,72.3,67.79,67.79,81.34],"0-1000":[44.19,58.92,70.7,66.29,66.29,79.54]},"Skill 3":{"4001+":[60.65,80.87,97.04,90.98,90.98,109.17],"2001-4000":[48.32,64.43,77.31,72.48,72.48,86.98],"1001-2000":[46.32,61.76,74.11,69.48,69.48,83.38],"0-1000":[45.32,60.43,72.51,67.98,67.98,81.58]}}},
+{id:"2025-06-28",label:"2025-26",t:{"Basic":{"4001+":[56.85,75.8,90.96,85.28,85.28,102.33],"2001-4000":[43.96,58.61,70.34,65.94,65.94,79.13],"1001-2000":[41.96,55.95,67.14,62.94,62.94,75.53],"0-1000":[40.96,54.61,65.54,61.44,61.44,73.73]},"Skill 1":{"4001+":[59.25,79,94.8,88.88,88.88,106.65],"2001-4000":[46.36,61.81,74.18,69.54,69.54,83.45],"1001-2000":[44.36,59.15,70.98,66.54,66.54,79.85],"0-1000":[43.36,57.81,69.38,65.04,65.04,78.05]},"Skill 2":{"4001+":[61.52,82.03,98.43,92.28,92.28,110.74],"2001-4000":[48.63,64.84,77.81,72.95,72.95,87.53],"1001-2000":[46.63,62.17,74.61,69.95,69.95,83.93],"0-1000":[45.63,60.84,73.01,68.45,68.45,82.13]},"Skill 3":{"4001+":[62.65,83.53,100.24,93.98,93.98,112.77],"2001-4000":[49.76,66.35,79.62,74.64,74.64,89.57],"1001-2000":[47.76,63.68,76.42,71.64,71.64,85.97],"0-1000":[46.76,62.35,74.82,70.14,70.14,84.17]}}},
+{id:"2026-07-04",label:"2026-27",t:RATES},
+{id:"2027-07-03",label:"2027-28",t:{"Basic":{"4001+":[60.85,81.13,97.36,91.28,91.28,109.53],"2001-4000":[46.84,62.45,74.94,70.26,70.26,84.31],"1001-2000":[44.84,59.79,71.74,67.26,67.26,80.71],"0-1000":[43.84,58.45,70.14,65.76,65.76,78.91]},"Skill 1":{"4001+":[63.25,84.33,101.2,94.88,94.88,113.85],"2001-4000":[49.24,65.65,78.78,73.86,73.86,88.63],"1001-2000":[47.24,62.99,75.58,70.86,70.86,85.03],"0-1000":[46.24,61.65,73.98,69.36,69.36,83.23]},"Skill 2":{"4001+":[65.52,87.36,104.83,98.28,98.28,117.94],"2001-4000":[51.51,68.68,82.42,77.27,77.27,92.72],"1001-2000":[49.51,66.01,79.22,74.27,74.27,89.12],"0-1000":[48.51,64.68,77.62,72.77,72.77,87.32]},"Skill 3":{"4001+":[66.65,88.87,106.64,99.98,99.98,119.97],"2001-4000":[52.64,70.19,84.22,78.96,78.96,94.75],"1001-2000":[50.64,67.52,81.02,75.96,75.96,91.15],"0-1000":[49.64,66.19,79.42,74.46,74.46,89.35]}}}];
+function ratePeriod(date){const d=/^\d{4}-\d{2}-\d{2}/.test(date||"")?String(date).slice(0,10):fmtDate(new Date());let p=null;for(const x of RATE_PERIODS)if(d>=x.id)p=x;return p;}
 /* Clerk classes (PCCCD 2022-2028 coastwise, printed p.141, see clerks-rates): only 4,001+ has full columns in the source; lower tiers have 1st-shift ST only, other columns null = blank (not invented). User-stated EC=30% job (Automation Clerk); Checker inferred Basic. */
 function jobClass(code){const sj=seattleJob(code);if(sj)return sj[2]||null;for(const g in JOBS)for(const [c] of JOBS[g])if(c===code)return g;return null;}
 /* returns {rate,otRate} (numbers) or null if no published default */
-function defaultRates(code,shift,tier){const g=jobClass(code);const si={"1st":0,"2nd":1,"3rd":2}[shift];
- if(!g||si==null||!RATES[g])return null;const row=RATES[g][tier||"4001+"];if(!row)return null;if(row[si]==null&&row[3+si]==null)return null;return {rate:row[si],otRate:row[3+si]};}
+function defaultRates(code,shift,tier,date){const g=jobClass(code);const si={"1st":0,"2nd":1,"3rd":2}[shift];const P=ratePeriod(date),T=P&&P.t;
+ if(!g||si==null||!T||!T[g])return null;const row=T[g][tier||"4001+"];if(!row)return null;if(row[si]==null&&row[3+si]==null)return null;return {rate:row[si],otRate:row[3+si]};}
 const OT_RATIO=s=>s==="1st"||!s?1.5:1.125; /* OT / own-shift ST: 1.5/1.0, 1.5/1.3333, 1.8/1.6 (Contract 4.142) */
 function jobCode(v){const sj=seattleJob(v);if(sj)return sj[1];for(const g in JOBS)for(const [c] of JOBS[g])if(c===v)return c;return "";}
 function jobLabel(code){const sj=seattleJob(code);if(sj)return sj[0]+(sj[1]?" ("+sj[1]+")":"");for(const g in JOBS)for(const [c,n] of JOBS[g])if(c===code)return c+" "+n;return code||"";}
@@ -743,16 +764,17 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v71",CACHE_VERSION="l19hours-v71"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v72",CACHE_VERSION="l19hours-v72"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
 const r4=x=>Math.round(x*10000)/10000,nz=x=>x==null?"":x;
 /* Travel time = one-half the basic straight-time hourly rate (Supp. IV 5.11; same rule as the Time Book workbook) */
-function basicST(tier){const r=RATES.Basic&&(RATES.Basic[tier]||RATES.Basic["4001+"]);return r?r[0]:0;}
-function travelRateFor(tier){return basicST(tier)/2;}
+/* v72: basic rate of the wage period for the shift date (no date = today; before 2022-07-02 = current table) */
+function basicST(tier,date){const P=ratePeriod(date),B=(P&&P.t.Basic)||RATES.Basic,r=B&&(B[tier]||B["4001+"]);return r?r[0]:0;}
+function travelRateFor(tier,date){return basicST(tier,date)/2;}
 const hasV=v=>v!=null&&v!==""&&isFinite(parseFloat(v));
-function travelRateOf(e){return hasV(e.travelRate)?num(e.travelRate):travelRateFor(CFG.tier);}
+function travelRateOf(e){return hasV(e.travelRate)?num(e.travelRate):travelRateFor(CFG.tier,e.date);}
 function mileRateOf(e){return hasV(e.mileRate)?num(e.mileRate):CFG.mileRate;}
 function travelPay(e){const h=num(e&&e.travel);return h>0?Math.round(h*travelRateOf(e)*100)/100:null;}
 function mileagePay(e){const m=num(e&&e.miles);return m>0?Math.round(m*mileRateOf(e)*100)/100:null;}
@@ -830,7 +852,10 @@ function topCombos(all,n){n=n||6;const m=new Map();
  const rest=a.filter(c=>c!==rec).sort((x,y)=>y.count-x.count||(y.last<x.last?-1:y.last>x.last?1:0));return [rec,...rest].slice(0,n);}
 function lastShift(all){let b=null;for(const e of all)if(!b||e.date>b.date||(e.date===b.date&&e.shift>=b.shift))b=e;return b;}
 function repeatDefaultDate(e,today){return e&&e.date<today?today:addDays(e?e.date:today,1);}
-function repeatCopy(e,date,id){const c={...e,id:id||uid(),date};return c;}
+function repeatCopy(e,date,id){const c={...e,id:id||uid(),date};return rateForDate(c,e.date);}
+/* v72: if the copied rate was the contract default for the old date (any tier), use the default for the new date (wage periods change each summer). Typed rates stay. */
+function rateForDate(c,oldDate){for(const [t] of TIERS){const a=defaultRates(c.job,c.shift,t,oldDate);if(!a||num(a.rate)!==num(c.rate)||(c.otRate!=null&&c.otRate!==""&&num(a.otRate)!==num(c.otRate)))continue;
+ const b=defaultRates(c.job,c.shift,t,c.date);if(b&&b.rate!=null){c.rate=b.rate.toFixed(2);if(c.otRate!=null&&c.otRate!=="")c.otRate=b.otRate.toFixed(2);}break;}return c;}
 /* v69: Call back = going back to the same job next shift. The draft copies the job details only; the date follows the
    repeat rule (last shift before today -> today, today or later -> the next day, same shift type). OT, pay rate and
    weekend rules are NOT copied: the Add form recomputes them for the new date. Up slot (first/second up) is per day, not copied. */
@@ -1530,7 +1555,7 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",
 let editId=null,selDate=null,retTo="week",hk="week",hv="list",cm=fmtDate(new Date()).slice(0,7),cd=null,sf={q:"",from:"",to:""},pendJump=null,ha=weekStart(fmtDate(new Date())),hidePay=false;try{hidePay=localStorage.getItem("l19.hidepay")==="1"}catch(e){}
 let wk=weekStart(fmtDate(new Date()));
 $("pier").innerHTML=PIERS.map(p=>`<option>${p}</option>`).join("")+'<option value="__c">Custom…</option>';
-$("job").innerHTML='<option value="">— select job —</option><optgroup label="Seattle jobs">'+SEATTLE_JOBS.map(([n,c])=>`<option value="${n}">${n}${c?" · "+c:""}</option>`).join("")+'</optgroup><option value="__c">Custom…</option><optgroup label="Other (PMA list)">'+Object.keys(JOBS).map(g=>JOBS[g].map(([c,n])=>`<option value="${c}">${c} ${n} (${g})</option>`).join("")).join("")+'</optgroup>';
+$("job").innerHTML='<option value="">— select job —</option><optgroup label="Seattle jobs">'+SEATTLE_JOBS.map(([n,c])=>`<option value="${n}">${n}${c?" · "+c:""}</option>`).join("")+'</optgroup><optgroup label="Contract 4.32 jobs (no PMA code)">'+PCL_JOBS.map(([n,c,k])=>`<option value="${n}">${n} · ${k}</option>`).join("")+'</optgroup><option value="__c">Custom…</option><optgroup label="Other (PMA list)">'+Object.keys(JOBS).map(g=>JOBS[g].map(([c,n])=>`<option value="${c}">${c} ${n} (${g})</option>`).join("")).join("")+'</optgroup>';
 const lastKey="l19hours.last";
 function setToday(){$("date").value=selDate||fmtDate(new Date());}
 function shiftDate(n){const v=$("date").value;$("date").value=/^\d{4}-\d{2}-\d{2}$/.test(v)?addDays(v,n):fmtDate(new Date());$("date").dispatchEvent(new Event("change",{bubbles:true}));}
@@ -1555,9 +1580,9 @@ const tierKey="l19hours.tier";let rateDirty=false;
 $("tier").innerHTML=TIERS.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 function curTier(){let m="manual",t="",tot=0;try{m=localStorage.getItem("l19.tierMode")==="auto"?"auto":"manual";t=localStorage.getItem(tierKey)||"";const st=num(localStorage.getItem("l19.startHrs"));tot=st+entries.reduce((x,e)=>x+num(e.hours),0);}catch(e){}return effectiveTier(m,t,tot,"4001+");}
 $("tier").value=curTier();
-function applyDefaults(){if(rateDirty)return;const j=$("job").value;const d=j&&j!=="__c"?defaultRates(j,$("shift").value,$("tier").value):null;
+function applyDefaults(){if(rateDirty)return;const j=$("job").value,dt=$("date").value,P=ratePeriod(dt);const d=j&&j!=="__c"?defaultRates(j,$("shift").value,$("tier").value,dt):null;
  $("rate").value=d&&d.rate!=null?d.rate.toFixed(2):"";$("otrate").value=d&&d.otRate!=null?d.otRate.toFixed(2):"";
- $("rhint").textContent=d?"Contract "+RATES_YEAR+"; edit to override.":(jobClass(j)==="Foreman"?"No 2026-27 foreman rate published in sources – enter yours.":"Enter rate to estimate pay.");
+ {const g=jobClass(j);$("rhint").textContent=d?"Contract "+P.label+" (eff. "+P.id+") for this date; edit to override.":(j&&g&&!P?"Date is before the 2022-2028 contract – enter your rate.":g==="Foreman"?"No 2026-27 foreman rate published in sources – enter yours.":g&&P&&RATES[g]&&!P.t[g]?"No "+P.label+" "+g+" rate in the app – enter yours.":"Enter rate to estimate pay.");}
  const sj=seattleJob(j);if(sj&&sj[3]==="inferred"&&d)$("rhint").textContent+=" Code/class mapping for this job is inferred ("+sj[1]+", "+sj[2]+") – verify.";}
 $("rate").oninput=$("otrate").oninput=()=>{rateDirty=true;};
 $("tier").onchange=()=>{try{if(localStorage.getItem("l19.tierMode")!=="auto")localStorage.setItem(tierKey,$("tier").value);}catch(e){}applyDefaults();};
@@ -1577,10 +1602,10 @@ function autoHrs(){const h=calcHours($("st").value,$("en").value);if(h!=null){$(
 $("st").onchange=$("en").onchange=autoHrs;
 $("hrs").oninput=()=>{hrsAuto=null;const el=$("hrsHint");if(el)el.textContent="";otHint();};$("ot").oninput=otHint;
 function tmHint(){const th=num($("trv").value),mi=num($("mi").value),p=[];
- if(th>0)p.push("Travel "+r2(th)+"h × "+money(travelRateFor($("tier").value)/1)+"/h (½ basic)"+(hidePay?"":" = "+money(Math.round(th*travelRateFor($("tier").value)*100)/100)));
+ if(th>0)p.push("Travel "+r2(th)+"h × "+money(travelRateFor($("tier").value,$("date").value)/1)+"/h (½ basic)"+(hidePay?"":" = "+money(Math.round(th*travelRateFor($("tier").value,$("date").value)*100)/100)));
  if(mi>0)p.push(r2(mi)+" mi × $"+CFG.mileRate.toFixed(3).replace(/0$/,"")+(hidePay?"":" = "+money(Math.round(mi*CFG.mileRate*100)/100)+" reimbursement"));
  $("tmhint").textContent=p.length?p.join(" · "):"Travel is paid at half the basic straight-time rate. Mileage is a reimbursement, separate from wages.";}
-$("trv").oninput=$("mi").oninput=tmHint;$("tier").addEventListener("change",tmHint);$("shift").addEventListener("change",otHint);$("date").addEventListener("change",otHint);$("date").addEventListener("input",otHint);
+$("trv").oninput=$("mi").oninput=tmHint;$("tier").addEventListener("change",tmHint);$("shift").addEventListener("change",otHint);$("date").addEventListener("change",applyDefaults);$("date").addEventListener("change",otHint);$("date").addEventListener("input",otHint);
 ["hrs","shift","job","jobC","st","en"].forEach(i=>$(i).addEventListener("input",guarHint));["shift","job"].forEach(i=>$(i).addEventListener("change",guarHint));
 function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHint();tmHint();$("pierC").classList.add("hide");$("jobC").classList.add("hide");setUp("");upShow();setX(false);
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
@@ -1597,7 +1622,7 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  const e={id:editId||uid(),date:$("date").value,pier,employer:$("emp").value.trim(),vessel:$("ves").value.trim(),job,shift:$("shift").value,upSlot:upApplies(job)?upSlot:"",
   start:$("st").value,end:$("en").value,hours,ot,otManual,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
  {const old=editId?entries.find(x=>x.id===editId):null;
-  if(num(e.travel)>0)e.travelRate=old&&hasV(old.travelRate)?old.travelRate:r4(travelRateFor($("tier").value));
+  if(num(e.travel)>0)e.travelRate=old&&hasV(old.travelRate)?old.travelRate:r4(travelRateFor($("tier").value,e.date));
   if(num(e.miles)>0)e.mileRate=old&&hasV(old.mileRate)?old.mileRate:r4(CFG.mileRate);}
  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
  save();localStorage.setItem(lastKey,JSON.stringify({rate:e.rate,otRate:e.otRate}));
@@ -3159,7 +3184,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:()=>ls(
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
