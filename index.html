@@ -36,9 +36,15 @@ label .mut{font-weight:400}
 .row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
 .dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
-.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
-.tabs button{flex:1;min-width:0;padding:0 1px;font-size:.8125rem;border:0;border-radius:0;min-height:56px;background:none;color:var(--mut)}
-.tabs button.on{color:var(--acc);font-weight:700;box-shadow:inset 0 3px var(--acc)}
+/* v67: bottom bar. All 7 buttons fit on one row at any width with a 4px gap between them (no touching, no sideways scroll).
+   Buttons size to their label (flex:1 1 auto) and share the spare room; label size follows the screen width (3.6vw, 12px floor,
+   never bigger than .8125rem) so the app's Large / Extra large text or a phone's text zoom can't push them off the screen. */
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;gap:4px;padding:4px 4px calc(4px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--bd);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.tabs button{flex:1 1 auto;min-width:0;min-height:52px;padding:2px 2px;margin:0;border:0;border-radius:10px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--bd);color:var(--mut);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:max(12px,min(.8125rem,3.6vw));font-weight:600;line-height:1.1;white-space:nowrap}
+.tabs .ti{font-size:max(16px,min(1.125rem,5vw));line-height:1}.tabs .ts{display:none}
+.tabs button.on{background:var(--pri);color:var(--prifg);box-shadow:inset 0 0 0 2px var(--acc),inset 0 -3px #ffd23f}
+@media (max-width:299px){.tabs{padding-left:2px;padding-right:2px}.tabs button{padding:2px 0}}
+@media (max-width:259px){.tabs .tl.lg{display:none}.tabs .ts{display:inline}}
 .ent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--bd)}
 .ent:first-child{border-top:0;padding-top:0}.ent:last-child{padding-bottom:0}
 .ent .acts{display:flex;gap:6px}.ent .acts button{min-width:44px;min-height:44px;padding:0}
@@ -232,6 +238,16 @@ body.pgdrag{overscroll-behavior:none}
 .bbbar .lcw{display:inline-flex;align-items:center;gap:2px}.bbbar .lce{min-width:44px;min-height:44px;padding:0;border-radius:50%;border:2px solid var(--bd);background:var(--card);color:var(--fg);font-size:1.1rem}
 .mvr{align-items:flex-end}.mvr>div{flex:1 1 90px;min-width:0}.mvr select,.mvr input{width:100%}
 .pgap select{flex:0 0 7.5rem;min-width:0}
+/* v67: Pegs rows that overflowed or touched on narrow screens / large text: the Add-peg row wraps (name on its own line),
+   stacked button rows get an 8px gap, and the global-pegs buttons wrap their label instead of clipping it */
+.pgap{flex-wrap:wrap}.pgap input{flex:1 1 100%}
+#pgCard>.row.shx+.row.shx,#pgCard>.row.shx+#pgShr,#pgPreset{margin-top:8px}
+.gstrip .row button{padding:4px 6px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
+#bbPhoto{overflow-wrap:anywhere;padding-left:6px;padding-right:6px}
+/* v67: History month/year pickers no longer push past the screen edge at Extra large text; text-size buttons wrap instead of clipping */
+.jump,.cj{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.jump>div,.cj>div{min-width:0}.jump select,.cj select{min-width:0;max-width:100%}
+#tsz button{padding:4px 6px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
+.seg{grid-template-columns:repeat(4,minmax(0,1fr))}.seg button{min-width:0;padding:4px 2px;white-space:normal;line-height:1.15;overflow-wrap:anywhere} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
 
 .bbz{width:max-content}
 .bbz.mini .sc{width:50%}
@@ -530,7 +546,7 @@ body.gopen{overflow:hidden}
 </section>
 <footer id="ft">ILWU LIFE <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button></footer>
 </main>
-<nav class="tabs"><button data-v="add" class="on">＋ Add</button><button data-v="ships">Ships</button><button data-v="pegs">Pegs</button><button data-v="chat">Chat</button><button data-v="week">Week</button><button data-v="hist">History</button><button data-v="data">Backup</button></nav>
+<nav class="tabs" aria-label="Main"><button type="button" data-v="add" class="on" aria-label="Add shift"><span class="ti" aria-hidden="true">➕</span><span class="tl">Add</span></button><button type="button" data-v="ships" aria-label="Ships"><span class="ti" aria-hidden="true">🚢</span><span class="tl">Ships</span></button><button type="button" data-v="pegs" aria-label="Pegs"><span class="ti" aria-hidden="true">📌</span><span class="tl">Pegs</span></button><button type="button" data-v="chat" aria-label="Chat"><span class="ti" aria-hidden="true">💬</span><span class="tl">Chat</span></button><button type="button" data-v="week" aria-label="Week"><span class="ti" aria-hidden="true">📅</span><span class="tl">Week</span></button><button type="button" data-v="hist" aria-label="History"><span class="ti" aria-hidden="true">🕘</span><span class="tl lg">History</span><span class="ts" aria-hidden="true">Hist.</span></button><button type="button" data-v="data" aria-label="Backup"><span class="ti" aria-hidden="true">💾</span><span class="tl lg">Backup</span><span class="ts" aria-hidden="true">Bkup</span></button></nav>
 <script>
 function splashMs(reduced){return reduced?400:1200}
 (function(){if(typeof document==="undefined")return;var e=document.getElementById("splash");if(!e)return;var d=function(){if(e&&e.parentNode)e.parentNode.removeChild(e);e=null};
@@ -714,7 +730,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v66",CACHE_VERSION="l19hours-v66"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v67",CACHE_VERSION="l19hours-v67"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1609,7 +1625,7 @@ function ovlTop(n){if(!n||n.nodeType!==1||!n.matches||!n.matches(OVL_SEL))return
 try{new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(ovlTop))).observe(document.body,{childList:true});}catch(e){}
 let backY=null;
 function show(v,how){const from=curV;if(how!=="back")backY=null;curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);if(v==="pegs"&&window.l19Sh)window.l19Sh.open();
+ document.querySelectorAll(".tabs button").forEach(b=>{const on=b.dataset.v===v;b.classList.toggle("on",on);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);if(v==="pegs"&&window.l19Sh)window.l19Sh.open();
  if(how==="back"&&backY!=null){const y=backY;backY=null;pageTo(y);requestAnimationFrame(()=>pageTo(y));}else pageTop();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
 function addOn(d){selDate=d;resetForm();retTo="hist";const by=curV==="hist"?window.pageYOffset:null;show("add");backY=by;}
