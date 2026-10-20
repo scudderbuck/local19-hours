@@ -34,6 +34,8 @@ input:focus,select:focus,button:focus-visible{outline:3px solid var(--acc);outli
 label{display:block;font-size:.9375rem;font-weight:600;color:var(--mut);margin:14px 0 4px}
 label .mut{font-weight:400}
 .row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
+#cbW{margin:0 0 12px}.cbb{width:100%;min-height:52px;font-size:1.0625rem;font-weight:800;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:8px;row-gap:0;padding:6px 12px;line-height:1.2;white-space:normal}
+.cbb span{font-weight:400;font-size:.875rem;opacity:.9}.cbl{margin-top:4px;overflow-wrap:anywhere}#cbW.cbon .cbl{font-weight:600;color:var(--fg)}
 .dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
 /* v67: bottom bar. All 7 buttons fit on one row at any width with a 4px gap between them (no touching, no sideways scroll).
@@ -396,6 +398,7 @@ body.gopen{overflow:hidden}
 <section id="v-add">
 <form id="f" class="card" autocomplete="off">
 <h3 id="ftitle">Add shift</h3>
+<div id="cbW"><button type="button" id="cb" class="p cbb">↩ Call back <span>same job again</span></button><div class="mut cbl" id="cbL" aria-live="polite"></div></div>
 <div id="qpW" class="hide"><label style="margin-top:0">Recent <span class="mut">(tap to fill pier, job, shift)</span></label><div class="ltr" id="qp"></div><button type="button" id="rep" style="width:100%;margin-top:8px">↻ Repeat last shift…</button></div>
 <label for="date">Date</label><div class="row dategrp"><button type="button" id="dprev" aria-label="Previous day">◀</button><input type="date" id="date" required min="2000-01-01" max="2099-12-31"><button type="button" id="dnext" aria-label="Next day">▶</button><button type="button" id="dtoday" class="p">Today</button></div>
 <label for="pier">Pier</label><select id="pier"></select>
@@ -737,7 +740,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v68",CACHE_VERSION="l19hours-v68"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v69",CACHE_VERSION="l19hours-v69"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -825,6 +828,14 @@ function topCombos(all,n){n=n||6;const m=new Map();
 function lastShift(all){let b=null;for(const e of all)if(!b||e.date>b.date||(e.date===b.date&&e.shift>=b.shift))b=e;return b;}
 function repeatDefaultDate(e,today){return e&&e.date<today?today:addDays(e?e.date:today,1);}
 function repeatCopy(e,date,id){const c={...e,id:id||uid(),date};return c;}
+/* v69: Call back = going back to the same job next shift. The draft copies the job details only; the date follows the
+   repeat rule (last shift before today -> today, today or later -> the next day, same shift type). OT, pay rate and
+   weekend rules are NOT copied: the Add form recomputes them for the new date. Up slot (first/second up) is per day, not copied. */
+const CALLBACK_FIELDS=["pier","job","shift","employer","vessel","start","end","hours","travel","miles","note"];
+function callbackDate(e,today){return repeatDefaultDate(e,today);}
+function callbackDraft(e,today){if(!e)return null;const d={date:callbackDate(e,today)};for(const k of CALLBACK_FIELDS)d[k]=e[k]==null?"":e[k];if(!d.shift)d.shift="1st";
+ d.prevRate=e.rate==null?"":String(e.rate);d.prevOtRate=e.otRate==null?"":String(e.otRate);return d;}
+function callbackLine(e,today){if(!e)return"";const where=e.vessel||e.pier||"";return "Last job: "+[where,jobLabel(e.job)||e.job||"",shDate(e.date)+" ("+(e.shift||"1st")+")"].filter(Boolean).join(" · ")+". Fills "+(callbackDate(e,today)===today?"today":shDate(callbackDate(e,today)))+".";}
 /* CSV export for a period or everything; noPay drops rate columns; excel adds a UTF-8 BOM */
 function csvForExport(all,kind,s,opts){opts=opts||{};const list=kind==="all"?all:periodEntries(all,kind,s),label=kind==="all"?"all":periodRange(kind,s).start+(kind==="week"?"_to_"+periodRange(kind,s).end:"_"+kind);
  let text=toCSV(list);if(opts.noPay){const cols=CSV_COLS.filter(c=>!NOPAY_COLS.includes(c)),ix=CSV_COLS.map((c,i)=>cols.includes(c)?i:-1).filter(i=>i>=0);
@@ -1586,7 +1597,7 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  const i=entries.findIndex(x=>x.id===e.id);if(i>=0)entries[i]=e;else entries.push(e);
  save();localStorage.setItem(lastKey,JSON.stringify({rate:e.rate,otRate:e.otRate}));
  wk=weekStart(e.date);selDate=null;refreshEmp();resetForm();if(retTo==="hist"){ha=e.date;}show(retTo,"back");retTo="week";};
-function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";const by=from&&curV===from?window.pageYOffset:null;show("add");backY=by;editId=id;$("qpW").classList.add("hide");
+function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";const by=from&&curV===from?window.pageYOffset:null;show("add");backY=by;editId=id;$("qpW").classList.add("hide");if($("cbW"))$("cbW").classList.add("hide");
  $("date").value=e.date;
  if(PIERS.includes(e.pier)||!e.pier){$("pier").value=e.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=e.pier;$("pierC").classList.remove("hide");}
  const known=[...$("job").options].some(o=>o.value===e.job&&e.job);
@@ -1645,9 +1656,9 @@ function entPayLines(e){const w=entryPay(e),tp=travelPay(e),mp=mileagePay(e),th=
  if(mi>0)L.push(["Mileage "+r2(mi)+" mi (reimbursement)",hidePay||mp==null?"":money(mp)]);
  return `<table class="mut" style="font-size:.9375rem">${L.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</table>`;}
 function openEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;const o=document.createElement("div");o.className="sheet";
- o.innerHTML=`<div><h3>${esc(shDate(e.date))} · ${esc(jobLabel(e.job)||"Shift")}</h3><div class="mut">${r2(num(e.hours))}h · ${esc(e.shift)} · ${esc(e.pier||"")}</div>${entPayLines(e)}<button class="p" data-m="e">Edit</button><button data-m="r">↻ Repeat on another date…</button><button class="d" data-m="d">Delete</button><button data-m="x">Cancel</button></div>`;
+ o.innerHTML=`<div><h3>${esc(shDate(e.date))} · ${esc(jobLabel(e.job)||"Shift")}</h3><div class="mut">${r2(num(e.hours))}h · ${esc(e.shift)} · ${esc(e.pier||"")}</div>${entPayLines(e)}<button class="p" data-m="e">Edit</button><button data-m="cb">↩ Call back (fill a new shift)</button><button data-m="r">↻ Repeat on another date…</button><button class="d" data-m="d">Delete</button><button data-m="x">Cancel</button></div>`;
  o.onclick=ev=>{const m=ev.target.dataset&&ev.target.dataset.m;if(ev.target!==o&&!m)return;o.remove();
-  if(m==="e")editEntry(id,"hist");if(m==="r")repeatSheet(e);if(m==="d"&&confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==id);save();renderHist();}};document.body.appendChild(o);}
+  if(m==="e")editEntry(id,"hist");if(m==="cb"){const by=curV==="hist"?window.pageYOffset:null;retTo="hist";show("add");backY=by;callbackFill(e,"hist");pageTop();}if(m==="r")repeatSheet(e);if(m==="d"&&confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==id);save();renderHist();}};document.body.appendChild(o);}
 function scrollToEl(el){if(!el)return;const mh=document.querySelector("#v-hist .mh"),off=(mh?mh.offsetHeight:0)+10;window.scrollTo(0,Math.max(0,el.getBoundingClientRect().top+window.pageYOffset-off));}
 function jumpTo(d){const g=histGroups(entries);const t=g.find(x=>x.date<=d)||g[g.length-1];if(!t)return;selDate=d;scrollToEl(document.getElementById("d-"+t.date));}
 function jumpMonth(m){const mh=document.getElementById("m-"+m);if(mh){const b=mh.getBoundingClientRect().top+window.pageYOffset-8;window.scrollTo(0,Math.max(0,b));return;}
@@ -2004,6 +2015,25 @@ function fillCombo(x){if(!x)return;
  const known=[...$("job").options].some(o=>o.value===x.job&&x.job);
  if(known||!x.job){$("job").value=x.job||"";$("jobC").classList.add("hide");}else{$("job").value="__c";$("jobC").value=x.job;$("jobC").classList.remove("hide");}
  $("shift").value=x.shift||"1st";setUp("");upShow();rateDirty=false;applyDefaults();pierHrs();otHint();guarHint();$("hrs").focus();}
+/* --- v69: Call back (fills the Add form from the latest shift, or a History entry; never saves) --- */
+function cbRefresh(){const w=$("cbW");if(!w)return;w.classList.toggle("hide",!!editId);const e=lastShift(entries),b=$("cb");
+ b.disabled=!e;$("cbL").textContent=e?callbackLine(e,todayS()):"No saved shifts yet. After you save one, Call back copies it for your next shift.";}
+function callbackFill(e,from){if(!e)return;const d=callbackDraft(e,todayS());resetForm();
+ $("date").value=d.date;
+ if(PIERS.includes(d.pier)||!d.pier){$("pier").value=d.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=d.pier;$("pierC").classList.remove("hide");}
+ const known=[...$("job").options].some(o=>o.value===d.job&&d.job);
+ if(known||!d.job){$("job").value=d.job||"";$("jobC").classList.add("hide");}else{$("job").value="__c";$("jobC").value=d.job;$("jobC").classList.remove("hide");}
+ $("shift").value=["1st","2nd","3rd"].includes(d.shift)?d.shift:"1st";setUp("");upShow();
+ $("emp").value=d.employer;$("ves").value=d.vessel;$("st").value=d.start;$("en").value=d.end;$("hrs").value=d.hours===""?"":d.hours;hrsAuto=null;
+ $("ot").value="";$("trv").value=d.travel;$("mi").value=d.miles;$("note").value=d.note;
+ $("tier").value=curTier();rateDirty=false;applyDefaults();
+ if($("rate").value===""&&d.prevRate!==""){$("rate").value=d.prevRate;$("otrate").value=d.prevOtRate;rateDirty=true;$("rhint").textContent="No contract rate for this job: kept the rate from your last one. Edit if it changed.";}
+ setX(!!(d.employer||d.vessel||d.start||d.end||d.travel||d.miles||d.note));otHint();guarHint();tmHint();
+ const hh=$("hrsHint");if(hh)hh.textContent="";
+ $("cbL").textContent="Copied from "+shDate(e.date)+" ("+(e.shift||"1st")+") to "+shDate(d.date)+". Check it, then tap Save shift.";$("cbW").classList.add("cbon");}
+$("cb").onclick=()=>{const e=lastShift(entries);if(!e)return;callbackFill(e,"add");};
+{const _rq=refreshQuick;refreshQuick=function(){_rq();if($("cbW"))$("cbW").classList.remove("cbon");cbRefresh();};}
+cbRefresh();
 /* --- 5. repeat shift --- */
 function repeatSheet(e){if(!e)return;const o=document.createElement("div");o.className="sheet";const def=repeatDefaultDate(e,todayS());
  o.innerHTML=`<div role="dialog" aria-label="Repeat shift"><h3>Repeat shift</h3><div class="mut">${esc(jobLabel(e.job)||"Shift")} · ${esc(e.pier||"")} · ${esc(e.shift)} · ${r2(num(e.hours))}h</div><label for="rpd" style="margin-top:6px">Copy to date</label><input type="date" id="rpd" value="${def}" min="2000-01-01" max="2099-12-31"><div class="mut" id="rpn" aria-live="polite"></div><button class="p" data-m="ok">Repeat shift</button><button data-m="x">Cancel</button></div>`;
@@ -2157,7 +2187,7 @@ function openYear(year,nopay){if($("ysum"))return;const d=document.createElement
  setTimeout(()=>{try{$("ysCl").focus({preventScroll:true});}catch(e){}},50);}
 ysFill();$("ysN").checked=hidePay;
 $("ysGo").onclick=()=>openYear($("ysY").value,$("ysN").checked);
-{const _sv=show;show=function(v,how){_sv(v,how);if(v==="data"){ysFill();$("ysN").checked=hidePay;}};}
+{const _sv=show;show=function(v,how){_sv(v,how);if(v==="add"&&!editId&&$("cbW")&&!$("cbW").classList.contains("cbon"))cbRefresh();if(v==="data"){ysFill();$("ysN").checked=hidePay;}};}
 /* --- first-run tour --- */
 function tourOpen(){if($("tour"))return;let i=0;const d=document.createElement("div");d.id="tour";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-labelledby","tourT");document.body.appendChild(d);ovInert(true);
  const fin=()=>{LSset(TOURK,"1");d.remove();ovInert(false);};
@@ -3120,7 +3150,7 @@ window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")
 })();}
 
 if(typeof module!=="undefined")module.exports={GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
-if(typeof module!=="undefined")Object.assign(module.exports,{chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
+if(typeof module!=="undefined")Object.assign(module.exports,{CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
