@@ -34,6 +34,8 @@ input:focus,select:focus,button:focus-visible{outline:3px solid var(--acc);outli
 label{display:block;font-size:.9375rem;font-weight:600;color:var(--mut);margin:14px 0 4px}
 label .mut{font-weight:400}
 .row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
+.pmab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;margin-top:12px;padding:6px 12px;border-radius:10px;background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:700;font-size:1rem;line-height:1.2;text-align:center;text-decoration:none;overflow-wrap:anywhere}
+.pmab span{min-width:0}.pmab:focus-visible{outline:3px solid var(--acc);outline-offset:2px}.pmah{margin:4px 0 0;overflow-wrap:anywhere}
 #cbW{margin:0 0 12px}.cbb{width:100%;min-height:52px;font-size:1.0625rem;font-weight:800;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:8px;row-gap:0;padding:6px 12px;line-height:1.2;white-space:normal}
 .cbb span{font-weight:400;font-size:.875rem;opacity:.9}.cbl{margin-top:4px;overflow-wrap:anywhere}#cbW.cbon .cbl{font-weight:600;color:var(--fg)}
 .dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
@@ -740,7 +742,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v69",CACHE_VERSION="l19hours-v69"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v70",CACHE_VERSION="l19hours-v70"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1981,6 +1983,10 @@ function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=toda
  if($("remGo"))$("remGo").onclick=()=>{LSset(REMS,todayS());renderBanners();if(editId)resetForm();retTo="week";show("add");};
  if($("remX"))$("remX").onclick=()=>{LSset(REMS,todayS());renderBanners();};
  if($("rvX"))$("rvX").onclick=()=>{LSset(RSEEN,RATES_VERSION.id);renderBanners();};}
+/* v70: official PMA Dockworker Self-Service Portal (pay stubs) under the stub check. Exact domain only (PMA warns of phishing);
+   opens in a new tab and the service worker never touches other origins. */
+const PMA_PORTAL_URL="https://selfservice.pmanet.org/";
+const PMA_PORTAL_HTML=`<a class="pmab" id="pmaPortal" href="${PMA_PORTAL_URL}" target="_blank" rel="noopener" aria-label="PMA Dockworker Portal log in (opens selfservice.pmanet.org in a new tab)"><b aria-hidden="true">🔐</b><span>PMA Dockworker Portal log in</span></a><p class="mut pmah">Official PMA site (selfservice.pmanet.org) – check your actual pay stub there. Only sign in at this address.</p>`;
 /* --- 2. pay stub check (Week tab) --- */
 function renderStub(box){const stubs=lsJson(STB,[]),cur=stubs.find(s=>s.week===wk)||{},we=addDays(wk,6);
  const row=s=>{const c=stubCompare(entries,s.week,s.hours,s.pay,{noPay:hidePay});return `<div class="ent"><div><b>${s.week.slice(5)} → ${addDays(s.week,6).slice(5)}</b> · stub ${r2(num(s.hours))}h${!hidePay&&s.pay!==""&&s.pay!=null?" · "+money(num(s.pay)):""}<div class="mut">${esc(c.msg)}</div></div><div class="acts"><button data-sx="${esc(s.week)}" class="d" aria-label="Delete stub check ${esc(s.week)}">🗑</button></div></div>`;};
@@ -1990,7 +1996,8 @@ function renderStub(box){const stubs=lsJson(STB,[]),cur=stubs.find(s=>s.week===w
  ${hidePay?'<p class="mut" id="sthn">Hours only mode is on, so pay is not compared.</p>':`<label for="sth_p">Gross pay on stub ($)</label><input type="number" id="sth_p" step="0.01" min="0" inputmode="decimal" value="${cur.pay!=null?esc(cur.pay):""}">`}
  <div class="row" style="margin-top:12px"><button type="button" class="p" id="sthGo">Check and save</button></div>
  <div id="sthRes" class="mut" aria-live="polite" style="margin-top:10px;color:var(--fg);font-weight:600"></div>
- ${hidePay?"":'<p class="mut" style="margin:8px 0 0">Your log\'s pay is an estimate from the rates you entered, so small differences are normal.</p>'}</div>
+ ${hidePay?"":'<p class="mut" style="margin:8px 0 0">Your log\'s pay is an estimate from the rates you entered, so small differences are normal.</p>'}
+ ${PMA_PORTAL_HTML}</div>
  ${past.length?`<div class="card"><h3>Past stub checks</h3>${past.map(row).join("")}</div>`:""}`;
  $("sthGo").onclick=()=>{const gh=$("sth_h").value,gp=$("sth_p")?$("sth_p").value:(cur.pay!=null?cur.pay:"");
   if(gh===""||!(parseFloat(gh)>=0)){$("sthRes").textContent="Enter the gross hours from your stub.";return;}
