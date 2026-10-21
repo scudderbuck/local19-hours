@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-21T05:45:04-07:00",
+ "updated": "2026-10-21T08:45:03-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -1116,16 +1116,6 @@
    "imo": "9300441"
   },
   {
-   "vessel": "EVER SUMMIT",
-   "service": "TPN",
-   "terminal": "PCT",
-   "agent": "",
-   "eta": "2026-11-11T05:00",
-   "etd": "2026-11-14T05:00",
-   "port": "Tacoma",
-   "imo": "9300453"
-  },
-  {
    "vessel": "MSC LISBON IX",
    "service": "Chinook",
    "terminal": "T5",
@@ -1216,6 +1206,16 @@
    "etd": "2026-11-14T16:00",
    "port": "Seattle",
    "imo": "9367190"
+  },
+  {
+   "vessel": "NORTH STAR",
+   "service": "Tote - AK2",
+   "terminal": "TOTE",
+   "agent": "",
+   "eta": "2026-11-13T13:00",
+   "etd": "2026-11-14T01:00",
+   "port": "Tacoma",
+   "imo": "9978676"
   }
  ]
 }
