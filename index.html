@@ -16,7 +16,9 @@
 :root{--bg:#f3f5f8;--card:#fff;--fg:#14202e;--mut:#5b6b7d;--pri:#00214e;--prifg:#fff;--acc:#00214e;--bd:#d5dde6;--dan:#b3261e;--r:12px;--s:12px}
 @media(prefers-color-scheme:dark){:root{--bg:#10151c;--card:#1a222c;--fg:#e8eef5;--mut:#9aabbd;--pri:#00214e;--prifg:#fff;--acc:#ffd23f;--bd:#4a5b6d;--dan:#ff8a80}}
 *{box-sizing:border-box}
-html{font-size:16px}html[data-ts=large]{font-size:19px}html[data-ts=xl]{font-size:22px}
+html{font-size:16px}
+/* v80 backstop only (real overflows fixed at the source): never let one wide element make Chrome lay the page out wider than the screen */
+html{overflow-x:hidden;max-width:100%}body{overflow-x:clip;max-width:100%}html[data-ts=large]{font-size:19px}html[data-ts=xl]{font-size:22px}
 ::placeholder{color:var(--mut);opacity:1}
 button:disabled,input:disabled,select:disabled{opacity:1;color:var(--mut);background:var(--bd);cursor:not-allowed}
 button.p:disabled{background:#3b4a63;color:#fff;border-color:#3b4a63}
@@ -66,7 +68,10 @@ label .mut{font-weight:400}
 .pmab span{min-width:0}.pmab:focus-visible{outline:3px solid var(--acc);outline-offset:2px}.pmah{margin:4px 0 0;overflow-wrap:anywhere}
 #cbW{margin:0 0 12px}.cbb{width:100%;min-height:52px;font-size:1.0625rem;font-weight:800;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:8px;row-gap:0;padding:6px 12px;line-height:1.2;white-space:normal}
 .cbb span{font-weight:400;font-size:.875rem;opacity:.9}.cbl{margin-top:4px;overflow-wrap:anywhere}#cbW.cbon .cbl{font-weight:600;color:var(--fg)}
-.dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
+.dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}
+/* v80: room for the full date (mm/dd/yyyy + picker icon) at 320-360px */
+.dategrp{gap:4px}.dategrp #dprev,.dategrp #dnext{min-width:44px;padding:0}.dategrp #dtoday{padding:0 8px;font-size:min(1rem,4.6vw)}.dategrp input{padding-left:8px;padding-right:4px;font-size:min(1rem,4.6vw)}
+@media (pointer:coarse) and (max-width:419px){.dategrp input::-webkit-calendar-picker-indicator{display:none}} /* phones open the date picker on a tap anywhere in the box */.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
 /* v67: bottom bar. All 7 buttons fit on one row at any width with a 4px gap between them (no touching, no sideways scroll).
    Buttons size to their label (flex:1 1 auto) and share the spare room; label size follows the screen width (3.6vw, 12px floor,
@@ -86,7 +91,7 @@ label .mut{font-weight:400}
 @media (max-width:259px){.tabs .tl.lg{display:none}.tabs .ts{display:inline}}
 .ent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--bd)}
 .ent:first-child{border-top:0;padding-top:0}.ent:last-child{padding-bottom:0}
-.ent .acts{display:flex;gap:6px}.ent .acts button{min-width:44px;min-height:44px;padding:0}
+/* v80: long user text (custom pier, vessel, notes) wraps instead of widening the page */.ent>div:first-child{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}td{overflow-wrap:anywhere}.ent .acts{display:flex;gap:6px}.ent .acts button{min-width:44px;min-height:44px;padding:0}
 button,input,select{font-size:1rem}
 #tsz button{font-size:1rem}
 .mut{color:var(--mut);font-size:.875rem}
@@ -94,6 +99,7 @@ button,input,select{font-size:1rem}
 .stat{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center}
 .stat b{display:block;font-size:1.5rem;line-height:1.2}.stat span{font-size:.875rem;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
 .stat.pri{background:var(--pri);border-color:var(--pri);color:var(--prifg)}.stat.pri span{color:inherit}
+.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{min-width:0}.stat b{overflow-wrap:anywhere}@media (max-width:340px){.stats{gap:6px}.stat{padding:12px 3px}} /* v80: big totals never push the page wider */
 .hide{display:none}
 .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.seg button{padding:0 4px;font-weight:600}
 .seg button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
@@ -101,7 +107,7 @@ button,input,select{font-size:1rem}
 .dh{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;margin:10px 2px 4px;font-weight:700}
 .dh .tot{font-weight:700;color:var(--fg)}.dh button.link{font-size:.9375rem;min-width:44px}
 .he{display:block;width:100%;text-align:left;min-height:56px;padding:10px 12px;margin-bottom:6px;border-radius:var(--r);background:var(--card);border:1px solid var(--bd);color:var(--fg)}
-.he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}
+.he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}.he .l1,.he .l2{overflow-wrap:anywhere;min-width:0}
 .vt{display:grid;grid-template-columns:1fr 1fr;gap:6px}.vt button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal .wdh{font-size:.875rem;font-weight:700;color:var(--mut);text-align:center;padding:4px 0}
 .cal button.cd{min-height:48px;min-width:0;padding:2px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:.9375rem;line-height:1.15;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px}
@@ -338,7 +344,7 @@ body.pgdrag{overscroll-behavior:none}
 #pgWrap.side .bbph img{cursor:zoom-in}
 .ban{background:var(--card);border:2px solid var(--acc);border-radius:var(--r);padding:12px 16px;margin-bottom:var(--s)}
 .pg{height:14px;border-radius:7px;background:var(--bd);border:1px solid var(--mut);overflow:hidden;margin:8px 0}.pg>i{display:block;height:100%;background:var(--acc)}
-#qp{margin-top:0}#qp button{text-align:left}
+#qp{margin-top:0}#qp button{text-align:left;max-width:100%;min-width:0;white-space:normal;overflow-wrap:anywhere}
 #lock{position:fixed;inset:0;background:var(--bg);color:var(--fg);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}
 #lock .lk{width:100%;max-width:340px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;text-align:center}
 #lock label{text-align:left}
@@ -958,7 +964,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v79",CACHE_VERSION="l19hours-v79"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v80",CACHE_VERSION="l19hours-v80"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
