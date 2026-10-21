@@ -34,8 +34,11 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .locd{margin:4px 0 0;font-weight:600}
 .locseg .loch{grid-column:1/-1;font-size:max(12px,.8125rem);font-weight:800;color:var(--mut);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em}
 .locsheet .locseg,#suLoc,#locSegB{max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain;padding:2px}
-@media (max-width:339px){.locseg{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.chh{margin:0 0 2px;font-size:1.375rem;line-height:1.2;padding:8px 10px;border-radius:10px;background:var(--pri);color:var(--prifg)}.chh .chhl{color:#ffd23f}.chhs{margin:0 0 6px;overflow-wrap:anywhere}
+/* v77: 5 columns so no region leaves a lone chip; labels stay on one line */
+.locseg{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}.locseg button{padding:4px 0}
+.locseg button{container-type:inline-size}.locseg button small{white-space:nowrap;overflow-wrap:normal;letter-spacing:-.03em;font-size:min(max(12px,.75rem),20cqw)}
+.locsheet .locseg{margin-left:-12px;margin-right:-12px}#suLoc{margin-left:-19px;margin-right:-19px}#locSegB{margin-left:-11px;margin-right:-11px}
+.chh{margin:0 0 2px;font-size:1.375rem;line-height:1.2;padding:8px 10px;border-radius:10px;background:var(--pri);color:var(--prifg)}.chh .chhl{color:#ffd23f}.chat h3.chh{font-size:min(1.375rem,6.6vw)}.chhs{margin:0 0 6px;overflow-wrap:anywhere}
 .holb{margin:6px 0 2px;padding:8px 10px;border-radius:10px;border:2px solid #b8860b;background:#fff4cc;color:#3d2c00;font-size:max(14px,.9375rem);line-height:1.35}.holb b{font-size:1.0625rem}
 .badge.hol,.hbad{display:inline-block;font-size:max(12px,.875rem);font-weight:800;border:1px solid #b8860b;border-radius:8px;padding:0 8px;margin-left:4px;background:#fff4cc;color:#3d2c00}
 .cal button.cd.hol{background:#fff4cc;color:#3d2c00;border-color:#b8860b}.cal button.cd.hol .hm{font-size:.75rem;line-height:1;font-weight:800}
@@ -624,7 +627,7 @@ const LOCALS={
    brackets: ls = "Longshore", clerk = "Marine clerks", fm = "Walking bosses/Foremen", lsc = "Longshore and marine clerks", lscf = "Longshore/clerks/foremen";
    Local 12 has no label; Local 46 = "Longshore/multi-charter"). Clerks use the PCCCD, foremen the WBF agreement, everyone else the PCLCD. */
 [["4","Vancouver","Vancouver, WA","Vancouver WA","360-693-1821","1205 Ingalls Street, Vancouver, WA 98660","ls"],
- ["7","Bellingham","Bellingham","Other","360-734-0950","807 North State St, Bellingham, WA 98225","ls"],
+ ["7","B'ham","Bellingham","Other","360-734-0950","807 North State St, Bellingham, WA 98225","ls"],
  ["8","Portland","Portland","Other","503-224-9310","2435 NW Front Avenue, Portland, OR 97209","ls"],
  ["12","Coos Bay","Coos Bay / North Bend","Other","541-756-4188","2064 Sheridan Avenue, North Bend, OR 97459","ls"],
  ["21","Longview","Longview","Longview","360-423-0950","617 14th Ave, Suite B, Longview, WA 98632","ls"],
@@ -949,7 +952,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v76",CACHE_VERSION="l19hours-v76"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v77",CACHE_VERSION="l19hours-v77"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
