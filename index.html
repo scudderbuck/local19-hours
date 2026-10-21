@@ -45,7 +45,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .badge.hol,.hbad{display:inline-block;font-size:max(12px,.875rem);font-weight:800;border:1px solid #b8860b;border-radius:8px;padding:0 8px;margin-left:4px;background:#fff4cc;color:#3d2c00}
 .cal button.cd.hol{background:#fff4cc;color:#3d2c00;border-color:#b8860b}.cal button.cd.hol .hm{font-size:.75rem;line-height:1;font-weight:800}
 .cal button.cd.hol.sel{background:var(--pri);color:var(--prifg)}
-.holl{list-style:none;margin:0;padding:0}.holl li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}.holl li:last-child{border-bottom:0}.holl .hn{font-weight:700;min-width:0;overflow-wrap:anywhere}.holl .hd{white-space:nowrap;text-align:right}
+.holl{list-style:none;margin:0;padding:0}.holl li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd)}.holl li:last-child{border-bottom:0}.holl .hn{font-weight:700;min-width:0;overflow-wrap:break-word}.holl .hd{white-space:nowrap;text-align:right}
 .swb{margin:6px 0 2px;padding:8px 10px;border-radius:10px;border:2px solid #5b3fa0;background:#ece4ff;color:#2a1658;font-size:max(14px,.9375rem);line-height:1.35}
 .badge.sw{display:inline-block;font-size:max(12px,.875rem);font-weight:800;border:1px solid #5b3fa0;border-radius:8px;padding:0 8px;margin-left:4px;background:#ece4ff;color:#2a1658}
 .cal button.cd.sw{border:2px dashed #5b3fa0}.cal button.cd .swm{font-size:.75rem;line-height:1;font-weight:800;color:#5b3fa0}.cal button.cd.sel .swm{color:var(--prifg)}
@@ -91,7 +91,7 @@ label .mut{font-weight:400}
 @media (max-width:259px){.tabs .tl.lg{display:none}.tabs .ts{display:inline}}
 .ent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-top:1px solid var(--bd)}
 .ent:first-child{border-top:0;padding-top:0}.ent:last-child{padding-bottom:0}
-/* v80: long user text (custom pier, vessel, notes) wraps instead of widening the page */.ent>div:first-child{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}td{overflow-wrap:anywhere}.ent .acts{display:flex;gap:6px}.ent .acts button{min-width:44px;min-height:44px;padding:0}
+/* v80: long user text (custom pier, vessel, notes) wraps instead of widening the page */.ent>div:first-child{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}td{overflow-wrap:anywhere}table.fitT td{white-space:nowrap;overflow-wrap:normal}.holl .hn .mut{white-space:nowrap}.ent .acts{display:flex;gap:6px}.ent .acts button{min-width:44px;min-height:44px;padding:0}
 button,input,select{font-size:1rem}
 #tsz button{font-size:1rem}
 .mut{color:var(--mut);font-size:.875rem}
@@ -99,7 +99,7 @@ button,input,select{font-size:1rem}
 .stat{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center}
 .stat b{display:block;font-size:1.5rem;line-height:1.2}.stat span{font-size:.875rem;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
 .stat.pri{background:var(--pri);border-color:var(--pri);color:var(--prifg)}.stat.pri span{color:inherit}
-.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{min-width:0}.stat b{overflow-wrap:anywhere}@media (max-width:340px){.stats{gap:6px}.stat{padding:12px 3px}} /* v80: big totals never push the page wider */
+.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{min-width:0}.stat b{overflow-wrap:normal}@media (max-width:340px){.stats{gap:6px}.stat{padding:12px 3px}} /* v80: big totals never push the page wider */
 .hide{display:none}
 .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.seg button{padding:0 4px;font-weight:600}
 .seg button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
@@ -107,7 +107,7 @@ button,input,select{font-size:1rem}
 .dh{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;margin:10px 2px 4px;font-weight:700}
 .dh .tot{font-weight:700;color:var(--fg)}.dh button.link{font-size:.9375rem;min-width:44px}
 .he{display:block;width:100%;text-align:left;min-height:56px;padding:10px 12px;margin-bottom:6px;border-radius:var(--r);background:var(--card);border:1px solid var(--bd);color:var(--fg)}
-.he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}.he .l1,.he .l2{overflow-wrap:anywhere;min-width:0}label[for=dpNum],label[for=dpNum2]{white-space:nowrap;font-size:min(1em,5.2vw)} /* v81: BA label on one line */
+.he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}.he .l1,.he .l2{overflow-wrap:anywhere;min-width:0}.he .l1>span:last-child{white-space:nowrap;flex:0 0 auto}.he .l1>span:first-child{min-width:0;overflow-wrap:break-word}label[for=dpNum],label[for=dpNum2]{white-space:nowrap;font-size:min(1em,5.2vw)} /* v81: BA label on one line */
 .vt{display:grid;grid-template-columns:1fr 1fr;gap:6px}.vt button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal .wdh{font-size:.875rem;font-weight:700;color:var(--mut);text-align:center;padding:4px 0}
 .cal button.cd{min-height:48px;min-width:0;padding:2px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:.9375rem;line-height:1.15;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px}
@@ -301,7 +301,7 @@ body.pgdrag{overscroll-behavior:none}
 #tsz button{padding:4px 6px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
 .seg{grid-template-columns:repeat(4,minmax(0,1fr))}.seg button{min-width:0;padding:4px 2px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
 /* v82: Week/Month/Quarter/Year stay one row, one line each, even 4px gaps at every text size: font follows the row width */
-.seg{gap:4px;container-type:inline-size}.seg button{white-space:nowrap;overflow-wrap:normal;overflow:hidden;font-size:min(1em,5.3cqw);letter-spacing:-.01em}.seg .sl{display:none}.seg.short .fl{display:none}.seg.short .sl{display:inline} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
+.seg{gap:4px;container-type:inline-size}.seg button{white-space:nowrap;overflow-wrap:normal;overflow:hidden;font-size:min(1em,5.3cqw);letter-spacing:-.01em}.fit1{white-space:nowrap!important;overflow:hidden}.stat span.fit1,.rng.fit1,.card>.row>div>span.mut.fit1{display:block}.seg .sl{display:none}.seg.short .fl{display:none}.seg.short .sl{display:inline} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
 
 .bbz{width:max-content}
 .bbz.mini .sc{width:50%}
@@ -966,7 +966,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v82",CACHE_VERSION="l19hours-v82"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v83",CACHE_VERSION="l19hours-v83"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1896,14 +1896,14 @@ function show(v,how){if(v==="pegs"&&!pegsOn())v="add";const from=curV;if(how!=="
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
 function addOn(d){selDate=d;resetForm();retTo="hist";const by=curV==="hist"?window.pageYOffset:null;show("add");backY=by;}
 /* v75: holiday lists */
-function holItem(h){const ob=h.observed!==h.date;return `<li><span class="hn">${esc(h.name)}${h.paid?"":` <span class="mut">(not paid)</span>`}${holNoWork(h)?` <span class="mut">· no-work hours</span>`:""}</span><span class="hd">${esc(shDate(h.date))}${ob?`<br><span class="mut">obs. ${esc(shDate(h.observed))}</span>`:""}</span></li>`;}
+function holItem(h){const ob=h.observed!==h.date;return `<li><span class="hn">${esc(h.name)}${h.paid?"":` <span class="mut">(not paid)</span>`}${holNoWork(h)?` <span class="mut">· no‑work hours</span>`:""}</span><span class="hd">${esc(shDate(h.date))}${ob?`<br><span class="mut">obs. ${esc(shDate(h.observed))}</span>`:""}</span></li>`;}
 function weekSwHtml(ws){let d=null;for(let i=0;i<7;i++)if(isStopWork(addDays(ws,i),curLocal()))d=addDays(ws,i);
- return d?`<div class="card swb" id="wkSw"><b>◆ ${SW_LABEL}: ${esc(shDate(d))}</b><div>Local 19 stop-work meeting (first Thursday). No night-side work (2nd/3rd shift). Day shift unaffected.</div></div>`:"";}
+ return d?`<div class="card swb" id="wkSw"><b>◆ ${SW_LABEL}: ${esc(shDate(d))}</b><div>Local 19 stop‑work meeting (first Thursday). No night-side work (2nd/3rd shift). Day shift unaffected.</div></div>`:"";}
 function weekHolHtml(ws){const we=addDays(ws,6),l=[];for(let i=0;i<7;i++){const d=addDays(ws,i);for(const h of holidaysOn(d))if(!l.some(x=>x.key===h.key&&x.date===h.date))l.push(h);}
  if(!l.length)return"";return `<div class="card holb" id="wkHol"><b>🎉 Contract holiday${l.length>1?"s":""} this week</b><ul class="holl">${l.map(holItem).join("")}</ul><div>Shifts saved on a holiday (or its observed Monday) pay all hours at the OT rate.</div></div>`;}
-function upHolHtml(today){const l=upcomingHolidays(today,4),sw=nextStopWork(today,curLocal(),2);return `<div class="card" id="upHol"><h3 style="margin-top:0">Upcoming contract holidays</h3>${l.length?`<ul class="holl">${l.map(holItem).join("")}</ul>`:`<p class="mut">No holidays left in the 2022-2028 contract.</p>`}${sw.length?`<div class="swb" id="upSw"><b>◆ ${SW_LABEL}</b> (Local 19, first Thursday): ${sw.map(d=>esc(shDate(d))).join(", ")}. No 2nd/3rd shift work; day shift unaffected.</div>`:""}<p class="mut" style="margin:6px 0 0">Holidays on a Saturday or Sunday are observed on Monday (Sec. 5.21). Work on a holiday is overtime (Sec. 2.1). Paid holiday = 8h straight time if you qualify (Sec. 5.31: registration, 1-week vacation hours, available 2 of 5 weekdays); that pay is not added to the app's totals.</p></div>`;}
+function upHolHtml(today){const l=upcomingHolidays(today,4),sw=nextStopWork(today,curLocal(),2);return `<div class="card" id="upHol"><h3 style="margin-top:0">Upcoming contract holidays</h3>${l.length?`<ul class="holl">${l.map(holItem).join("")}</ul>`:`<p class="mut">No holidays left in the 2022-2028 contract.</p>`}${sw.length?`<div class="swb" id="upSw"><b>◆ ${SW_LABEL}</b> (Local 19, first Thursday): ${sw.map(d=>esc(shDate(d))).join(", ")}. No 2nd/3rd shift work; day shift unaffected.</div>`:""}<p class="mut" style="margin:6px 0 0">Holidays on a Saturday or Sunday are observed on Monday (Sec. 5.21). Work on a holiday is overtime (Sec. 2.1). Paid holiday = 8h straight time if you qualify (Sec. 5.31: registration, 1‑week vacation hours, available 2 of 5 weekdays); that pay is not added to the app's totals.</p></div>`;}
 function monthHolHtml(m){const y=m.slice(0,4),l=holidaysInYear(y).filter(h=>h.date.slice(0,7)===m||h.observed.slice(0,7)===m),sw=SW_LOCALS.includes(curLocal())?firstThursday(+y,+m.slice(5,7)):"";
- return (sw?`<div class="mut" style="margin-top:10px"><b>◆ ${SW_LABEL}:</b> ${esc(shDate(sw))} (Local 19 stop-work meeting)</div>`:"")+(l.length?`<div class="mut" style="margin-top:10px"><b>★ Contract holidays:</b> ${l.map(h=>esc(shDate(h.date))+" "+esc(h.name)+(h.observed!==h.date?" (obs. "+esc(shDate(h.observed))+")":"")).join("; ")}</div>`:"");}
+ return (sw?`<div class="mut" style="margin-top:10px"><b>◆ ${SW_LABEL}:</b> ${esc(shDate(sw))} (Local 19 stop‑work meeting)</div>`:"")+(l.length?`<div class="mut" style="margin-top:10px"><b>★ Contract holidays:</b> ${l.map(h=>esc(shDate(h.date))+" "+esc(h.name)+(h.observed!==h.date?" (obs. "+esc(shDate(h.observed))+")":"")).join("; ")}</div>`:"");}
 function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
  return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${esc([e.pier,e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}</div>${trvLine(e)}</button>`;}
 function trvLine(e){const th=num(e.travel),mi=num(e.miles);if(!(th>0||mi>0))return "";const tp=travelPay(e),mp=mileagePay(e);
@@ -1955,13 +1955,28 @@ function calView(){const y=+cm.slice(0,4),mo=+cm.slice(5)-1,wk=monthGrid(y,mo),d
  const cells=wk.map(r=>r.map(c=>{const t=dt[c.date],hl=holLabel(c.date);return `<button type="button" class="cd${c.inMonth?"":" out"}${c.date===today?" today":""}${c.date===cd?" sel":""}${hl?" hol":""}${isStopWork(c.date,curLocal())?" sw":""}" data-cd="${c.date}" aria-pressed="${c.date===cd}" aria-label="${esc(shDate(c.date))}${c.date===today?", today":""}${hl?", holiday: "+esc(hl):""}${isStopWork(c.date,curLocal())?", "+SW_LABEL:""}${t?", "+r2(t.hours)+" hours":""}"><span>${c.day}${hl?'<span class="hm" aria-hidden="true"> ★</span>':""}${isStopWork(c.date,curLocal())?'<span class="swm" aria-hidden="true"> ◆</span>':""}</span>${t?`<small><span class="dot"></span>${r2(t.hours)}</small>`:""}</button>`}).join("")).join("");
  const mt=entries.filter(e=>e.date.slice(0,7)===cm).reduce((x,e)=>x+num(e.hours),0);
  let det="";if(cd){const l=entries.filter(e=>e.date===cd).sort((a,b)=>a.shift<b.shift?1:-1);
-  det=`<div class="card"><div class="row" style="align-items:center"><h3 style="margin:0">${esc(shDate(cd))}${l.length?" · "+r2(l.reduce((x,e)=>x+num(e.hours),0))+"h":""}</h3><button type="button" class="p" id="cadd">＋ Add</button></div>${isHol(cd)?`<div class="holb">${holHtml(cd,false)}</div>`:""}${isStopWork(cd,curLocal())?`<div class="swb"><b>◆ ${SW_LABEL}</b>: Local 19 stop-work meeting, no night-side work.</div>`:""}${l.length?"":'<p class="mut" style="margin:8px 0 0">No shifts this day.</p>'}</div>`+l.map(entRow).join("")+(l.length?`<div class="card"><button type="button" id="cgo">Show in list</button></div>`:"");}
+  det=`<div class="card"><div class="row" style="align-items:center"><h3 style="margin:0">${esc(shDate(cd))}${l.length?" · "+r2(l.reduce((x,e)=>x+num(e.hours),0))+"h":""}</h3><button type="button" class="p" id="cadd">＋ Add</button></div>${isHol(cd)?`<div class="holb">${holHtml(cd,false)}</div>`:""}${isStopWork(cd,curLocal())?`<div class="swb"><b>◆ ${SW_LABEL}</b>: Local 19 stop‑work meeting, no night‑side work.</div>`:""}${l.length?"":'<p class="mut" style="margin:8px 0 0">No shifts this day.</p>'}</div>`+l.map(entRow).join("")+(l.length?`<div class="card"><button type="button" id="cgo">Show in list</button></div>`:"");}
  return `<div class="card nav"><button id="cp" aria-label="Previous month">◀</button><div class="t">${MON[mo]} ${y}<div class="mut">${r2(mt)}h this month</div></div><button id="cn" aria-label="Next month">▶</button></div>
  <div class="card"><div class="cal">${head}${cells}</div><div class="jump" style="margin-top:10px">${monthSel("cj",cm)}</div><button type="button" id="cto" class="full" style="margin-top:10px;width:100%">Today</button>${monthHolHtml(cm)}</div>${det}`;}
 function upSR(){const el=$("hsr");if(el){el.innerHTML=searchResults();el.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>openEntry(b.dataset.h));}}
 /* v82: if a full label (e.g. "Quarter") still can't fit on one line (very large phone font scaling), the row switches to Wk/Mo/Qtr/Yr */
 function segFit(){const g=document.getElementById("hk");if(!g)return;g.classList.remove("short");if([...g.querySelectorAll(".fl")].some(f=>f.scrollWidth>f.parentNode.clientWidth+0.5||f.getBoundingClientRect().width>f.parentNode.clientWidth+0.5))g.classList.add("short");}
-window.l19SegFit=segFit;addEventListener("resize",()=>segFit());
+window.l19SegFit=segFit;
+/* v83: Week/History labels, headings, totals and buttons stay on one line: shrink the font (to 11px at most) and, if still too wide, use data-short */
+const FIT_SEL=".holl .hn,.stat b,.stat span,.rng,h3,h4,.card>.row>div>span.mut,button";
+function fitView(id){const v=document.getElementById(id);if(!v||v.classList.contains("hide"))return;
+ v.querySelectorAll(FIT_SEL).forEach(el=>{if(el.closest(".hide,.cal,.seg,.acts"))return;if(el.dataset.full!=null){el.textContent=el.dataset.full;delete el.dataset.full;}el.style.fontSize="";el.classList.add("fit1");
+  if(!el.clientWidth)return;const over=()=>el.scrollWidth>el.clientWidth+0.5;let fs=parseFloat(getComputedStyle(el).fontSize),n=0;
+  while(over()&&fs>11&&n<60){fs-=0.5;n++;el.style.fontSize=fs+"px";}
+  if(over()&&el.dataset.short&&el.children.length===0){el.dataset.full=el.textContent;el.textContent=el.dataset.short;el.style.fontSize="";fs=parseFloat(getComputedStyle(el).fontSize);n=0;while(over()&&fs>11&&n<60){fs-=0.5;n++;el.style.fontSize=fs+"px";}}
+  if(over()){if(el.dataset.full!=null){el.textContent=el.dataset.full;delete el.dataset.full;}el.classList.remove("fit1");el.style.fontSize="";}});
+ v.querySelectorAll("table").forEach(t=>{if(t.closest(".hide"))return;const pe=t.parentElement,pc=getComputedStyle(pe),pw=pe.clientWidth-parseFloat(pc.paddingLeft)-parseFloat(pc.paddingRight);t.style.fontSize="";t.classList.add("fitT");if(!pw)return;
+  let fs=parseFloat(getComputedStyle(t).fontSize),n=0;while(t.offsetWidth>pw+0.5&&fs>11&&n<60){fs-=0.5;n++;t.style.fontSize=fs+"px";}
+  if(t.offsetWidth>pw+0.5){t.classList.remove("fitT");t.style.fontSize="";}});}
+window.l19Fit=fitView;setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);fitView("v-hist");return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);addEventListener("resize",()=>{fitView("v-hist");fitView("v-week");});addEventListener("resize",()=>segFit());
+/* v83: short one-line period range, e.g. "Oct 1 – Dec 31, 2026" */
+function rangeShort(a,b){const M3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],f=d=>M3[+d.slice(5,7)-1]+" "+(+d.slice(8,10));
+ return a.slice(0,4)===b.slice(0,4)?f(a)+" – "+f(b)+", "+b.slice(0,4):f(a)+", "+a.slice(0,4)+" – "+f(b)+", "+b.slice(0,4);}
 function renderHist(){const kinds=[["week","Week","Wk"],["month","Month","Mo"],["quarter","Quarter","Qtr"],["year","Year","Yr"]];
  const r=periodRange(hk,ha),t=periodTotals(entries,hk,ha),pay=hasPay(t)&&!hidePay;
  const grp=o=>Object.keys(o).sort((a,b)=>o[b].hours-o[a].hours).map(k=>`<tr><td>${esc(k)}</td><td>${r2(o[k].hours)}h${o[k].anyPay&&!hidePay?" "+money(o[k].pay):""}</td></tr>`).join("");
@@ -1970,9 +1985,9 @@ function renderHist(){const kinds=[["week","Week","Wk"],["month","Month","Mo"],[
   list+=`<div class="dh" id="d-${g.date}"><span>${WD[parseDate(g.date).getDay()].slice(0,3)} ${g.date.slice(5).replace("-","/")}/${g.date.slice(2,4)} <span class="tot">· ${r2(g.hours)}h</span>${isHol(g.date)?` <span class="badge hol">🎉 ${esc(holShort(g.date))}</span>`:""}${isStopWork(g.date,curLocal())?` <span class="badge sw">◆ Stop work night</span>`:""}</span><button type="button" class="link" data-a="${g.date}">＋ Add</button></div>`+g.items.map(entRow).join("");}
  $("v-hist").innerHTML=`<div class="card"><div class="vt" id="hv"><button type="button" data-hv="list" aria-pressed="${hv==="list"}">☰ List</button><button type="button" data-hv="cal" aria-pressed="${hv==="cal"}">📅 Calendar</button></div></div>${searchCard()}<div id="hsr">${searchResults()}</div>${hv==="cal"?calView():`<div class="card"><h3>Jump to</h3><div class="jump">${monthSel("jm",cur)}</div><div class="jb"><button type="button" id="jc">📅 Calendar</button><button type="button" id="jt">Today</button><button type="button" id="jn" class="p">＋ Add</button></div></div>
 <div class="card"><div class="seg" id="hk">${kinds.map(([k,l,sh])=>`<button type="button" data-k="${k}" aria-pressed="${k===hk}" aria-label="${l}"><span class="fl">${l}</span><span class="sl" aria-hidden="true">${sh}</span></button>`).join("")}</div></div>
- <div class="card nav"><button id="hp" aria-label="Previous ${hk}">◀</button><div class="t">${periodLabel(hk,ha)}<div class="mut">${hk==="week"?"Sat–Fri pay week":r.start+" to "+r.end}</div></div><button id="hn" aria-label="Next ${hk}">▶</button></div>
- <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.straight)}/${r2(t.ot)}</b><span>Straight/OT</span></div><div class="stat"><b>${t.days}</b><span>Days</span></div></div>
- <div class="card"><div class="row" style="align-items:center"><div><span class="mut">Total pay est.</span><div class="big">${hidePay?"Hidden":pay?money(payTotal(t)):"–"}</div></div><button type="button" id="hpay" aria-pressed="${hidePay}">${hidePay?"Show pay":"Hours only (no pay)"}</button></div>
+ <div class="card nav"><button id="hp" aria-label="Previous ${hk}">◀</button><div class="t">${periodLabel(hk,ha)}<div class="mut rng">${hk==="week"?"Sat–Fri pay week":rangeShort(r.start,r.end)}</div></div><button id="hn" aria-label="Next ${hk}">▶</button></div>
+ <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.straight)}/${r2(t.ot)}</b><span data-short="ST/OT">Straight/OT</span></div><div class="stat"><b>${t.days}</b><span>Days</span></div></div>
+ <div class="card"><div class="row" style="align-items:center"><div><span class="mut">Total pay est.</span><div class="big">${hidePay?"Hidden":pay?money(payTotal(t)):"–"}</div></div><button type="button" id="hpay" aria-pressed="${hidePay}" data-short="${hidePay?"Show pay":"Hours only"}">${hidePay?"Show pay":"Hours only (no pay)"}</button></div>
  ${t.travel||t.miles||(pay&&(t.travelPay||t.milePay))?`<div class="mut" style="margin-top:8px">${pay&&t.anyPay&&t.travelPay?"Shift wages "+money(t.pay)+" · ":""}${t.travel?"Travel "+r2(t.travel)+"h"+(pay&&t.travelPay?" · "+money(t.travelPay):""):""}${t.miles?(t.travel?" · ":"")+r2(t.miles)+" mi"+(pay&&t.milePay?" · "+money(t.milePay)+" mileage reimbursement (not wages)":""):""}</div>`:""}
  <button type="button" id="hys" style="width:100%;margin-top:10px">Year summary (${esc(ha.slice(0,4))})</button>
  ${t.count?`<h4>By job</h4><table>${grp(t.byJob)}</table><h4>By pier</h4><table>${grp(t.byPier)}</table>`:'<p class="mut" style="margin:8px 0 0">No shifts in this period.</p>'}</div>
@@ -2463,7 +2478,7 @@ function ysYears(){const y=histYears(histMonths(entries,todayS()));return y.leng
 function ysFill(){const ys=ysYears(),cur=$("ysY").value;$("ysY").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("ysY").value=ys.includes(cur)?cur:ys[0];}
 function yearHtml(y,nopay){const tb=(a,f)=>a.map(f).join("");
  return `<h2>Year summary ${esc(y.year)}</h2><div class="mut">ILWU LIFE · generated ${esc(todayS())}${nopay?" · hours only":""}</div>
- ${y.shifts?`<div class="stats" style="margin-top:12px"><div class="stat pri"><b>${r2(y.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(y.straight)}/${r2(y.ot)}</b><span>Straight/OT</span></div><div class="stat"><b>${y.days}</b><span>Days</span></div></div>${y.holShifts?`<p class="mut">Holiday shifts: ${y.holShifts} (${r2(y.holHours)}h)</p>`:""}
+ ${y.shifts?`<div class="stats" style="margin-top:12px"><div class="stat pri"><b>${r2(y.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(y.straight)}/${r2(y.ot)}</b><span data-short="ST/OT">Straight/OT</span></div><div class="stat"><b>${y.days}</b><span>Days</span></div></div>${y.holShifts?`<p class="mut">Holiday shifts: ${y.holShifts} (${r2(y.holHours)}h)</p>`:""}
  ${nopay?"":`<div class="card"><span class="mut">Total pay est. (wages + travel)</span><div class="big">${y.hasPay?money(y.total):"–"}</div>${y.hasPay?`<div class="mut">${y.anyPay?"Shift wages "+money(y.wages):""}${y.travelPay?(y.anyPay?" · ":"")+"Travel pay "+money(y.travelPay):""}</div>`:""}</div>`}
  ${y.travelHours||y.miles?`<div class="card"><h4 style="margin-top:0">Travel &amp; mileage</h4><table>${y.travelHours?`<tr><td>Travel hours</td><td>${r2(y.travelHours)}h${nopay?"":" · "+money(y.travelPay)}</td></tr>`:""}${y.miles?`<tr><td>Miles</td><td>${r2(y.miles)} mi${nopay?"":" · "+money(y.milePay)}</td></tr>`:""}</table>${!nopay&&y.miles?`<div class="mut">Mileage is a reimbursement, not wages.</div>`:""}</div>`:""}
  <div class="card"><h4 style="margin-top:0">Top jobs</h4><table>${tb(y.topJobs,j=>`<tr><td>${esc(j.name)}</td><td>${r2(j.hours)}h${!nopay&&j.anyPay?" "+money(j.pay):""}</td></tr>`)}</table>
