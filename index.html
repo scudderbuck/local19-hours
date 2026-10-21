@@ -35,7 +35,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .locseg .loch{grid-column:1/-1;font-size:max(12px,.8125rem);font-weight:800;color:var(--mut);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em}
 .locsheet .locseg,#suLoc,#locSegB{max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain;padding:2px}
 /* v77: 5 columns so no region leaves a lone chip; labels stay on one line */
-.locseg{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}.locseg button{padding:4px 0}
+.locseg{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.locseg button{padding:4px 0}
 .locseg button{container-type:inline-size}.locseg button small{white-space:nowrap;overflow-wrap:normal;letter-spacing:-.03em;font-size:min(max(12px,.75rem),20cqw)}
 .locsheet .locseg{margin-left:-12px;margin-right:-12px}#suLoc{margin-left:-19px;margin-right:-19px}#locSegB{margin-left:-11px;margin-right:-11px}
 .chh{margin:0 0 2px;font-size:1.375rem;line-height:1.2;padding:8px 10px;border-radius:10px;background:var(--pri);color:var(--prifg)}.chh .chhl{color:#ffd23f}.chat h3.chh{font-size:min(1.375rem,6.6vw)}.chhs{margin:0 0 6px;overflow-wrap:anywhere}
@@ -73,7 +73,7 @@ label .mut{font-weight:400}
    never bigger than .8125rem) so the app's Large / Extra large text or a phone's text zoom can't push them off the screen. */
 /* v68: the bottom bar is one fixed block: the 7 tab buttons, then a row of two document links (safety code, contract) */
 #bbar{position:fixed;bottom:0;left:0;right:0;z-index:5;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom);-webkit-text-size-adjust:100%;text-size-adjust:100%}
-.tabs{display:flex;gap:4px;padding:4px 4px 0}
+.tabs{display:flex;gap:4px;padding:4px 4px 0}.tabs button[hidden]{display:none}.tabs.nopg button{flex:1 1 0}
 .docs{display:flex;gap:4px;padding:4px}
 .docs a{flex:1 1 0;min-width:0;min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;padding:2px 6px;border-radius:8px;background:var(--pri);color:var(--prifg);box-shadow:inset 0 0 0 1px var(--acc);text-decoration:none;font-weight:700;font-size:max(12px,min(.875rem,3.6vw));line-height:1.2;text-align:center;overflow:hidden}
 .docs a span{min-width:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -651,6 +651,8 @@ function curLocal(){let v="";try{v=localStorage.getItem(LOCAL_KEY)||"";}catch(e)
 /* outport piers: only terminals named in a source (Port of Portland T4 = Toyota autos, T6 = autos + Oregon Container Terminal; Port of Grays Harbor
    Terminal 4 = autos); otherwise just the home port (use Custom… for a terminal). */
 const OUT_PIERS={"8":["Terminal 4","Terminal 6"],"24":["Terminal 4"]};
+/* v79: Pegs (dispatch peg boards + equipment board) are Local 19's dispatch system; other locals have their own, so the tab is hidden for them */
+function pegsOn(n){return localId(n===undefined?curLocal():n)==="19";}
 function localPiers(n){n=localId(n);return n==="23"?TAC_PIERS:LOCALS[n].out?(OUT_PIERS[n]||[LOCALS[n].port]):SEA_PIERS;}
 function localTitle(n){return "ILWU LIFE · Local "+localId(n);}
 let PIERS=localPiers(curLocal());
@@ -956,7 +958,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v78",CACHE_VERSION="l19hours-v78"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v79",CACHE_VERSION="l19hours-v79"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1880,7 +1882,7 @@ const OVL_SEL=".sheet,.cpop,#ysum,#setup,#tour,#lock,#lv,#gear";
 function ovlTop(n){if(!n||n.nodeType!==1||!n.matches||!n.matches(OVL_SEL))return;const f=()=>{n.scrollTop=0;for(const k of n.children)if(k.scrollTop)k.scrollTop=0;const g=n.querySelector("#gearB");if(g)g.scrollTop=0;};f();requestAnimationFrame(f);}
 try{new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(ovlTop))).observe(document.body,{childList:true});}catch(e){}
 let backY=null;
-function show(v,how){const from=curV;if(how!=="back")backY=null;curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
+function show(v,how){if(v==="pegs"&&!pegsOn())v="add";const from=curV;if(how!=="back")backY=null;curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
  document.querySelectorAll(".tabs button").forEach(b=>{const on=b.dataset.v===v;b.classList.toggle("on",on);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);if(v==="pegs"&&window.l19Sh)window.l19Sh.open();
  if(how==="back"&&backY!=null){const y=backY;backY=null;pageTo(y);requestAnimationFrame(()=>pageTo(y));}else pageTop();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
@@ -2342,7 +2344,7 @@ function localSet(n){n=localId(n);const was=curLocal();try{localStorage.setItem(
  tierUI();if(!editId){rateDirty=false;applyDefaults();}if(typeof pierHrs==="function")pierHrs();
  if(n!==was&&$("ndP")&&$("ndP").value===LOCALS[was].need&&!(typeof ndEdit!=="undefined"&&ndEdit)){$("ndP").value=LOCALS[n].need;try{renderNdShips();}catch(e){}}
  locRender();try{renderShips();}catch(e){}
- if(n!==was&&window.l19ChatLocal)window.l19ChatLocal(n);}
+ if(n!==was&&window.l19ChatLocal)window.l19ChatLocal(n);if(window.l19Pegs)window.l19Pegs();}
 function localSheet(){if(document.querySelector(".locsheet"))return;const o=document.createElement("div");o.className="sheet locsheet";
  o.innerHTML='<div role="dialog" aria-modal="true" aria-labelledby="lsT"><h3 id="lsT" style="margin:0">Your local</h3><div id="lsW"></div><p class="mut" style="margin:0">New shifts use this local\'s jobs and contract rates. Chat switches to this local\'s room. Saved shifts don\'t change.</p><button type="button" class="p" data-m="x">Done</button></div>';
  o.onclick=ev=>{if(ev.target===o||(ev.target.dataset&&ev.target.dataset.m==="x")){o.remove();$("hdLoc").focus({preventScroll:true});}};
@@ -2523,7 +2525,7 @@ function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=
   if(d.e){const t=pgBoard(name).takes.find(x=>x.id===d.e);if(!t)return;const row=ev.target.parentNode;row.innerHTML=`<input aria-label="Person" id="lgP" maxlength="80" value="${esc(t.person)}"><button type="button" class="p" id="lgS">Save</button>`;$("lgP").focus();
    $("lgS").onclick=()=>{const r=pegTakeEdit(pgBoard(name),d.e,$("lgP").value,new Date());if(!r.ok){$("lgP").setAttribute("aria-invalid","true");return;}pgStore(name,r.board);pgRender();o.remove();pgLogOpen();};}};
  $("lgDn").onclick=()=>o.remove();$("lgDn").focus({preventScroll:true});}
-function pgRender(){if(pgShared&&!shGet(pgShared))pgShared=null;if(pgShared&&shGet(pgShared).eq){pgShared=null;pgEq=true;} /* v61: the live equipment board opens under its own entry */$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
+function pgRender(){if(!pegsOn())return;if(pgShared&&!shGet(pgShared))pgShared=null;if(pgShared&&shGet(pgShared).eq){pgShared=null;pgEq=true;} /* v61: the live equipment board opens under its own entry */$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
  if(pgEq){eqRender();return;}$("pgGrid").setAttribute("aria-label","Peg board slips (scrolls sideways)");const name=pgCur(),b=pgBoard(name);
  $("pgCols").value=b.cols;$("pgRows").value=b.rows;
  $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
@@ -2868,7 +2870,7 @@ function eqSh(){if(!shJoined())return null;return shAll().find(x=>x.id===EQ_ID&&
 function eqSlC(){const c=lsJson(EQSK,null);return c&&typeof c==="object"&&window.l19Fb&&c.code===window.l19Fb.code()&&c.slots&&typeof c.slots==="object"?c:null;}
 function eqSlSave(c){try{LSset(EQSK,JSON.stringify(c));}catch(e){}}
 function eqView(){const sh=eqSh();if(!sh)return{b:eqB,sh:null,live:false};const c=eqSlC();if(c&&c.ok)return{b:eqWithSlots(sh.eq,c.slots),sh:sh,live:true};return{b:sh.eq,sh:sh,live:false,denied:!!(c&&c.denied)};}
-function eqSlStart(){const F=window.l19Fb;if(!F||!shJoined())return;const code=F.code();if(eqSlUnsub&&eqSlCode===code)return;if(eqSlUnsub){try{eqSlUnsub();}catch(e){}eqSlUnsub=null;}
+function eqSlStart(){const F=window.l19Fb;if(!F||!shJoined()||!pegsOn())return;const code=F.code();if(eqSlUnsub&&eqSlCode===code)return;if(eqSlUnsub){try{eqSlUnsub();}catch(e){}eqSlUnsub=null;}
  const f=F.fs(),db=F.db();if(!f||!db)return;eqSlCode=code;
  eqSlUnsub=f.onSnapshot(f.collection(db,"rooms",code,"boards",EQ_ID,"slots"),snap=>{const s={};snap.docs.forEach(d=>{s[d.id]=d.data();});eqSlSave({code:code,ok:true,at:Date.now(),slots:s});shRepaint();},
   e=>{const den=/permission/.test(e&&e.code||"");if(den)eqSlSave({code:code,ok:false,denied:true,slots:{}});eqSlUnsub=null;eqSlCode="";shRepaint();});}
@@ -3034,7 +3036,7 @@ function shWhenBy(sh){return sh.ms?"Last updated "+pegWhen(new Date(sh.ms))+(sh.
 function shOffline(){return typeof navigator!=="undefined"&&navigator.onLine===false||!!shErr||shCached;}
 function shCacheSave(boards){try{LSset(SHK,JSON.stringify({code:window.l19Fb.code(),at:Date.now(),boards:boards}));}catch(e){}}
 function shRepaint(){if(!$("v-pegs").classList.contains("hide"))pgRender();}
-async function shOpen(){shRepaint();if(!shJoined()){return;}
+async function shOpen(){if(!pegsOn())return;shRepaint();if(!shJoined()){return;}
  if(typeof navigator!=="undefined"&&navigator.onLine===false){shErr="";shCached=true;shRepaint();return;}
  try{await window.l19Fb.ready();}catch(e){shErr=shFriendly(e);shRepaint();return;}
  if(!shReg){shReg=true;window.l19Fb.on(()=>shRepaint());}
@@ -3097,7 +3099,7 @@ async function shPush(name,force){const F=window.l19Fb,id=shMap()[name];if(name=
  try{await F.ready();const f=F.fs();await f.setDoc(f.doc(F.db(),"rooms",F.code(),"boards",id),{...doc,updatedAt:f.serverTimestamp(),updatedBy:F.uid(),updatedByName:chatName(F.name())||"?"});shLast[name]=ser;shPushErr="";}
  catch(e){shPushErr="Couldn't sync to the room. "+shFriendly(e)+" Your own board is safe; it will retry on your next change.";}shLocalUi();}
 async function shFlush(){if(shBusy)return;shBusy=true;try{const m=shMap();for(const n of Object.keys(m))await shPush(n,false);}finally{shBusy=false;}}
-function shTouch(){if(!window.l19Fb||!shJoined())return;if(!Object.keys(shMap()).length)return;clearTimeout(shT);shT=setTimeout(shFlush,1000);}
+function shTouch(){if(!window.l19Fb||!shJoined()||!pegsOn())return;if(!Object.keys(shMap()).length)return;clearTimeout(shT);shT=setTimeout(shFlush,1000);}
 $("pgShB").onclick=async()=>{if(pgEq){await eqShareToggle();return;}const name=pgSelName(),m=shMap(),F=window.l19Fb;if(!shAdmin())return;
  if(m[name]){if(!confirm("Stop sharing “"+name+"”? Everyone in the room loses the shared copy. Your own board stays."))return;const id=m[name];delete m[name];shMapSet(m);
   try{const f=F.fs();await f.deleteDoc(f.doc(F.db(),"rooms",F.code(),"boards",id));$("pgM").textContent="Stopped sharing.";}catch(e){$("pgM").textContent="Unlinked here, but the shared copy could not be deleted. "+shFriendly(e);}shPushErr="";pgRender();return;}
@@ -3106,6 +3108,10 @@ $("pgShB").onclick=async()=>{if(pgEq){await eqShareToggle();return;}const name=p
  if(!confirm("Share “"+name+"” with everyone in room "+F.code()+"? "+(pgEq?"They will see the unit list and reservation names with time stamps (read-only).":"They will see slip names, pegs and the take log (read-only).")+" Photos, notes, ★ and your hours/pay are never shared."))return;
  m[name]=id;shMapSet(m);$("pgM").textContent="Sharing…";await shPush(name,true);$("pgM").textContent=shPushErr?"":"Shared. Changes you make are sent to the room within a second.";pgRender();};
 window.l19Sh={open:shOpen};
+window.l19Pegs=function(){const on=pegsOn(),b=document.querySelector('.tabs button[data-v="pegs"]');if(b)b.hidden=!on;const t=document.querySelector(".tabs");if(t)t.classList.toggle("nopg",!on);
+ if(!on){if(shUnsub){try{shUnsub();}catch(e){}shUnsub=null;shCode="";}if(eqSlUnsub){try{eqSlUnsub();}catch(e){}eqSlUnsub=null;eqSlCode="";}pgRender();if(curV==="pegs")show("add");}
+ else pgRender();};
+window.l19Pegs();
 window.addEventListener("online",()=>{shCached=false;if(!$("v-pegs").classList.contains("hide"))shOpen();shTouch();});
 window.addEventListener("offline",()=>shRepaint());
 pgRender();
@@ -3450,7 +3456,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chat
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
