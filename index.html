@@ -32,6 +32,8 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .locseg button[aria-checked=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 -3px #ffd23f}
 .locseg button[aria-checked=true] small{color:var(--prifg)}
 .locd{margin:4px 0 0;font-weight:600}
+.locseg .loch{grid-column:1/-1;font-size:max(12px,.8125rem);font-weight:800;color:var(--mut);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em}
+.locsheet .locseg,#suLoc,#locSegB{max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain;padding:2px}
 @media (max-width:339px){.locseg{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .chh{margin:0 0 2px;font-size:1.375rem;line-height:1.2;padding:8px 10px;border-radius:10px;background:var(--pri);color:var(--prifg)}.chh .chhl{color:#ffd23f}.chhs{margin:0 0 6px;overflow-wrap:anywhere}
 .holb{margin:6px 0 2px;padding:8px 10px;border-radius:10px;border:2px solid #b8860b;background:#fff4cc;color:#3d2c00;font-size:max(14px,.9375rem);line-height:1.35}.holb b{font-size:1.0625rem}
@@ -600,24 +602,53 @@ const SEA_PIERS=["Pier 5","Pier 18","Pier 86 (Louis Dreyfus)","Pier 91","Pier 66
 const TAC_PIERS=["Husky Terminal","Washington United Terminals (WUT)","Pierce County Terminal (PCT)","West Sitcum Terminal (WST)","East Blair One (EB1)","TOTE Maritime terminal","Terminal 7"];
 /* v74: which ILWU local the user works out of. Saved on this device; default Local 19. Sources: hall address/phone = ilwu.org/contact/ilwu-local-unions-2;
    contracts = pmanet.org/members/resources/contract-documents (PCLCD / PCCCD / Walking Bosses & Foremen's Agreement 2022-2028). */
-const LOCAL_KEY="l19.local",LOCAL_IDS=["19","23","52","98"];
+const LOCAL_KEY="l19.local",MAIN_LOCALS=["19","23","52","98"];
+/* v76: Washington + Oregon longshore outport locals. Number, city, address, phone = ilwu.org/contact/ilwu-local-unions-2 (listed under "Longshore",
+   except Local 12 which the listing shows without a division label). They work under the PCLCD like 19/23, so rates/contract are the same.
+   ship: which NWSA ship feed to show (null = none for that port); need: Needs-tab port value. */
+/* v76: regions for the picker */
+const LOCAL_REGIONS=[["Washington",["19","23","52","98","4","7","21","24","25","27","32","47","51"]],["Oregon",["8","12","40","50","53"]]];
+const LOCAL_IDS=LOCAL_REGIONS.flatMap(r=>r[1]),OUT_LOCALS=LOCAL_IDS.filter(n=>!MAIN_LOCALS.includes(n));
+function localRegion(n){const r=LOCAL_REGIONS.find(x=>x[1].includes(String(n)));return r?r[0]:"";}
 const PMA_DOCS="https://www.pmanet.org/wp-content/uploads/2025/03/";
 const LOCALS={
- "19":{n:"19",short:"Seattle",trade:"Seattle longshore",port:"Seattle",hall:"206-623-7461",tel:"+12066237461",addr:"3440 E Marginal Way S, Seattle, WA 98134",room:"LOCAL19",
+ "19":{n:"19",short:"Seattle",trade:"Seattle longshore",port:"Seattle",ship:"Seattle",need:"Seattle",hall:"206-623-7461",tel:"+12066237461",addr:"3440 E Marginal Way S, Seattle, WA 98134",room:"LOCAL19",
   doc:{url:PMA_DOCS+"Pacific_Coast_Longshore_Contract_Document_2022-2028.pdf",name:"Pacific Coast Longshore Contract Document (PCLCD) 2022-2028"}},
- "23":{n:"23",short:"Tacoma",trade:"Tacoma longshore",port:"Tacoma",hall:"253-272-6600",tel:"+12532726600",addr:"1306 Alexander Ave. E, Fife, WA 98424",room:"LOCAL23",
+ "23":{n:"23",short:"Tacoma",trade:"Tacoma longshore",port:"Tacoma",ship:"Tacoma",need:"Tacoma",hall:"253-272-6600",tel:"+12532726600",addr:"1306 Alexander Ave. E, Fife, WA 98424",room:"LOCAL23",
   doc:{url:PMA_DOCS+"Pacific_Coast_Longshore_Contract_Document_2022-2028.pdf",name:"Pacific Coast Longshore Contract Document (PCLCD) 2022-2028"}},
- "52":{n:"52",short:"Clerks",trade:"Seattle marine clerks",port:"Seattle",hall:"206-728-1948",tel:"+12067281948",addr:"2414 SW Andover, Ste E-110, Seattle, WA 98106",room:"LOCAL52",
+ "52":{n:"52",short:"Clerks",trade:"Seattle marine clerks",port:"Seattle",ship:"Seattle",need:"Seattle",hall:"206-728-1948",tel:"+12067281948",addr:"2414 SW Andover, Ste E-110, Seattle, WA 98106",room:"LOCAL52",
   doc:{url:PMA_DOCS+"Pacific_Coast_Clerks_Contract_Document-2022-2028.pdf",name:"Pacific Coast Clerks' Contract Document (PCCCD) 2022-2028"}},
- "98":{n:"98",short:"Foremen",trade:"Walking bosses & foremen",port:"Seattle",hall:"206-870-8010",tel:"+12068708010",addr:"22613 Pacific Hwy South, Ste 302, Des Moines, WA 98198",room:"LOCAL98",
+ "98":{n:"98",short:"Foremen",trade:"Walking bosses & foremen",port:"Seattle",ship:"Seattle",need:"Seattle",hall:"206-870-8010",tel:"+12068708010",addr:"22613 Pacific Hwy South, Ste 302, Des Moines, WA 98198",room:"LOCAL98",
   doc:{url:PMA_DOCS+"Pacific_Coast_Walking_Bosses_and_Foremens_Agreement_2022-2028.pdf",name:"Pacific Coast Walking Bosses and Foremen's Agreement 2022-2028"}}};
+/* [local, short (picker), home port, Needs port, hall phone (display), address, kind] — all from the ilwu.org local unions listing (division label in
+   brackets: ls = "Longshore", clerk = "Marine clerks", fm = "Walking bosses/Foremen", lsc = "Longshore and marine clerks", lscf = "Longshore/clerks/foremen";
+   Local 12 has no label; Local 46 = "Longshore/multi-charter"). Clerks use the PCCCD, foremen the WBF agreement, everyone else the PCLCD. */
+[["4","Vancouver","Vancouver, WA","Vancouver WA","360-693-1821","1205 Ingalls Street, Vancouver, WA 98660","ls"],
+ ["7","Bellingham","Bellingham","Other","360-734-0950","807 North State St, Bellingham, WA 98225","ls"],
+ ["8","Portland","Portland","Other","503-224-9310","2435 NW Front Avenue, Portland, OR 97209","ls"],
+ ["12","Coos Bay","Coos Bay / North Bend","Other","541-756-4188","2064 Sheridan Avenue, North Bend, OR 97459","ls"],
+ ["21","Longview","Longview","Longview","360-423-0950","617 14th Ave, Suite B, Longview, WA 98632","ls"],
+ ["24","Aberdeen","Aberdeen / Grays Harbor","Aberdeen","360-533-3412","3105 John Stevens Way, Hoquiam, WA 98550","ls"],
+ ["25","Anacortes","Anacortes","Other","360-293-3724","PO Box 157, Anacortes, WA 98221","ls"],
+ ["27","Pt Angeles","Port Angeles","Port Angeles","360-457-7595","608 Marine Drive, Port Angeles, WA 98383","ls"],
+ ["32","Everett","Everett","Everett","425-252-4200","1016 Hewitt Avenue, Everett, WA 98201","ls"],
+ ["40","PDX clerks","Portland","Other","503-221-0342","2401 NW 23rd Avenue, Portland, OR 97210","clerk"],
+ ["47","Olympia","Olympia","Olympia","360-357-5915","PO Box 355, Olympia, WA 98507","ls"],
+ ["50","Astoria","Astoria","Other","503-325-2271","491 Industry Street, Astoria, OR 97103","ls"],
+ ["51","Pt Gamble","Port Gamble","Other","425-218-1572","PO Box 125, Port Gamble, WA 98364","ls"],
+ ["53","Newport","Newport, OR","Other","541-265-2191","606 SW 13th Street, Newport, OR 97365","ls"]]
+ .forEach(([n,short,port,need,hall,addr,kind])=>{const tr={ls:"longshore",clerk:"marine clerks",fm:"walking bosses & foremen",lsc:"longshore & marine clerks",lscf:"longshore, clerks & foremen"}[kind];
+  LOCALS[n]={n,short,trade:port+" "+tr,port,ship:null,need,hall,tel:"+1"+hall.replace(/\D/g,""),addr,room:"LOCAL"+n,out:true,kind,doc:(kind==="clerk"?LOCALS["52"]:kind==="fm"?LOCALS["98"]:LOCALS["19"]).doc};});
 function localId(v){v=String(v==null?"":v).replace(/\D/g,"");return LOCAL_IDS.includes(v)?v:"19";}
 function curLocal(){let v="";try{v=localStorage.getItem(LOCAL_KEY)||"";}catch(e){}return localId(v);}
-function localPiers(n){return localId(n)==="23"?TAC_PIERS:SEA_PIERS;}
+/* outport piers: only terminals named in a source (Port of Portland T4 = Toyota autos, T6 = autos + Oregon Container Terminal; Port of Grays Harbor
+   Terminal 4 = autos); otherwise just the home port (use Custom… for a terminal). */
+const OUT_PIERS={"8":["Terminal 4","Terminal 6"],"24":["Terminal 4"]};
+function localPiers(n){n=localId(n);return n==="23"?TAC_PIERS:LOCALS[n].out?(OUT_PIERS[n]||[LOCALS[n].port]):SEA_PIERS;}
 function localTitle(n){return "ILWU LIFE · Local "+localId(n);}
 let PIERS=localPiers(curLocal());
 const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman"],["0006","Frontman/Slingman"],["0007","Holdman"],["0008","Jitney Driver"],["0009","Lasher"],["0012","Car Man"],["0150","CFS Utility Man"],["0011","PMA Training (L/S)"]],
-"Skill 1":[["0023","Button Pusher"],["0025","Combo Lift/Jitney"],["0026","Crane Chaser"],["0028","Hatch Tender"],["0029","Lift Truck Operator"],["0031","Rail Car Pusher"],["0033","Skilled Holdman"],["0036","Tractor-Semi-Dock"],["0037","Utility Lift Driver"],["0038","Winch Driver"],["0052","Gang Boss"],["0054","Hatch Boss Tender"],["0003","Boatman"],["0030","Payloader Operator"],["0070","Bulldozer/Caterpillar"],["0071","D.O.T. Truck Driver"]],
+"Skill 1":[["0023","Button Pusher"],["0025","Combo Lift/Jitney"],["0026","Crane Chaser"],["0028","Hatch Tender"],["0029","Lift Truck Operator"],["0031","Rail Car Pusher"],["0033","Skilled Holdman"],["0036","Tractor-Semi-Dock"],["0037","Utility Lift Driver"],["0038","Winch Driver"],["0052","Gang Boss"],["0054","Hatch Boss Tender"],["0003","Boatman"],["0030","Payloader Operator"],["0070","Bulldozer/Caterpillar"],["0071","D.O.T. Truck Driver"],["0047","UTR Ro/Ro Ship (WA)"]],
 "Skill 2":[["0055","Lift Truck-Heavy"],["0085","Crane Mobile"],["0087","Crane Shipboard"],["0088","Crane Whirley"],["0053","Payloader Over 15 Tons"],["0057","Utility Lift Driver - Work"],["0058","Utility Lift Driver - Guarantee"],["0080","Bulkloader Operator"],["0086","Crane Sheer Leg / Stiff Leg"],["0091","Excavator/Coverhoist"],["0092","Log Loader - Snapper"],["0094","Loci Operator"]],
 "Skill 3":[["0061","Top Handler"],["0062","Side Pick"],["0063","Reach Stacker"],["0065","Mobile Crane SK3"],["0083","Transtainer Operator"],["0084","Crane Container Gantry"],["0093","Straddle Carrier"],["0095","Port Packer"],["0067","Hall Crane Rated Equipment"],["0079","Mthly/Wkly UTR/ULD Work"],["0185","9.43 Terminal Worker - Terminal"],["0186","9.43 Terminal Worker - Guarantee"],["0187","9.43 Terminal Worker - Ship"],["0195","9.43 Ship Worker - Ship"],["0196","9.43 Ship Worker - Guarantee"],["0197","9.43 Ship Worker - Terminal"]],
 "Foreman":[["0128","30% Foreman W/B Ship"],["0129","30% Foreman W/B Dock"],["0136","30% Foreman Guarantee"],["0138","30% Foreman (Elevated) Ship"],["0139","30% Foreman (Elevated) Dock"],["0140","30% Foreman (Steady) Ship"],["0141","30% Foreman (Steady) Dock"],["0142","30% Foreman (Steady From...)"],["0143","30% Foreman (Steady From...)"],["0180","CFS Foreman Day Shift"]]};
@@ -644,6 +675,11 @@ const SEATTLE_JOBS=[
 ["Heavy bull","0055","Skill 2","user","User-stated code 0055 Lift Truck-Heavy, Skill 2 (PMA list); rates from Skill 2 schedule"],
 ["Porter","0005","Basic","user","Pier 66 cruise sheet: Porters 005 Basic (same PMA code as Dockman); Basic rates"],
 ["Trucker","","Basic","user","User-stated Basic (non-skilled); no PMA code assigned (T91 cruise sheet lists Truckers under 005, which is PMA Dockman); rate from Basic schedule"],
+/* v76: auto ships (RoRo / car carriers) in Seattle and Tacoma (Aberdeen = Local 24, not in this app). Source: PMA "Occupation Codes and Rates" (pmpr1007, 2024,
+   pmanet.org): 0001 AUTO DRIVER = group A02 Longshore Basic (all areas); 0047 UTR RO/RO SHIP = group A05 Longshore Skill 1, valid area W (Washington) only.
+   PCLCD 4.32 does not list auto drivers, so driving autos is Basic. "Trucker pay" mapped to RoRo tractor/UTR code 0047 (Skill I) = assumption, see report. */
+["Auto driver (stevedore pay)","0001","Basic","direct","PMA occ. code 0001 AUTO DRIVER, group A02 Longshore Basic (PMA Occupation Codes and Rates 2024); not a PCLCD 4.32 skill job, so Basic rates"],
+["Auto driver (trucker pay)","0047","Skill 1","inferred","PMA occ. code 0047 UTR RO/RO SHIP, group A05 Longshore Skill 1, Washington only (PMA Occupation Codes and Rates 2024); PCLCD 4.32 Skill I lists Tractor (semi-truck) Driver. Using 0047 for auto-ship trucker work is an assumption"],
 ["Dockman","0005","Basic","direct","0005 Dockman (Pier 66 cruise sheet: 005 Basic)"],
 ["Skilled holdman","0033","Skill 1","direct","0033 Skilled Holdman (T91/Pier 66 cruise sheets: 033 Skill I)"],
 ["Button pusher","0023","Skill 1","direct","0023 Button Pusher (Pier 66 cruise sheet: 023 Skill I)"],
@@ -680,18 +716,34 @@ const CLERK_JOBS=[
 const CLERK_SEATTLE=["Checker","Supervisor","Chief","Supercargo","Yard planner","EC (Exception clerk)"];
 /* v74: Local 98. WBF Agreement 2022-2028 wage schedule pp.69-70 (Walking Boss/Foreman, also CFS Foreman p.81): one rate, no experience tiers. */
 const WBF_JOBS=[["Walking boss / Foreman","","Foreman","direct","Pacific Coast Walking Bosses and Foremen's Agreement 2022-2028 wage schedule (134% of longshore Skill I). 30% Men = walking bosses/foremen (WBF index, 2.3)"]];
-function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||PCL_JOBS.find(j=>j[0]===v)||CLERK_JOBS.find(j=>j[0]===v)||WBF_JOBS.find(j=>j[0]===v)||null;}
+function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||TAC_JOBS.find(j=>j[0]===v)||PCL_JOBS.find(j=>j[0]===v)||CLERK_JOBS.find(j=>j[0]===v)||WBF_JOBS.find(j=>j[0]===v)||null;}
 const CLASS_SHORT={"Basic":"Basic","Clerk Supervisor":"Clerk Supervisor","Kitchen/Tower/Computer Clerk":"Kitchen/Tower/Computer","Chief/Supercargo (30%)":"Chief/Supercargo 30%"};
 /* v74: job picker groups for a local: [label, [[value,text],...]] in order; ["__c"] = the Custom… option. Every local keeps every job (so editing an old shift never loses its job); the local's own group comes first. */
-function localJobGroups(n){n=localId(n);const isClerk=j=>CLERK_SEATTLE.includes(j[0]);
+/* v76: outport job lists. Auto ships: Portland T4/T6 (Port of Portland terminal pages) and Grays Harbor T4 (Port of Grays Harbor / Daily World 2024:
+   RoRo carriers, ILWU Local 24). Reach stacker at Portland: Port of Portland T6 "fully grounded reach stacker operation". */
+const OUT_EXTRA={"8":["Auto driver (stevedore pay)","Auto driver (trucker pay)","Reach stacker"],"24":["Auto driver (stevedore pay)","Auto driver (trucker pay)"]};
+function localJobGroups(n){n=localId(n);
+ if(LOCALS[n].out){const K=LOCALS[n].kind,j2=v=>{const j=seattleJob(v);return[v,v+(j&&j[1]?" · "+j[1]:j&&j[2]?" · "+(CLASS_SHORT[j[2]]||j[2]):"")];};
+  const ex=(OUT_EXTRA[n]||[]).map(j2),pc=["Contract 4.32 jobs (no PMA code)",PCL_JOBS.map(([v,c,k])=>[v,v+" · "+k])];
+  const cw=Object.keys(JOBS).filter(g=>g!=="Foreman").map(g=>["PMA "+g+" jobs (coastwide)",JOBS[g].map(([c,nm])=>[c,c+" "+nm])]);
+  const ck=["Local "+n+" clerk jobs (PCCCD)",[...CLERK_JOBS,...SEATTLE_JOBS.filter(j=>CLERK_SEATTLE.includes(j[0]))].map(([v,c,k])=>[v,v+" · "+(CLASS_SHORT[k]||k)])];
+  const fm=["Local "+n+" walking bosses / foremen (WBF)",[...WBF_JOBS.map(([v])=>[v,v]),...JOBS.Foreman.map(([c,nm])=>[c,c+" "+nm])]];
+  const all=["Other job names",[...TAC_JOBS,...SEATTLE_JOBS,...CLERK_JOBS,...WBF_JOBS].map(([v,c])=>[v,v+(c?" · "+c:"")])],fmc=["PMA 30% foreman codes",JOBS.Foreman.map(([c,nm])=>[c,c+" "+nm])];
+  const G=K==="clerk"?[ck,...cw,pc,["__c"],fmc,all]:K==="fm"?[fm,["__c"],...cw,pc,ck,all]:[...(ex.length?[["Local "+n+" jobs",ex]]:[]),...cw,...(K==="lsc"||K==="lscf"?[ck]:[]),...(K==="lscf"?[fm]:[]),pc,["__c"],fmc,ck,all];
+  const seen=new Set();return G.map(g=>g[0]==="__c"?g:[g[0],g[1].filter(([v])=>!seen.has(v)&&seen.add(v))]).filter(g=>g[0]==="__c"||g[1].length);}
+ const isClerk=j=>CLERK_SEATTLE.includes(j[0]),tac=["Tacoma job names",TAC_JOBS.map(([v,c])=>[v,v+" · "+c])];
  const sea=only=>SEATTLE_JOBS.filter(j=>!only||!isClerk(j)).map(([v,c])=>[v,v+(c?" · "+c:"")]);
  const pcl=["Contract 4.32 jobs (no PMA code)",PCL_JOBS.map(([v,c,k])=>[v,v+" · "+k])];
  const pma=skipF=>["Other (PMA list)",Object.keys(JOBS).filter(g=>!(skipF&&g==="Foreman")).flatMap(g=>JOBS[g].map(([c,nm])=>[c,c+" "+nm+" ("+g+")"]))];
- if(n==="52")return[["Local 52 clerk jobs (PCCCD)",[...CLERK_JOBS,...SEATTLE_JOBS.filter(isClerk)].map(([v,c,k])=>[v,v+" · "+(CLASS_SHORT[k]||k)])],["Seattle longshore jobs",sea(true)],pcl,["__c"],pma(false)];
- if(n==="98")return[["Local 98 walking bosses / foremen (WBF)",[...WBF_JOBS.map(([v])=>[v,v]),...JOBS.Foreman.map(([c,nm])=>[c,c+" "+nm])]],["__c"],["Longshore jobs",sea(false)],pcl,pma(true)];
- return[[n==="23"?"Longshore jobs":"Seattle jobs",sea(false)],pcl,["__c"],pma(false)];}
+ if(n==="52")return[["Local 52 clerk jobs (PCCCD)",[...CLERK_JOBS,...SEATTLE_JOBS.filter(isClerk)].map(([v,c,k])=>[v,v+" · "+(CLASS_SHORT[k]||k)])],["Seattle longshore jobs",sea(true)],pcl,["__c"],pma(false),tac];
+ if(n==="98")return[["Local 98 walking bosses / foremen (WBF)",[...WBF_JOBS.map(([v])=>[v,v]),...JOBS.Foreman.map(([c,nm])=>[c,c+" "+nm])]],["__c"],["Longshore jobs",sea(false)],pcl,pma(true),tac];
+ return[[n==="23"?"Longshore jobs":"Seattle jobs",[...(n==="23"?TAC_JOBS.map(([v,c])=>[v,v+" · "+c]):[]),...sea(false)]],pcl,["__c"],pma(false),...(n==="23"?[]:[tac])];}
 function jobSelectHtml(n){const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
  return'<option value="">— select job —</option>'+localJobGroups(n).map(g=>g[0]==="__c"?'<option value="__c">Custom…</option>':'<optgroup label="'+E(g[0])+'">'+g[1].map(([v,t])=>'<option value="'+E(v)+'">'+E(t)+'</option>').join("")+'</optgroup>').join("");}
+/* v76: Tacoma (Local 23) container equipment. PCLCD 4.32 Skill III lists "Strad Driver" and "Reachstacker"; PMA codes 0093 STRADDLE CARRIER OPERATOR and
+   0063 REACH STACKER are group A08 Longshore Skill 3 (PMA Occupation Codes and Rates 2024): same codes/class as the PMA list entries. */
+const TAC_JOBS=[["Straddle carrier","0093","Skill 3","direct","PCLCD 4.32 Skill III: Strad Driver; PMA 0093 Straddle Carrier Operator (A08 Skill 3)"],
+ ["Reach stacker","0063","Skill 3","direct","PCLCD 4.32 Skill III: Reachstacker; PMA 0063 Reach Stacker (A08 Skill 3)"]];
 /* ===== PIER DEFAULT HOURS (cruise work sheets) — EDIT HERE =====
    Prefills the Hours box when you pick the pier + job on a new shift; you can always edit it. Keys = job value in the picker.
    P91 = Terminal 91 cruise sheet (stevedore co. Metro); P66 = Pier 66 sheet (Norwegian Bliss/Encore Sat-Sun 2023). Pay class is NOT changed by this. */
@@ -897,7 +949,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v75",CACHE_VERSION="l19hours-v75"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v76",CACHE_VERSION="l19hours-v76"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1928,7 +1980,7 @@ let shipData=null,shipStale=false;
 function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
  if(!shipData){if(typeof renderNdShips==="function")renderNdShips();sum.innerHTML='<p class="mut">Ship schedule unavailable right now (offline or not published yet). Try Refresh.</p>';list.innerHTML="";up.textContent="";return;}
  const today=fmtDate(new Date()),v=shipData.vessels||[];
- const hp=LOCALS[curLocal()].port;sum.innerHTML=(hp!=="Seattle"?[hp+" (home port, Local "+curLocal()+"):"]:[]).concat(shipSummary(v,today,null,hp)).map(x=>`<div><b>${esc(x)}</b></div>`).join("");
+ const LL=LOCALS[curLocal()],hp=LL.ship||"Seattle";sum.innerHTML=(!LL.ship?["No ship feed for "+LL.port+" (the app's list covers Seattle and Tacoma, NWSA). Seattle:"]:hp!=="Seattle"?[hp+" (home port, Local "+curLocal()+"):"]:[]).concat(shipSummary(v,today,null,hp)).map(x=>`<div><b>${esc(x)}</b></div>`).join("");
  let u="";if(shipData.updated){const d=new Date(shipData.updated);u="Schedule last updated: "+(isNaN(d)?esc(shipData.updated):d.toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}));
   if(!isNaN(d)&&Date.now()-d>12*3600e3)u+=" (more than 12 hours old)";}
  if(shipStale)u+=" · showing saved copy, couldn't reach the server";
@@ -2093,7 +2145,7 @@ const NDDR="l19.needDraft";
 function ndDraftSave(){if(!ndPend)return;LSset(NDDR,JSON.stringify({id:ndPend,edit:ndEdit||"",date:$("ndD").value,shift:$("ndS").value,port:$("ndP").value,pier:$("ndT2").value,out:$("ndO").value,gang:$("ndG").value}));}
 function ndReset(){if(ndPend&&!needsList().some(n=>n.id===ndPend))lByKey(ndKey(ndPend)).then(a=>a.forEach(r=>lDel(r.id))).catch(()=>{});
  try{localStorage.removeItem(NDDR);}catch(e){}
- ndEdit=null;ndPend=uid();$("ndD").value=todayS();$("ndS").value="1st";$("ndP").value=LOCALS[curLocal()].port;$("ndT2").value="";$("ndO").value="";$("ndG").value="";
+ ndEdit=null;ndPend=uid();$("ndD").value=todayS();$("ndS").value="1st";$("ndP").value=LOCALS[curLocal()].need;$("ndT2").value="";$("ndO").value="";$("ndG").value="";
  $("ndT").textContent="Today's needs";$("ndSv").textContent="Save note";$("ndCx").classList.add("hide");$("ndPt").innerHTML="";if(typeof renderNdShips==="function")renderNdShips();ndDraftSave();}
 /* on start: bring back the unsaved draft (text + photos) and re-attach any photos v57 orphaned on reload */
 async function ndRestore(){const d=ndDraftClean(lsJson(NDDR,null)),ids=needsList().map(n=>n.id);ndPend=null;ndReset();
@@ -2264,7 +2316,7 @@ $("tmode").onchange=()=>{LSset(TMODE,$("tmode").value);tierUI();};
 $("tman").onchange=()=>{LSset(tierKey,$("tman").value);tierUI();};
 $("dpier").onchange=()=>{LSset(DPIER,$("dpier").value);};$("djob").onchange=()=>{LSset(DJOB,$("djob").value);};
 /* --- v74: your local (19 / 23 / 52 / 98). Changes defaults and pickers for NEW entries, the contract link, hall phone, home port and chat room. --- */
-function locSegHtml(id){const c=curLocal();return'<div class="locseg" role="radiogroup" aria-label="Your ILWU local" id="'+id+'">'+LOCAL_IDS.map(n=>`<button type="button" role="radio" data-loc="${n}" aria-checked="${n===c}" aria-label="Local ${n}, ${esc(LOCALS[n].trade)}"><span>${n}</span><small>${esc(LOCALS[n].short)}</small></button>`).join("")+'</div><p class="locd">Local '+c+' · '+esc(LOCALS[c].trade)+'</p>';}
+function locSegHtml(id){const c=curLocal();return'<div class="locseg" role="radiogroup" aria-label="Your ILWU local" id="'+id+'">'+LOCAL_IDS.map(n=>(LOCAL_REGIONS.some(r=>r[1][0]===n)?'<span class="loch" aria-hidden="true">'+localRegion(n)+'</span>':"")+`<button type="button" role="radio" data-loc="${n}" aria-checked="${n===c}" aria-label="Local ${n}, ${esc(LOCALS[n].trade)}"><span>${n}</span><small>${esc(LOCALS[n].short)}</small></button>`).join("")+'</div><p class="locd">Local '+c+' · '+esc(LOCALS[c].trade)+'</p>';}
 function locWire(root){root.querySelectorAll("[data-loc]").forEach(b=>b.onclick=()=>{localSet(b.dataset.loc);const q=root.querySelector('[data-loc="'+curLocal()+'"]');if(q)q.focus({preventScroll:true});});}
 function locPaint(root,id){if(!root)return;root.innerHTML=locSegHtml(id);locWire(root);}
 function locRender(){const c=curLocal(),L=LOCALS[c];
@@ -2281,7 +2333,7 @@ function localSet(n){n=localId(n);const was=curLocal();try{localStorage.setItem(
  $("job").innerHTML=jobSelectHtml(n);$("job").value=jv;
  $("dpier").innerHTML='<option value="">— none —</option>'+PIERS.map(p=>`<option>${esc(p)}</option>`).join("");$("djob").innerHTML=jobOpts().replace("— select job —","— none —");
  tierUI();if(!editId){rateDirty=false;applyDefaults();}if(typeof pierHrs==="function")pierHrs();
- if(n!==was&&$("ndP")&&$("ndP").value===LOCALS[was].port&&!(typeof ndEdit!=="undefined"&&ndEdit)){$("ndP").value=LOCALS[n].port;try{renderNdShips();}catch(e){}}
+ if(n!==was&&$("ndP")&&$("ndP").value===LOCALS[was].need&&!(typeof ndEdit!=="undefined"&&ndEdit)){$("ndP").value=LOCALS[n].need;try{renderNdShips();}catch(e){}}
  locRender();try{renderShips();}catch(e){}
  if(n!==was&&window.l19ChatLocal)window.l19ChatLocal(n);}
 function localSheet(){if(document.querySelector(".locsheet"))return;const o=document.createElement("div");o.className="sheet locsheet";
@@ -3380,7 +3432,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chat
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
