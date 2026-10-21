@@ -107,7 +107,7 @@ button,input,select{font-size:1rem}
 .dh{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;margin:10px 2px 4px;font-weight:700}
 .dh .tot{font-weight:700;color:var(--fg)}.dh button.link{font-size:.9375rem;min-width:44px}
 .he{display:block;width:100%;text-align:left;min-height:56px;padding:10px 12px;margin-bottom:6px;border-radius:var(--r);background:var(--card);border:1px solid var(--bd);color:var(--fg)}
-.he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}.he .l1,.he .l2{overflow-wrap:anywhere;min-width:0}
+.he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}.he .l1,.he .l2{overflow-wrap:anywhere;min-width:0}label[for=dpNum],label[for=dpNum2]{white-space:nowrap;font-size:min(1em,5.2vw)} /* v81: BA label on one line */
 .vt{display:grid;grid-template-columns:1fr 1fr;gap:6px}.vt button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal .wdh{font-size:.875rem;font-weight:700;color:var(--mut);text-align:center;padding:4px 0}
 .cal button.cd{min-height:48px;min-width:0;padding:2px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:.9375rem;line-height:1.15;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px}
@@ -497,8 +497,8 @@ body.gopen{overflow:hidden}
 <div class="card"><h3>Backup</h3>
 <p id="lastBk" class="mut"></p>
 <p class="mut">Data lives only on this device (localStorage). Back up now and then. The backup also includes your pay stub checks and starting hours.</p>
-<p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup, and neither are peg board photos or ship gear photos. Ship gear cards (text), Today's needs notes (text), peg board positions, job pegs, global pegs, peg logs and your dispatch number are included.</p>
-<label for="dpNum2">Dispatch number <span class="mut">(same as on the Ships tab)</span></label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number">
+<p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup, and neither are peg board photos or ship gear photos. Ship gear cards (text), Today's needs notes (text), peg board positions, job pegs, global pegs, peg logs and your BA number are included.</p>
+<label for="dpNum2">Business Agent (BA) number</label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your BA's number" aria-describedby="baH2"><p id="baH2" class="mut" style="margin:4px 0 0">Call your BA if you're fired or have a beef on the job. Same number as on the Ships tab.</p>
 <div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
 <div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing (uncheck to replace all)</span></div>
@@ -568,10 +568,10 @@ body.gopen{overflow:hidden}
 </section>
 <section id="v-ships" class="hide">
 <div class="card"><h3 style="margin-top:0">Dispatch quick links</h3>
-<label for="dpNum" style="margin-top:0">Dispatch number <span class="mut">(you enter it; saved on this device only)</span></label>
-<input id="dpNum" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your dispatch number" aria-describedby="dpNote">
+<label for="dpNum" style="margin-top:0">Business Agent (BA) number</label>
+<input id="dpNum" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your BA's number" aria-describedby="baH"><p id="baH" class="mut" style="margin:4px 0 0">Call your BA if you're fired or have a beef on the job. Saved on this device only.</p>
 <div class="qgrid">
-<a id="dpCall" class="bt p off" href="#" aria-disabled="true">📞 Call dispatch (enter number above)</a>
+<a id="dpCall" class="bt p off" href="#" aria-disabled="true" aria-label="Call BA (enter the number above)">📞 Call BA</a>
 <a class="bt p" href="tel:+18002754598" id="twCall">📞 Travel Washington (1-800-ASK-ILWU)</a>
 <a class="bt p" href="tel:+12066237461" id="hallCall">📞 Local 19 hall: 206-623-7461</a>
 <a class="bt" href="https://docs.nwseaportalliance.com/Vessel/Schedule.pdf" target="_blank" rel="noopener">NWSA vessel schedule (PDF) ↗</a>
@@ -964,7 +964,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v80",CACHE_VERSION="l19hours-v80"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v81",CACHE_VERSION="l19hours-v81"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1874,7 +1874,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==b.dataset.x);save();renderWeek();}});}
 function download(name,type,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
 $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0="";try{txt0=await f.text();const inc=validImport(JSON.parse(txt0));
- if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.dispatch)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.dispatch));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(o&&o.equip&&typeof o.equip==="object"){LSset(EQK,JSON.stringify($("merge").checked?eqMerge(lsJson(EQK,null),o.equip):eqClean(o.equip)));if(typeof eqB!=="undefined"){eqB=eqLoad();pgRender();}}if(o&&o.gear&&typeof o.gear==="object"){try{localStorage.setItem("l19.gear",JSON.stringify({v:1,cards:gearStoreMerge((lsJson("l19.gear",null)||{}).cards,o.gear)}));}catch(_){}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
+ if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.ba)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.ba));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(o&&o.equip&&typeof o.equip==="object"){LSset(EQK,JSON.stringify($("merge").checked?eqMerge(lsJson(EQK,null),o.equip):eqClean(o.equip)));if(typeof eqB!=="undefined"){eqB=eqLoad();pgRender();}}if(o&&o.gear&&typeof o.gear==="object"){try{localStorage.setItem("l19.gear",JSON.stringify({v:1,cards:gearStoreMerge((lsJson("l19.gear",null)||{}).cards,o.gear)}));}catch(_){}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");try{localStorage.removeItem(PGK);}catch(e){}pgD=pegsLoad();pgClose();pgRender();lAll().then(a=>(a||[]).filter(r=>String(r.k).startsWith("peg|")).forEach(r=>lDel(r.id))).then(refreshPegPic).catch(()=>{});renderNeeds();$("msg").textContent="All data deleted.";}};
 /* v66: every page, sheet and overlay opens at the top of the screen. pageTop() resets the window (and the
@@ -2130,7 +2130,8 @@ const LS=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v;}catch(e
 const LSset=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
 const lsJson=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}};
 let curV="add";
-const DSP="l19.dispatch",NDK="l19.needs";
+/* v81: the field is the Business Agent's number. The old dispatch number (l19.dispatch) is not carried over: removed, BA starts empty */
+const DSP="l19.ba",NDK="l19.needs";try{localStorage.removeItem("l19.dispatch");}catch(e){}
 const BK="l19.lastBackup",BKS="l19.bkSnooze",STB="l19.stubs",STH="l19.startHrs",PINK="l19.pin",SUD="l19.setupDone",TMODE="l19.tierMode",DPIER="l19.defPier",DJOB="l19.defJob",REM="l19.rem",REMS="l19.remSnooze",TOURK="l19.tourDone",RSEEN="l19.ratesSeen",MRK="l19.mileRate";
 const todayS=()=>fmtDate(new Date());
 const fmtN=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
@@ -2141,7 +2142,7 @@ async function shareFile(name,type,text){const f=new File([text],name,{type});
 /* --- 1. backup reminder + export --- */
 function setLastBackup(){LSset(BK,new Date().toISOString());renderBanners();renderLastBk();}
 function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b>"+esc(backupAgo(LS(BK,""),todayS()))+"</b>";}
-async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),equip:eqClean(lsJson(EQK,null)),gear:gearStoreClean((lsJson("l19.gear",null)||{}).cards),dispatch:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),equip:eqClean(lsJson(EQK,null)),gear:gearStoreClean((lsJson("l19.gear",null)||{}).cards),ba:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
 
@@ -2150,7 +2151,7 @@ function needsList(){return needsClean(lsJson(NDK,[]));}
 function renderDispatch(){const v=cleanPhone(LS(DSP,"")),h=telHref(v),a=$("dpCall");
  for(const id of["dpNum","dpNum2"]){const e=$(id);if(e&&document.activeElement!==e)e.value=v;}
  a.classList.toggle("off",!h);a.setAttribute("aria-disabled",h?"false":"true");a.href=h||"#";
- a.textContent=h?"📞 Call dispatch: "+v:"📞 Call dispatch (enter number above)";}
+ a.textContent="📞 Call BA";a.setAttribute("aria-label",h?"Call BA: "+v:"Call BA (enter the number above)");}
 for(const id of["dpNum","dpNum2"]){$(id).oninput=()=>{const v=$(id).value;LSset(DSP,cleanPhone(v));renderDispatch();$(id==="dpNum"?"dpNum2":"dpNum").value=v;};$(id).onblur=()=>renderDispatch();}
 $("dpCall").onclick=e=>{if($("dpCall").classList.contains("off"))e.preventDefault();};
 let ndEdit=null,ndPend=null;
