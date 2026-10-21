@@ -299,7 +299,9 @@ body.pgdrag{overscroll-behavior:none}
 /* v67: History month/year pickers no longer push past the screen edge at Extra large text; text-size buttons wrap instead of clipping */
 .jump,.cj{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.jump>div,.cj>div{min-width:0}.jump select,.cj select{min-width:0;max-width:100%}
 #tsz button{padding:4px 6px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
-.seg{grid-template-columns:repeat(4,minmax(0,1fr))}.seg button{min-width:0;padding:4px 2px;white-space:normal;line-height:1.15;overflow-wrap:anywhere} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
+.seg{grid-template-columns:repeat(4,minmax(0,1fr))}.seg button{min-width:0;padding:4px 2px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
+/* v82: Week/Month/Quarter/Year stay one row, one line each, even 4px gaps at every text size: font follows the row width */
+.seg{gap:4px;container-type:inline-size}.seg button{white-space:nowrap;overflow-wrap:normal;overflow:hidden;font-size:min(1em,5.3cqw);letter-spacing:-.01em}.seg .sl{display:none}.seg.short .fl{display:none}.seg.short .sl{display:inline} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
 
 .bbz{width:max-content}
 .bbz.mini .sc{width:50%}
@@ -964,7 +966,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v81",CACHE_VERSION="l19hours-v81"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v82",CACHE_VERSION="l19hours-v82"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1957,14 +1959,17 @@ function calView(){const y=+cm.slice(0,4),mo=+cm.slice(5)-1,wk=monthGrid(y,mo),d
  return `<div class="card nav"><button id="cp" aria-label="Previous month">◀</button><div class="t">${MON[mo]} ${y}<div class="mut">${r2(mt)}h this month</div></div><button id="cn" aria-label="Next month">▶</button></div>
  <div class="card"><div class="cal">${head}${cells}</div><div class="jump" style="margin-top:10px">${monthSel("cj",cm)}</div><button type="button" id="cto" class="full" style="margin-top:10px;width:100%">Today</button>${monthHolHtml(cm)}</div>${det}`;}
 function upSR(){const el=$("hsr");if(el){el.innerHTML=searchResults();el.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>openEntry(b.dataset.h));}}
-function renderHist(){const kinds=[["week","Week"],["month","Month"],["quarter","Quarter"],["year","Year"]];
+/* v82: if a full label (e.g. "Quarter") still can't fit on one line (very large phone font scaling), the row switches to Wk/Mo/Qtr/Yr */
+function segFit(){const g=document.getElementById("hk");if(!g)return;g.classList.remove("short");if([...g.querySelectorAll(".fl")].some(f=>f.scrollWidth>f.parentNode.clientWidth+0.5||f.getBoundingClientRect().width>f.parentNode.clientWidth+0.5))g.classList.add("short");}
+window.l19SegFit=segFit;addEventListener("resize",()=>segFit());
+function renderHist(){const kinds=[["week","Week","Wk"],["month","Month","Mo"],["quarter","Quarter","Qtr"],["year","Year","Yr"]];
  const r=periodRange(hk,ha),t=periodTotals(entries,hk,ha),pay=hasPay(t)&&!hidePay;
  const grp=o=>Object.keys(o).sort((a,b)=>o[b].hours-o[a].hours).map(k=>`<tr><td>${esc(k)}</td><td>${r2(o[k].hours)}h${o[k].anyPay&&!hidePay?" "+money(o[k].pay):""}</td></tr>`).join("");
  const groups=histGroups(entries);let list="",mk="";const cur=fmtDate(new Date()).slice(0,7);
  for(const g of groups){const m=g.date.slice(0,7);if(m!==mk){mk=m;const mh=entries.filter(e=>e.date.slice(0,7)===m).reduce((x,e)=>x+num(e.hours),0);list+=`<div class="mh" id="m-${m}"><span>${MON[+m.slice(5)-1]} ${m.slice(0,4)}</span><span>${r2(mh)}h</span></div>`;}
   list+=`<div class="dh" id="d-${g.date}"><span>${WD[parseDate(g.date).getDay()].slice(0,3)} ${g.date.slice(5).replace("-","/")}/${g.date.slice(2,4)} <span class="tot">· ${r2(g.hours)}h</span>${isHol(g.date)?` <span class="badge hol">🎉 ${esc(holShort(g.date))}</span>`:""}${isStopWork(g.date,curLocal())?` <span class="badge sw">◆ Stop work night</span>`:""}</span><button type="button" class="link" data-a="${g.date}">＋ Add</button></div>`+g.items.map(entRow).join("");}
  $("v-hist").innerHTML=`<div class="card"><div class="vt" id="hv"><button type="button" data-hv="list" aria-pressed="${hv==="list"}">☰ List</button><button type="button" data-hv="cal" aria-pressed="${hv==="cal"}">📅 Calendar</button></div></div>${searchCard()}<div id="hsr">${searchResults()}</div>${hv==="cal"?calView():`<div class="card"><h3>Jump to</h3><div class="jump">${monthSel("jm",cur)}</div><div class="jb"><button type="button" id="jc">📅 Calendar</button><button type="button" id="jt">Today</button><button type="button" id="jn" class="p">＋ Add</button></div></div>
-<div class="card"><div class="seg" id="hk">${kinds.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${k===hk}">${l}</button>`).join("")}</div></div>
+<div class="card"><div class="seg" id="hk">${kinds.map(([k,l,sh])=>`<button type="button" data-k="${k}" aria-pressed="${k===hk}" aria-label="${l}"><span class="fl">${l}</span><span class="sl" aria-hidden="true">${sh}</span></button>`).join("")}</div></div>
  <div class="card nav"><button id="hp" aria-label="Previous ${hk}">◀</button><div class="t">${periodLabel(hk,ha)}<div class="mut">${hk==="week"?"Sat–Fri pay week":r.start+" to "+r.end}</div></div><button id="hn" aria-label="Next ${hk}">▶</button></div>
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.straight)}/${r2(t.ot)}</b><span>Straight/OT</span></div><div class="stat"><b>${t.days}</b><span>Days</span></div></div>
  <div class="card"><div class="row" style="align-items:center"><div><span class="mut">Total pay est.</span><div class="big">${hidePay?"Hidden":pay?money(payTotal(t)):"–"}</div></div><button type="button" id="hpay" aria-pressed="${hidePay}">${hidePay?"Show pay":"Hours only (no pay)"}</button></div>
@@ -1983,7 +1988,7 @@ function wireHist(){
   wireMonthSel("cj",m=>{cm=m;cd=null;renderHist();});$("cto").onclick=()=>{const t=fmtDate(new Date());cm=t.slice(0,7);cd=t;ha=t;pendJump=t;renderHist();};
   if($("cadd"))$("cadd").onclick=()=>addOn(cd);if($("cgo"))$("cgo").onclick=()=>{hv="list";renderHist();jumpTo(cd);};return;}
 
- document.querySelectorAll("#hk button").forEach(b=>b.onclick=()=>{hk=b.dataset.k;renderHist();});
+ document.querySelectorAll("#hk button").forEach(b=>b.onclick=()=>{hk=b.dataset.k;renderHist();});segFit();
  $("hp").onclick=()=>{ha=shiftPeriod(hk,ha,-1);renderHist();};$("hn").onclick=()=>{ha=shiftPeriod(hk,ha,1);renderHist();};
  $("hpay").onclick=()=>{hidePay=!hidePay;try{localStorage.setItem("l19.hidepay",hidePay?"1":"0")}catch(e){}renderHist();};
  wireMonthSel("jm",jumpMonth);$("jc").onclick=openCalPop;$("hys").onclick=()=>openYear(ha.slice(0,4),hidePay);
