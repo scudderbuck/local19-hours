@@ -57,6 +57,7 @@ h3,h4{margin:0 0 8px;font-size:1.125rem}h4{font-size:.875rem;text-transform:uppe
 button,input,select{font:inherit;color:var(--fg)}
 button{min-height:48px;padding:0 16px;border-radius:10px;border:1px solid var(--bd);background:var(--card);cursor:pointer}
 button.p{background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600}
+.musw{container-type:inline-size;margin:0 0 12px}.musb{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;min-height:48px;padding:0 12px;border-radius:999px;background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600;text-decoration:none;white-space:nowrap;overflow:hidden;font-size:min(1em,6.4cqw)}
 button.d{color:var(--dan)}
 button.link{border:0;background:none;color:var(--acc);font-weight:600;padding:0;min-height:44px}
 input,select{width:100%;min-height:48px;padding:6px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
@@ -490,6 +491,7 @@ body.gopen{overflow:hidden}
 <div class="card"><h3>Rates &amp; app</h3>
 <p class="mut" id="verInfo" style="margin-top:0"></p>
 <p class="mut" id="aboutOwn">ILWU LIFE is an independent app by Daniel White. Not affiliated with or endorsed by the ILWU or PMA.<br>© 2026 Daniel White. All rights reserved.</p>
+<div class="musw"><a id="musicBtn" class="musb" href="https://suno.com/s/weM2IQiWNmoNdTu9" target="_blank" rel="noopener">🎵 Longshore — the playlist</a></div>
 <div class="row"><button type="button" id="rpBtn">Report a problem</button><button type="button" id="tourBtn">Replay tour</button></div>
 <p class="mut" style="margin-bottom:0">Reports are text you paste to the beta organizer. Nothing is sent from this app.</p></div>
 <div class="card"><h3>Year summary</h3>
@@ -966,7 +968,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v83",CACHE_VERSION="l19hours-v83"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v84",CACHE_VERSION="l19hours-v84"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1973,7 +1975,10 @@ function fitView(id){const v=document.getElementById(id);if(!v||v.classList.cont
  v.querySelectorAll("table").forEach(t=>{if(t.closest(".hide"))return;const pe=t.parentElement,pc=getComputedStyle(pe),pw=pe.clientWidth-parseFloat(pc.paddingLeft)-parseFloat(pc.paddingRight);t.style.fontSize="";t.classList.add("fitT");if(!pw)return;
   let fs=parseFloat(getComputedStyle(t).fontSize),n=0;while(t.offsetWidth>pw+0.5&&fs>11&&n<60){fs-=0.5;n++;t.style.fontSize=fs+"px";}
   if(t.offsetWidth>pw+0.5){t.classList.remove("fitT");t.style.fontSize="";}});}
-window.l19Fit=fitView;setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);fitView("v-hist");return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);addEventListener("resize",()=>{fitView("v-hist");fitView("v-week");});addEventListener("resize",()=>segFit());
+window.l19Fit=fitView;
+/* v84: playlist button stays one line: shrink (to 11px at most) if the text is wider than the button */
+function musFit(reset){const a=document.getElementById("musicBtn");if(!a||!a.clientWidth)return;if(reset)a.style.fontSize="";let fs=parseFloat(getComputedStyle(a).fontSize),n=0;while(a.scrollWidth>a.clientWidth+0.5&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}
+window.l19MusFit=musFit;addEventListener("resize",()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data")musFit(1);return r;})(show);},0);setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);fitView("v-hist");return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);addEventListener("resize",()=>{fitView("v-hist");fitView("v-week");});addEventListener("resize",()=>segFit());
 /* v83: short one-line period range, e.g. "Oct 1 – Dec 31, 2026" */
 function rangeShort(a,b){const M3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],f=d=>M3[+d.slice(5,7)-1]+" "+(+d.slice(8,10));
  return a.slice(0,4)===b.slice(0,4)?f(a)+" – "+f(b)+", "+b.slice(0,4):f(a)+", "+a.slice(0,4)+" – "+f(b)+", "+b.slice(0,4);}
