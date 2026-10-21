@@ -184,6 +184,10 @@ html,body{overscroll-behavior-x:none} /* v62: a sideways board swipe must not tr
 .chat,.chat h3,.chat p,.chat label,.chat input,.chat textarea,.chat button,.chat .chnote,.chat .mut,.chm,.chm .tx,.chm button,#chSt{font-weight:700}
 .chat input::placeholder,.chat textarea::placeholder{font-weight:700}
 .chm .who{font-weight:800}.chat h4,.chat code,.chat summary,.chat li{font-weight:700}.chm .mt{font-weight:600}
+.chsc{display:flex;gap:0;margin:0 0 8px;border:2px solid #ffd23f;border-radius:999px;overflow:hidden}
+.chsc button{flex:1 1 0;min-width:0;min-height:44px;border:0;border-radius:0;background:transparent;color:#fff;font-weight:800;white-space:nowrap;padding:4px 6px;font-size:min(1.0625rem,5.2vw)}
+.chsc button[aria-pressed=true]{background:#ffd23f;color:#00214e}
+.ltag{display:inline-block;font-size:max(12px,.75rem);font-weight:800;padding:0 5px;border-radius:6px;background:#ffd23f;color:#00214e;vertical-align:1px}
 .chtabs{display:flex;gap:8px;margin:10px 0}.chtabs button{flex:1}.chtabs button[aria-pressed=true]{background:#ffd23f;color:#00214e;font-weight:700}
 .chlist{height:50vh;height:50dvh;min-height:260px;overflow-y:auto;border:1px solid #3b5a8c;border-radius:10px;padding:8px;background:#001a3d;display:flex;flex-direction:column;gap:8px}
 .chm{max-width:85%;padding:8px 12px;border-radius:14px;background:#17407f;color:#fff;align-self:flex-start;word-wrap:break-word;overflow-wrap:anywhere}
@@ -952,7 +956,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v77",CACHE_VERSION="l19hours-v77"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v78",CACHE_VERSION="l19hours-v78"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -3288,6 +3292,11 @@ const CHAT_CFG={apiKey:"AIzaSyAskyTwFl7zd0ferXLF7EmDvOU1CE33oeE",authDomain:"ilw
 const CHAT_SDK="https://www.gstatic.com/firebasejs/10.14.1/",CHAT_DEFAULT_CODE="LOCAL19",CHAT_CHANNELS=["Ideas","Updates"],CHAT_GAP=2000;
 function chatCode(s){const c=String(s==null?"":s).toUpperCase().replace(/[^A-Z0-9_-]/g,"").slice(0,30);return c.length>=3?c:"";}
 function chatName(s){return String(s==null?"":s).replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim().slice(0,30);}
+/* v78: shared Coastwide room. The sender's local rides in the existing name field ("Sam B. · L23", <=30 chars) so the Firestore rules
+   (message keys text/name/uid/channel/createdAt) don't change. Self-reported, like the name itself. */
+const CHAT_COAST="COASTWIDE",CHAT_SCOPE_KEY="l19.chatScope";
+function chatTagName(n,loc){const t=" · L"+String(loc).replace(/\D/g,"").slice(0,3),b=chatName(n).replace(/ · L\d{1,3}$/,"");return chatName(b.slice(0,30-t.length).trim()+t);}
+function chatSplitTag(n){const m=/^(.*\S) · L(\d{1,3})$/.exec(String(n||""));return m?{name:m[1],local:m[2]}:{name:String(n||""),local:""};}
 function chatText(s){return String(s==null?"":s).replace(/\r/g,"").trim().slice(0,500);}
 function chatCanSend(last,now){return !last||now-last>=CHAT_GAP;}
 /* v53: shared boards (pure helpers) + roles */
@@ -3323,7 +3332,7 @@ const KN="l19.chatName",KC="l19.chatCode",KH="l19.chatChan";
    invite code = room id (l19.chatCode.<local>, default LOCAL23 / LOCAL52 / LOCAL98). Peg/equipment boards and ship gear cards stay in the Local 19 room for everyone. */
 const CK=()=>curLocal()==="19"?KC:KC+"."+curLocal(),defCode=()=>curLocal()==="19"?CHAT_DEFAULT_CODE:"LOCAL"+curLocal();
 const ls=(k,d)=>{try{return localStorage.getItem(k)||d;}catch(e){return d;}},lss=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
-const cc=()=>ls(CK(),""),bc=()=>ls(KC,"")||(ls(KN,"")&&cc()?CHAT_DEFAULT_CODE:"");let gen=0,roleMaps={},roleSubs={},roleErrs={};
+const lc=()=>ls(CK(),""),coast=()=>ls(CHAT_SCOPE_KEY,"")==="coast",cc=()=>lc()?(coast()?CHAT_COAST:lc()):"",bc=()=>ls(KC,"")||(ls(KN,"")&&cc()?CHAT_DEFAULT_CODE:"");let gen=0,roleMaps={},roleSubs={},roleErrs={};
 let FB=null,fbP=null,unsub=null,msgs=[],chan=CHAT_CHANNELS.includes(ls(KH,""))?ls(KH,""):"Ideas",lastSend=0,settings=false,err="",note="";
 let panel="",roles={},rolesUnsub=null,rolesCode="",rolesErr="",reps=null,repErr="",pnote="";const lis=[];
 function load(){if(fbP)return fbP;fbP=(async()=>{const app=await import(CHAT_SDK+"firebase-app.js"),au=await import(CHAT_SDK+"firebase-auth.js"),fs=await import(CHAT_SDK+"firebase-firestore.js");
@@ -3347,15 +3356,21 @@ function rolesStart(){if(!FB)return;const keep=[cc(),bc()].filter(Boolean);for(c
 function friendly(e){if(typeof navigator!=="undefined"&&navigator.onLine===false)return"You're offline. Chat needs internet; the rest of the app works as usual.";
  const c=e&&e.code||"";if(/permission/.test(c))return"Chat isn't open yet (the server rules haven't been set up) or the code was refused.";
  if(/unavailable|network/.test(c))return"Can't reach the chat server right now. Try again in a moment.";return"Chat couldn't connect. Check your internet and try again.";}
-function head(){const n=curLocal();return'<h3 class="chh" id="chH"><span class="chhl">ILWU Local '+n+'</span> · Chat</h3><p class="mut chhs">'+E(LOCALS[n].trade)+' · room <b>'+E(cc()||defCode())+'</b> · switch local with the Local '+n+' ▾ button at the top</p><div class="chnote" role="note">Chat is online and visible to coworkers with this local\'s code. Your hours and pay stay on your phone.</div>';}
+function head(){const n=curLocal(),co=coast()&&!!lc(),sc=ls(KN,"")&&lc()&&!settings?'<div class="chsc" role="group" aria-label="Chat room"><button type="button" data-sc="local" aria-pressed="'+!co+'">Local '+n+'</button><button type="button" data-sc="coast" aria-pressed="'+co+'">Coastwide</button></div>':"";
+ return sc+(co?'<h3 class="chh" id="chH"><span class="chhl">ILWU Coastwide</span> · Chat</h3><p class="mut chhs">All locals · room <b>'+CHAT_COAST+'</b> · your posts show <b>L'+n+'</b> next to your name</p><div class="chnote" role="note">The Coastwide room is open to ILWU members of every local using this app.'
+ :'<h3 class="chh" id="chH"><span class="chhl">ILWU Local '+n+'</span> · Chat</h3><p class="mut chhs">'+E(LOCALS[n].trade)+' · room <b>'+E(cc()||defCode())+'</b> · switch local with the Local '+n+' ▾ button at the top</p><div class="chnote" role="note">Chat is online and visible to coworkers with this local\'s code.')+' Your hours and pay stay on your phone.</div>';}
+function who(nm){if(cc()!==CHAT_COAST)return E(nm);const t=chatSplitTag(nm);return E(t.name)+(t.local?' <span class="ltag" title="Local '+E(t.local)+'">L'+E(t.local)+'</span>':"");}
+/* v78: Local NN | Coastwide toggle (remembered); switching drops the listener and messages like a local switch */
+document.addEventListener("click",ev=>{const b=ev.target&&ev.target.closest&&ev.target.closest("#chCard [data-sc]");if(!b)return;const v=b.dataset.sc==="coast"?"coast":"local";
+ if((v==="coast")===coast())return;lss(CHAT_SCOPE_KEY,v);window.l19ChatLocal();toTop();});
 function fillId(){const u=uid(),el=g("chUid");if(!el)return;el.textContent=u||"Loading…";const r=g("chRl");if(r)r.textContent=u?"Your role in this room: "+(roleLabel(role())||"MEMBER")+(rolesErr?" ("+rolesErr+")":""):"";}
 function paintSetup(){const c=g("chCard");c.innerHTML=head()+'<label for="chN">Your display name (shown to coworkers)</label><input id="chN" maxlength="30" autocomplete="off" value="'+E(ls(KN,""))+'" placeholder="e.g. Sam B.">'+
- '<label for="chC">Coworker invite code</label><input id="chC" maxlength="30" autocomplete="off" autocapitalize="characters" value="'+E(cc()||defCode())+'" placeholder="Invite code">'+
+ '<label for="chC">Coworker invite code</label><input id="chC" maxlength="30" autocomplete="off" autocapitalize="characters" value="'+E(lc()||defCode())+'" placeholder="Invite code">'+
  '<p class="mut">Ask a Local '+curLocal()+' coworker for the code (each local has its own room). Letters, numbers, - and _ only (3–30).</p><div class="row"><button type="button" class="p" id="chGo">Join chat</button>'+(ls(KN,"")&&cc()?'<button type="button" id="chBk">Cancel</button>':"")+'</div><p id="chSt" aria-live="polite">'+E(note)+'</p>'+
  '<h4>My ID (uid)</h4><code id="chUid">Loading…</code><div class="row"><button type="button" id="chCp">Copy</button></div><p class="mut" id="chCpM" aria-live="polite" style="margin:0"></p><p class="mut" id="chRl" style="margin:4px 0 0"></p>'+
  '<details open><summary>Owner: make the first admin</summary><ol><li>Tap Copy above.</li><li>Open the Firebase console, project ilwu-life-chat, Firestore Database, Data.</li><li>Go to <b>rooms</b> → <b>'+E(cc()||defCode())+'</b> (this local\'s room; add it if missing) → <b>roles</b>. Add a document: Document ID = your ID (paste); fields <b>role</b> (string) = <b>admin</b>, <b>name</b> (string) = your display name, <b>setAt</b> (timestamp) = now.</li><li>Come back here and open Chat again. You now see ADMIN, People and Reports.</li></ol><p class="mut">Your ID belongs to this phone and browser. If site data is cleared or you use a new device you get a new ID, so keep a second admin.</p></details>';
  g("chGo").onclick=()=>{const n=chatName(g("chN").value),k=chatCode(g("chC").value);if(!n){g("chSt").textContent="Please enter a display name.";return;}if(!k){g("chSt").textContent="The code needs 3–30 letters or numbers.";return;}
-  const ch=k!==cc();lss(KN,n);lss(CK(),k);settings=false;note="";if(ch){msgs=[];const cd=g("chCard");if(cd)cd.innerHTML="";}stop();open();if(FB)rolesStart();toTop();};
+  const ch=k!==lc();lss(KN,n);lss(CK(),k);settings=false;note="";if(ch){msgs=[];const cd=g("chCard");if(cd)cd.innerHTML="";}stop();open();if(FB)rolesStart();toTop();};
  if(g("chBk"))g("chBk").onclick=()=>{settings=false;note="";open();toTop();};
  g("chCp").onclick=async()=>{const u=uid();if(!u){g("chCpM").textContent="Your ID isn't ready yet (needs internet).";return;}
   try{await navigator.clipboard.writeText(u);g("chCpM").textContent="Copied.";}catch(e){try{const r=document.createRange();r.selectNodeContents(g("chUid"));const sl=window.getSelection();sl.removeAllRanges();sl.addRange(r);g("chCpM").textContent=document.execCommand&&document.execCommand("copy")?"Copied.":"Selected: press and hold to copy.";}catch(x){g("chCpM").textContent="Press and hold the ID to copy it.";}}};
@@ -3379,7 +3394,7 @@ function paintMain(){const c=g("chCard");if(!g("chL")){
  document.querySelectorAll(".chtabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===chan)));
  g("chT").placeholder="Message to #"+chan;g("chSt").textContent=err;
  const me=uid(),L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,list=msgs.filter(m=>m.channel===chan),rl=role();
- L.innerHTML=list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me);return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+E(m.name)+badge(m.uid)+'</div><div class="tx">'+E(m.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep">Report</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>';
+ L.innerHTML=list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me);return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+who(m.name)+badge(m.uid)+'</div><div class="tx">'+E(m.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep">Report</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>';
  L.querySelectorAll("button[data-a]").forEach(b=>b.onclick=()=>act(b.dataset.a,b.closest(".chm").dataset.id));
  if(near||!L.dataset.s){L.scrollTop=L.scrollHeight;L.dataset.s="1";}}
 function back(){panel="";pnote="";open();toTop();}
@@ -3412,7 +3427,7 @@ function paint(){if(settings||!ls(KN,"")||!cc())paintSetup();else if(panel)paint
 async function send(){const t=chatText(g("chT").value),now=Date.now();if(!t)return;if(!chatCanSend(lastSend,now)){err="Slow down a little: one message every 2 seconds.";g("chSt").textContent=err;return;}
  if(!FB){err="Not connected yet.";g("chSt").textContent=err;return;}
  lastSend=now;g("chS").disabled=true;err="";
- try{const f=FB.fs;await f.addDoc(f.collection(FB.db,"rooms",cc(),"messages"),{text:t,name:chatName(ls(KN,"")),uid:FB.auth.currentUser.uid,channel:chan,createdAt:f.serverTimestamp()});g("chT").value="";err="";}
+ try{const f=FB.fs;await f.addDoc(f.collection(FB.db,"rooms",cc(),"messages"),{text:t,name:cc()===CHAT_COAST?chatTagName(ls(KN,""),curLocal()):chatName(ls(KN,"")),uid:FB.auth.currentUser.uid,channel:chan,createdAt:f.serverTimestamp()});g("chT").value="";err="";}
  catch(e){err="Message not sent. "+friendly(e);}
  if(g("chS"))g("chS").disabled=false;if(g("chSt"))g("chSt").textContent=err;}
 async function act(a,id){if(!FB)return;const f=FB.fs;try{
@@ -3436,7 +3451,7 @@ window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")
 })();}
 
 if(typeof module!=="undefined")module.exports={LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
-if(typeof module!=="undefined")Object.assign(module.exports,{CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS});
+if(typeof module!=="undefined")Object.assign(module.exports,{CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
