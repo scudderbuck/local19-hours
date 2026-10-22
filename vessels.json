@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-22T08:45:06-07:00",
+ "updated": "2026-10-22T11:45:06-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -182,23 +182,12 @@
    "imo": "9188829"
   },
   {
-   "vessel": "MIDNIGHT SUN",
-   "service": "",
-   "terminal": "TOTE",
-   "agent": "Tote Maritime Alaska Inc",
-   "eta": "2026-10-21T15:00",
-   "etd": "2026-10-22T01:00",
-   "port": "Tacoma",
-   "vessel_type": "Multipurpose",
-   "imo": "7307110"
-  },
-  {
    "vessel": "EVER MACH",
    "service": "",
    "terminal": "PCT",
    "agent": "BEN LINE",
    "eta": "2026-10-22T05:00",
-   "etd": "2026-10-23T17:00",
+   "etd": "2026-10-24T03:00",
    "port": "Tacoma",
    "imo": "9935210"
   },
@@ -208,7 +197,7 @@
    "terminal": "T7",
    "agent": "Norton Lilly International",
    "eta": "2026-10-22T21:00",
-   "etd": "2026-10-26T18:00",
+   "etd": "2026-10-26T16:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9332925"
@@ -411,17 +400,6 @@
    "imo": "9300477"
   },
   {
-   "vessel": "LIBERTY PEACE",
-   "service": "",
-   "terminal": "T7",
-   "agent": "Inchcape",
-   "eta": "2026-10-27T06:00",
-   "etd": "2026-10-28T04:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9777890"
-  },
-  {
    "vessel": "FRANKFURT EXPRESS",
    "service": "WC4/TP5",
    "terminal": "Husky",
@@ -441,6 +419,17 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9777888"
+  },
+  {
+   "vessel": "LIBERTY PEACE",
+   "service": "",
+   "terminal": "T7",
+   "agent": "Inchcape",
+   "eta": "2026-10-27T19:00",
+   "etd": "2026-10-28T04:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9777890"
   },
   {
    "vessel": "Aristeia",
@@ -546,6 +535,16 @@
    "eta_time": false
   },
   {
+   "vessel": "EVER MODE",
+   "service": "",
+   "terminal": "PCT",
+   "agent": "BEN LINE",
+   "eta": "2026-10-30T05:00",
+   "etd": "2026-10-31T17:00",
+   "port": "Tacoma",
+   "imo": "9935296"
+  },
+  {
    "vessel": "MATSON ANCHORAGE",
    "service": "Matson - AK",
    "terminal": "WST",
@@ -565,16 +564,6 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "9978676"
-  },
-  {
-   "vessel": "EVER MODE",
-   "service": "",
-   "terminal": "PCT",
-   "agent": "BEN LINE",
-   "eta": "2026-10-30T17:00",
-   "etd": "2026-11-01T05:00",
-   "port": "Tacoma",
-   "imo": "9935296"
   },
   {
    "vessel": "NADI CHIEF",
