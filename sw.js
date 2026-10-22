@@ -1,5 +1,5 @@
 /* ILWU LIFE service worker. Copyright (c) 2026 Daniel White. All rights reserved. No permission is granted to copy, modify, distribute, or use this software or its source code, in whole or in part, without prior written permission from the copyright holder. See LICENSE. */
-const C="l19hours-v89",F=["./","index.html","manifest.json","icon-192.png","icon-512.png","img/gear-twistlocks.jpg","img/gear-manual-cone.jpg","img/gear-lashing2.jpg","img/gear-bridge.jpg","img/gear-lashing.jpg","img/gear-turnbuckles.jpg","img/gear-hatch.jpg","img/gear-cellguides.jpg"];
+const C="l19hours-v90",F=["./","index.html","manifest.json","icon-192.png","icon-512.png","img/gear-twistlocks.jpg","img/gear-manual-cone.jpg","img/gear-lashing2.jpg","img/gear-bridge.jpg","img/gear-lashing.jpg","img/gear-turnbuckles.jpg","img/gear-hatch.jpg","img/gear-cellguides.jpg","img/waterfront-fcu.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(F.map(u=>new Request(u,{cache:"reload"})))).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
 self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;
