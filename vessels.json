@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-22T05:45:06-07:00",
+ "updated": "2026-10-22T08:45:06-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -57,7 +57,7 @@
  "vessels": [
   {
    "vessel": "CMA CGM ALMAVIVA",
-   "service": "CPNW",
+   "service": "Ad Hoc",
    "terminal": "T18",
    "agent": "Norton Lilly International",
    "eta": "2026-10-17T13:00",
@@ -74,16 +74,6 @@
    "etd": "2026-10-19T05:00",
    "port": "Seattle",
    "imo": "9312585"
-  },
-  {
-   "vessel": "EXPRESS ROME",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-18T06:00",
-   "etd": "2026-10-19T18:00",
-   "port": "Seattle",
-   "imo": "9484936"
   },
   {
    "vessel": "Shanghai Highway",
@@ -140,26 +130,6 @@
    "imo": "1074137"
   },
   {
-   "vessel": "EVER ELITE",
-   "service": "TPN",
-   "terminal": "PCT",
-   "agent": "BEN LINES",
-   "eta": "2026-10-20T05:00",
-   "etd": "2026-10-21T19:00",
-   "port": "Tacoma",
-   "imo": "9241281"
-  },
-  {
-   "vessel": "SM QINGDAO",
-   "service": "",
-   "terminal": "T18",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-20T14:00",
-   "etd": "2026-10-21T04:00",
-   "port": "Seattle",
-   "imo": "9395939"
-  },
-  {
    "vessel": "MSC DENISSE X",
    "service": "Chinook",
    "terminal": "T5",
@@ -188,16 +158,6 @@
    "etd": "2026-10-27T04:00",
    "port": "Tacoma",
    "imo": "9450416"
-  },
-  {
-   "vessel": "MATSON ANCHORAGE",
-   "service": "Matson - AK",
-   "terminal": "WST",
-   "agent": "Matson",
-   "eta": "2026-10-21T03:00",
-   "etd": "2026-10-21T22:00",
-   "port": "Tacoma",
-   "imo": "8419142"
   },
   {
    "vessel": "THEMIS LEADER",
@@ -1205,6 +1165,16 @@
    "etd": "2026-11-14T01:00",
    "port": "Tacoma",
    "imo": "9978676"
+  },
+  {
+   "vessel": "RJ PFEIFFER",
+   "service": "Matson - AK",
+   "terminal": "WST",
+   "agent": "",
+   "eta": "2026-11-13T16:55",
+   "etd": "2026-11-14T04:55",
+   "port": "Tacoma",
+   "imo": "9002037"
   }
  ]
 }
