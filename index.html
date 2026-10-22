@@ -372,7 +372,7 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .nd .nb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.nd .nb button{min-height:44px;padding:0 14px}
 html,body{background:#00214e}
 #splash{position:fixed;inset:0;z-index:2147483000;opacity:1;background:#00214e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spf 1.2s linear forwards;-webkit-tap-highlight-color:transparent}
-#splash img{width:50%;max-width:320px;height:auto;display:block}
+#splash img{width:min(75%,480px,85vw,60vh);height:auto;display:block}
 #splash b{font-size:1.5rem;letter-spacing:.14em;color:#fff}#splash b i{font-style:normal;color:#ffd23f}
 @keyframes spf{0%,70%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
 body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){visibility:hidden;animation:spa 1.2s step-end forwards}
@@ -968,7 +968,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v88",CACHE_VERSION="l19hours-v88"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v89",CACHE_VERSION="l19hours-v89"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
