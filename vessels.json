@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-21T14:45:06-07:00",
+ "updated": "2026-10-21T17:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -102,7 +102,7 @@
    "terminal": "Husky",
    "agent": "Norton Lilly International",
    "eta": "2026-10-19T15:00",
-   "etd": "2026-10-24T04:00",
+   "etd": "2026-10-24T03:00",
    "port": "Tacoma",
    "imo": "9741449"
   },
@@ -165,7 +165,7 @@
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-10-20T16:00",
-   "etd": "2026-10-22T04:00",
+   "etd": "2026-10-22T09:00",
    "port": "Seattle",
    "imo": "9219795"
   },
@@ -389,17 +389,6 @@
    "imo": "9166704"
   },
   {
-   "vessel": "POLARIS MILA",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-25T04:00",
-   "etd": "2026-10-25T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9289908"
-  },
-  {
    "vessel": "CMA CGM FORT JAMES",
    "service": "CPNW",
    "terminal": "T18",
@@ -431,6 +420,17 @@
    "imo": "9484405"
   },
   {
+   "vessel": "POLARIS MILA",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-26T06:00",
+   "etd": "2026-10-26T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9289908"
+  },
+  {
    "vessel": "YM PLUM",
    "service": "PN1",
    "terminal": "WUT",
@@ -449,17 +449,6 @@
    "etd": "2026-10-29T19:00",
    "port": "Tacoma",
    "imo": "9300477"
-  },
-  {
-   "vessel": "LIBERTY PASSION",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Inchcape",
-   "eta": "2026-10-27T06:00",
-   "etd": "2026-10-27T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9777888"
   },
   {
    "vessel": "LIBERTY PEACE",
@@ -481,6 +470,17 @@
    "etd": "2026-10-30T18:00",
    "port": "Tacoma",
    "imo": "9450442"
+  },
+  {
+   "vessel": "LIBERTY PASSION",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Inchcape",
+   "eta": "2026-10-27T17:00",
+   "etd": "2026-10-28T04:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9777888"
   },
   {
    "vessel": "Aristeia",
@@ -540,7 +540,7 @@
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-10-28T17:00",
-   "etd": "2026-10-30T04:00",
+   "etd": "2026-10-30T18:00",
    "port": "Seattle",
    "imo": "9398371"
   },
@@ -690,16 +690,6 @@
    "imo": "9206011"
   },
   {
-   "vessel": "MSC SOLA",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-01T07:00",
-   "etd": "2026-11-03T04:00",
-   "port": "Seattle",
-   "imo": "9401104"
-  },
-  {
    "vessel": "ONE SYNERGY",
    "service": "FP2",
    "terminal": "Husky",
@@ -708,6 +698,16 @@
    "etd": "2026-11-05T18:00",
    "port": "Tacoma",
    "imo": "9976197"
+  },
+  {
+   "vessel": "MSC SOLA",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-01T17:00",
+   "etd": "2026-11-03T18:00",
+   "port": "Seattle",
+   "imo": "9401104"
   },
   {
    "vessel": "MSC NITYA B",
@@ -792,14 +792,14 @@
    "imo": "9936381"
   },
   {
-   "vessel": "MSC YUKTA X",
-   "service": "Chinook",
+   "vessel": "MSC FLORA",
+   "service": "CLX",
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-11-04T07:00",
-   "etd": "2026-11-06T04:00",
+   "etd": "2026-11-05T04:00",
    "port": "Seattle",
-   "imo": "9146467"
+   "imo": "9978937"
   },
   {
    "vessel": "MIDNIGHT SUN",
@@ -853,6 +853,16 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9278105"
+  },
+  {
+   "vessel": "MSC YUKTA X",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-05T07:00",
+   "etd": "2026-11-07T04:00",
+   "port": "Seattle",
+   "imo": "9146467"
   },
   {
    "vessel": "MSC SABRINA",
@@ -916,16 +926,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9383431"
-  },
-  {
-   "vessel": "MSC FLORA",
-   "service": "CLX",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-06T07:00",
-   "etd": "2026-11-07T04:00",
-   "port": "Seattle",
-   "imo": "9978937"
   },
   {
    "vessel": "MATSON KODIAK",
