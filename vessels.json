@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-23T05:45:07-07:00",
+ "updated": "2026-10-23T08:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -119,16 +119,6 @@
    "imo": "1074137"
   },
   {
-   "vessel": "YM COSMOS",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "Inchcape",
-   "eta": "2026-10-20T16:00",
-   "etd": "2026-10-22T18:00",
-   "port": "Tacoma",
-   "imo": "9198288"
-  },
-  {
    "vessel": "VIENNA EXPRESS",
    "service": "WC4/TP5",
    "terminal": "Husky",
@@ -231,16 +221,6 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "9978676"
-  },
-  {
-   "vessel": "RJ PFEIFFER",
-   "service": "Matson - AK",
-   "terminal": "WST",
-   "agent": "",
-   "eta": "2026-10-23T16:55",
-   "etd": "2026-10-24T04:55",
-   "port": "Tacoma",
-   "imo": "9002037"
   },
   {
    "vessel": "ARC ENDEAVOR",
