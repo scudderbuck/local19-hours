@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-23T08:45:05-07:00",
+ "updated": "2026-10-23T11:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -156,7 +156,7 @@
    "terminal": "PCT",
    "agent": "BEN LINE",
    "eta": "2026-10-22T05:00",
-   "etd": "2026-10-24T03:00",
+   "etd": "2026-10-24T06:00",
    "port": "Tacoma",
    "imo": "9935210"
   },
@@ -276,17 +276,6 @@
    "imo": "9792618"
   },
   {
-   "vessel": "RED CLOUD",
-   "service": "",
-   "terminal": "T7",
-   "agent": "833rd Trans Bn Sddc",
-   "eta": "2026-10-24T14:00",
-   "etd": "2026-10-26T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Ro-Ro",
-   "imo": "8227525"
-  },
-  {
    "vessel": "YM WEALTH",
    "service": "PN3",
    "terminal": "WUT",
@@ -360,6 +349,17 @@
    "imo": "9198264"
   },
   {
+   "vessel": "RED CLOUD",
+   "service": "",
+   "terminal": "T7",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-26T20:00",
+   "etd": "2026-10-27T18:30",
+   "port": "Tacoma",
+   "vessel_type": "Ro-Ro",
+   "imo": "8227525"
+  },
+  {
    "vessel": "EVER SALUTE",
    "service": "TPN",
    "terminal": "PCT",
@@ -396,7 +396,7 @@
    "terminal": "T7",
    "agent": "Inchcape",
    "eta": "2026-10-27T19:00",
-   "etd": "2026-10-28T04:00",
+   "etd": "2026-10-30T18:30",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9777890"
@@ -567,16 +567,6 @@
    "imo": "9461477"
   },
   {
-   "vessel": "HYUNDAI FORWARD",
-   "service": "PN3",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-10-31T20:00",
-   "etd": "2026-11-03T14:00",
-   "port": "Tacoma",
-   "imo": "9330707"
-  },
-  {
    "vessel": "Red Cosmos",
    "service": "",
    "terminal": "T2",
@@ -627,16 +617,6 @@
    "etd": "2026-11-02T18:00",
    "port": "Seattle",
    "imo": "9778117"
-  },
-  {
-   "vessel": "ONE MAJESTY",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-11-01T21:43",
-   "etd": "2026-11-05T04:43",
-   "port": "Tacoma",
-   "imo": "9424912"
   },
   {
    "vessel": "SM TIANJIN",
@@ -690,6 +670,16 @@
    "imo": "9619098"
   },
   {
+   "vessel": "HYUNDAI FORWARD",
+   "service": "PN3",
+   "terminal": "WUT",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-03T15:00",
+   "etd": "2026-11-05T18:00",
+   "port": "Tacoma",
+   "imo": "9330707"
+  },
+  {
    "vessel": "Glovis Legend",
    "service": "",
    "terminal": "T4",
@@ -718,6 +708,16 @@
    "etd": "2026-11-08T00:00",
    "port": "Tacoma",
    "imo": "9936381"
+  },
+  {
+   "vessel": "ONE MAJESTY",
+   "service": "PN1",
+   "terminal": "WUT",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-04T06:00",
+   "etd": "2026-11-06T04:00",
+   "port": "Tacoma",
+   "imo": "9424912"
   },
   {
    "vessel": "MIDNIGHT SUN",
