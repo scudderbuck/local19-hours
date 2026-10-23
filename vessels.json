@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-22T20:45:09-07:00",
+ "updated": "2026-10-22T23:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -9,7 +9,7 @@
    "credit": "Port of Grays Harbor vessel schedule",
    "source": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpAomeTT0eQnICFNJZD2-7wMPnOBeK_3wGTR_Uf2FOr7UibmUqkliQyL2A9QuzSC_VvbBS7rVo3dpD/pub?output=csv",
    "parsed": 15,
-   "current": 11,
+   "current": 10,
    "latest": "2026-11-04"
   },
   "Olympia": {
@@ -74,17 +74,6 @@
    "etd": "2026-10-19T05:00",
    "port": "Seattle",
    "imo": "9312585"
-  },
-  {
-   "vessel": "Shanghai Highway",
-   "service": "",
-   "terminal": "T4",
-   "agent": "",
-   "eta": "2026-10-19T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false,
-   "imo": "9294343"
   },
   {
    "vessel": "ONE OWL",
