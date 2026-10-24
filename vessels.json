@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-24T05:45:05-07:00",
+ "updated": "2026-10-24T07:45:07-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -1246,6 +1246,17 @@
    "etd": "2026-11-22T02:00",
    "port": "Seattle",
    "imo": "9928229"
+  },
+  {
+   "vessel": "MORNING LILY",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-21T06:00",
+   "etd": "2026-11-21T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9446013"
   }
  ]
 }
