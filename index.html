@@ -71,7 +71,7 @@ label .mut{font-weight:400}
 .cbb span{font-weight:400;font-size:.875rem;opacity:.9}.cbl{margin-top:4px;overflow-wrap:anywhere}#cbW.cbon .cbl{font-weight:600;color:var(--fg)}
 .dategrp{align-items:stretch}.dategrp button{flex:0 0 auto;min-width:48px;padding:0 12px}
 /* v80: room for the full date (mm/dd/yyyy + picker icon) at 320-360px */
-.dategrp{gap:4px}.dategrp #dprev,.dategrp #dnext{min-width:44px;padding:0}.dategrp #dtoday{padding:0 8px;font-size:min(1rem,4.6vw)}.dategrp input{padding-left:8px;padding-right:4px;font-size:min(1rem,4.6vw)}
+.dategrp{gap:4px}.dategrp #dprev,.dategrp #dnext{min-width:44px;padding:0}.dategrp #dtoday{padding:0 8px;font-size:min(1rem,4.6vw)}.dategrp input{padding-left:8px;padding-right:4px;font-size:max(16px,min(1rem,4.6vw))} /* v100: never under 16px (no zoom-on-focus) */
 @media (pointer:coarse) and (max-width:419px){.dategrp input::-webkit-calendar-picker-indicator{display:none}} /* phones open the date picker on a tap anywhere in the box */.dategrp input{flex:1 1 auto;min-width:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
 .nav{display:flex;gap:8px;align-items:center;padding:8px}.nav .t{flex:1;text-align:center;font-weight:600}.nav button{min-width:48px;padding:0}
 /* v67: bottom bar. All 7 buttons fit on one row at any width with a 4px gap between them (no touching, no sideways scroll).
@@ -124,8 +124,13 @@ button,input,select{font-size:1rem}
 .cpop>div{background:var(--card);color:var(--fg);border:1px solid var(--bd);width:100%;max-width:440px;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);overflow:auto;border-radius:16px;padding:12px}
 .cpop .ph{display:flex;align-items:center;gap:8px;margin-bottom:8px}.cpop .ph h3{margin:0;flex:1}.cpop .ph button{min-width:48px;padding:0}
 .cpop .nav{padding:0;margin-bottom:8px}.cpop .pf{margin-top:10px;border-top:1px solid var(--bd);padding-top:10px}.cpop .pf .row{margin-top:8px}
-#upd{position:fixed;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));z-index:60;background:var(--pri);color:var(--prifg);border:2px solid var(--acc);border-radius:12px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:8px;max-width:544px;margin:0 auto}
-#upd span{flex:1;font-weight:600}#upd button{min-height:44px;background:var(--card);color:var(--fg);border:1px solid var(--acc);font-weight:700}
+#upd{position:fixed;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));z-index:9998;background:var(--pri);color:var(--prifg);border:2px solid var(--acc);border-radius:12px;padding:8px 8px 8px 14px;display:flex;align-items:center;gap:8px;max-width:544px;margin:0 auto}
+#upd{padding:4px;background:#ffd23f;border-color:#7a5b00;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+#upd button{flex:1 1 auto;min-height:52px;background:#ffd23f;color:#1a1300;border:0;font-weight:800;font-size:max(15px,min(1.05em,4.6vw));padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkre{margin:8px 0 0;font-weight:600}
+#l19err{position:fixed;left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));z-index:9999;max-width:544px;margin:0 auto;background:#fff6d6;color:#3a2a00;border:2px solid #b45309;border-radius:12px;padding:10px 12px;font-weight:600}
+#l19err button{min-height:44px;margin:6px 6px 0 0;font-weight:700}
+.safe-l .rlg p{margin:0 0 6px}
 .chat{background:#00214e;color:#f2f6fb;border:2px solid #ffd23f;font-size:1.125rem}
 .chat h3{color:#ffd23f;font-size:1.375rem}.chat .mut{color:#c9d6e6}
 .chat input,.chat textarea{width:100%;font:inherit;font-size:1.125rem;padding:10px;border-radius:10px;border:1px solid #ffd23f;background:#0a2f66;color:#fff}
@@ -251,6 +256,8 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:1.9em;height:1.9em;padding:0 .25em;border-radius:999px;border:2px solid #fff;box-shadow:0 0 0 1px #000;font-size:.8em;font-weight:800;line-height:1;box-sizing:border-box}
 .pk.g{border-radius:6px;border:3px double #fff;background:#10151c;color:#fff}
 .pggrid.bbg{background:#07153a;border-color:#ffd23f;max-height:80vh;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+/* v100: one page-level vertical scroll on the Pegs tab (no nested vertical scroller, no vh-sized box that re-lays out the board when the Android URL bar moves); the board still scrolls sideways */
+.pggrid.bbg{max-height:none;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;overscroll-behavior-y:auto;contain:layout paint}
 .bb{display:flex;gap:.6em;width:max-content;padding:.5em;font-size:calc(1rem*var(--bz,1));color:#f2f6ff}
 .bcol{width:11.5em;flex:0 0 11.5em;display:flex;flex-direction:column;gap:.25em}
 .bh{position:sticky;top:0;z-index:2;align-self:center;width:2.2em;height:2.2em;margin-bottom:.15em;border-radius:50%;background:#ffd23f;color:#07153a;font-weight:800;font-size:1.3em;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #07153a}
@@ -270,6 +277,9 @@ table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-al
 .slip.hp{border:2px solid #ffd23f;background:#1f3f86}
 .slip.me{box-shadow:inset 0 0 0 3px #ffd23f}
 .slip.sel{outline:3px solid #ffd23f;outline-offset:1px}
+.trd{font-size:.72em;font-weight:800;color:#ffd23f;white-space:nowrap;overflow:hidden;line-height:1.25;padding:1px .4em 0}
+.trh{margin:0 0 8px;padding:8px 10px;border-radius:8px;background:#fff6d6;color:#3a2a00;font-weight:600}
+#pgGrid.mvon .slip:not(.sel){outline:2px dashed #ffd23f;outline-offset:-2px;cursor:pointer}
 .bb.held .slip{cursor:copy}
 .bbzb{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0;padding:6px;border-radius:10px;background:#07153a;border:1px solid #4a6bb5;color:#f2f6ff}
 .bbzb button{min-width:44px;min-height:44px;font-weight:800}
@@ -302,7 +312,36 @@ body.pgdrag{overscroll-behavior:none}
 #tsz button{padding:4px 6px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
 .seg{grid-template-columns:repeat(4,minmax(0,1fr))}.seg button{min-width:0;padding:4px 2px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
 /* v82: Week/Month/Quarter/Year stay one row, one line each, even 4px gaps at every text size: font follows the row width */
-.seg{gap:4px;container-type:inline-size}.seg button{white-space:nowrap;overflow-wrap:normal;overflow:hidden;font-size:min(1em,5.3cqw);letter-spacing:-.01em}.fit1{white-space:nowrap!important;overflow:hidden} .lbp{font-style:normal} .lb2>span.mut,.lb2>.lbp{display:block;font-weight:400} .row.stk{flex-direction:column} .row.stk>button{flex:1 1 auto;width:100%} #v-data p,#v-data label>span.mut{text-wrap:pretty}.stat span.fit1,.rng.fit1,.card>.row>div>span.mut.fit1{display:block}.seg .sl{display:none}.seg.short .fl{display:none}.seg.short .sl{display:inline}.pgsd{grid-template-columns:repeat(2,minmax(0,1fr));margin:0 0 10px}.pgsd button{font-size:min(1em,8cqw)}.pgsdb{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;background:#fff3c4;color:#5a4300;font-size:.875em;white-space:nowrap}.pgsdb.n{background:#1c2b52;color:#ffd23f}.pgsw{margin:0 0 8px;padding:6px 10px;border-radius:8px;background:#efe7ff;color:#3b2470;font-weight:600} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
+.seg{gap:4px;container-type:inline-size}.seg button{white-space:nowrap;overflow-wrap:normal;overflow:hidden;font-size:min(1em,5.3cqw);letter-spacing:-.01em}.fit1{white-space:nowrap!important;overflow:hidden} /* v100: Pegs one-line rule (Large/XL, phone font scaling): pf1 = measured one-line button/label; pgst = row stacked into even full-width rows; pgg2 = 2-column grid */
+ .pf1{white-space:nowrap!important;overflow:hidden!important;overflow-wrap:normal!important;text-overflow:clip} #v-pegs .row.pgst,.sheet .row.pgst{flex-direction:column;gap:8px} #v-pegs .row.pgst>button,.sheet .row.pgst>button{flex:0 0 auto;width:100%;min-height:44px}
+ #v-pegs .row.pgg2,.sheet .row.pgg2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px} #v-pegs .row.pgg2>button,.sheet .row.pgg2>button{min-width:0;min-height:44px}
+ #pgCard>h3 .lb19.blk{display:table;margin-top:4px} .sheet>div{grid-template-columns:minmax(0,1fr)} .sheet .row>input{min-width:0;flex:1 1 0} .lgd .lcw{max-width:100%;min-width:0} .lgd .lcw>.lc{flex:0 1 auto} .lgd .lc{max-width:100%;min-width:0} .lgd .lc>span:last-child{min-width:0} .bbzb button{flex:0 0 auto;padding-left:8px;padding-right:8px;white-space:nowrap} .bbzb.zb2{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))} .bbzb.zb2 input[type=range]{order:0;grid-column:1/-1;min-width:0;width:100%} .bbzb.zb2 #bbZm{order:1;grid-column:span 2} .bbzb.zb2 output{order:2;grid-column:span 2;min-width:0} .bbzb.zb2 #bbZa{order:3;grid-column:span 2} .bbzb.zb2 #bbZf{order:4;grid-column:span 3} .bbzb.zb2 #bbZ1{order:5;grid-column:span 3} .bbzb.zb2 button{min-width:0} .lbp{font-style:normal} .lb2>span.mut,.lb2>.lbp{display:block;font-weight:400}
+/* v100 fields pass: every field label is a one-line word label; the (explanation) sits under it as help text */
+label>span.mut{display:block;font-weight:400;font-size:.875em;line-height:1.3;margin-top:1px}
+#pgSdB{white-space:nowrap}
+/* v100: focused board view - just this board, biggest readable names, one page scroll */
+.pgfobar{display:none}
+#pgCard.pgfo>*:not(#pgFoBar):not(#pgSd):not(#pgBb):not(#pgWrap):not(#pgBb2):not(#pgEd):not(#pgM){display:none!important}
+#pgCard.pgfo{display:flex;flex-direction:column}
+#pgCard.pgfo>#pgFoBar{order:0}#pgCard.pgfo>#pgSd{order:1}#pgCard.pgfo>#pgM{order:2}#pgCard.pgfo>#pgWrap{order:3}#pgCard.pgfo>#pgBb{order:4}#pgCard.pgfo>#pgBb2{order:5}#pgCard.pgfo>#pgEd{order:6}
+body.pgfo main{max-width:none}
+#pgCard.pgfo #pgSd{margin-bottom:6px}
+#pgCard.pgfo{padding:8px 6px}
+#pgCard.pgfo #pgFoBar{display:flex;align-items:center;gap:10px;margin:0 0 8px}
+#pgFoX{flex:0 0 auto;min-height:48px;padding:0 14px;font-size:1.05em;white-space:nowrap}
+#pgFoT{flex:1 1 auto;min-width:0;font-size:1.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pgCard.pgfo .bcol{width:var(--fcw,8em);flex-basis:var(--fcw,8em)}
+#pgCard.pgfo #pgM:empty{display:none}
+#pgCard.pgfo .slip .sl.sm{font-size:.9em}
+#pgCard.pgfo .slip .sl.w2{font-size:.9em}
+#pgCard.pgfo .bb{gap:.35em;padding:.3em}
+#pgCard.pgfo .pggrid.bbg{border-width:1px}
+#pgCard.pgfo.pgfit .pggrid.bbg{overflow:visible;contain:none}
+#pgCard.pgfo.pgfit .bh{position:sticky;top:0;z-index:3;background:#07153a}
+body.pgfo #hdr{display:none}
+#pgCard.pgfo #pgEd:not(.hide){position:fixed;left:0;right:0;bottom:0;z-index:60;max-height:72vh;max-height:72dvh;overflow:auto;overscroll-behavior:contain;margin:0;border-radius:14px 14px 0 0;box-shadow:0 -6px 18px rgba(0,0,0,.35)}
+.pgmore{margin-top:12px;border-top:1px solid var(--bd);padding-top:4px}
+.pgmore>summary{min-height:44px;display:flex;align-items:center;font-weight:700;cursor:pointer;color:var(--acc)} .row.stk{flex-direction:column} .row.stk>button{flex:1 1 auto;width:100%} #v-data p,#v-data label>span.mut{text-wrap:pretty}.stat span.fit1,.rng.fit1,.card>.row>div>span.mut.fit1{display:block}.seg .sl{display:none}.seg.short .fl{display:none}.seg.short .sl{display:inline}.pgsd{grid-template-columns:repeat(2,minmax(0,1fr));margin:0 0 10px}.pgsd button{font-size:min(1em,8cqw)}.pgsdb{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;background:#fff3c4;color:#5a4300;font-size:.875em;white-space:nowrap}.pgsdb.n{background:#1c2b52;color:#ffd23f}.pgsw{margin:0 0 8px;padding:6px 10px;border-radius:8px;background:#efe7ff;color:#3b2470;font-weight:600} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
 
 .bbz{width:max-content}
 .bbz.mini .sc{width:50%}
@@ -375,7 +414,7 @@ html,body{background:#00214e}
 #splash img{width:min(75%,480px,85vw,60vh);height:auto;display:block}
 #splash b{font-size:1.5rem;letter-spacing:.14em;color:#fff}#splash b i{font-style:normal;color:#ffd23f}
 @keyframes spf{0%,70%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
-body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){visibility:hidden;animation:spa 1.2s step-end forwards}
+body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast):not(#upd):not(#l19err){visibility:hidden;animation:spa 1.2s step-end forwards}
 @keyframes spa{0%,69%{visibility:hidden}70%,100%{visibility:visible}}
 @media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){animation:spb 0s .4s forwards}@keyframes spb{to{visibility:visible}}}
 /* v63: ship gear card */
@@ -503,11 +542,17 @@ body.gopen{overflow:hidden}
 <p class="mut">Data lives only on this device (localStorage). Back up now and then. The backup also includes your pay stub checks and starting hours.</p>
 <p class="mut"><b>Note:</b> Ship letter photos and Today's needs photos (Ships tab) are stored separately on this device and are <b>not</b> included in the JSON backup, and neither are peg board photos or ship gear photos. Ship gear cards (text), Today's needs notes (text), peg board positions, job pegs, global pegs, peg logs and your BA number are included.</p>
 <label for="dpNum2">Business Agent (BA) number</label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your BA's number" aria-describedby="baH2"><p id="baH2" class="mut" style="margin:4px 0 0">Call your BA if you're fired or have a beef on the job. Same number as on the Ships tab.</p>
+<p class="bkre"><b>Reinstalling or new phone?</b> Back up first.</p>
 <div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
 <div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing <i class="lbp">(uncheck to replace all)</i></span></div>
 <p id="msg" class="mut"></p>
 <button class="d" id="wipe" style="width:100%">Delete all data</button></div>
+<div class="card" id="safeCard"><h3>Restore previous data</h3>
+<p class="mut" style="margin-top:0">Each time the app updates it keeps a safety copy of everything on this phone (the last 6). If something looks wrong after an update, restore one here. No reinstall needed.</p>
+<div id="safeList" class="safe-l"><p class="mut">Loading…</p></div>
+<div class="row"><button type="button" id="safeNow">Save a safety copy now</button></div>
+<p id="safeM" class="mut" aria-live="polite"></p></div>
 <div class="card"><h3>Export to CSV</h3>
 <label for="cxk" style="margin-top:0">Period</label><select id="cxk"><option value="week">Week (Sat–Fri)</option><option value="month">Month</option><option value="quarter">Quarter</option><option value="year">Year</option><option value="all">All entries</option></select>
 <label for="cxd">Period containing date</label><input type="date" id="cxd">
@@ -542,6 +587,7 @@ body.gopen{overflow:hidden}
 <section id="v-pegs" class="hide">
 <div class="card" id="pgCard"><h3 style="margin-top:0">Peg boards <span class="lb19">Local 19 boards</span></h3>
 <p class="mut" style="margin-top:0">Your own record of the physical peg boards (admins can also share a board live with the whole chat room; shared boards are read-only for everyone else). Pick a board, tap a peg in the legend (or a peg already on a slip) and then tap a slip circle to put it there. The app never decides who gets a job. To move a slip itself, press and hold it, then drag; or open the slip and use Move.</p>
+<div id="pgFoBar" class="pgfobar"><button type="button" class="p" id="pgFoX" aria-label="Back to all boards">← Boards</button><b id="pgFoT"></b></div>
 <div class="seg pgsd eqx" id="pgSd" role="group" aria-label="Day or Night peg boards"><button type="button" data-sd="day" aria-pressed="true">☀ Day</button><button type="button" data-sd="night" aria-pressed="false">🌙 Night</button></div>
 <p id="pgSw" class="pgsw eqx hide" role="status"></p>
 <div class="gstrip shx eqx" id="pgGl" role="region" aria-label="Global pegs"></div>
@@ -561,6 +607,7 @@ body.gopen{overflow:hidden}
 <div id="pgPreset" class="hide shx eqx"><button type="button" id="pgPre" style="width:100%">Add preset jobs (Semi, Bull, Strad, UT, Super flex bull)</button></div>
 <div class="row pgsz shx eqx"><div><label for="pgCols" style="margin-top:0">Columns (1–60)</label><input id="pgCols" type="number" inputmode="numeric" min="1" max="60"></div><div><label for="pgRows" style="margin-top:0">Rows (1–60)</label><input id="pgRows" type="number" inputmode="numeric" min="1" max="60"></div></div>
 <div class="row shx eqx" style="margin-top:8px"><button type="button" id="pgSz">Apply size</button></div>
+<div class="row shx pgfob" id="pgFoR"><button type="button" class="p" id="pgFoGo">⛶ Full-screen board</button></div>
 <div id="pgBb" class="bbbar hide shx"></div><input type="file" id="bbFile" class="hide" accept=".json,application/json,text/plain">
 <div id="pgZb" class="bbzb hide shx" role="group" aria-label="Board zoom"><button type="button" id="bbZm" aria-label="Zoom out">−</button><input type="range" id="bbZs" min="10" max="250" step="1" value="100" aria-label="Board zoom percent"><button type="button" id="bbZa" aria-label="Zoom in">+</button><output id="bbZl" for="bbZs" aria-live="off">100%</output><button type="button" id="bbZf" aria-label="Fit whole board on screen">Fit</button><button type="button" id="bbZ1" aria-label="Zoom to 100 percent">100%</button></div>
 <div id="pgWrap" class="shx"><div id="pgPane" class="bbph hide"></div><div id="pgGrid" class="pggrid" tabindex="0" role="group" aria-label="Peg board slips (scrolls sideways)"></div></div>
@@ -611,6 +658,25 @@ body.gopen{overflow:hidden}
 </main>
 <div id="bbar"><nav class="tabs" aria-label="Main"><button type="button" data-v="add" class="on" aria-label="Add shift"><span class="ti" aria-hidden="true">➕</span><span class="tl">Add</span></button><button type="button" data-v="ships" aria-label="Ships"><span class="ti" aria-hidden="true">🚢</span><span class="tl">Ships</span></button><button type="button" data-v="pegs" aria-label="Pegs"><span class="ti" aria-hidden="true">📌</span><span class="tl">Pegs</span></button><button type="button" data-v="chat" aria-label="Chat"><span class="ti" aria-hidden="true">💬</span><span class="tl">Chat</span></button><button type="button" data-v="week" aria-label="Week"><span class="ti" aria-hidden="true">📅</span><span class="tl">Week</span></button><button type="button" data-v="hist" aria-label="History"><span class="ti" aria-hidden="true">🕘</span><span class="tl lg">History</span><span class="ts" aria-hidden="true">Hist.</span></button><button type="button" data-v="data" aria-label="Backup"><span class="ti" aria-hidden="true">💾</span><span class="tl lg">Backup</span><span class="ts" aria-hidden="true">Bkup</span></button></nav><nav class="docs" aria-label="Documents"><a id="docSafety" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Marine_Safety_Code_2022.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Marine Safety Code, 2022 Revision (PDF on pmanet.org)" aria-label="ILWU Safety Handbook: Pacific Coast Marine Safety Code, 2022 Revision, PDF, opens in a new tab"><b aria-hidden="true">⛑️</b><span>ILWU Safety Handbook</span></a><a id="docContract" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Longshore_Contract_Document_2022-2028.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Longshore Contract Document, July 1, 2022 – July 1, 2028 (PDF on pmanet.org)" aria-label="Current Contract: Pacific Coast Longshore Contract Document 2022 to 2028, PDF, opens in a new tab"><b aria-hidden="true">📄</b><span>Current Contract</span></a></nav></div>
 <script>
+/* ===== v100: data safety, runs FIRST (Daniel: "users must be able to keep uploaded data"). =====
+   Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
+   on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
+   Nothing here ever deletes or renames an app key. */
+var L19_BOOT_VER="v100",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
+var l19Boot={prev:null,snap:null,err:null};
+try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
+function l19SafeDb(){return new Promise(function(res,rej){try{if(typeof indexedDB==="undefined")throw 0;var r=indexedDB.open(L19_SAFE_DB,1);r.onupgradeneeded=function(){r.result.createObjectStore("snaps",{keyPath:"id"});};r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};r.onblocked=function(){rej(0);};}catch(e){rej(e);}});}
+function l19SafeList(){return l19SafeDb().then(function(db){return new Promise(function(res,rej){var t=db.transaction("snaps","readonly"),q=t.objectStore("snaps").getAll();q.onsuccess=function(){res((q.result||[]).sort(function(a,b){return b.id-a.id;}));};q.onerror=function(){rej(q.error);};});});}
+function l19SafePut(data,from,why){var snap={id:Date.now(),at:new Date().toISOString(),from:from||"",to:L19_BOOT_VER,why:why||"update",data:data};
+ return l19SafeDb().then(function(db){return new Promise(function(res,rej){var t=db.transaction("snaps","readwrite"),st=t.objectStore("snaps");st.put(snap);var q=st.getAll();q.onsuccess=function(){var all=(q.result||[]).sort(function(a,b){return b.id-a.id;});all.slice(L19_SAFE_KEEP).forEach(function(x){st.delete(x.id);});};t.oncomplete=function(){res(snap);};t.onerror=function(){rej(t.error);};});});}
+if(l19Boot.snap){l19SafePut(l19Boot.snap,l19Boot.prev||"older version","update").then(function(){try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}},function(e){l19Boot.err=String(e);});}
+/* ask the browser to keep this app's storage (not cleared under storage pressure) */
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(function(p){if(!p)return navigator.storage.persist();}).catch(function(){});}catch(e){}
+/* if something breaks while loading, say so plainly instead of leaving a broken screen (that is what made people reinstall and lose data) */
+(function(){if(typeof window==="undefined"||!window.addEventListener)return;var shown=false;window.addEventListener("error",function(ev){if(shown||!document.body)return;shown=true;try{var d=document.createElement("div");d.id="l19err";d.setAttribute("role","alert");
+ d.innerHTML='<b>Something went wrong.</b> Your data is still on this phone &mdash; please don\'t reinstall. <button type="button" id="l19errB">Open Backup</button> <button type="button" id="l19errX">Close</button>';document.body.appendChild(d);
+ document.getElementById("l19errB").onclick=function(){d.remove();try{show("data");}catch(e){}};document.getElementById("l19errX").onclick=function(){d.remove();};}catch(e){}});})();
 function splashMs(reduced){return reduced?400:1200}
 (function(){if(typeof document==="undefined")return;var e=document.getElementById("splash");if(!e)return;var d=function(){if(e&&e.parentNode)e.parentNode.removeChild(e);e=null};
 var r=false;try{r=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}
@@ -830,8 +896,8 @@ function caShipsHtml(n){const L=caShipLinks(n),E=x=>String(x).replace(/[&<>"]/g,
    Prefills the Hours box when you pick the pier + job on a new shift; you can always edit it. Keys = job value in the picker.
    P91 = Terminal 91 cruise sheet (stevedore co. Metro); P66 = Pier 66 sheet (Norwegian Bliss/Encore Sat-Sun 2023). Pay class is NOT changed by this. */
 const PIER_HOURS={
- "P91":{"Sling man":9,"Skilled holdman":9,"Crane op":11,"0128":11,"Bull":9,"Semi":9,"Gangway operator":12,"Trucker":9,"Sweeper":10,"Jib operator":11,"Bus":11,"Heavy bull":11},
- "P66":{"Sweeper":10,"Ramp":12,"Porter":9,"Dockman":9,"Sling man":9,"Button pusher":9,"Bull":9,"Skilled holdman":9,"Mobile crane":11,"Button pusher (conveyor)":9}};
+ "P91":{"Sling man":9,"Skilled holdman":9,"Crane op":10,"0128":11,"Bull":9,"Semi":9,"Gangway operator":12,"Trucker":9,"Sweeper":10,"Jib operator":11,"Bus":11,"Heavy bull":11},
+ "P66":{"Sweeper":10,"Ramp":12,"Porter":9,"Dockman":9,"Sling man":9,"Button pusher":9,"Bull":9,"Skilled holdman":9,"Mobile crane":10,"Button pusher (conveyor)":9}};
 const PIER_HOURS_SRC={"P91":"Terminal 91 cruise sheet","P66":"Pier 66 cruise sheet"};
 function pierKey(p){const t=String(p||"");if(/\b(?:pier|terminal|t)\s*-?\s*91\b/i.test(t))return "P91";if(/\b(?:pier|terminal|t)\s*-?\s*66\b/i.test(t))return "P66";return "";}
 function pierHours(pier,job){const k=pierKey(pier),t=k&&PIER_HOURS[k];return t&&Object.prototype.hasOwnProperty.call(t,job)?t[job]:null;}
@@ -1031,7 +1097,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v99",CACHE_VERSION="l19hours-v99"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v100",CACHE_VERSION="l19hours-v100"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1246,10 +1312,11 @@ function pegSnapModel(name,b,gOn,now){b=b||pegBoardNew();now=now instanceof Date
  return{title:String(name||"Peg board"),cols,rows,cells,legend,cw:Math.max(72,Math.min(150,Math.floor(4200/cols))),ch:58,when:pegWhen(now),updated:pegWhen(b.updated)};}
 function needsGroups(a){const g={};for(const n of needsClean(a))(g[n.date]=g[n.date]||[]).push(n);return Object.keys(g).sort().reverse().map(k=>({key:k,items:g[k].sort((x,y)=>(y.created||"")>(x.created||"")?1:-1)}));}
 /* ===== Peg boards (pure helpers; manual entries only, no seniority logic) ===== */
-const PEG_BOARDS=["Bull board","Stevedore board","Sling board","Crane board","Little crane board","Flex crane board","Trucker board","Flex steve board","Wheat board"]; /* v95: Flex crane + Flex steve added; Daniel's order after the Bull board */
+const PEG_BOARDS=["Bull board","Stevedore board","Sling board","Crane board","Little crane board","Trucker board","Wheat board"]; /* v95 order after the Bull board; v100: no Flex crane / Flex steve boards (Daniel: there are no flex boards, only pegs) */
+const PEG_FLEX_GONE=["Flex crane board","Flex steve board"];
 function pegNameNorm(n){return String(n||"").toLowerCase().replace(/\bboard\b/g,"").replace(/[^a-z0-9]+/g," ").trim();}
 const PEG_GLOBAL_DEFAULT=["Supervisor","Flex supervisor","Foreman"],PEG_GLOBALS=10,PEG_PRESET=["Semi","Bull","Strad","UT","Super flex bull"],PEG_PRESET_ID=["p0","p1","p2","p3","p4"],PEG_PRESET_COLOR=[7,8,0,9,12],PEG_PRESET_OLDCOLOR=[0,1,2,3,4],PEG_PRESET_NEW=[],PEG_REMOVED=["flex semi","flex strad"]; /* ids/colors of the v40 five are kept stable */
-const PEG_MUNDO=5,PEG_DEF={cols:25,rows:10},PEG_HALL={"Stevedore board":9,"Sling board":2,"Crane board":5,"Little crane board":1,"Flex crane board":1,"Trucker board":1,"Flex steve board":1,"Wheat board":1},PEG_HALL_ROWS=25,PEG_LEGACY={cols:20,rows:10},PEG_MAX=60,PEG_JOBS=20,PEG_TAKES=500,PEG_UNDO=10;
+const PEG_MUNDO=5,PEG_DEF={cols:25,rows:10},PEG_HALL={"Stevedore board":9,"Sling board":2,"Crane board":5,"Little crane board":1,"Trucker board":1,"Wheat board":1},PEG_HALL_ROWS=25,PEG_LEGACY={cols:20,rows:10},PEG_MAX=60,PEG_JOBS=20,PEG_TAKES=500,PEG_UNDO=10;
 const PEG_COLORS=[["Red","#b3261e","#ffffff"],["Orange","#9a4a00","#ffffff"],["Green","#1b5e20","#ffffff"],["Teal","#00606b","#ffffff"],["Blue","#0b4fa8","#ffffff"],["Purple","#6a2c91","#ffffff"],["Pink","#a3185b","#ffffff"],["Yellow","#ffd23f","#1a1400"],["Orange (bright)","#ff8a1f","#1a0e00","#ffffff"],["Teal (bright)","#1fc2b3","#00201d","#ffffff"],["Yellow, dashed flex ring","#ffd23f","#1a1400","#ffffff",1],["Red, dashed flex ring","#b3261e","#ffffff","#ffffff",1],["Purple (bright)","#8e44c7","#ffffff","#ffffff"]]; /* v49: slots 8-12 are the slip-board peg colors; optional 4th item = ring color */
 function pegRing(c){return c&&c[3]?c[3]:"#fff";}
 function pegSty(c){c=c||PEG_COLORS[0];return"background:"+c[1]+";color:"+c[2]+";border-color:"+pegRing(c)+(c[4]?";border-style:dashed":"");}
@@ -1280,7 +1347,7 @@ function pegBoardClean(b){const o=pegBoardNew();if(!b||typeof b!=="object")retur
   o.undo.push({id:u.id.slice(0,40),at:sl(u.at,40),label:sl(u.label,120),pos:ps,take:sl(u.take,40)});}
  o.undo=o.undo.slice(-PEG_UNDO);
  return o;}
-function pegsClean(d){const o={boards:{},custom:[],sel:"",seeded:false,globals:[],glog:[],gundo:[],mundo:[]};if(!d||typeof d!=="object")return o;
+function pegsClean(d){const o={boards:{},custom:[],sel:"",seeded:false,globals:[],glog:[],gundo:[],mundo:[],trades:[]};if(!d||typeof d!=="object")return o;
  let bs=d.boards&&typeof d.boards==="object"&&!Array.isArray(d.boards)?d.boards:{};
  for(const k of Object.keys(bs)){if(PEG_BOARDS.includes(k))continue;const bi=PEG_BOARDS.find(x=>pegNameNorm(x)===pegNameNorm(k));if(bi&&!bs[bi]){bs={...bs,[bi]:bs[k]};delete bs[k];if(Array.isArray(d.custom))d={...d,custom:d.custom.filter(x=>x!==k)};}}
  for(const k of Object.keys(bs)){const name=String(k).trim().slice(0,40);if(!name||name==="__proto__")continue;o.boards[name]=pegBoardClean(bs[k]);}
@@ -1312,7 +1379,12 @@ function pegsClean(d){const o={boards:{},custom:[],sel:"",seeded:false,globals:[
    boards[bn]={rows:pegDim(sn.rows,PEG_DEF.rows),pegs:pg,jobs:jb,updated:sl(sn.updated,40)};}
   const gl=(Array.isArray(u.snap.globals)?u.snap.globals:[]).filter(g=>g&&typeof g.id==="string").map(g=>({id:g.id.slice(0,24),board:sl(g.board,40),pos:okK(g.pos)?g.pos:""}));
   o.mundo.push({id:sl(u.id,40),at:sl(u.at,40),label:sl(u.label,120),snap:{boards:boards,globals:gl}});}
- o.mundo=o.mundo.slice(-PEG_MUNDO);return o;}
+ o.mundo=o.mundo.slice(-PEG_MUNDO);
+ /* v100: trades */
+ o.trades=[];const okD=x=>/^\d{4}-\d{2}-\d{2}$/.test(x||""),okS=x=>x&&typeof x==="object"&&names.includes(x.board)&&okK(x.key);
+ for(const t of Array.isArray(d.trades)?d.trades:[]){if(!t||typeof t!=="object"||!okS(t.a)||!okS(t.b)||!okD(t.start))continue;const st=t.st==="on"?"on":"ended";
+  o.trades.push({id:sl(t.id,40),at:sl(t.at,40),a:{board:t.a.board,key:t.a.key,n:sl(t.a.n,80)},b:{board:t.b.board,key:t.b.key,n:sl(t.b.n,80)},start:t.start,end:okD(t.end)?t.end:"",st:st,note:sl(t.note,160),onAt:sl(t.onAt,40),doneAt:sl(t.doneAt,40)});}
+ o.trades=o.trades.slice(-PEG_TRADES);return o;}
 function pegDropped(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);return Object.keys(b.pegs).filter(k=>{const m=k.split("-");return +m[0]>rows||+m[1]>cols;}).sort((x,y)=>{const a=x.split("-"),c=y.split("-");return(+a[0]-+c[0])||(+a[1]-+c[1]);});}
 function pegResize(b,rows,cols){rows=pegDim(rows,b.rows);cols=pegDim(cols,b.cols);const dropped=pegDropped(b,rows,cols),pegs={};
  for(const k of Object.keys(b.pegs))if(!dropped.includes(k))pegs[k]=b.pegs[k];
@@ -1351,6 +1423,41 @@ function pegFlexRemove(d){d=pegsClean(d);const b=d.boards["Bull board"];if(!b)re
  let nb=b;gone.forEach(j=>{const r=pegJobRemove(nb,j.id);if(r.ok)nb=r.board;});
  const mundo=(d.mundo||[]).map(u=>({...u,snap:{...u.snap,boards:Object.fromEntries(Object.entries(u.snap.boards).map(([k,v])=>{const jb={...v.jobs};if(k==="Bull board")gone.forEach(j=>{delete jb[j.id];});return[k,{...v,jobs:jb}];}))}}));
  return{data:{...d,boards:{...d.boards,"Bull board":nb},mundo:mundo},removed:gone.length};}
+/* v100: drop the built-in Flex crane / Flex steve boards. An untouched one (no names, notes, job pegs, takes, undo, custom size, global peg on it) is deleted;
+   one with any data stays as a custom board under the same name, so nothing is lost. */
+function pegFlexBoardsRemove(d){d=pegsClean(d);const removed=[],kept=[];let bs={...d.boards},cu=[...d.custom];
+ for(const n of PEG_FLEX_GONE){const b=bs[n];if(!b){cu=cu.filter(x=>x!==n);continue;}
+  const used=Object.keys(b.pegs||{}).length||(b.jobs||[]).length||(b.takes||[]).length||(b.undo||[]).length||b.cm||(d.globals||[]).some(g=>g.board===n);
+  if(used){kept.push(n);if(!cu.includes(n))cu.push(n);}else{delete bs[n];cu=cu.filter(x=>x!==n);removed.push(n);}}
+ return{data:{...d,boards:bs,custom:cu,sel:PEG_FLEX_GONE.includes(d.sel)&&removed.includes(d.sel)?"Bull board":d.sel},removed,kept};}
+/* v100: every hall board has its own named job peg(s): Stevedore + Flex steve, Sling (no flex sling), Crane + Flex crane, Little crane, Trucker, Wheat.
+   They are ordinary job pegs (b.jobs), so they place/advance/take/undo, log takes and share exactly like any other job peg, separately per Day/Night side.
+   Added once per side, never duplicated (matched by name); a global peg already called "Flex crane"/"Flex steve" etc. is converted into the board peg,
+   keeping its slip if it sat on that board and moving its takes on that board into the board's take log. */
+const PEG_BOARD_PEGS={"Stevedore board":[["Stevedore",4],["Flex steve (lashers)",3,["flex steve"]]],"Sling board":[["Sling",2]],"Crane board":[["Crane",0],["Flex crane",1]],"Little crane board":[["Little crane",5]],"Trucker board":[["Trucker",6]],"Wheat board":[["Wheat",11]]};
+function pegBoardPegsSeed(d){d=pegsClean(d);const boards={...d.boards};let globals=[...(d.globals||[])],glog=[...(d.glog||[])];const added=[],converted=[],gone=[];
+ for(const bn of Object.keys(PEG_BOARD_PEGS)){let b=boards[bn]||pegBoardNew(bn);const jobs=[...(b.jobs||[])];let takes=[...(b.takes||[])];
+  for(const [nm,col,al] of PEG_BOARD_PEGS[bn]){const same=x=>[nm.toLowerCase(),...(al||[])].includes(String(x).toLowerCase());if(jobs.some(j=>same(j.name))||jobs.length>=PEG_JOBS)continue;
+   let id="bp-"+nm.toLowerCase().replace(/\(.*\)/,"").trim().replace(/[^a-z0-9]+/g,"-");while(jobs.some(j=>j.id===id))id+="x";
+   const g=globals.find(x=>same(x.name));let pos="";
+   if(g){if(g.board===bn&&g.pos&&/^(\d+)-(\d+)$/.test(g.pos)){const m=/^(\d+)-(\d+)$/.exec(g.pos);if(+m[1]<=b.rows&&+m[2]<=b.cols)pos=g.pos;}
+    const mv=glog.filter(t=>t.gid===g.id&&t.board===bn);takes=[...takes,...mv.map(t=>({id:t.id,at:t.at,d:t.d,jid:id,job:nm,person:t.person,pos:t.pos,num:t.num}))].sort((a,c)=>a.at<c.at?-1:1).slice(-PEG_TAKES);
+    glog=glog.filter(t=>!(t.gid===g.id&&t.board===bn));globals=globals.filter(x=>x.id!==g.id);gone.push(g.id);converted.push(nm);}
+   jobs.push({id:id,name:nm,color:col,pos:pos});added.push(bn+": "+nm);}
+  boards[bn]={...b,jobs:jobs,takes:takes};}
+ return{data:pegsClean({...d,boards:boards,globals:globals,glog:glog,gundo:(d.gundo||[]).map(u=>{const p={...(u.pegs||{})};gone.forEach(id=>{delete p[id];});return{...u,pegs:p};})}),added,converted};}
+/* v100: Flex stevedores are lashers. If a take ever pre-fills a shift, this peg maps to PMA 0009 Lasher (no other job-list change). */
+const PEG_JOB_LINK={"flex steve (lashers)":"0009"};function pegJobLink(name){return PEG_JOB_LINK[String(name||"").toLowerCase()]||"";}
+const PEG_CHIP_SHORT={"Flex steve (lashers)":"Flex steve"};
+/* v100: Daniel - the regular Stevedore peg also dispatches lashing at the regular start (no default job); flex lashing is the drop. The shift form has no flex-start option, so none is set. */
+const PEG_HINT={"Flex steve (lashers)":"Flex lashing at the drop"};
+/* v100: any peg take (board job peg or global peg) can pre-fill a new shift (never saves). Daniel's hour rules:
+   Flex steve (lashers) = 0009 Lasher, 9 h (flex lashing at the drop); crane & strad = 10 h (sometimes 11 - edit);
+   everything else 8 h straight time unless there's a finish with OT (add OT in the form as usual). Little crane is a supplemental (seniority) board - same job/rate as Crane, so it gets the same 10 h and no separate rate.
+   Only the Flex steve peg forces a job. */
+const PEG_PREFILL_HRS={"flex steve (lashers)":9,"crane":10,"flex crane":10,"little crane":10},PEG_PREFILL_DEF=8;
+function pegTakeHours(n){const k=String(n||"").trim().toLowerCase();if(Object.prototype.hasOwnProperty.call(PEG_PREFILL_HRS,k))return PEG_PREFILL_HRS[k];return /\bstrad(dle)?s?\b|straddle/.test(k)?10:PEG_PREFILL_DEF;}
+function pegTakePrefill(t){const n=t&&(t.job||t.peg);if(!n)return null;return{date:/^\d{4}-\d{2}-\d{2}$/.test(t.d||"")?t.d:"",job:pegJobLink(n),hours:pegTakeHours(n),name:String(n)};}function pegHint(name){return PEG_HINT[String(name||"")]||"";}
 function pegsSeed(d){d=pegsClean(d);if(d.seeded)return d;const nb=d.boards["Bull board"]||pegBoardNew();
  if(!nb.jobs.length)d.boards["Bull board"]=pegPresetAdd(nb).board;d.seeded=true;return d;}
 
@@ -1441,6 +1548,44 @@ function pegSlipUndo(d,now){now=pegNowOf(now);const st=d.mundo||[];if(!st.length
   nd.boards[bn]={...cur,rows:Math.max(cur.rows,sn.rows),pegs:JSON.parse(JSON.stringify(sn.pegs)),updated:sn.updated,jobs:(cur.jobs||[]).map(j=>Object.prototype.hasOwnProperty.call(sn.jobs,j.id)?{...j,pos:sn.jobs[j.id]}:j)};}
  const gm={};u.snap.globals.forEach(g=>{gm[g.id]=g;});nd.globals=(d.globals||[]).map(g=>gm[g.id]?{...g,board:gm[g.id].board,pos:gm[g.id].pos}:g);
  nd.mundo=st.slice(0,-1);return{ok:true,data:nd,undone:u};}
+/* ===== v100: trades - two people switch spots on different boards (same Day/Night side).
+   Daniel: dispatch makes the call, so the app only RECORDS trades: nothing is enforced or automated. Start date and an optional end date are info only
+   (hint: trades run 7-30 days, dispatch decides); nobody is ever moved without a tap; "End trade" (with confirm) puts both back, any time. ===== */
+const PEG_TRADES=60,PEG_TRADE_LEN=[7,14,30],PEG_TRADE_HINT="Trades run 7–30 days — dispatch decides.";
+function pegDayP(s){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?Date.UTC(+m[1],+m[2]-1,+m[3]):NaN;}
+function pegDayAdd(ds,n){const t=pegDayP(ds);if(!isFinite(t))return"";const x=new Date(t+n*864e5);return x.getUTCFullYear()+"-"+String(x.getUTCMonth()+1).padStart(2,"0")+"-"+String(x.getUTCDate()).padStart(2,"0");}
+function pegDayDiff(a,b){return Math.round((pegDayP(b)-pegDayP(a))/864e5);}
+function pegDateShort(ds){const t=pegDayP(ds);if(!isFinite(t))return ds||"";const x=new Date(t);return["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][x.getUTCMonth()]+" "+x.getUTCDate();}
+function pegTradeLive(t){return !!t&&t.st==="on";}
+function pegTradeAt(d,board,key){return(d.trades||[]).find(t=>pegTradeLive(t)&&((t.a.board===board&&t.a.key===key)||(t.b.board===board&&t.b.key===key)))||null;}
+/* info-only marker text: "until <end>" while the end date hasn't passed, a gentle "ended <end>?" after it, plain "Traded" with no end date */
+function pegTradeMarkText(t,today){if(!t.end)return{full:"⇄ Traded",s:"⇄ Traded",x:"⇄"};const dd=pegDateShort(t.end);
+ return today>t.end?{full:"⇄ Trade ended "+dd+"?",s:"⇄ ended "+dd+"?",x:"⇄ "+dd+"?"}:{full:"⇄ Trade until "+dd,s:"⇄ until "+dd,x:"⇄ "+dd};}
+function pegSpot(d,board,key){const b=d.boards[board]||pegBoardNew(board);return board+" spot #"+pegKeyNum(b,key);}
+function pegSwapSlips(d,ba,ka,bb,kb,now){const nd={...d,boards:{...d.boards}},A={...(nd.boards[ba]||pegBoardNew(ba)),pegs:{...(nd.boards[ba]||pegBoardNew(ba)).pegs}};nd.boards[ba]=A;
+ const B=ba===bb?A:{...(nd.boards[bb]||pegBoardNew(bb)),pegs:{...(nd.boards[bb]||pegBoardNew(bb)).pegs}};nd.boards[bb]=B;
+ const x=A.pegs[ka],y=B.pegs[kb];if(y)A.pegs[ka]=y;else delete A.pegs[ka];if(x)B.pegs[kb]=x;else delete B.pegs[kb];const at=pegNowOf(now).toISOString();A.updated=at;B.updated=at;return nd;}
+function pegTradeSet(d,id,ch){return{...d,trades:(d.trades||[]).map(t=>t.id===id?{...t,...ch}:t)};}
+/* record a trade the member was given: both switch spots now (dates are info only, never checked or acted on) */
+function pegTradeNew(d,a,b,start,end,now){now=pegNowOf(now);const names=pegBoardOrder(d),okD=x=>/^\d{4}-\d{2}-\d{2}$/.test(x||"");
+ if(!a||!b||!names.includes(a.board)||!names.includes(b.board))return{ok:false,error:"That board doesn't exist."};
+ if(a.board===b.board)return{ok:false,error:"A trade is between two different boards. To change places on the same board, use Move."};
+ const va=(d.boards[a.board]||pegBoardNew(a.board)).pegs[a.key],vb=(d.boards[b.board]||pegBoardNew(b.board)).pegs[b.key];
+ if(!va||!va.n||!vb||!vb.n)return{ok:false,error:"Pick a spot that has a name on it."};
+ for(const [x,v] of [[a,va],[b,vb]]){if(pegTradeAt(d,x.board,x.key))return{ok:false,error:v.n+" is already in a trade. End that trade first."};}
+ start=okD(start)?start:pegLocalDay(now);end=okD(end)?end:"";
+ let tid="tr"+now.getTime().toString(36),i=0;while((d.trades||[]).some(t=>t.id===tid))tid="tr"+now.getTime().toString(36)+(++i);
+ const t={id:tid,at:now.toISOString(),a:{board:a.board,key:a.key,n:va.n},b:{board:b.board,key:b.key,n:vb.n},start:start,end:end,st:"on",note:""};
+ const nd=pegSwapSlips({...d,trades:[...(d.trades||[]),t].slice(-PEG_TRADES)},a.board,a.key,b.board,b.key,now);
+ return{ok:true,data:nd,trade:t,msg:"Traded: "+va.n+" ("+pegSpot(d,a.board,a.key)+") ⇄ "+vb.n+" ("+pegSpot(d,b.board,b.key)+")"+(end?", until "+pegDateShort(end):"")+". Use End trade to put them back."};}
+/* put both people back. Finds them where the trade put them (or anywhere on that board if someone moved them since). */
+function pegTradeBack(d,t,now){const B=d.boards[t.b.board]||pegBoardNew(t.b.board),A=d.boards[t.a.board]||pegBoardNew(t.a.board);
+ const find=(bd,key,n)=>bd.pegs[key]&&bd.pegs[key].n===n?key:Object.keys(bd.pegs).find(k=>bd.pegs[k]&&bd.pegs[k].n===n)||"";
+ const ka=find(B,t.b.key,t.a.n),kb=find(A,t.a.key,t.b.n);if(!ka||!kb)return null;return pegSwapSlips(d,t.b.board,ka,t.a.board,kb,now);}
+/* End trade: any time (dispatch decides) - only ever from a tap + confirm */
+function pegTradeEnd(d,id,now){now=pegNowOf(now);const t=(d.trades||[]).find(x=>x.id===id);if(!pegTradeLive(t))return{ok:false,error:"That trade is already over."};
+ const r=pegTradeBack(d,t,now);if(!r)return{ok:false,error:"Couldn't find "+t.a.n+" and "+t.b.n+" to put them back. Move them by hand, then end the trade again."};
+ return{ok:true,data:pegTradeSet(r,id,{st:"ended",doneAt:now.toISOString()}),msg:"Trade ended: "+t.a.n+" and "+t.b.n+" are back on their own spots."};}
 /* edit a column of slips: insert / remove / up / down; job pegs and global pegs ride with their slip */
 function pegColOp(d,bn,op,r,c){const b=d.boards[bn];if(!b)return{ok:false,error:"No such board."};r=+r;c=+c;
  if(!(r>=1&&r<=b.rows&&c>=1&&c<=b.cols))return{ok:false,error:"That slip is not on the board."};
@@ -1841,7 +1986,7 @@ function gearGuideHtml(){return GEAR_GUIDE.map(([id,t,h])=>`<section class="gsec
 if(typeof document!=="undefined"){
 const $=id=>document.getElementById(id),KEY="l19hours.v1";
 let entries=[];try{const raw=localStorage.getItem(KEY)||"[]",c=cleanEntries(JSON.parse(raw));entries=c.ok;
- if(c.bad.length&&localStorage.getItem(KEY+".raw")===null)localStorage.setItem(KEY+".raw",raw);}catch(e){}
+ if(c.bad.length&&localStorage.getItem(KEY+".raw")===null)localStorage.setItem(KEY+".raw",raw);}catch(e){try{const raw=localStorage.getItem(KEY);if(raw&&localStorage.getItem(KEY+".bad")===null)localStorage.setItem(KEY+".bad",raw);}catch(_){}} /* v100: an unreadable shift list is kept as l19hours.v1.bad before anything is saved over it */
 const save=()=>{localStorage.setItem(KEY,JSON.stringify(entries));if(typeof renderBanners==='function')renderBanners();};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let editId=null,selDate=null,retTo="week",hk="week",hv="list",cm=fmtDate(new Date()).slice(0,7),cd=null,sf={q:"",from:"",to:""},pendJump=null,ha=weekStart(fmtDate(new Date())),hidePay=false;try{hidePay=localStorage.getItem("l19.hidepay")==="1"}catch(e){}
@@ -1963,7 +2108,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Delete this shift?")){entries=entries.filter(x=>x.id!==b.dataset.x);save();renderWeek();}});}
 function download(name,type,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
 $("imp").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;let txt0="";try{txt0=await f.text();const inc=validImport(JSON.parse(txt0));
- if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=lsJson(STB,[]),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.ba)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.ba));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(o.pegsNight&&typeof o.pegsNight==="object")LSset(PGKN,JSON.stringify($("merge").checked&&lsJson(PGKN,null)?pegsMerge(lsJson(PGKN,null),o.pegsNight):pegsClean(o.pegsNight)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(o&&o.equip&&typeof o.equip==="object"){LSset(EQK,JSON.stringify($("merge").checked?eqMerge(lsJson(EQK,null),o.equip):eqClean(o.equip)));if(typeof eqB!=="undefined"){eqB=eqLoad();pgRender();}}if(o&&o.gear&&typeof o.gear==="object"){try{localStorage.setItem("l19.gear",JSON.stringify({v:1,cards:gearStoreMerge((lsJson("l19.gear",null)||{}).cards,o.gear)}));}catch(_){}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
+ if(!inc)throw 0;try{const o=JSON.parse(txt0);if(o&&Array.isArray(o.stubs)){const cur=stubsGet(),mp=new Map(cur.map(x=>[x.week,x]));o.stubs.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")).forEach(x=>mp.set(x.week,x));LSset(STB,JSON.stringify([...mp.values()]));}if(o&&num(o.startHours)>0&&num(LS(STH,"0"))===0){LSset(STH,String(num(o.startHours)));$("sth").value=num(o.startHours);}if(o&&(o.setupDone===true||inc.length))LSset(SUD,"1");if(o&&LS(TMODE,"")===""&&(o.tierMode==="auto"||o.tierMode==="manual"))LSset(TMODE,o.tierMode);if(o&&TIERS.some(x=>x[0]===o.tier)&&LS("l19hours.tier","")==="")LSset("l19hours.tier",o.tier);if(o&&PIERS.includes(o.defPier)&&!LS(DPIER,""))LSset(DPIER,o.defPier);if(o&&typeof o.defJob==="string"&&o.defJob&&!LS(DJOB,""))LSset(DJOB,o.defJob);if(o&&Array.isArray(o.needs)){const nm=$("merge").checked?needsMerge(needsList(),o.needs):needsClean(o.needs);LSset(NDK,JSON.stringify(nm));}if(o&&cleanPhone(o.ba)&&!LS(DSP,"")){LSset(DSP,cleanPhone(o.ba));}if(o&&hasV(o.mileRate)&&LS(MRK,"")===""){LSset(MRK,String(num(o.mileRate)));loadMileRate();}if(o&&o.tourDone===true)LSset(TOURK,"1");if(o&&o.settings)l19SettingsImport(o.settings,!$("merge").checked);if(o&&typeof o.ratesSeen==="string"&&o.ratesSeen&&!LS(RSEEN,""))LSset(RSEEN,o.ratesSeen);if(o&&o.pegs&&typeof o.pegs==="object"){LSset(PGK,JSON.stringify($("merge").checked?pegsMerge(lsJson(PGK,null),o.pegs):pegsClean(o.pegs)));if(o.pegsNight&&typeof o.pegsNight==="object")LSset(PGKN,JSON.stringify($("merge").checked&&lsJson(PGKN,null)?pegsMerge(lsJson(PGKN,null),o.pegsNight):pegsClean(o.pegsNight)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}if(o&&o.equip&&typeof o.equip==="object"){LSset(EQK,JSON.stringify($("merge").checked?eqMerge(lsJson(EQK,null),o.equip):eqClean(o.equip)));if(typeof eqB!=="undefined"){eqB=eqLoad();pgRender();}}if(o&&o.gear&&typeof o.gear==="object"){try{localStorage.setItem("l19.gear",JSON.stringify({v:1,cards:gearStoreMerge((lsJson("l19.gear",null)||{}).cards,o.gear)}));}catch(_){}}if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}if(typeof tierUI==="function")tierUI();}catch(_){}entries=$("merge").checked?mergeEntries(entries,inc):inc;save();refreshEmp();$("msg").textContent="Imported "+inc.length+" entries.";}
  catch(e){$("msg").textContent="Import failed: not a valid backup file.";}ev.target.value="";};
 $("wipe").onclick=()=>{if(confirm("Delete ALL shifts on this device? Export a backup first.")&&confirm("Really delete everything?")){entries=[];save();LSset(STB,"[]");LSset(NDK,"[]");try{localStorage.removeItem(PGK);localStorage.removeItem(PGKN);}catch(e){}pgD=pegsLoad();pgClose();pgRender();lAll().then(a=>(a||[]).filter(r=>String(r.k).startsWith("peg|")).forEach(r=>lDel(r.id))).then(refreshPegPic).catch(()=>{});renderNeeds();$("msg").textContent="All data deleted.";}};
 /* v66: every page, sheet and overlay opens at the top of the screen. pageTop() resets the window (and the
@@ -2077,6 +2222,51 @@ function fitData(){fitBox("banners");fitBox("v-data");}
 /* v99: stray two-line buttons on Ships and Chat at large text: same shrink-to-fit, button by button */
 function fitStrays(){["clrL","ndPh","chSet"].forEach(id=>{const e=document.getElementById(id);if(e&&e.offsetParent)fitEl(e);});}
 window.l19FitData=fitData;
+
+/* v100: Pegs tab + its sheets stay clean at Large/XL and with phone font scaling. Same rule as v82/v83/v99: a label stays on one line by shrinking (never below ~80% of the text size / 13px
+   while a better layout exists), then a shorter WORD label (full text kept as aria-label), and a row that still can't fit is split into even full-width rows (2-up grid for 4, one per row otherwise).
+   Runs after a Pegs render, on width change and on text-size change only - never on scroll. */
+const PG_SHORT=[[/^🚜 Reserve equipment with this name$/,["🚜 Reserve equipment","🚜 Reserve"]],[/^Move to column\/row$/,["Move there"]],[/^＋ Insert blank slip above$/,["＋ Insert blank"]],[/^Remove slip \(close gap\)$/,["Remove slip"]],[/^📷 Take another photo$/,["📷 Another photo"]],[/^📷 Take photo$/,["📷 Photo"]],[/^🖼 Choose from gallery$/,["🖼 Gallery"]],[/^Post board update \(share\)$/,["Post update"]],
+ [/^📤 Share board picture$/,["📤 Share picture"]],[/^Share this board with the room$/,["Share this board","Share board"]],[/^🔗 Shared live: tap to stop sharing$/,["🔗 Shared live: stop","🔗 Stop sharing"]],
+ [/^Undo \(global pegs\)$/,["Undo (global)","Undo"]],[/^Undo: .+/,["Undo"]],[/^Global log$/,["Log"]],[/^Add preset jobs \(.*\)$/,["Add preset jobs","Presets"]],
+ [/^↩ Undo \(nothing yet\)$/,["↩ Undo"]],[/^↩ Undo: .+/,["↩ Undo"]],[/^↩ Undo move \(nothing yet\)$/,["↩ Undo move"]],[/^↩ Undo move: .+/,["↩ Undo move"]],[/^Who took what$/,["Who took"]],
+ [/^Log “taken” when I place a peg: (on|off)$/,m=>["Log “taken”: "+m[1],"Taken: "+m[1]]],[/^Move mode: Insert \(push others down\)$/,["Move mode: Insert","Mode: Insert"]],[/^Move mode: Swap places$/,["Move mode: Swap","Mode: Swap"]],
+ [/^Photo beside board: (on|off)$/,m=>["Photo beside: "+m[1],"Photo: "+m[1]]],[/^Import names$/,["Import"]],[/^Export names$/,["Export"]],[/^Remove this custom board$/,["Remove board"]],
+ [/^Manage units & clear \(admin\)$/,["Manage units (admin)","Manage units"]],[/^Global pegs log · all boards$/,["Global pegs log"]],[/^Flex steve \(lashers\): Flex lashing at the drop$/,["Flex steve: lashing at the drop","Flex lashing at the drop"]],[/^Columns \(1–60\)$/,["Columns"]],[/^Rows \(1–60\)$/,["Rows"]]];
+function pgShorts(t){for(const [re,v] of PG_SHORT){const m=t.match(re);if(m)return typeof v==="function"?v(m):v;}return [];}
+function pgFitReset(el){if(el.dataset.pfs!=null){if(el.textContent===el.dataset.pfs)el.textContent=el.dataset.pff;if(el.dataset.pfa==="1")el.removeAttribute("aria-label");delete el.dataset.pfs;delete el.dataset.pff;delete el.dataset.pfa;}el.style.fontSize="";el.classList.remove("pf1");}
+/* one element: shrink to floor, then each shorter label; true when it fits on one line */
+function pgFitOne(el,floor){const plain=el.children.length===0,full=el.textContent,over=()=>el.scrollWidth>el.clientWidth+0.5;
+ const shrink=()=>{el.style.fontSize="";let fs=parseFloat(getComputedStyle(el).fontSize),n=0;while(over()&&fs>floor&&n<80){fs=Math.max(floor,fs-0.5);n++;el.style.fontSize=fs+"px";}return !over();};
+ if(!el.clientWidth){pgFitLater();return true;}el.classList.add("pf1");if(shrink())return true;
+ if(plain)for(const t of pgShorts(full.trim())){el.textContent=t;el.dataset.pfs=t;el.dataset.pff=full;if(!el.hasAttribute("aria-label")){el.setAttribute("aria-label",full.trim());el.dataset.pfa="1";}if(shrink())return true;}
+ return false;}
+function pgFitIn(root){if(!root||!root.offsetParent&&!root.classList.contains("sheet"))return;
+ const base=parseFloat(getComputedStyle(document.documentElement).fontSize)||16,F=Math.max(13,base*0.8);
+ const skip=el=>!el.offsetParent||el.closest("#pgGrid,#pgPane,.lgd,.bbzb,.pgnav,.gp,.cal,.slip");
+ root.querySelectorAll(".row.pgst,.row.pgg2").forEach(r=>r.classList.remove("pgst","pgg2"));
+ const els=[...root.querySelectorAll("button,label,summary,.eqsum,h3,h4,.pghint")].filter(e=>!skip(e)&&!e.querySelector(".lb19"));els.forEach(pgFitReset);
+ const h=root.querySelector(":scope>h3 .lb19");if(h){h.classList.remove("blk");const h3=h.parentElement;const r=document.createRange();r.selectNodeContents(h3);const tops=new Set([...r.getClientRects()].filter(q=>q.width>1).map(q=>Math.round(q.top)));if(tops.size>1)h.classList.add("blk");}
+ root.querySelectorAll(".lgd .lc>span:last-child").forEach(sp=>{if(!sp.offsetParent)return;sp.style.fontSize="";sp.classList.remove("pf1");const tn=sp.firstChild&&sp.firstChild.nodeType===3?sp.firstChild:null;
+  if(tn&&sp.dataset.pff!=null){tn.nodeValue=sp.dataset.pff;delete sp.dataset.pff;}
+  const over=()=>sp.scrollWidth>sp.clientWidth+0.5,shr=fl=>{let fs=parseFloat(getComputedStyle(sp).fontSize),n=0;while(over()&&fs>fl&&n<80){fs=Math.max(fl,fs-0.5);n++;sp.style.fontSize=fs+"px";}return !over();};
+  sp.classList.add("pf1");if(shr(F))return;const sh=tn&&PEG_CHIP_SHORT[tn.nodeValue];if(sh){sp.dataset.pff=tn.nodeValue;tn.nodeValue=sh;sp.style.fontSize="";if(shr(F))return;}
+  if(!shr(11)){sp.classList.remove("pf1");sp.style.fontSize="";}});
+ const rows=new Set();
+ els.forEach(el=>{const row=el.tagName==="BUTTON"&&el.parentElement.classList.contains("row")?el.parentElement:null;
+  if(row&&[...row.children].filter(b=>b.tagName==="BUTTON"&&b.offsetParent).length>1&&![...row.children].some(c=>/^(INPUT|SELECT)$/.test(c.tagName)&&c.offsetParent)){rows.add(row);return;}
+  if(!pgFitOne(el,F)&&!pgFitOne(el,13))pgFitOne(el,11);});
+ rows.forEach(row=>{const bs=[...row.children].filter(b=>b.tagName==="BUTTON"&&b.offsetParent);
+  if(bs.map(b=>pgFitOne(b,F)).every(Boolean))return;
+  bs.forEach(pgFitReset);row.classList.add(bs.length%2===0&&bs.length>2?"pgg2":"pgst");
+  if(row.classList.contains("pgg2")&&!bs.map(b=>pgFitOne(b,F)).every(Boolean)){bs.forEach(pgFitReset);row.classList.replace("pgg2","pgst");}
+  bs.forEach(b=>{if(b.classList.contains("pf1"))return;if(!pgFitOne(b,F)&&!pgFitOne(b,13))pgFitOne(b,11);});});}
+function pgZbFit(){const z=document.getElementById("pgZb");if(!z||!z.offsetParent)return;z.classList.remove("zb2");const k=[...z.children].filter(x=>x.offsetParent);if(new Set(k.map(x=>Math.round(x.getBoundingClientRect().top))).size>1)z.classList.add("zb2");}
+function pgFit(){const v=document.getElementById("v-pegs");if(v&&!v.classList.contains("hide")){pgFitIn(document.getElementById("pgCard"));pgZbFit();}document.querySelectorAll(".sheet").forEach(pgFitIn);}
+/* not laid out yet (view/sheet still opening): try again shortly, a few times at most - never on scroll */
+let pgFitL=0,pgFitLT=0;function pgFitLater(){if(pgFitLT||pgFitL>=4)return;pgFitL++;pgFitLT=setTimeout(()=>{pgFitLT=0;pgFit();},120);}
+let pgFitQ=0;function pgFitSoon(){if(pgFitQ)return;pgFitL=0;pgFitQ=requestAnimationFrame(()=>{pgFitQ=0;pgFit();});}
+window.l19PgFit=pgFit;
 window.l19Fit=fitView;
 /* v84: playlist button stays one line: shrink (to 11px at most) if the text is wider than the button */
 function musFit(reset){const a=document.getElementById("musicBtn");if(!a||!a.clientWidth)return;if(reset)a.style.fontSize="";let fs=parseFloat(getComputedStyle(a).fontSize),n=0;while(a.scrollWidth>a.clientWidth+0.5&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}
@@ -2098,12 +2288,13 @@ function hdrFit(){const h=document.getElementById("hdr"),m=h&&h.querySelector(".
  h.classList.remove("tight");t.style.fontSize="";l.style.fontSize="";const mid=e=>{const r=e.getBoundingClientRect();return (r.top+r.bottom)/2;},one=()=>Math.abs(mid(t)-mid(l))<4&&Math.abs(mid(l)-mid(m))<4&&h.scrollWidth<=h.clientWidth;
  let ft=parseFloat(getComputedStyle(t).fontSize),fl=parseFloat(getComputedStyle(l).fontSize),n=0;
  while(!one()&&n<120&&(ft>14||fl>12)){if(n===10)h.classList.add("tight");ft=Math.max(14,ft-0.5);fl=Math.max(12,fl-0.5);n++;t.style.fontSize=ft+"px";l.style.fontSize=fl+"px";}}
-window.l19HdrFit=hdrFit;onWidth(hdrFit);setTimeout(()=>{hdrFit();new MutationObserver(()=>{hdrFit();if(typeof fitData==="function"){fitData();fitStrays();}}).observe(document.documentElement,{attributes:true,attributeFilter:["data-ts"]});const n=document.getElementById("hdLn");if(n)new MutationObserver(hdrFit).observe(n,{childList:true,characterData:true,subtree:true});},0);
+window.l19HdrFit=hdrFit;onWidth(hdrFit);setTimeout(()=>{hdrFit();new MutationObserver(()=>{hdrFit();if(typeof fitData==="function"){fitData();fitStrays();pgFitSoon();}}).observe(document.documentElement,{attributes:true,attributeFilter:["data-ts"]});const n=document.getElementById("hdLn");if(n)new MutationObserver(hdrFit).observe(n,{childList:true,characterData:true,subtree:true});},0);
 /* v93: ⏭ skip to the next main-playlist song from its start (wraps last to first); if muted it only moves the position */
 let musToastT=0;function musSkip(){const a=musEl();if(!a)return;musI=(musI+1)%PLAYLIST.length;a.loop=PLAYLIST.length===1;a.src=PLAYLIST[musI].src;try{a.currentTime=0;}catch(e){}
  if(musOn())a.play().then(()=>{musStarted=true;},()=>{});const t=document.getElementById("musToast");if(t){t.textContent="♪ "+PLAYLIST[musI].title;t.classList.add("on");clearTimeout(musToastT);musToastT=setTimeout(()=>t.classList.remove("on"),2000);}}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hdSkip"))musSkip();});
-setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()=>musI};onWidth(()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data"){musFit(1);fitData();}else{fitBox("banners");if(curV==="ships"||curV==="chat")fitStrays();}return r;})(show);},0);/* v88: The Rusty Hook (Local 19 Pensioners Club newsletter) link at the bottom of History; one line: shrink, then short label */
+setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()=>musI};onWidth(()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data"){musFit(1);fitData();}else{fitBox("banners");if(curV==="ships"||curV==="chat")fitStrays();if(curV==="pegs")pgFitSoon();}if(curV!=="pegs"&&typeof pgFo!=="undefined"&&pgFo)pgFocusOff(false);return r;})(show);
+ pgRender=(f=>function(){const r=f.apply(this,arguments);if(pgFo)pgFocusTitle();pgFitSoon();return r;})(pgRender);pgGlRender=(f=>function(){const r=f.apply(this,arguments);pgFitSoon();return r;})(pgGlRender);eqRender=(f=>function(){const r=f.apply(this,arguments);pgFitSoon();return r;})(eqRender);},0);/* v88: The Rusty Hook (Local 19 Pensioners Club newsletter) link at the bottom of History; one line: shrink, then short label */
 /* v90: Waterfront Federal Credit Union (the longshore credit union) link, stacked under The Rusty Hook; opens in a new tab (never framed) */
 /* v96: California locals get the ILWU Credit Union instead (serves ILWU members in California; logo = ilwucu.org header logo img/ilwu_logo.svg, rendered to PNG) */
 const WF_FULL="Waterfront FCU",WF_SHORT="Waterfront",WF_HTML='<div class="musw wfw"><a id="wfBtn" class="musb" href="https://www.waterfrontfcu.org/" target="_blank" rel="noopener" aria-label="Waterfront Federal Credit Union (opens in new tab)"><img src="img/waterfront-fcu.png" alt="" width="32" height="32"><span>'+WF_FULL+'</span></a></div>';
@@ -2140,7 +2331,7 @@ function rhClose(){const d=document.getElementById("rhv");if(!d)return;d.remove(
 addEventListener("popstate",()=>{if(document.getElementById("rhv")&&!(history.state&&history.state.l19rh))rhClose();});
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#rhBtn,#tgpBtn");if(!b)return;e.preventDefault();const P=pensCfg(curLocal());rhOpen(b.id==="tgpBtn"?TGP:P&&!P.rh?{url:P.href,title:P.title,ftitle:P.ftitle,music:false,btn:"rhBtn"}:null);});
 onWidth(rhBarFit);window.l19Rh={open:rhOpen,close:rhClose};onWidth(rhFit);
-setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);onWidth(()=>{fitView("v-hist");fitView("v-week");fitData();fitStrays();});onWidth(()=>segFit());
+setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);onWidth(()=>{fitView("v-hist");fitView("v-week");fitData();fitStrays();pgFitSoon();});onWidth(()=>segFit());
 /* v83: short one-line period range, e.g. "Oct 1 – Dec 31, 2026" */
 function rangeShort(a,b){const M3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],f=d=>M3[+d.slice(5,7)-1]+" "+(+d.slice(8,10));
  return a.slice(0,4)===b.slice(0,4)?f(a)+" – "+f(b)+", "+b.slice(0,4):f(a)+", "+a.slice(0,4)+" – "+f(b)+", "+b.slice(0,4);}
@@ -2316,7 +2507,8 @@ cleanLetters();
 /* ===== v30 features: UI ===== */
 const LS=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:v;}catch(e){return d;}};
 const LSset=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
-const lsJson=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}};
+const lsJson=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){try{const raw=localStorage.getItem(k);if(raw!=null&&localStorage.getItem(k+".bad")==null)localStorage.setItem(k+".bad",raw);}catch(_){}return d;}}; /* v100: an unreadable value is kept as <key>.bad before anything replaces it */
+const stubsGet=()=>{const v=lsJson("l19.stubs",[]);return Array.isArray(v)?v.filter(x=>x&&typeof x==="object"&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||"")):[];}; /* v100: a damaged pay-stub list can no longer crash the Week tab */
 let curV="add";
 /* v81: the field is the Business Agent's number. The old dispatch number (l19.dispatch) is not carried over: removed, BA starts empty */
 const DSP="l19.ba",NDK="l19.needs";try{localStorage.removeItem("l19.dispatch");}catch(e){}
@@ -2330,9 +2522,28 @@ async function shareFile(name,type,text){const f=new File([text],name,{type});
 /* --- 1. backup reminder + export --- */
 function setLastBackup(){LSset(BK,new Date().toISOString());renderBanners();renderLastBk();}
 function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b>"+esc(backupAgo(LS(BK,""),todayS()))+"</b>";}
-async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:lsJson(STB,[]),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),pegsNight:lsJson(PGKN,null)?pegsClean(lsJson(PGKN,null)):undefined,equip:eqClean(lsJson(EQK,null)),gear:gearStoreClean((lsJson("l19.gear",null)||{}).cards),ba:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
+/* v100: everything else the app stores (your local, text size, chat name/room, reminders, peg view settings, migration flags...) so a reinstall or new phone gets it all back.
+   Not included: the screen-lock PIN, caches, and the internal raw copies. */
+const L19_SET_SKIP=/^(l19hours\.v1|l19\.stubs|l19\.pegs|l19\.pegs\.night|l19\.equip|l19\.gear|l19\.needs|l19\.pin|l19ships\.v1|l19\.shared|l19\.eqSlots|l19\.appVer|l19\.lastBackup|l19\.pegs\.v45raw|l19\.pegs\.v51raw|l19\.pegs\.bullbak|l19-bull-names)$|\.bad$|raw$/;
+function l19SettingsExport(){const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&!L19_SET_SKIP.test(k)){const v=localStorage.getItem(k);if(v!=null&&v.length<20000)o[k]=v;}}}catch(e){}return o;}
+function l19SettingsImport(set,replace){let n=0;if(!set||typeof set!=="object"||Array.isArray(set))return 0;for(const k of Object.keys(set)){if(typeof k!=="string"||k.indexOf("l19")!==0||L19_SET_SKIP.test(k)||typeof set[k]!=="string")continue;if(!replace&&LS(k,null)!=null)continue;LSset(k,set[k]);n++;}return n;}
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:stubsGet(),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),pegsNight:lsJson(PGKN,null)?pegsClean(lsJson(PGKN,null)):undefined,equip:eqClean(lsJson(EQK,null)),gear:gearStoreClean((lsJson("l19.gear",null)||{}).cards),ba:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),settings:l19SettingsExport(),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
+/* ===== v100: safety copies (Backup tab) ===== */
+function safeSummary(d){let n=0,b=0;try{const e=JSON.parse(d["l19hours.v1"]||"[]");n=Array.isArray(e)?e.length:0;}catch(e){}try{const p=JSON.parse(d["l19.pegs"]||"{}");b=Object.values(p.boards||{}).reduce((a,x)=>a+Object.values((x&&x.pegs)||{}).filter(v=>v&&v.n).length,0);}catch(e){}return n+" shift"+(n===1?"":"s")+(b?" · "+b+" peg name"+(b===1?"":"s"):"");}
+function safeLabel(x){return x.why==="update"?"Before "+x.to+(x.from&&x.from!=="older version"?" (from "+x.from+")":""):x.why==="before restore"?"Before a restore":"Saved by you";}
+function safeRender(){const el=$("safeList");if(!el)return;l19SafeList().then(list=>{
+ el.innerHTML=list.length?list.map(x=>`<div class="rlg"><p><b>${esc(safeLabel(x))}</b><br><span class="mut">${esc(new Date(x.at).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))} · ${esc(safeSummary(x.data||{}))}</span></p><div class="row"><button type="button" class="p" data-rs="${x.id}">Restore this copy</button></div></div>`).join(""):'<p class="mut">No safety copies yet. One is made automatically at the next update, or tap below.</p>';
+ el.querySelectorAll("[data-rs]").forEach(b=>b.onclick=()=>safeRestore(+b.dataset.rs,list));},()=>{el.innerHTML='<p class="mut">Safety copies aren\'t available in this browser. Use Back up now (JSON) instead.</p>';});}
+function safeRestore(id,list){const x=list.find(y=>y.id===id);if(!x||!x.data)return;
+ if(!confirm("Replace the data on this phone with the safety copy from "+new Date(x.at).toLocaleString()+"? What's on the phone now is saved as another safety copy first."))return;
+ const m=$("safeM");m.textContent="Restoring…";
+ l19SafePut(l19Keys(),APP_VERSION,"before restore").then(()=>{try{Object.keys(l19Keys()).forEach(k=>{if(!(k in x.data))localStorage.removeItem(k);});Object.keys(x.data).forEach(k=>localStorage.setItem(k,x.data[k]));localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){m.textContent="Restore failed (storage full?). Nothing was lost: your current data is in the newest safety copy.";return;}
+  m.textContent="Restored. Reloading…";setTimeout(()=>location.reload(),300);},()=>{m.textContent="Couldn't save the current data first, so nothing was changed. Use Back up now (JSON), then try again.";});}
+show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data")safeRender();return r;})(show);
+$("safeNow").onclick=()=>{const m=$("safeM");l19SafePut(l19Keys(),APP_VERSION,"manual").then(()=>{m.textContent="Safety copy saved on this phone.";safeRender();},()=>{m.textContent="Couldn't save a safety copy in this browser. Use Back up now (JSON).";});};
+
 
 /* ===== Dispatch links + Today's needs notes (text in localStorage + JSON backup; photos in IndexedDB, not in backup) ===== */
 function needsList(){return needsClean(lsJson(NDK,[]));}
@@ -2430,7 +2641,7 @@ function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=toda
 const PMA_PORTAL_URL="https://selfservice.pmanet.org/";
 const PMA_PORTAL_HTML=`<a class="pmab" id="pmaPortal" href="${PMA_PORTAL_URL}" target="_blank" rel="noopener" aria-label="PMA Dockworker Portal log in (opens selfservice.pmanet.org in a new tab)"><b aria-hidden="true">🔐</b><span>PMA Dockworker Portal log in</span></a><p class="mut pmah">Official PMA site (selfservice.pmanet.org) – check your actual pay stub there. Only sign in at this address.</p>`;
 /* --- 2. pay stub check (Week tab) --- */
-function renderStub(box){const stubs=lsJson(STB,[]),cur=stubs.find(s=>s.week===wk)||{},we=addDays(wk,6);
+function renderStub(box){const stubs=stubsGet(),cur=stubs.find(s=>s.week===wk)||{},we=addDays(wk,6);
  const row=s=>{const c=stubCompare(entries,s.week,s.hours,s.pay,{noPay:hidePay});return `<div class="ent"><div><b>${s.week.slice(5)} → ${addDays(s.week,6).slice(5)}</b> · stub ${r2(num(s.hours))}h${!hidePay&&s.pay!==""&&s.pay!=null?" · "+money(num(s.pay)):""}<div class="mut">${esc(c.msg)}</div></div><div class="acts"><button data-sx="${esc(s.week)}" class="d" aria-label="Delete stub check ${esc(s.week)}">🗑</button></div></div>`;};
  const past=[...stubs].sort((a,b)=>a.week<b.week?1:-1);
  box.innerHTML=`<div class="card"><h3>Pay stub check</h3><p class="mut" style="margin:0 0 4px">Week ${wk.slice(5)} → ${we.slice(5)} (Sat–Fri, the week shown above). Enter the totals printed on your stub.</p>
@@ -2443,9 +2654,9 @@ function renderStub(box){const stubs=lsJson(STB,[]),cur=stubs.find(s=>s.week===w
  ${past.length?`<div class="card"><h3>Past stub checks</h3>${past.map(row).join("")}</div>`:""}`;
  $("sthGo").onclick=()=>{const gh=$("sth_h").value,gp=$("sth_p")?$("sth_p").value:(cur.pay!=null?cur.pay:"");
   if(gh===""||!(parseFloat(gh)>=0)){$("sthRes").textContent="Enter the gross hours from your stub.";return;}
-  const c=stubCompare(entries,wk,gh,gp,{noPay:hidePay});const a=lsJson(STB,[]).filter(s=>s.week!==wk);a.push({id:uid(),week:wk,hours:gh,pay:gp,added:new Date().toISOString()});LSset(STB,JSON.stringify(a));
+  const c=stubCompare(entries,wk,gh,gp,{noPay:hidePay});const a=stubsGet().filter(s=>s.week!==wk);a.push({id:uid(),week:wk,hours:gh,pay:gp,added:new Date().toISOString()});LSset(STB,JSON.stringify(a));
   renderStub(box);$("sthRes").textContent=c.msg;};
- box.querySelectorAll("[data-sx]").forEach(b=>b.onclick=()=>{if(confirm("Delete this stub check?")){LSset(STB,JSON.stringify(lsJson(STB,[]).filter(s=>s.week!==b.dataset.sx)));renderStub(box);}});}
+ box.querySelectorAll("[data-sx]").forEach(b=>b.onclick=()=>{if(confirm("Delete this stub check?")){LSset(STB,JSON.stringify(stubsGet().filter(s=>s.week!==b.dataset.sx)));renderStub(box);}});}
 {const _rw=renderWeek;renderWeek=function(){_rw();const st=$("v-week").querySelector(".stats");if(st)st.insertAdjacentHTML("afterend",milestoneCard());const sb=document.createElement("div");sb.id="stubBox";$("v-week").appendChild(sb);renderStub(sb);};}
 /* --- 4. milestones --- */
 function milestoneCard(){const m=milestones(entries,LS(STH,"0")),st=num(LS(STH,"0"));
@@ -2681,29 +2892,44 @@ renderLastBk();renderPin();renderRem();cxInfo();
 lockNow();setupShow();renderBanners();scheduleRem();tourMaybe();
 
 resetForm();refreshEmp();
-if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;let shown=false;
- const upBanner=()=>{if(shown||$("upd"))return;shown=true;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<span>Update available</span><button type="button" id="updGo">Reload</button>';document.body.appendChild(d);$("updGo").onclick=()=>location.reload();};
- navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had)upBanner();});
- navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
+/* v100: updates apply in place - never uninstall/reinstall. A new version installs in the background (sw.js: network-first, skipWaiting + clients.claim);
+   then a big "Update ready - tap to refresh" bar shows, and the app also refreshes by itself the next time you come back to it (when nothing is half-typed). */
+if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;let pend=false,seenAt=Date.now(),touched=false;
+ const arm=()=>{seenAt=Date.now();touched=false;document.addEventListener("pointerdown",()=>{touched=true;},{once:true,passive:true,capture:true});};arm();
+ const fresh=()=>Date.now()-seenAt<10000&&!touched&&!document.querySelector(".sheet"); /* just opened, nothing tapped yet: safe to refresh straight away */
+ const safeNow=()=>!document.querySelector(".sheet")&&$("pgEd").classList.contains("hide")&&curV!=="add"&&!$("lock");
+ const upBanner=()=>{pend=true;if($("upd"))return;const d=document.createElement("div");d.id="upd";d.setAttribute("role","status");d.innerHTML='<button type="button" id="updGo">⟳ Update ready — tap to refresh</button>';document.body.appendChild(d);$("updGo").onclick=()=>location.reload();};
+ navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had)return;upBanner();if(fresh())location.reload();});
+ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;if(pend&&safeNow())location.reload();else arm();});
+ navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{const chk=()=>{try{r.update().catch(()=>{});}catch(e){}};chk();
+  if(r.waiting&&had)upBanner();r.addEventListener("updatefound",()=>{const w=r.installing;if(w)w.addEventListener("statechange",()=>{if(w.state==="installed"&&navigator.serviceWorker.controller)upBanner();});});
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)chk();});setInterval(chk,3600000);}).catch(()=>{});}
 /* ===== Peg boards: UI (localStorage "l19.pegs"; photo in IndexedDB key peg|<board>) ===== */
-const PGK="l19.pegs",PGH="l19.pegHint41",PGL="l19.pegLabels",PGS="l19.pegSlip",PGP="l19.pegSide",PGT="l19.pegTakeOnPlace",PGZ="l19.pegZoom",PGB45="l19.pegs.v45raw",PGMIG="l19.bull48",PGBK="l19.pegs.bullbak",PGB52="l19.pegs.v51raw",PGFR="l19.flexRemoved52",PGKN="l19.pegs.night",PGSH="l19.pegShift",PGHS="l19.pegHall95",PGHSN="l19.pegHall95.night";
+const PGK="l19.pegs",PGH="l19.pegHint41",PGL="l19.pegLabels",PGS="l19.pegSlip",PGP="l19.pegSide",PGT="l19.pegTakeOnPlace",PGZ="l19.pegZoom",PGB45="l19.pegs.v45raw",PGMIG="l19.bull48",PGBK="l19.pegs.bullbak",PGB52="l19.pegs.v51raw",PGFR="l19.flexRemoved52",PGKN="l19.pegs.night",PGSH="l19.pegShift",PGHS="l19.pegHall95",PGHSN="l19.pegHall95.night",PGFX="l19.flexBoards100",PGFXN="l19.flexBoards100.night",PGFXK="l19.flexKept100",PGBP="l19.boardPegs100",PGBPN="l19.boardPegs100.night";
 let pgShift=LS(PGSH,"day")==="night"?"night":"day";
+/* v100 migration rule: a step runs once (its flag), only adds/transforms, and the untouched value is kept first as <key>.<tag>raw (plus the full safety copy in IndexedDB). */
+function l19KeepRaw(key,tag){try{const v=localStorage.getItem(key);if(v!=null&&localStorage.getItem(key+"."+tag+"raw")==null)localStorage.setItem(key+"."+tag+"raw",v);}catch(e){}}
+function l19Mig(flag,key,tag,fn){if(LS(flag,"")==="1")return false;l19KeepRaw(key,tag);fn();LSset(flag,"1");return true;}
 function pegsLoadDay(){const rawTxt=LS(PGK,""),raw=lsJson(PGK,null);if(rawTxt&&!LS(PGB52,""))LSset(PGB52,rawTxt); /* v52: untouched copy of the v51 data, kept once */
  let d=pegsSeed(raw||{}),dirty=!raw||raw.seeded!==true||!Array.isArray(raw.globals);
  if(LS(PGMIG,"")!=="1"){if(rawTxt&&!LS(PGB45,""))LSset(PGB45,rawTxt); /* v46: back up the untouched v45 data once */
   const m=pegBullMigrate(d);d=m.data;LSset(PGMIG,m.kept?"kept":"1");dirty=true;if(m.kept)LSset(PGMIG,"1");}
  if(LS(PGFR,"")!=="1"){const fr=pegFlexRemove(d);d=fr.data;LSset(PGFR,"1");dirty=true;} /* v52: raw data was copied to l19.pegs.v51raw above */
  if(LS(PGHS,"")!=="1"){d=pegsHallSeed(d).data;LSset(PGHS,"1");dirty=true;} /* v95: hall photo names, once */
+ if(l19Mig(PGFX,PGK,"v99",()=>{const fx=pegFlexBoardsRemove(d);d=fx.data;if(fx.kept.length)LSset(PGFXK,fx.kept.join("|"));}))dirty=true;
+ if(l19Mig(PGBP,PGK,"v99",()=>{d=pegBoardPegsSeed(d).data;}))dirty=true; /* v100: each hall board's own peg(s), once */
  if(dirty){try{LSset(PGK,JSON.stringify(d));}catch(e){}}return d;}
 /* v95: the Day side lives in "l19.pegs" (unchanged, so old backups restore into Day); the Night side in "l19.pegs.night", seeded once from Day */
 function pegsLoadNight(){const day=pegsLoadDay(),raw=lsJson(PGKN,null);let n=raw&&typeof raw==="object"?pegsSeed(pegsClean(raw)):pegsNightSeed(day),dirty=!(raw&&typeof raw==="object");
  if(LS(PGHSN,"")!=="1"){n=pegsHallSeed(n).data;LSset(PGHSN,"1");dirty=true;}
+ if(l19Mig(PGBPN,PGKN,"v99",()=>{n=pegBoardPegsSeed(n).data;}))dirty=true;
+ if(l19Mig(PGFXN,PGKN,"v99",()=>{const fx=pegFlexBoardsRemove(n);n=fx.data;if(fx.kept.length)LSset(PGFXK,[...new Set(LS(PGFXK,"").split("|").filter(Boolean).concat(fx.kept))].join("|"));}))dirty=true;
  if(dirty){try{LSset(PGKN,JSON.stringify(n));}catch(e){}}return n;}
 function pegsLoad(){return pgShift==="night"?pegsLoadNight():pegsLoadDay();}
 function pgSideTag(){return pgShift==="night"?"Night":"Day";}
 function pgSideName(n){return n+" ("+pgSideTag()+")";}
 function pegsSave(d){LSset(pgShift==="night"?PGKN:PGK,JSON.stringify(d));if(typeof shTouch==="function")shTouch();}
-let eqManOpen=false,pgCarry=null,eqSlUnsub=null,eqSlCode="",pgEq=LS("l19.eqSel","")==="1",eqB=eqLoad(),pgShared=null,pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgDrag=null,pgDragEnd=0;
+let eqManOpen=false,pgCarry=null,eqSlUnsub=null,eqSlCode="",pgEq=LS("l19.eqSel","")==="1",eqB=eqLoad(),pgShared=null,pgSelKey=null,pgD=pegsLoad(),pgBlob=null,pgHeld=null,pgImp=false,pgMoving=null,pgTrading=null,pgDrag=null,pgDragEnd=0;
 function pgNames(){return[...PEG_BOARDS,...pgD.custom];}
 function pgCur(){const n=pgNames();if(!n.includes(pgD.sel))pgD.sel=n[0];return pgD.sel;}
 function pgGApply(r,msg){if(!r.ok){$("pgM").textContent=r.error;return false;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);if(msg)$("pgM").textContent=msg;pgClose();pgRender();return true;}
@@ -2712,7 +2938,7 @@ function pgStore(name,b){pgD.boards[name]=b;pegsSave(pgD);}
 function pgRenderSel(){const cur=pgCur(),lk=shMap(),shl=shListUi();const eqO=`<option value="eq:${EQ_ID}"${pgEq&&!pgShared?" selected":""}>🚜 ${esc(EQ_NAME)}${eqSh()?" 🔗":""}</option>`; /* v62: right after the Bull board, so a swipe goes Bull ⇄ Equipment */
  $("pgSel").innerHTML=pgNames().map(n=>{const b=pgBoard(n),me=Object.values(b.pegs).some(v=>v.me);return`<option value="${esc(n)}"${n===cur&&!pgShared&&!pgEq?" selected":""}>${esc(n)}${me?" ★":""}${lk[n]?" 🔗":""}</option>`+(n===BULL_BOARD?eqO:"");}).join("")+(pgNames().includes(BULL_BOARD)?"":eqO)+(shl.length?`<optgroup label="Shared by admins (read-only)">`+shl.map(x=>`<option value="sh:${esc(x.id)}"${pgShared===x.id?" selected":""}>🔗 ${esc(x.name)} (shared)</option>`).join("")+`</optgroup>`:"");
  $("pgDel").classList.toggle("hide",PEG_BOARDS.includes(cur));pgNavRender();}
-function pgSheet(id){const o=document.createElement("div");o.className="sheet";o.id=id;o.addEventListener("keydown",e=>{if(e.key==="Escape")o.remove();});document.body.appendChild(o);return o;}
+function pgSheet(id){const o=document.createElement("div");o.className="sheet";o.id=id;pgFitSoon();o.addEventListener("keydown",e=>{if(e.key==="Escape")o.remove();});document.body.appendChild(o);return o;}
 function pgJobEdit(id){if($("pgJobS"))return;const name=pgCur(),b=pgBoard(name),j=pegJob(b,id);if(!j)return;let col=j.color;const o=pgSheet("pgJobS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="jeT" class="rot"><h3 id="jeT">Edit job peg</h3><label for="jeN" style="margin-top:0">Job name</label><input id="jeN" maxlength="40" autocomplete="off" value="${esc(j.name)}">
  <label style="margin-top:4px">Color</label><div class="sw" role="group" aria-label="Color">${PEG_COLORS.map((c,i)=>`<button type="button" data-c="${i}" aria-pressed="${i===col}" style="background:${c[1]};color:${c[2]}">${c[0]}</button>`).join("")}</div>
@@ -2723,9 +2949,10 @@ function pgJobEdit(id){if($("pgJobS"))return;const name=pgCur(),b=pgBoard(name),
  $("jeRm").onclick=()=>{if(!confirm("Remove the job peg “"+j.name+"”? Its past takes stay in the log."))return;const r=pegJobRemove(pgBoard(name),id);if(r.ok){pgStore(name,r.board);$("pgM").textContent="Removed “"+j.name+"”.";}o.remove();pgRender();};$("jeN").focus();}
 function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=pgSheet("pgLogS"),days=pegTakeDays(b);
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="lgT" class="rot"><h3 id="lgT">Who took which job · ${esc(name)}</h3>
- ${days.length?days.map(g=>`<div class="rlg"><p><b>${esc(pegDateLong(g.d))}</b></p>${g.items.slice().reverse().map(t=>`<p>${esc(t.job)} – <b>${esc(t.person)}</b>${t.num?" (#"+t.num+")":""}</p><div class="row"><button type="button" data-e="${esc(t.id)}">Edit</button><button type="button" class="d" data-x="${esc(t.id)}">Delete</button></div>`).join("")}</div>`).join(""):'<p class="mut">No takes logged on this board yet.</p>'}
- <p class="mut" style="margin:0">Edit changes the person's name in the log only. Newest first; the last ${PEG_TAKES} are kept.</p><button type="button" class="p" id="lgDn">Close</button></div>`;
+ ${days.length?days.map(g=>`<div class="rlg"><p><b>${esc(pegDateLong(g.d))}</b></p>${g.items.slice().reverse().map(t=>`<p>${esc(t.job)} – <b>${esc(t.person)}</b>${t.num?" (#"+t.num+")":""}</p><div class="row"><button type="button" data-e="${esc(t.id)}">Edit</button><button type="button" class="d" data-x="${esc(t.id)}">Delete</button></div>${pegTakePrefill(t)?`<div class="row"><button type="button" class="p" data-ls="${esc(t.id)}">＋ Log this shift</button></div>`:""}`).join("")}</div>`).join(""):'<p class="mut">No takes logged on this board yet.</p>'}
+ ${pgTradeLog(name)}<p class="mut" style="margin:0">Edit changes the person's name in the log only. Newest first; the last ${PEG_TAKES} are kept.</p><button type="button" class="p" id="lgDn">Close</button></div>`;
  o.onclick=ev=>{if(ev.target===o){o.remove();return;}const d=ev.target.dataset||{};
+  if(d.ls){const t=pgBoard(name).takes.find(x=>x.id===d.ls),f=pegTakePrefill(t);if(!f)return;o.remove();pgLogShift(f);return;}
   if(d.x){if(!confirm("Delete this log entry?"))return;const r=pegTakeDelete(pgBoard(name),d.x,new Date());if(r.ok){pgStore(name,r.board);pgRender();}o.remove();pgLogOpen();}
   if(d.e){const t=pgBoard(name).takes.find(x=>x.id===d.e);if(!t)return;const row=ev.target.parentNode;row.innerHTML=`<input aria-label="Person" id="lgP" maxlength="80" value="${esc(t.person)}"><button type="button" class="p" id="lgS">Save</button>`;$("lgP").focus();
    $("lgS").onclick=()=>{const r=pegTakeEdit(pgBoard(name),d.e,$("lgP").value,new Date());if(!r.ok){$("lgP").setAttribute("aria-invalid","true");return;}pgStore(name,r.board);pgRender();o.remove();pgLogOpen();};}};
@@ -2733,9 +2960,9 @@ function pgLogOpen(){if($("pgLogS"))return;const name=pgCur(),b=pgBoard(name),o=
 /* v95: Day | Night side for every peg board (Equipment board keeps its own Day/Night slots) */
 function pgSdUi(){const n=pgShift==="night";document.querySelectorAll("#pgSd button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sd===pgShift)));const bd=$("pgSdB");if(bd){bd.textContent=n?"🌙 Night side":"☀ Day side";bd.classList.toggle("n",n);}
  const sw=$("pgSw");if(sw){const t=fmtDate(new Date()),on=n&&isStopWork(t,curLocal());sw.classList.toggle("hide",!on);sw.textContent=on?"◆ "+SW_LABEL+" tonight: Local 19 stop\u2011work meeting, no night\u2011side work.":"";}}
-function pgSetShift(v){v=v==="night"?"night":"day";if(v===pgShift)return;const sel=pgD.sel;pgShift=v;LSset(PGSH,v);shLast={};shPushErr="";pgClose();pgHeld=null;pgMoving=null;if(pgShared)pgShared=null;pgD=pegsLoad();if(pgNames().includes(sel))pgD.sel=sel;$("pgM").textContent=(v==="night"?"🌙 Night":"☀ Day")+" side boards.";pgRender();}
+function pgSetShift(v){v=v==="night"?"night":"day";if(v===pgShift)return;const sel=pgD.sel;pgShift=v;LSset(PGSH,v);shLast={};shPushErr="";pgClose();pgHeld=null;pgMoving=null;pgTrading=null;if(pgShared)pgShared=null;pgD=pegsLoad();if(pgNames().includes(sel))pgD.sel=sel;$("pgM").textContent=(v==="night"?"🌙 Night":"☀ Day")+" side boards.";pgRender();}
 document.querySelectorAll("#pgSd button").forEach(b=>b.onclick=()=>pgSetShift(b.dataset.sd));
-function pgRender(){if(!pegsOn())return;pgSdUi();if(pgShared&&!shGet(pgShared))pgShared=null;if(pgShared&&shGet(pgShared).eq){pgShared=null;pgEq=true;} /* v61: the live equipment board opens under its own entry */$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
+function pgRender(){if(!pegsOn())return;{const k=LS(PGFXK,"");if(k){LSset(PGFXK,"");setTimeout(()=>{if($("pgM"))$("pgM").textContent=k.split("|").join(" and ")+": the built-in flex boards are gone (there are no flex boards, only pegs). Yours had names on it, so it is kept as a custom board.";},0);}}pgSdUi();if(pgShared&&!shGet(pgShared))pgShared=null;if(pgShared&&shGet(pgShared).eq){pgShared=null;pgEq=true;} /* v61: the live equipment board opens under its own entry */$("pgCard").classList.toggle("shv",!!pgShared);$("pgCard").classList.toggle("eqv",!pgShared&&pgEq);pgRenderSel();shChips();if(pgShared){$("pgSh").classList.remove("hide");shRender();$("pgGrid").innerHTML="";return;}$("pgSh").classList.add("hide");$("pgSh").innerHTML="";shLocalUi();
  if(pgEq){eqRender();return;}$("pgGrid").setAttribute("aria-label","Peg board slips (scrolls sideways)");const name=pgCur(),b=pgBoard(name);
  $("pgCols").value=b.cols;$("pgRows").value=b.rows;
  $("pgUp").innerHTML=b.updated?"Last updated: <b>"+esc(pegWhen(b.updated))+"</b>":"Not updated yet.";
@@ -2743,20 +2970,21 @@ function pgRender(){if(!pegsOn())return;pgSdUi();if(pgShared&&!shGet(pgShared))p
  $("pgMine").innerHTML=mine.length?"★ My pegs: "+mine.join(" · "):"★ No peg marked as yours yet. Tap a slip and turn on “This is my peg”.";
  const jat={},gat={};for(const j of b.jobs){if(j.pos)(jat[j.pos]=jat[j.pos]||[]).push(j);}for(const g of pegGlobalsOn(pgD,name))(gat[g.pos]=gat[g.pos]||[]).push(g);
  pgGlRender();$("pgPreset").classList.toggle("hide",name!=="Bull board");
- pgBarRender(name,b);pgSlipRender(name,b,jat,gat);refreshPegPic();}
+ pgBarRender(name,b);pgSlipRender(name,b,jat,gat);$("pgGrid").classList.toggle("mvon",!!(pgMoving&&pgMoving.board===name));refreshPegPic();}
 function pgEdit(k){const name=pgCur(),b=pgBoard(name),m=k.split("-"),r=+m[0],c=+m[1],v=b.pegs[k]||{n:"",note:"",me:false};pgSelKey=k;
  const e=$("pgEd");e.classList.remove("hide");
  const slip=true;
- e.innerHTML=`<h4>${esc(name)} · ${slip?"column "+c+", slip "+r:"position "+pegNum(r,c,b.cols)}</h4><p class="mut" style="margin-top:0">${slip?"Edit this slip":"Row "+r+", column "+c}</p>
-<label for="pgN" style="margin-top:0">${slip?"Name (e.g. S. LASTNAME)":"Name"}</label><input id="pgN" maxlength="80" autocomplete="off" value="${esc(v.n)}">
+ e.innerHTML=`<h4>${esc(name)} · ${slip?"column "+c+", slip "+r:"position "+pegNum(r,c,b.cols)}</h4>${slip?"":`<p class="mut" style="margin-top:0">Row ${r}, column ${c}</p>`}
+${v.n?`<div class="row" style="margin:0 0 8px"><button type="button" class="p" id="mvTap" aria-label="Move ${esc(v.n)} to another spot on ${esc(name)}">↕ Move</button>${pegTradeAt(pgD,name,k)?"":`<button type="button" class="p" id="trGo" aria-label="Trade spots: ${esc(v.n)} switches with someone on another board">⇄ Trade</button>`}</div>`:""}${pgTradeInfo(name,k)}
+<label for="pgN" style="margin-top:0">Name</label><input id="pgN" maxlength="80" autocomplete="off" autocapitalize="characters" placeholder="${slip?"S. LASTNAME":""}" value="${esc(v.n)}">
 <label for="pgNo">${slip?"Registration number":"Note"} <span class="mut">(optional, stays on this device)</span></label><input id="pgNo" maxlength="200" autocomplete="off" value="${esc(v.note)}">
 <button type="button" id="pgMe" aria-pressed="${v.me}" style="width:100%;margin-top:12px">${v.me?"★ This is my peg (on)":"☆ This is my peg (off)"}</button>
+<details class="pgmore"><summary>More slip options</summary>
 ${slip?`<p class="mut" style="margin:12px 0 0">Slips in this column (pegs move with their slip)</p><div class="row" style="flex-wrap:wrap"><button type="button" data-co="up">▲ Move up</button><button type="button" data-co="down">▼ Move down</button><button type="button" data-co="insert">＋ Insert blank slip above</button><button type="button" class="d" data-co="remove">Remove slip (close gap)</button></div>`:""}
 <p class="mut" style="margin:12px 0 0">Move this slip (its pegs go with it inside this board; between boards they are taken off)</p>
 <div class="row mvr"><div><label for="mvB" style="margin-top:0">Board</label><select id="mvB">${pgNames().map(n=>`<option value="${esc(n)}"${n===name?" selected":""}>${esc(n)}</option>`).join("")}</select></div><div><label for="mvC" style="margin-top:0">Column</label><input id="mvC" type="number" inputmode="numeric" min="1" max="60" value="${c}"></div><div><label for="mvR" style="margin-top:0">Slip (row)</label><input id="mvR" type="number" inputmode="numeric" min="1" max="60" value="${r}"></div></div>
 <div class="row"><button type="button" id="mvMode" aria-pressed="${pgMoveMode()==="swap"}">${pgMoveModeText()}</button><button type="button" class="p" id="mvGo">Move to column/row</button></div>
-<div class="row"><button type="button" id="mvTap">Move by tapping the new place…</button></div>
-${v.n?`<div class="row"><button type="button" id="pgEqC">🚜 Reserve equipment with this name</button></div>`:""}
+${v.n?`<div class="row"><button type="button" id="pgEqC">🚜 Reserve equipment with this name</button></div>`:""}</details>
 <div class="row" style="margin-top:12px"><button type="button" class="p" id="pgSv">Save</button><button type="button" id="pgCl" class="d">Clear</button><button type="button" id="pgCx">Cancel</button></div>`;
  e.querySelectorAll("[data-co]").forEach(x=>x.onclick=()=>{const op=x.dataset.co;if(op==="remove"&&!confirm("Remove this slip and move the ones below it up? Pegs on it stay at this spot."))return;
   const q=pegColOp(pgD,name,op,r,c);if(!q.ok){$("pgM").textContent=q.error;return;}pgD={...q.data,sel:pgD.sel};pegsSave(pgD);$("pgM").textContent=op==="insert"?"Inserted a blank slip.":op==="remove"?"Removed the slip.":"Moved the slip "+op+".";
@@ -2773,8 +3001,81 @@ ${v.n?`<div class="row"><button type="button" id="pgEqC">🚜 Reserve equipment 
  $("mvGo").onclick=()=>{const tc=Number($("mvC").value),tr=Number($("mvR").value),bn=$("mvB").value,bb=pgBoard(bn);if(!(Number.isInteger(tc)&&Number.isInteger(tr)&&tc>=1&&tr>=1&&tc<=bb.cols&&tr<=bb.rows)){$("pgM").textContent=bn+" has columns 1–"+bb.cols+" and slips 1–"+bb.rows+". Enter whole numbers in that range.";return;}
   pgMoveDo({board:name,key:k},{board:bn,key:pegKey(tr,tc)},pgMoveMode());};
  if($("pgEqC"))$("pgEqC").onclick=()=>eqCarry(v.n); /* v61: copies the name; this slip stays where it is */
- $("mvTap").onclick=()=>{pgMoving={board:name,key:k};pgHeld=null;pgClose();$("pgM").textContent="Moving "+(v.n||"this slip")+". Tap the slip where it should go (you can change the board first).";pgRender();};
+ if($("trGo"))$("trGo").onclick=()=>pgTradePick(name,k);
+ if($("trEnd"))$("trEnd").onclick=()=>{const t=pegTradeAt(pgD,name,k);if(!t)return;if(!confirm("End this trade? "+t.a.n+" and "+t.b.n+" go back to their own spots."))return;
+  const r=pegTradeEnd(pgD,t.id,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgTradeCommit(r.data,[t.a.board,t.b.board],r.msg);};
+ if($("mvTap"))$("mvTap").onclick=()=>{pgMoving={board:name,key:k,own:1};pgHeld=null;pgClose();$("pgM").textContent="Moving "+(v.n||"this slip")+" on "+name+". Tap the highlighted spot where it should go.";pgRender();};
  pgRender();e.scrollIntoView({block:"nearest"});$("pgN").focus({preventScroll:true});}
+
+/* ===== v100: trade UI ===== */
+function pgTradeMark(name,k){const t=pegTradeAt(pgD,name,k);if(!t)return"";const m=pegTradeMarkText(t,pegLocalDay(new Date())),o=t.a.board===name&&t.a.key===k?t.b:t.a;
+ return`<div class="trd" data-s="${esc(m.s)}" data-x="${esc(m.x)}" title="${esc(m.full)} (with ${esc(o.n)}, ${esc(o.board)})">${esc(m.full)}</div>`;}
+function pgTradeInfo(name,k){const t=pegTradeAt(pgD,name,k);if(!t)return"";const me=t.a.board===name&&t.a.key===k,o=me?t.b:t.a;
+ return`<p class="trh">⇄ Traded with ${esc(o.n)} (${esc(pegSpot(pgD,o.board,o.key))}) since ${esc(pegDateShort(t.start))}${t.end?(pegLocalDay(new Date())>t.end?" · end date "+esc(pegDateShort(t.end))+" has passed":" · until "+esc(pegDateShort(t.end))):""}.</p>
+ <div class="row" style="margin:0 0 8px"><button type="button" class="d" id="trEnd">End trade</button></div>`;}
+function pgTradeLog(name){const ts=(pgD.trades||[]).filter(t=>t.a.board===name||t.b.board===name).slice().reverse();if(!ts.length)return"";
+ const S={on:"on",ended:"ended"};
+ return`<div class="rlg"><p><b>Trades</b></p>${ts.map(t=>`<p>⇄ ${esc(t.a.n)} (${esc(t.a.board)}) ⇄ ${esc(t.b.n)} (${esc(t.b.board)})<br><span class="mut">${esc(pegDateShort(t.start))}${t.end?" → "+esc(pegDateShort(t.end)):""} · ${S[t.st]||"ended"}${t.doneAt&&t.st!=="on"?" "+esc(pegDateShort(pegLocalDay(new Date(t.doneAt)))):""}</span></p>`).join("")}</div>`;}
+/* save this side locally, then send both boards to the room in one write (all-or-nothing); retried once, then the user is told */
+function pgTradeCommit(nd,boards,msg){pgD={...nd,sel:pgD.sel};LSset(pgShift==="night"?PGKN:PGK,JSON.stringify(pgD));pgTrading=null;pgMoving=null;pgClose();pgRender();if(msg)$("pgM").textContent=msg;
+ shPushMany([...new Set(boards)]).then(ok=>{if(ok===false&&$("pgM"))$("pgM").textContent=(msg?msg+" ":"")+"The shared boards didn't update yet; both will be sent together on your next change or when you're back online.";});}
+async function shPushMany(names){const F=window.l19Fb;if(!F||typeof shJoined!=="function"||!shJoined()||!pegsOn())return true;const m=shMap(),list=names.filter(n=>m[n]&&n!==EQ_NAME&&pgNames().includes(n));if(!list.length||!F.isAdmin())return true;
+ const docs=list.map(n=>[n,shareBuild(shSideDocName(n),pgBoard(n),pegGlobalsOn(pgD,n))]);
+ for(let tr=0;tr<2;tr++){try{await F.ready();const f=F.fs(),meta={updatedAt:f.serverTimestamp(),updatedBy:F.uid(),updatedByName:chatName(F.name())||"?"};
+   if(typeof f.writeBatch==="function"){const bt=f.writeBatch(F.db());docs.forEach(([n,doc])=>bt.set(f.doc(F.db(),"rooms",F.code(),"boards",m[n]),{...doc,...meta}));await bt.commit();}
+   else for(const [n,doc] of docs)await f.setDoc(f.doc(F.db(),"rooms",F.code(),"boards",m[n]),{...doc,...meta});
+   docs.forEach(([n,doc])=>{shLast[n]=JSON.stringify(doc);});shPushErr="";shLocalUi();return true;}
+  catch(e){if(tr){shPushErr="Couldn't sync the trade to the room. "+shFriendly(e)+" Your own boards are safe; both will be sent together on your next change.";shLast={};shLocalUi();return false;}await new Promise(r=>setTimeout(r,1500));}}}
+function pgTradePick(board,key){const b=pgBoard(board),v=b.pegs[key];if(!v||!v.n)return;pgClose();pgMoving=null;pgHeld=null;const old=$("pgTrS");if(old)old.remove();const o=pgSheet("pgTrS"),others=pgNames().filter(n=>n!==board);
+ o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="trT" class="rot"><h3 id="trT">Trade ${esc(v.n)}</h3><p class="mut" style="margin:0">${esc(pegSpot(pgD,board,key))} · ${esc(pgSideTag())} side. Pick the board of the person ${esc(v.n)} trades with:</p>
+ <div class="row trb">${others.map(n=>`<button type="button" data-tb="${esc(n)}">${esc(n)}</button>`).join("")}</div><div class="row"><button type="button" id="trPx">Cancel</button></div></div>`;
+ o.onclick=ev=>{if(ev.target===o){o.remove();return;}const bt=ev.target.closest("button");if(!bt)return;if(bt.id==="trPx"){o.remove();pgTrading=null;pgRender();$("pgM").textContent="Trade cancelled.";return;}
+  const tb=bt.dataset.tb;if(!tb)return;o.remove();pgTrading={board:board,key:key,n:v.n};pgD={...pgD,sel:tb};pgRender();$("pgM").textContent="Trading "+v.n+": tap the other person's spot on "+tb+".";};
+ const f=o.querySelector("button");if(f)f.focus({preventScroll:true});}
+function pgTradeConfirm(to){const fr=pgTrading;if(!fr)return;const old=$("pgTcS");if(old)old.remove();const o=pgSheet("pgTcS"),today=pegLocalDay(new Date());
+ o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="tcT" class="rot"><h3 id="tcT">Confirm trade</h3>
+ <p class="trh" style="margin:0"><b>${esc(fr.n)}</b> (${esc(pegSpot(pgD,fr.board,fr.key))}) ⇄ <b>${esc(to.n)}</b> (${esc(pegSpot(pgD,to.board,to.key))})</p>
+ <p class="mut" style="margin:6px 0 0">Both switch spots now. ${esc(PEG_TRADE_HINT)}</p>
+ <label for="tcS">Start date</label><input type="date" id="tcS" value="${today}">
+ <label>End date <span class="mut">(optional, for your notes)</span></label><div class="row" id="tcL">${PEG_TRADE_LEN.map(n=>`<button type="button" data-n="${n}" aria-pressed="false">${n} days</button>`).join("")}</div>
+ <div class="row"><input type="date" id="tcE" aria-label="End date (optional)"><button type="button" id="tcE0" style="flex:0 0 auto">No end date</button></div>
+ <p id="tcM" class="mut" aria-live="polite" style="margin:0"></p>
+ <div class="row"><button type="button" class="p" id="tcGo">Confirm trade</button><button type="button" id="tcX">Cancel</button></div></div>`;
+ const S=$("tcS"),E=$("tcE"),M=$("tcM"),sync=()=>{const st=S.value||today,n=E.value?pegDayDiff(st,E.value):NaN;
+  o.querySelectorAll("#tcL button").forEach(b=>b.setAttribute("aria-pressed",String(n===+b.dataset.n)));
+  M.textContent=E.value?"Until "+pegDateLong(E.value)+(isFinite(n)?" ("+n+" day"+(n===1?"":"s")+")":"")+". Nobody moves back on their own; use End trade when dispatch says.":"No end date. Use End trade when dispatch says.";};
+ sync();S.onchange=sync;E.onchange=sync;
+ o.onclick=ev=>{if(ev.target===o){o.remove();return;}const bt=ev.target.closest("button");if(!bt)return;
+  if(bt.dataset.n){E.value=pegDayAdd(S.value||today,+bt.dataset.n);sync();return;}
+  if(bt.id==="tcE0"){E.value="";sync();return;}
+  if(bt.id==="tcX"){o.remove();pgTrading=null;pgRender();$("pgM").textContent="Trade cancelled.";return;}
+  if(bt.id==="tcGo"){const r=pegTradeNew(pgD,{board:fr.board,key:fr.key},{board:to.board,key:to.key},S.value,E.value,new Date());if(!r.ok){M.textContent=r.error;return;}
+   o.remove();pgTradeCommit(r.data,[fr.board,to.board],r.msg);}};
+ $("tcGo").focus({preventScroll:true});}
+
+/* ===== v100: focused board view (Daniel: "best optics" when you open a board) =====
+   Only this board + Day/Night + legend; all columns fit the width when names stay readable (>=14px), otherwise a clean sideways scroll.
+   Zoom is not saved (your own zoom setting comes back when you leave). Phone Back closes it. Width changes only (rotate = refit), never on scroll. */
+var pgFo=false;
+function pgFocusFit(){const g=$("pgGrid"),bz=g&&g.querySelector(".bbz");if(!bz)return;const prev=bz.style.zoom;bz.style.zoom="1";
+ const nw=bz.firstChild.offsetWidth,sp=bz.querySelector(".slip"),fs=sp?parseFloat(getComputedStyle(sp).fontSize)*0.9:14;bz.style.zoom=prev||"1";
+ const avail=g.clientWidth-4,zf=avail/nw,zmin=14/fs,z=Math.min(1.6,Math.max(zf,zmin)),fit=zf>=zmin-0.001;
+ $("pgCard").classList.toggle("pgfit",fit);
+ /* fits: zoom to readable size (not bigger than 100%) and let the columns share the spare width so names get room; doesn't fit: readable zoom + sideways scroll */
+ const zz=Math.ceil((fit?Math.max(zmin,Math.min(zf,1)):z)*100)/100,bb=bz.firstChild,cols=bb.querySelectorAll(".bcol").length||1;
+ bb.style.removeProperty("--fcw");
+ if(fit){const cs=getComputedStyle(bb),gap=parseFloat(cs.columnGap)||0,pad=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0),w=(avail/zz-pad-gap*(cols-1))/cols;
+  if(w>0)bb.style.setProperty("--fcw",Math.floor(w)+"px");}
+ bz.style.zoom=String(zz);bz.classList.toggle("mini",zz<0.6);pgZc=zz;pgZUpdate();if(fit)g.scrollLeft=0;
+ g.querySelectorAll(".slip .sl").forEach(e=>e.classList.remove("sm","w2"));pgNameFit(g);}
+function pgFocusTitle(){const t=$("pgFoT");if(!t)return;const n=pgEq?EQ_NAME:pgCur();t.textContent=n.replace(/ board$/,"");t.title=pgEq?n:pgSideName(n);}
+function pgFocusOn(){if(pgFo)return;pgFo=true;$("pgCard").classList.add("pgfo");document.body.classList.add("pgfo");try{history.pushState({...(history.state||{}),l19pgfo:1},"");}catch(e){}
+ pgRender();requestAnimationFrame(()=>{const b=$("pgFoBar");if(b)b.scrollIntoView({block:"start"});});}
+function pgFocusOff(fromPop){if(!pgFo)return;pgFo=false;$("pgCard").classList.remove("pgfo","pgfit");document.body.classList.remove("pgfo");
+ if(!fromPop&&history.state&&history.state.l19pgfo){try{history.back();}catch(e){}}pgRender();requestAnimationFrame(()=>{const w=$("pgWrap");if(w&&!$("v-pegs").classList.contains("hide"))w.scrollIntoView({block:"start"});});}
+window.addEventListener("popstate",()=>{if(pgFo&&!(history.state&&history.state.l19pgfo))pgFocusOff(true);});
+$("pgFoGo").onclick=pgFocusOn;$("pgFoX").onclick=()=>pgFocusOff(false);
+onWidth(()=>{if(pgFo)pgZApply();});
 function pgClose(){pgSelKey=null;$("pgEd").classList.add("hide");$("pgEd").innerHTML="";}
 
 /* ===== v46: Bull board slip view ===== */
@@ -2784,15 +3085,16 @@ function pgZoom(){const z=parseFloat(LS(PGZ,"1"));return isFinite(z)?Math.min(2,
 function pgHeldPeg(){if(!pgHeld)return null;if(pgHeld.t==="j"){const j=pegJob(pgBoard(pgCur()),pgHeld.id);return j?{t:"j",id:j.id,name:j.name,col:j.color}:null;}
  const g=pegGlobal(pgD,pgHeld.id);return g?{t:"g",id:g.id,name:g.name}:null;}
 function pgChip(t,id,name,color,where,held){const c=t==="j"?PEG_COLORS[color]||PEG_COLORS[0]:null;
- return`<button type="button" class="lc" data-t="${t}" data-id="${esc(id)}" aria-pressed="${held}" aria-label="${esc(name)} peg${t==="g"?" (global)":""}: ${esc(where)}. Tap to pick it up, then tap a slip"><span class="pk${t==="g"?" g":""}"${c?` style="${pegSty(c)}"`:""}>${esc(pegAbbr(name))}</span><span>${esc(name)}${where&&where!=="not placed"?`<small>${esc(where)}</small>`:""}</span></button>`;}
+ const hn=pegHint(name);return`<button type="button" class="lc" data-t="${t}" data-id="${esc(id)}" aria-pressed="${held}"${hn?` title="${esc(name)}: ${esc(hn)}"`:""} aria-label="${esc(name)} peg${t==="g"?" (global)":""}${hn?" ("+esc(hn)+")":""}: ${esc(where)}. Tap to pick it up, then tap a slip"><span class="pk${t==="g"?" g":""}"${c?` style="${pegSty(c)}"`:""}>${esc(pegAbbr(name))}</span><span>${esc(name)}${where&&where!=="not placed"?`<small>${esc(where)}</small>`:""}</span></button>`;}
 function pgBarRender(name,b){const el=$("pgBb");if(!el)return;el.classList.remove("hide");$("pgZb").classList.remove("hide");const side=LS(PGP,"0")==="1";$("pgWrap").classList.toggle("side",side);$("pgPane").classList.toggle("hide",!side);
  const hp=pgHeldPeg();if(pgHeld&&!hp)pgHeld=null;
  if(pgMoving&&!(pgD.boards[pgMoving.board]&&pgD.boards[pgMoving.board].pegs[pgMoving.key]))pgMoving=null;
  const where=pos=>pos&&b.pegs[pos]?(b.pegs[pos].n||"(no name)"):pos?"(blank slip)":"not placed";
  let h="";
  if(pgCarry)h+=`<div class="hold eqcarry" role="status">Carrying <b>${esc(pgCarry.n)}</b> for the ${esc(EQ_NAME)}. <div class="row" style="margin-top:6px"><button type="button" id="bbEqGo" class="p">Open reserve board</button><button type="button" id="bbEqX">Cancel</button></div></div>`;
- if(pgMoving){const mb=pgD.boards[pgMoving.board],mm=pgMoving.key.split("-");h+=`<div class="hold" role="status">Moving ${esc(mb.pegs[pgMoving.key].n||"slip")} (${esc(pgMoving.board)}, column ${mm[1]}, slip ${mm[0]}) – tap the slip where it should go. You can change the board first. <div class="row" style="margin-top:6px"><button type="button" id="bbMm2">${pgMoveModeText()}</button><button type="button" id="bbMvX">Cancel move</button></div></div>`;}
- h+=`<div class="lgd" role="group" aria-label="Peg legend">`+b.jobs.map(j=>`<span class="lcw">`+pgChip("j",j.id,j.name,j.color,where(j.pos),!!(pgHeld&&pgHeld.t==="j"&&pgHeld.id===j.id))+`<button type="button" class="lce" data-e="${esc(j.id)}" aria-label="Edit peg ${esc(j.name)}">✎</button></span>`).join("")+pgD.globals.map(g=>pgChip("g",g.id,g.name,0,g.board&&g.pos?(g.board===name?where(g.pos):g.board):"not placed",!!(pgHeld&&pgHeld.t==="g"&&pgHeld.id===g.id))).join("")+`</div>`;
+ if(pgTrading){const tb=pgTrading.board===name;h+=`<div class="hold" role="status">Trading ${esc(pgTrading.n)} (${esc(pegSpot(pgD,pgTrading.board,pgTrading.key))}) – ${tb?"pick the other board.":"tap the other person's spot on "+esc(name)+"."} <div class="row" style="margin-top:6px"><button type="button" id="bbTrB">Other board</button><button type="button" id="bbTrX">Cancel</button></div></div>`;}
+ if(pgMoving){const mb=pgD.boards[pgMoving.board],mm=pgMoving.key.split("-");h+=`<div class="hold" role="status">Moving ${esc(mb.pegs[pgMoving.key].n||"slip")} (${esc(pgMoving.board)}, column ${mm[1]}, slip ${mm[0]}) – ${pgMoving.board===name?"tap the highlighted spot where it should go on this board.":"moves stay on its own board: go back to "+esc(pgMoving.board)+"."} <div class="row" style="margin-top:6px"><button type="button" id="bbMm2" aria-label="${pgMoveModeText()}. Tap to change">${pgMoveMode()==="swap"?"⇄ Swap":"↧ Insert"}</button><button type="button" id="bbMvX">Cancel</button></div></div>`;}
+ h+=`<div class="lgd" role="group" aria-label="Peg legend">`+b.jobs.map(j=>`<span class="lcw">`+pgChip("j",j.id,j.name,j.color,where(j.pos),!!(pgHeld&&pgHeld.t==="j"&&pgHeld.id===j.id))+`<button type="button" class="lce" data-e="${esc(j.id)}" aria-label="Edit peg ${esc(j.name)}">✎</button></span>`).join("")+pgD.globals.map(g=>pgChip("g",g.id,g.name,0,g.board&&g.pos?(g.board===name?where(g.pos):g.board):"not placed",!!(pgHeld&&pgHeld.t==="g"&&pgHeld.id===g.id))).join("")+`</div>`+b.jobs.filter(j=>pegHint(j.name)).map(j=>`<p class="mut pghint" style="margin:0 0 6px">${esc(j.name)}: ${esc(pegHint(j.name))}</p>`).join("");
  if(!b.jobs.length)h+=`<p class="mut" style="margin:0 0 6px">This board has no job pegs yet. Use “Add peg to this board” (name and color) below.</p>`;
  if(hp)h+=`<div class="hold" role="status">Holding ${esc(hp.name)} – tap a slip to place it <button type="button" id="bbCx" style="margin-left:8px">Cancel</button></div>`;
  h+=`<div class="row"><button type="button" id="bbUn"${b.undo.length?"":" disabled"}>↩ ${b.undo.length?"Undo: "+esc(b.undo[b.undo.length-1].label):"Undo (nothing yet)"}</button><button type="button" id="bbLog">Who took what</button></div>`;
@@ -2811,7 +3113,7 @@ function pgZFit(){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return n
  bz.style.zoom="1";const bb=bz.firstChild,nw=bb.offsetWidth,nh=bb.offsetHeight;bz.style.zoom=prev;
  return bullFitScale(nw,nh,g.clientWidth-pad-2,pgEq?0:Math.min(window.innerHeight*0.8,g.clientHeight||1e9)-pv-2);} /* v60: the equipment board fits its width and scrolls down */
 function pgZUpdate(){const l=$("bbZl"),sl=$("bbZs"),pc=Math.round(pgZc*100);if(l)l.textContent=pc+"%";if(sl&&+sl.value!==pc)sl.value=String(pc);const f=$("bbZf");if(f)f.setAttribute("aria-pressed",String(pgZPref()==="fit"));}
-function pgZApply(){const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return;const v=pgZPref();let z;
+function pgZApply(){if(pgFo&&!pgEq&&!pgShared){pgFocusFit();return;}const g=$("pgGrid"),bz=g.querySelector(".bbz");if(!bz)return;const v=pgZPref();let z;
  if(v==="fit"){z=pgZFit();if(z==null)return;}else z=v;
  bz.style.zoom=String(z);bz.classList.toggle("mini",z<0.6);pgZc=z;pgZUpdate();}
 /* val: number or "fit". ax/ay: point in the grid viewport that should stay put */
@@ -2826,18 +3128,20 @@ $("pgZb").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)
  if(id==="bbZf")pgZoomTo("fit");else if(id==="bbZ1")pgZoomTo(1);
  else if(id==="bbZm")pgZoomTo(Math.max(BULL_ZMIN,st(pgZc/1.25)));else if(id==="bbZa")pgZoomTo(Math.min(BULL_ZMAX,st(pgZc*1.25)));});
 $("pgZb").addEventListener("input",e=>{if(e.target.id==="bbZs")pgZoomTo(+e.target.value/100);});
-window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{if(pgZPref()==="fit")pgZApply();},120);});let pgZRt=0;
+onWidth(()=>{if(pgZPref()==="fit")pgZApply();}); /* v100: width changes only - Android URL bar / keyboard height changes no longer refit (and re-lay out) the whole board while scrolling */
 (function(){const g=$("pgGrid");let pz=null,tp=null,last=null;
  const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
  g.addEventListener("touchstart",e=>{if(!g.querySelector(".bbz"))return;
-  if(e.touches.length===2){pz={d:dist(e.touches)||1,z:pgZc};tp=null;last=null;}
+  if(e.touches.length===2){pz={d:dist(e.touches)||1,z:pgZc};tp=null;last=null;pzOn();}
   else if(e.touches.length===1&&!pz){tp={x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now(),mv:false,held:pgHeld};}},{passive:true});
- g.addEventListener("touchmove",e=>{
-  if(pz&&e.touches.length===2){e.preventDefault();const r=g.getBoundingClientRect(),t=e.touches;
-   pgZoomTo(pz.z*dist(t)/pz.d,(t[0].clientX+t[1].clientX)/2-r.left,(t[0].clientY+t[1].clientY)/2-r.top,false);}
-  else if(tp&&e.touches.length===1&&Math.hypot(e.touches[0].clientX-tp.x,e.touches[0].clientY-tp.y)>10)tp.mv=true;},{passive:false});
+ /* v100: the board's touchmove listener is passive (scrolling stays on the compositor); a blocking one is added only while two fingers pinch */
+ const pzMove=e=>{if(pz&&e.touches.length===2){e.preventDefault();const r=g.getBoundingClientRect(),t=e.touches;
+   pgZoomTo(pz.z*dist(t)/pz.d,(t[0].clientX+t[1].clientX)/2-r.left,(t[0].clientY+t[1].clientY)/2-r.top,false);}};
+ let pzA=false;const pzOn=()=>{if(!pzA){pzA=true;g.addEventListener("touchmove",pzMove,{passive:false});}},pzOff=()=>{if(pzA){pzA=false;g.removeEventListener("touchmove",pzMove,{passive:false});}};
+ g.addEventListener("touchmove",e=>{if(tp&&e.touches.length===1&&Math.hypot(e.touches[0].clientX-tp.x,e.touches[0].clientY-tp.y)>10)tp.mv=true;},{passive:true});
+ g.addEventListener("touchcancel",()=>{pz=null;pzOff();},{passive:true});
  g.addEventListener("touchend",e=>{
-  if(pz){if(e.touches.length<2){LSset(pgEq?PGVE:PGV0,String(bullZoomClamp(pgZc)));pz=null;pgZUpdate();}return;}
+  if(pz){if(e.touches.length<2){LSset(pgEq?PGVE:PGV0,String(bullZoomClamp(pgZc)));pz=null;pzOff();pgZUpdate();}return;}
   pgTouchAt=Date.now();if(pgDrag||Date.now()-pgDragEnd<400){tp=null;last=null;return;}if(!tp||tp.mv||e.touches.length)return;const now=Date.now();
   if(last&&now-tp.t<400&&now-last.t<350&&Math.hypot(tp.x-last.x,tp.y-last.y)<30&&!last.held){
    e.preventDefault();clearTimeout(pgEditT);const r=g.getBoundingClientRect(),ax=tp.x-r.left,ay=tp.y-r.top;last=null;tp=null;
@@ -2893,7 +3197,8 @@ window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{
  g.addEventListener("dragstart",e=>{e.preventDefault();});
 })();
 /* v51: names stay on ONE line; only a name that still overflows at the base size wraps to two lines (measured at zoom 1, so the result is the same at every zoom) */
-function pgNameFit(g){g.querySelectorAll(".slip .sl").forEach(e=>{if(e.scrollWidth>e.clientWidth+1){e.classList.add("sm");if(e.scrollWidth>e.clientWidth+1)e.classList.add("w2");}});}
+function pgNameFit(g){g.querySelectorAll(".slip .sl").forEach(e=>{if(e.scrollWidth>e.clientWidth+1){e.classList.add("sm");if(e.scrollWidth>e.clientWidth+1)e.classList.add("w2");}});
+ g.querySelectorAll(".trd").forEach(e=>{if(e.scrollWidth>e.clientWidth+1&&e.dataset.s){e.textContent=e.dataset.s;if(e.scrollWidth>e.clientWidth+1)e.textContent=e.dataset.x;}});}
 function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg");const labs=[];
  let t=`<div class="bbz"><div class="bb${pgHeld?" held":""}" style="--bz:${pgZoom()}">`;
  for(let c=1;c<=b.cols;c++){t+=`<div class="bcol" role="group" aria-label="Column ${c}"><div class="bh" aria-hidden="true">${c}</div>`;
@@ -2901,7 +3206,7 @@ function pgSlipRender(name,b,jat,gat){const g=$("pgGrid");g.classList.add("bbg")
    const pk=pj.map(j=>{const cc=PEG_COLORS[j.color]||PEG_COLORS[0];return`<span class="pk" data-t="j" data-id="${esc(j.id)}" style="${pegSty(cc)}" title="${esc(j.name)}">${esc(pegAbbr(j.name))}</span>`;}).join("")+pg.map(x=>`<span class="pk g" data-t="g" data-id="${esc(x.id)}" title="${esc(x.name)}">${esc(pegAbbr(x.name))}</span>`).join("");
    const top=pj.length?pj[pj.length-1]:null,tc=top?PEG_COLORS[top.color]||PEG_COLORS[0]:null,cnt=pj.length+pg.length;
    const cl=top?"Peg "+top.name+(cnt>1?" and "+(cnt-1)+" more":"")+" on this slip. Tap to pick it up":pg.length?"Global peg "+pg[pg.length-1].name+" on this slip. Tap to pick it up":"Empty peg circle. Tap to place the selected peg here";
-   t+=`<div class="sw"><button type="button" class="sc${top?" f":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${esc(cl)}"><span class="sd"${tc?` style="${pegSty(tc)}"`:""}>${top?esc(pegAbbr(top.name)):""}${cnt>1?`<i class="cb">${cnt}</i>`:""}</span></button><button type="button" class="slip${nm?"":" e"}${pj.length||pg.length?" hp":""}${v&&v.me?" me":""}${pgSelKey===k||(pgMoving&&pgMoving.board===name&&pgMoving.key===k)?" sel":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${nm?esc(nm)+(v.note?", number "+esc(v.note):""):"blank"}${v&&v.me?", my peg":""}${pj.map(j=>", peg "+esc(j.name)).join("")}${pg.map(x=>", global peg "+esc(x.name)).join("")}. Opens the slip editor. Press and hold, then drag, to move it">${v&&v.note?`<span class="sn">${esc(v.note)}</span>`:""}<span class="sl">${nm?(v.me?"★ ":"")+esc(nm):"(blank)"}</span><span class="sp">${pk}</span></button></div>`;}
+   t+=`<div class="sw"><button type="button" class="sc${top?" f":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${esc(cl)}"><span class="sd"${tc?` style="${pegSty(tc)}"`:""}>${top?esc(pegAbbr(top.name)):""}${cnt>1?`<i class="cb">${cnt}</i>`:""}</span></button><button type="button" class="slip${nm?"":" e"}${pj.length||pg.length?" hp":""}${v&&v.me?" me":""}${pgSelKey===k||(pgMoving&&pgMoving.board===name&&pgMoving.key===k)?" sel":""}" data-k="${k}" aria-label="Column ${c}, slip ${r}: ${nm?esc(nm)+(v.note?", number "+esc(v.note):""):"blank"}${v&&v.me?", my peg":""}${pj.map(j=>", peg "+esc(j.name)).join("")}${pg.map(x=>", global peg "+esc(x.name)).join("")}. Opens the slip editor. Press and hold, then drag, to move it">${v&&v.note?`<span class="sn">${esc(v.note)}</span>`:""}<span class="sl">${nm?(v.me?"★ ":"")+esc(nm):"(blank)"}</span><span class="sp">${pk}</span></button>${pgTradeMark(name,k)}</div>`;}
   t+="</div>";}
  g.innerHTML=t+"</div></div>";pgNameFit(g);pgZApply();
  const pane=$("pgPane");if(pane&&!pane.classList.contains("hide")&&!pane.firstChild)pane.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';}
@@ -2917,7 +3222,10 @@ function pgMoveDo(from,to,mode){const r=pegSlipMove(pgD,from,to,mode,new Date())
  const cell=document.querySelector('.slip[data-k="'+to.key+'"]');if(cell&&cell.scrollIntoView)cell.scrollIntoView({block:"nearest",inline:"nearest"});return true;}
 function pgMoveUndo(){const r=pegSlipUndo(pgD,new Date());if(!r.ok){$("pgM").textContent=r.error;return;}pgD={...r.data,sel:pgD.sel};pegsSave(pgD);pgClose();pgMoving=null;$("pgM").textContent="Undid: "+r.undone.label+".";pgRender();}
 $("pgGrid").addEventListener("click",e=>{if(Date.now()-pgDragEnd<400)return;const sc=e.target.closest(".sc");
- if(pgMoving){const t=e.target.closest(".sc,.slip");if(t)pgMoveDo(pgMoving,{board:pgCur(),key:t.dataset.k},pgMoveMode());return;}
+ if(pgTrading){const t=e.target.closest(".sc,.slip");if(!t)return;const cur=pgCur(),v=pgBoard(cur).pegs[t.dataset.k];
+  if(cur===pgTrading.board){$("pgM").textContent="Pick the other board first (Other board), then tap the person's spot there.";return;}
+  if(!v||!v.n){$("pgM").textContent="That spot is blank. Tap a spot with a name on it.";return;}pgTradeConfirm({board:cur,key:t.dataset.k,n:v.n});return;}
+ if(pgMoving){const t=e.target.closest(".sc,.slip");if(!t)return;if(pgMoving.board!==pgCur()){$("pgM").textContent="Moves stay on "+pgMoving.board+". Go back to it, or Cancel.";return;}pgMoveDo(pgMoving,{board:pgCur(),key:t.dataset.k},pgMoveMode());return;}
  if(sc){const k=sc.dataset.k;if(pgHeld){pgDrop(k);return;}
   const b=pgBoard(pgCur()),pj=b.jobs.filter(j=>j.pos===k),pg=pgD.globals.filter(g=>g.board===pgCur()&&g.pos===k);
   if(pj.length)pgHold("j",pj[pj.length-1].id);else if(pg.length)pgHold("g",pg[pg.length-1].id);else{$("pgM").textContent="Pick a peg in the legend first, then tap a circle to place it.";}return;}
@@ -2929,6 +3237,8 @@ const pgBbClick=e=>{const b=e.target.closest("button");if(!b)return;const id=b.i
  if(b.classList.contains("lc")){pgHold(b.dataset.t,b.dataset.id);return;}
  if(b.classList.contains("lce")){pgJobEdit(b.dataset.e);return;}
  if(id==="bbMm"||id==="bbMm2"){LSset(PGMM,pgMoveMode()==="swap"?"insert":"swap");pgRender();}
+ else if(id==="bbTrX"){pgTrading=null;$("pgM").textContent="Trade cancelled.";pgRender();}
+ else if(id==="bbTrB"){if(pgTrading)pgTradePick(pgTrading.board,pgTrading.key);}
  else if(id==="bbMvX"){pgMoving=null;$("pgM").textContent="Move cancelled.";pgRender();}
  else if(id==="bbMu"){pgMoveUndo();}
  else if(id==="bbPhoto"){LSset(PGP,LS(PGP,"0")==="1"?"0":"1");pgRender();}
@@ -3001,7 +3311,7 @@ $("pgPh").onclick=()=>{if(!ldbOk){$("pgM").textContent="Photos unavailable (priv
 $("pgCam").onclick=()=>{if(!ldbOk){$("pgM").textContent="Photos unavailable (private storage not supported in this browser).";return;}pickCam(pgCtx());};
 async function refreshPegPic(){const el=$("pgPic");if(!el)return;const c=pgSelName();let a=[];if(ldbOk){try{a=await lByKey(pgPicKey(c));}catch(e){}}
  if(c!==pgSelName())return;if(pgBlob){URL.revokeObjectURL(pgBlob);pgBlob=null;}
- $("pgCam").textContent=a.length?"📷 Take another photo":"📷 Take photo";
+ {const cb=$("pgCam"),want=a.length?"📷 Take another photo":"📷 Take photo";if((cb.dataset.pff||cb.textContent)!==want){pgFitReset(cb);cb.textContent=want;pgFitSoon();}} /* v100: keep the fitted short label; refit only if the label really changes */
  const pn=$("pgPane");if(!a.length){el.innerHTML="";if(pn&&!pn.classList.contains("hide"))pn.innerHTML='<p class="mut" style="margin:6px">No photo yet. Use Take photo or Choose from gallery above.</p>';return;}const last=a[a.length-1];pgBlob=URL.createObjectURL(last.blob);
  if(pn&&!pn.classList.contains("hide")){pn.innerHTML=`<img alt="Photo of the ${esc(c)} to compare (tap to open full screen)" src="${pgBlob}">`;pn.firstChild.onclick=()=>{const x=pgCtx();viewer(x.k,x.vs,x.eta,x.etd);};}
  el.innerHTML=`<button type="button" class="pgp" aria-label="Open photos of ${esc(c)}"><img alt="Photo of ${esc(c)}" src="${pgBlob}"></button><p class="mut pgpl" style="margin:0 0 8px"><b>${last.src==="gal"?"Photo added":"Photo taken"} ${esc(pegWhen(last.added))}</b>${a.length>1?" · "+a.length+" photos (tap to view all, share or delete)":" · tap to view full size, share or delete"}</p><div class="row" style="margin:0 0 8px"><button type="button" id="pgPhS">📤 Share photo</button></div>`;
@@ -3052,11 +3362,16 @@ function pgGlRender(){const el=$("pgGl");if(!el)return;const gs=pgD.globals,un=p
  (gs.length?gs.map(g=>`<p class="gp" data-g="${esc(g.id)}"><b>◆ ${esc(g.name)}</b><br><span class="mut">${pgGLine(g)}</span></p>`).join(""):'<p class="mut">No global pegs. Use Manage to add one.</p>')+
  `<div class="row"><button type="button" id="gUn"${un.length?"":" disabled"}>${un.length?"Undo: "+esc(un[un.length-1].label):"Undo (global pegs)"}</button><button type="button" id="gLog">Global log</button><button type="button" id="gMan">Manage</button></div>`;
  $("gUn").onclick=()=>{const r=pegGlobalUndo(pgD,new Date());pgGApply(r,r.ok?"Undid: "+r.undone.label+".":"");};$("gLog").onclick=pgGLogOpen;$("gMan").onclick=pgGManage;}
+function pgLogShift(f){if(editId)resetForm();retTo="pegs";show("add");
+   if(f.date)$("date").value=f.date;const jo=f.job&&[...$("job").options].some(x=>x.value===f.job);if(jo){$("job").value=f.job;$("jobC").classList.add("hide");}rateDirty=false;applyDefaults();pierHrs();
+   if(f.hours!==""){$("hrs").value=f.hours;hrsAuto=null;$("hrs").dispatchEvent(new Event("input",{bubbles:true}));if($("hrsHint"))$("hrsHint").textContent=f.hours+"h from the "+f.name+" peg take"+(f.hours===9?" (flex lashing at the drop)":f.hours===10?" (crane/strad – 11 if it ran long)":"")+" – add OT or edit if your shift differs.";}otHint();guarHint();$("hrs").focus();}
 function pgGLogOpen(){if($("pgGLogS"))return;const o=pgSheet("pgGLogS"),days=pegGlobalDays(pgD);
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="glT" class="rot"><h3 id="glT">Global pegs log · all boards</h3>
- ${days.length?days.map(g=>`<div class="rlg"><p><b>${esc(pegDateLong(g.d))}</b></p>${g.items.slice().reverse().map(t=>`<p>◆ ${esc(t.peg)} – <b>${esc(t.person)}</b><br><span class="mut">${esc(t.board)}${t.num?" · position #"+t.num:""}</span></p><div class="row"><button type="button" class="d" data-x="${esc(t.id)}">Delete</button></div>`).join("")}</div>`).join(""):'<p class="mut">No global pegs taken yet.</p>'}
+ ${days.length?days.map(g=>`<div class="rlg"><p><b>${esc(pegDateLong(g.d))}</b></p>${g.items.slice().reverse().map(t=>`<p>◆ ${esc(t.peg)} – <b>${esc(t.person)}</b><br><span class="mut">${esc(t.board)}${t.num?" · position #"+t.num:""}</span></p><div class="row"><button type="button" class="d" data-x="${esc(t.id)}">Delete</button></div>${pegTakePrefill(t)?`<div class="row"><button type="button" class="p" data-ls="${esc(t.id)}">＋ Log this shift</button></div>`:""}`).join("")}</div>`).join(""):'<p class="mut">No global pegs taken yet.</p>'}
  <p class="mut" style="margin:0">Newest first; the last ${PEG_TAKES} are kept. Job-peg takes are in each board's “Who took what” log.</p><button type="button" class="p" id="glDn">Close</button></div>`;
- o.onclick=ev=>{if(ev.target===o){o.remove();return;}const d=ev.target.dataset||{};if(d.x){if(!confirm("Delete this log entry?"))return;const r=pegGlobalDeleteTake(pgD,d.x);o.remove();if(pgGApply(r,""))pgGLogOpen();}};
+ o.onclick=ev=>{if(ev.target===o){o.remove();return;}const d=ev.target.dataset||{};
+  if(d.ls){const t=(pgD.glog||[]).find(x=>x.id===d.ls),f=pegTakePrefill(t);if(!f)return;o.remove();pgLogShift(f);return;}
+  if(d.x){if(!confirm("Delete this log entry?"))return;const r=pegGlobalDeleteTake(pgD,d.x);o.remove();if(pgGApply(r,""))pgGLogOpen();}};
  $("glDn").onclick=()=>o.remove();$("glDn").focus({preventScroll:true});}
 function pgGManage(){if($("pgGManS"))return;const o=pgSheet("pgGManS");
  o.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="gmT" class="rot"><h3 id="gmT">Manage global pegs</h3>
@@ -3675,7 +3990,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chat
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
