@@ -33,7 +33,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .locseg button small{font-size:max(12px,.75rem);font-weight:600;color:var(--mut);overflow-wrap:anywhere;text-align:center;max-width:100%}
 .locseg button[aria-checked=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 -3px #ffd23f}
 .locseg button[aria-checked=true] small{color:var(--prifg)}
-.locd{margin:4px 0 0;font-weight:600}.cash{display:grid;gap:8px;margin:8px 0 4px}.cash .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cashn{margin:0}
+.locd{margin:4px 0 0;font-weight:600}.bt.hide{display:none}html[data-st=CA] .waonly{display:none!important}html[data-st=CA] .wa1,html[data-st=OR] .wa1{display:none!important}.cash{display:grid;gap:8px;margin:8px 0 4px}.cash .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cashn{margin:0}
 .locseg .loch{grid-column:1/-1;font-size:max(12px,.8125rem);font-weight:800;color:var(--mut);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em}
 .locsheet .locseg,#suLoc,#locSegB{max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain;padding:2px}
 /* v77: 5 columns so no region leaves a lone chip; labels stay on one line */
@@ -482,7 +482,7 @@ body.gopen{overflow:hidden}
 <section id="v-week" class="hide"></section>
 <section id="v-hist" class="hide"></section>
 <section id="v-data" class="hide">
-<div class="card" id="locCard"><h3 style="margin-top:0">Your local</h3><div id="locSegD"></div><p class="mut" style="margin:6px 0 0">Changes the job list, pay rates, contract link, hall phone, home port for Ships/Needs, and which chat room you are in. Saved shifts keep what they were saved with. Peg, equipment boards and ship gear cards stay shared (Local 19 boards).</p></div>
+<div class="card" id="locCard"><h3 style="margin-top:0">Your local</h3><div id="locSegD"></div><p class="mut" style="margin:6px 0 0">Changes the job list, pay rates, contract link, hall phone, home port for Ships/Needs, and which chat room you are in. Saved shifts keep what they were saved with.<span class="waonly"> Peg, equipment boards and ship gear cards stay shared (Local 19 boards).</span></p></div>
 <div class="card"><h3>Text size</h3><div class="row" id="tsz"><button type="button" data-ts="normal" aria-pressed="false">Normal</button><button type="button" data-ts="large" aria-pressed="false">Large</button><button type="button" data-ts="xl" aria-pressed="false">Extra large</button></div></div>
 <div class="card"><h3>Travel &amp; mileage</h3>
 <label for="mrate" style="margin-top:0">Mileage rate <span class="mut">($ per mile, IRS rate – editable)</span></label><input type="number" id="mrate" step="0.001" min="0" inputmode="decimal">
@@ -578,21 +578,21 @@ body.gopen{overflow:hidden}
 <input id="dpNum" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your BA's number" aria-describedby="baH"><p id="baH" class="mut" style="margin:4px 0 0">Call your BA if you're fired or have a beef on the job. Saved on this device only.</p>
 <div class="qgrid">
 <a id="dpCall" class="bt p off" href="#" aria-disabled="true" aria-label="Call BA (enter the number above)">📞 Call BA</a>
-<a class="bt p" href="tel:+18002754598" id="twCall">📞 Travel Washington (1-800-ASK-ILWU)</a>
+<a class="bt p wa1" href="tel:+18002754598" id="twCall">📞 Travel Washington (1-800-ASK-ILWU)</a>
 <a class="bt p" href="tel:+12066237461" id="hallCall">📞 Local 19 hall: 206-623-7461</a>
 <a class="bt p hide" href="#" id="offCall">📞 Local office</a>
-<a class="bt" href="https://docs.nwseaportalliance.com/Vessel/Schedule.pdf" target="_blank" rel="noopener">NWSA vessel schedule (PDF) ↗</a>
-<a class="bt" href="https://www.ilwu23.org" target="_blank" rel="noopener">Local 23 Tacoma ↗</a>
-<a class="bt" href="https://ilwu21.org" target="_blank" rel="noopener">ILWU Local 21 ↗</a>
+<a class="bt waonly" href="https://docs.nwseaportalliance.com/Vessel/Schedule.pdf" target="_blank" rel="noopener">NWSA vessel schedule (PDF) ↗</a>
+<a class="bt waonly" href="https://www.ilwu23.org" target="_blank" rel="noopener">Local 23 Tacoma ↗</a>
+<a class="bt waonly" href="https://ilwu21.org" target="_blank" rel="noopener">ILWU Local 21 ↗</a>
 </div>
-<p id="dpNote" class="mut" style="margin-bottom:0">Needs and gang allocation aren't published online, so call dispatch and log them below. Hall number from ilwu.org/contact/ilwu-local-unions-2. Travel Washington (1-800-ASK-ILWU, 1-800-275-4598) is for out-of-port travel/needs across Washington, not general dispatch (number provided by you; not verified online).</p></div>
+<p id="dpNote" class="mut" style="margin-bottom:0">Needs and gang allocation aren't published online, so call dispatch and log them below. Hall number from ilwu.org/contact/ilwu-local-unions-2.<span class="wa1"> Travel Washington (1-800-ASK-ILWU, 1-800-275-4598) is for out-of-port travel/needs across Washington, not general dispatch (number provided by you; not verified online).</span></p></div>
 <div class="card"><h3 style="margin-top:0" id="ndT">Today's needs</h3>
 <form id="ndF" autocomplete="off">
 <label for="ndD" style="margin-top:0">Date</label><input type="date" id="ndD" required>
 <label for="ndS">Shift</label><select id="ndS"><option>1st</option><option>2nd</option><option>3rd</option></select>
-<label for="ndP">Port</label><select id="ndP"><option>Seattle</option><option>Tacoma</option><option>Everett</option><option>Olympia</option><option>Longview</option><option>Vancouver WA</option><option>Aberdeen</option><option>Port Angeles</option><option>Other</option></select>
+<label for="ndP" class="waonly">Port</label><select id="ndP" class="waonly"><option>Seattle</option><option>Tacoma</option><option>Everett</option><option>Olympia</option><option>Longview</option><option>Vancouver WA</option><option>Aberdeen</option><option>Port Angeles</option><option>Other</option></select>
 <label for="ndT2">Pier / terminal <span class="mut">(optional)</span></label><input id="ndT2" maxlength="80" placeholder="e.g. T5, Pier 91">
-<div id="ndSh" aria-live="polite"></div>
+<div id="ndSh" class="waonly" aria-live="polite"></div>
 <label for="ndO">Out-of-port needs</label><textarea id="ndO" maxlength="2000"></textarea>
 <label for="ndG">Gang allocation</label><textarea id="ndG" maxlength="2000"></textarea>
 <label style="margin-top:12px">Gang allocation photo <span class="mut">(optional)</span></label><div class="ltr" style="margin-top:4px"><button type="button" id="ndCam">📷 Take photo</button><button type="button" id="ndPh">🖼 Choose from gallery</button><div id="ndPt"></div></div>
@@ -604,7 +604,7 @@ body.gopen{overflow:hidden}
 <div id="shSum"></div><p id="shUp" class="mut"></p>
 <div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Letter photos stay on this device only (private, offline). Auto-removed 30 days after the ship's ETD.</p></div>
 <div id="shList"></div>
-<div class="card"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). <b>Ships coming</b> lists Seattle container terminals only (T5, T18); T91 is cruise, no container calls. The Needs <b>At berth now</b> box covers more ports. <b>⚙️ Gear</b> opens a lashing/cone/catwalk card for that ship, filled in by coworkers and shared in your chat room (photos stay on your phone).</p>
+<div class="card waonly"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). <b>Ships coming</b> lists Seattle container terminals only (T5, T18); T91 is cruise, no container calls. The Needs <b>At berth now</b> box covers more ports. <b>⚙️ Gear</b> opens a lashing/cone/catwalk card for that ship, filled in by coworkers and shared in your chat room (photos stay on your phone).</p>
 <p class="mut" style="margin:8px 0 0"><b>Sources:</b> Seattle and Tacoma: Northwest Seaport Alliance Vessel Schedule Forecast (Tacoma includes car ships and breakbulk). Aberdeen: Port of Grays Harbor vessel schedule (dates only). Olympia: Port of Olympia vessel announcements (dates only). Everett: Port of Everett shipping schedule. Port Angeles: Port of Port Angeles ship schedule. Longview and Vancouver WA: no public schedule; Columbia River Pilots dispatch is used only when it is current. "leaves ?" means the source gives no departure time.</p></div>
 </section>
 <footer id="ft">ILWU LIFE <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button><small id="ftc">© 2026 Daniel White. All rights reserved.</small></footer>
@@ -767,7 +767,8 @@ function pmaName(c){for(const g in JOBS)for(const [k,nm] of JOBS[g])if(k===c)ret
 function localJobGroups(n){n=localId(n);
  if(LOCALS[n].out){const K=LOCALS[n].kind,j2=v=>{const j=seattleJob(v);if(!j&&pmaName(v))return[v,v+" "+pmaName(v)];return[v,v+(j&&j[1]?" · "+j[1]:j&&j[2]?" · "+(CLASS_SHORT[j[2]]||j[2]):j?" · rate: enter yours":"")];};
   const ex=(OUT_EXTRA[n]||[]).map(j2),pc=["Contract 4.32 jobs (no PMA code)",PCL_JOBS.map(([v,c,k])=>[v,v+" · "+k])];
-  const cw=Object.keys(JOBS).filter(g=>g!=="Foreman").map(g=>["PMA "+g+" jobs (coastwide)",JOBS[g].map(([c,nm])=>[c,c+" "+nm])]);
+  const cw=Object.keys(JOBS).filter(g=>g!=="Foreman").map(g=>["PMA "+g+" jobs (coastwide)",JOBS[g].filter(([c,nm])=>!(CA_SHIP_OF[n]&&/\(WA\)/.test(nm))).map(([c,nm])=>[c,c+" "+nm])]);
+  if(CA_SHIP_OF[n])cw.push(["PMA codes for other areas",Object.values(JOBS).flat().filter(([c,nm])=>/\(WA\)/.test(nm)).map(([c,nm])=>[c,c+" "+nm.replace(/\s*\(WA\)/,"")])]); /* v97: kept (old shifts never lose a job), area tag dropped */
   const ck=["Local "+n+" clerk jobs (PCCCD)",[...CLERK_JOBS,...SEATTLE_JOBS.filter(j=>CLERK_SEATTLE.includes(j[0]))].map(([v,c,k])=>[v,v+" · "+(CLASS_SHORT[k]||k)])];
   const fm=["Local "+n+" walking bosses / foremen (WBF)",[...WBF_JOBS.map(([v])=>[v,v]),...JOBS.Foreman.map(([c,nm])=>[c,c+" "+nm])]];
   const all=["Other job names",[...TAC_JOBS,...SEATTLE_JOBS,...CLERK_JOBS,...WBF_JOBS].map(([v,c])=>[v,v+(c?" · "+c:"")])],fmc=["PMA 30% foreman codes",JOBS.Foreman.map(([c,nm])=>[c,c+" "+nm])];
@@ -805,6 +806,14 @@ const CA_SHIP_OF={"13":"LA","63":"LA","94":"LA","10":"Bay","34":"Bay","91":"Bay"
 const CU_CFG={full:"ILWU Credit Union",short:"ILWU CU",href:"https://www.ilwucu.org/",img:"img/ilwu-cu.png",w:107,h:24,aria:"ILWU Credit Union (opens in new tab)"},
  WF_CFG={full:"Waterfront FCU",short:"Waterfront",href:"https://www.waterfrontfcu.org/",img:"img/waterfront-fcu.png",w:32,h:32,aria:"Waterfront Federal Credit Union (opens in new tab)"};
 function cuCfg(n){return CA_SHIP_OF[localId(n)]?CU_CFG:WF_CFG;}
+/* v97: History pensioners button. Rusty Hook = Local 19 only. California: no club has its own website, so South locals (13/63/94; Southern California
+   Pensioners Group, Wilmington) get Local 13's pensioners page and the other CA locals get the ILWU Pacific Coast Pensioners Association directory
+   (lists Bay Area, San Diego, Hueneme Gold Coast and Eureka clubs). WA/OR locals other than 19: nothing. */
+const PENS_RH={full:"📰 The Rusty Hook — Pensioners newsletter",short:"📰 The Rusty Hook",href:"https://www.ilwu19.com/rustyhook",aria:"The Rusty Hook, Local 19 Pensioners Club newsletter",rh:true},
+ PENS_L13={full:"⚓ Local 13 Pensioners — SoCal",short:"⚓ L13 Pensioners",href:"https://ilwu13.com/pensioners/",aria:"ILWU Local 13 Pensioners page (Southern California Pensioners Group area)",title:"Local 13 Pensioners",ftitle:"ILWU Local 13 Pensioners (ilwu13.com)"},
+ PENS_PCPA={full:"⚓ ILWU Pensioners Clubs (PCPA)",short:"⚓ Pensioners (PCPA)",href:"https://www.ilwu.org/contact/pacific-coast-pensioners/",aria:"ILWU Pacific Coast Pensioners Association: pensioners clubs directory",title:"Pensioners Clubs (PCPA)",ftitle:"ILWU Pacific Coast Pensioners Association (ilwu.org)"};
+function pensCfg(n){n=localId(n);if(n==="19")return PENS_RH;const k=CA_SHIP_OF[n];return !k?null:k==="LA"?PENS_L13:PENS_PCPA;}
+function localSt(n){n=localId(n);return CA_SHIP_OF[n]?"CA":localRegion(n)==="Oregon"?"OR":"WA";}
 function caShipLinks(n){const k=CA_SHIP_OF[localId(n)];return k?CA_SHIP_LINKS[k]:null;}
 function caShipsHtml(n){const L=caShipLinks(n),E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
  return '<p class="mut cashn">Live list not available for this port yet.</p>'+(L.length?'<div class="cash">'+L.map(([t,u])=>'<a class="bt" href="'+E(u)+'" target="_blank" rel="noopener">'+E(t)+' ↗</a>').join("")+'</div>':'<p class="mut" style="margin:0">No public schedule page found for '+E(LOCALS[localId(n)].port)+'.</p>');}
@@ -1013,7 +1022,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v96",CACHE_VERSION="l19hours-v96"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v97",CACHE_VERSION="l19hours-v97"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1204,7 +1213,7 @@ function needPierNote(v,port,pier){const t=String(pier||"").toUpperCase().replac
 function telHref(s){s=String(s||"").trim();const d=s.replace(/\D/g,"");if(d.length<7||d.length>15)return"";return"tel:"+(s.charAt(0)==="+"?"+":"")+d;}
 function cleanPhone(s){return String(s||"").replace(/[^\d+\-().\s]/g,"").trim().slice(0,30);}
 function needDateLong(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d||""))return String(d||"");const x=new Date(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10));return["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][x.getDay()]+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][x.getMonth()]+" "+x.getDate()+", "+x.getFullYear();}
-function needText(n){const t=x=>String(x||"").trim();return["Local 19 – Today's needs","Date: "+needDateLong(n.date),"Shift: "+t(n.shift),"Port: "+t(n.port)+(t(n.pier)?" ("+t(n.pier)+")":""),"","Out-of-port needs:",t(n.out)||"(none logged)","","Gang allocation:",t(n.gang)||"(none logged)"].join("\n");}
+function needText(n){const t=x=>String(x||"").trim();return["Local "+curLocal()+" – Today's needs","Date: "+needDateLong(n.date),"Shift: "+t(n.shift),"Port: "+t(n.port)+(t(n.pier)?" ("+t(n.pier)+")":""),"","Out-of-port needs:",t(n.out)||"(none logged)","","Gang allocation:",t(n.gang)||"(none logged)"].join("\n");}
 function needsClean(a){const o=[],seen=new Set();for(const n of Array.isArray(a)?a:[]){if(!n||typeof n!=="object"||!/^\d{4}-\d{2}-\d{2}$/.test(n.date||""))continue;const id=String(n.id||"").slice(0,40);if(!id||seen.has(id))continue;seen.add(id);
  o.push({id,date:n.date,shift:NEED_SHIFTS.includes(n.shift)?n.shift:"1st",port:NEED_PORTS.includes(n.port)?n.port:"Other",pier:String(n.pier||"").slice(0,80),out:String(n.out||"").slice(0,2000),gang:String(n.gang||"").slice(0,2000),created:String(n.created||"").slice(0,30)});}return o;}
 function needsMerge(cur,inc){const m=new Map(needsClean(cur).map(n=>[n.id,n]));needsClean(inc).forEach(n=>m.set(n.id,n));return[...m.values()];}
@@ -2069,7 +2078,7 @@ setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()
 /* v90: Waterfront Federal Credit Union (the longshore credit union) link, stacked under The Rusty Hook; opens in a new tab (never framed) */
 /* v96: California locals get the ILWU Credit Union instead (serves ILWU members in California; logo = ilwucu.org header logo img/ilwu_logo.svg, rendered to PNG) */
 const WF_FULL="Waterfront FCU",WF_SHORT="Waterfront",WF_HTML='<div class="musw wfw"><a id="wfBtn" class="musb" href="https://www.waterfrontfcu.org/" target="_blank" rel="noopener" aria-label="Waterfront Federal Credit Union (opens in new tab)"><img src="img/waterfront-fcu.png" alt="" width="32" height="32"><span>'+WF_FULL+'</span></a></div>';
-function wfSwap(){const a=document.getElementById("wfBtn");if(!a)return;const c=cuCfg(curLocal()),im=a.querySelector("img");if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);im.src=c.img;im.width=c.w;im.height=c.h;}a.classList.toggle("cu",c===CU_CFG);a.querySelector("span").textContent=c.full;wfFit();}
+function wfSwap(){const a=document.getElementById("wfBtn");if(!a)return;const c=cuCfg(curLocal()),im=a.querySelector("img");if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);im.src=c.img;im.width=c.w;im.height=c.h;}a.classList.toggle("cu",c===CU_CFG);a.querySelector("span").textContent=c.full;wfFit();if(typeof pensSwap==="function")pensSwap();}
 window.l19WfSwap=wfSwap;
 function wfFit(){const a=document.getElementById("wfBtn");if(!a||!a.clientWidth)return;const C=cuCfg(curLocal()),t=a.querySelector("span");t.textContent=C.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=C.short;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
@@ -2079,9 +2088,10 @@ function tgpFit(){const a=document.getElementById("tgpBtn");if(!a||!a.clientWidt
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=TGP_SHORT;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 addEventListener("resize",()=>tgpFit());window.l19TgpFit=tgpFit;
 const RH_FULL="📰 The Rusty Hook — Pensioners newsletter",RH_SHORT="📰 The Rusty Hook";
+function pensSwap(){const a=document.getElementById("rhBtn");if(!a)return;const c=pensCfg(curLocal());a.parentNode.classList.toggle("hide",!c);if(!c)return;if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);}rhFit();}
 function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML);wfSwap();}
-function rhFit(){const a=document.getElementById("rhBtn");if(!a||!a.clientWidth)return;a.textContent=RH_FULL;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
- while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=RH_SHORT;a.style.fontSize="";fs=parseFloat(getComputedStyle(a).fontSize);n=0;while(over()&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
+function rhFit(){const a=document.getElementById("rhBtn");if(!a||!a.clientWidth)return;const P=pensCfg(curLocal())||PENS_RH;a.textContent=P.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
+ while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=P.short;a.style.fontSize="";fs=parseFloat(getComputedStyle(a).fontSize);n=0;while(over()&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 window.l19RhFit=rhFit;
 /* v88: Rusty Hook opens in an in-app viewer; Cold Coffee loops while it is open (mute toggle respected), normal playlist resumes on close; phone Back closes it */
 const RH_URL="https://www.ilwu19.com/rustyhook";let rhPrev=null;
@@ -2099,7 +2109,7 @@ function rhClose(){const d=document.getElementById("rhv");if(!d)return;d.remove(
  const a=musEl();if(a&&rhPrev){const p=rhPrev;rhPrev=null;musI=p.i;a.loop=PLAYLIST.length===1;a.src=PLAYLIST[musI].src;if(p.src===PLAYLIST[musI].src&&p.t>0)a.addEventListener("loadedmetadata",()=>{try{a.currentTime=p.t;}catch(e){}},{once:true});if(musOn())a.play().catch(()=>{});}
  const b=document.getElementById(rhBtnId);if(b)b.focus();}
 addEventListener("popstate",()=>{if(document.getElementById("rhv")&&!(history.state&&history.state.l19rh))rhClose();});
-document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#rhBtn,#tgpBtn");if(!b)return;e.preventDefault();rhOpen(b.id==="tgpBtn"?TGP:null);});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#rhBtn,#tgpBtn");if(!b)return;e.preventDefault();const P=pensCfg(curLocal());rhOpen(b.id==="tgpBtn"?TGP:P&&!P.rh?{url:P.href,title:P.title,ftitle:P.ftitle,music:false,btn:"rhBtn"}:null);});
 addEventListener("resize",rhBarFit);window.l19Rh={open:rhOpen,close:rhClose};addEventListener("resize",rhFit);
 setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);addEventListener("resize",()=>{fitView("v-hist");fitView("v-week");});addEventListener("resize",()=>segFit());
 /* v83: short one-line period range, e.g. "Oct 1 – Dec 31, 2026" */
@@ -2349,8 +2359,8 @@ async function needBlobs(id){if(!ldbOk)return[];try{return(await lByKey(ndKey(id
 function needFiles(n,blobs){return blobs.map((b,i)=>{const t=b.type||"image/jpeg",ext=t.includes("png")?"png":t.includes("webp")?"webp":"jpg";return new File([b],needPhotoName(n,blobs.length>1?i+1:0,ext),{type:t});});}
 async function shareNeedPics(n){const bl=await needBlobs(n.id);if(!bl.length)return;await shareImgs(needFiles(n,bl),"Gang allocation – "+n.port+" "+n.date,"",$("ndM"));}
 async function shareNeed(n){const text=needText(n),m=$("ndM");
- {const bl=await needBlobs(n.id);if(bl.length){await shareImgs(needFiles(n,bl),"Local 19 – Today's needs",text,m);return;}}
- try{if(navigator.share){await navigator.share({title:"Local 19 – Today's needs",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
+ {const bl=await needBlobs(n.id);if(bl.length){await shareImgs(needFiles(n,bl),"Local "+curLocal()+" – Today's needs",text,m);return;}}
+ try{if(navigator.share){await navigator.share({title:"Local "+curLocal()+" – Today's needs",text});m.textContent="Shared.";return;}}catch(e){if(e&&e.name==="AbortError")return;}
  let ok=false;try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok=true;}}catch(e){}
  if(!ok){try{const t=document.createElement("textarea");t.value=text;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();ok=document.execCommand("copy");t.remove();}catch(e){}}
  m.textContent=ok?"Sharing isn't available here, so the note was copied to your clipboard.":"Couldn't share or copy. Select the text in the note and copy it manually.";}
@@ -2487,7 +2497,7 @@ function locPaint(root,id){if(!root)return;root.innerHTML=locSegHtml(id);locWire
 function locRender(){const c=curLocal(),L=LOCALS[c];
  $("hdLn").textContent="Local "+c;$("hdLoc").setAttribute("aria-label","Your local: Local "+c+", "+L.trade+". Change local");document.title=localTitle(c);
  const d=$("docContract");if(d){d.href=L.doc.url;d.title=L.doc.name+" (PDF on pmanet.org)";d.setAttribute("aria-label","Current Contract: "+L.doc.name+", PDF, opens in a new tab");}
- const h=$("hallCall");if(h){h.href="tel:"+L.tel;h.textContent="📞 Local "+c+(L.office?" dispatch: ":" hall: ")+L.hall;}if(window.l19WfSwap)window.l19WfSwap();const tw=$("twCall");if(tw)tw.classList.toggle("hide",!!CA_SHIP_OF[c]); /* v96: Travel Washington line is for WA/OR locals */
+ const h=$("hallCall");if(h){h.href="tel:"+L.tel;h.textContent="📞 Local "+c+(L.office?" dispatch: ":" hall: ")+L.hall;}if(window.l19WfSwap)window.l19WfSwap();/* v97: hide Washington-only items for California (and Travel Washington for Oregon too) */document.documentElement.dataset.st=localSt(c);const n2=$("ndT2");if(n2)n2.placeholder=CA_SHIP_OF[c]?"e.g. terminal or berth":"e.g. T5, Pier 91";
  const oc=$("offCall");if(oc){oc.classList.toggle("hide",!L.office);if(L.office){oc.href="tel:"+L.offTel;oc.textContent="📞 Local "+c+" office: "+L.office;}}
  locPaint($("locSegD"),"locSegB");locPaint($("suLocW"),"suLoc");locPaint($("lsW"),"lsSeg");}
 function localSet(n){n=localId(n);const was=curLocal();try{localStorage.setItem(LOCAL_KEY,n);}catch(e){}
@@ -3635,7 +3645,7 @@ window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")
 })();}
 
 if(typeof module!=="undefined")module.exports={pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
-if(typeof module!=="undefined")Object.assign(module.exports,{cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
+if(typeof module!=="undefined")Object.assign(module.exports,{localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
