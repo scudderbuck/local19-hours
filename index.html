@@ -968,7 +968,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v93",CACHE_VERSION="l19hours-v93"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v94",CACHE_VERSION="l19hours-v94"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1980,7 +1980,7 @@ window.l19Fit=fitView;
 function musFit(reset){const a=document.getElementById("musicBtn");if(!a||!a.clientWidth)return;if(reset)a.style.fontSize="";let fs=parseFloat(getComputedStyle(a).fontSize),n=0;while(a.scrollWidth>a.clientWidth+0.5&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}
 window.l19MusFit=musFit;
 /* v85: background music. Add tracks here (played in order, then loop). Starts on the first tap (browsers block autoplay with sound). */
-const PLAYLIST=[{title:"Breakin my bones",src:"music/breakin-my-bones.mp3"},{title:"Velvet Umbrella",src:"music/velvet-umbrella.mp3"},{title:"Cold Coffee",src:"music/cold-coffee.mp3"},{title:"Rust Coffee Shift",src:"music/rust-coffee-shift.mp3"}];
+const PLAYLIST=[{title:"King of the Docks",src:"music/king-of-the-docks.mp3"},{title:"Breakin my bones",src:"music/breakin-my-bones.mp3"},{title:"Velvet Umbrella",src:"music/velvet-umbrella.mp3"},{title:"Cold Coffee",src:"music/cold-coffee.mp3"},{title:"Rust Coffee Shift",src:"music/rust-coffee-shift.mp3"}];
 const MUS_K="l19.music";let musI=0,musWas=false,musStarted=false;
 function musOn(){return localStorage.getItem(MUS_K)!=="0";}
 function musEl(){const a=document.getElementById("bgm");if(a&&!a.dataset.init){a.dataset.init="1";a.volume=0.35;a.loop=PLAYLIST.length===1;a.src=PLAYLIST[0].src;
