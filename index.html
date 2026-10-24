@@ -35,7 +35,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .locseg button[aria-checked=true] small{color:var(--prifg)}
 .locd{margin:4px 0 0;font-weight:600}.bt.hide{display:none}html[data-st=CA] .waonly{display:none!important}html[data-st=CA] .wa1,html[data-st=OR] .wa1{display:none!important}.cash{display:grid;gap:8px;margin:8px 0 4px}.cash .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cashn{margin:0}
 .locseg .loch{grid-column:1/-1;font-size:max(12px,.8125rem);font-weight:800;color:var(--mut);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em}
-.locsheet .locseg,#suLoc,#locSegB{max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain;padding:2px}
+.locsheet .locseg,#suLoc,#locSegB{max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain;padding:2px} /* v99: on the Backup tab the Local picker is part of the page (no inner scroll box): a finger landing on it scrolls the page instead of getting stuck in a contained inner scroller */ #locSegB{max-height:none;overflow:visible}
 /* v77: 5 columns so no region leaves a lone chip; labels stay on one line */
 .locseg{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.locseg button{padding:4px 0}
 .locseg button{container-type:inline-size}.locseg button small{white-space:nowrap;overflow-wrap:normal;letter-spacing:-.03em;font-size:min(max(12px,.75rem),20cqw)}
@@ -302,7 +302,7 @@ body.pgdrag{overscroll-behavior:none}
 #tsz button{padding:4px 6px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
 .seg{grid-template-columns:repeat(4,minmax(0,1fr))}.seg button{min-width:0;padding:4px 2px;white-space:normal;line-height:1.15;overflow-wrap:anywhere}
 /* v82: Week/Month/Quarter/Year stay one row, one line each, even 4px gaps at every text size: font follows the row width */
-.seg{gap:4px;container-type:inline-size}.seg button{white-space:nowrap;overflow-wrap:normal;overflow:hidden;font-size:min(1em,5.3cqw);letter-spacing:-.01em}.fit1{white-space:nowrap!important;overflow:hidden}.stat span.fit1,.rng.fit1,.card>.row>div>span.mut.fit1{display:block}.seg .sl{display:none}.seg.short .fl{display:none}.seg.short .sl{display:inline}.pgsd{grid-template-columns:repeat(2,minmax(0,1fr));margin:0 0 10px}.pgsd button{font-size:min(1em,8cqw)}.pgsdb{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;background:#fff3c4;color:#5a4300;font-size:.875em;white-space:nowrap}.pgsdb.n{background:#1c2b52;color:#ffd23f}.pgsw{margin:0 0 8px;padding:6px 10px;border-radius:8px;background:#efe7ff;color:#3b2470;font-weight:600} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
+.seg{gap:4px;container-type:inline-size}.seg button{white-space:nowrap;overflow-wrap:normal;overflow:hidden;font-size:min(1em,5.3cqw);letter-spacing:-.01em}.fit1{white-space:nowrap!important;overflow:hidden} .lbp{font-style:normal} .lb2>span.mut,.lb2>.lbp{display:block;font-weight:400} .row.stk{flex-direction:column} .row.stk>button{flex:1 1 auto;width:100%} #v-data p,#v-data label>span.mut{text-wrap:pretty}.stat span.fit1,.rng.fit1,.card>.row>div>span.mut.fit1{display:block}.seg .sl{display:none}.seg.short .fl{display:none}.seg.short .sl{display:inline}.pgsd{grid-template-columns:repeat(2,minmax(0,1fr));margin:0 0 10px}.pgsd button{font-size:min(1em,8cqw)}.pgsdb{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;background:#fff3c4;color:#5a4300;font-size:.875em;white-space:nowrap}.pgsdb.n{background:#1c2b52;color:#ffd23f}.pgsw{margin:0 0 8px;padding:6px 10px;border-radius:8px;background:#efe7ff;color:#3b2470;font-weight:600} /* v67: History Week/Month/Quarter/Year row stays on screen at Extra large */
 
 .bbz{width:max-content}
 .bbz.mini .sc{width:50%}
@@ -505,7 +505,7 @@ body.gopen{overflow:hidden}
 <label for="dpNum2">Business Agent (BA) number</label><input id="dpNum2" type="tel" inputmode="tel" autocomplete="off" placeholder="Enter your BA's number" aria-describedby="baH2"><p id="baH2" class="mut" style="margin:4px 0 0">Call your BA if you're fired or have a beef on the job. Same number as on the Ships tab.</p>
 <div class="row"><button id="exj" class="p">Back up now (JSON)</button></div>
 <label for="imp">Import JSON backup</label><input type="file" id="imp" accept=".json,application/json">
-<div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing (uncheck to replace all)</span></div>
+<div class="chk" style="margin-top:12px"><input type="checkbox" id="merge" checked><span>Merge with existing <i class="lbp">(uncheck to replace all)</i></span></div>
 <p id="msg" class="mut"></p>
 <button class="d" id="wipe" style="width:100%">Delete all data</button></div>
 <div class="card"><h3>Export to CSV</h3>
@@ -513,7 +513,7 @@ body.gopen{overflow:hidden}
 <label for="cxd">Period containing date</label><input type="date" id="cxd">
 <div class="chk" style="margin-top:12px"><input type="checkbox" id="cxn"><span>Hours only (no pay)</span></div>
 <p id="cxi" class="mut" aria-live="polite"></p>
-<div class="row"><button id="cxs" class="p">Share / save CSV</button><button id="cxe">Excel-friendly CSV</button></div>
+<div class="row"><button id="cxs" class="p">Share / save CSV</button><button id="cxe">Excel‑friendly CSV</button></div>
 <p class="mut">Excel-friendly adds a byte-order mark so Excel opens accents correctly. Sharing uses your phone's share sheet; otherwise the file downloads.</p>
 <p id="cxm" class="mut" aria-live="polite"></p></div>
 <div class="card"><h3>Hours milestones</h3>
@@ -534,7 +534,7 @@ body.gopen{overflow:hidden}
 <div class="row" style="margin-top:12px"><button id="pinSet" class="p">Set PIN</button><button id="pinRm" class="d hide">Remove PIN</button></div>
 <p id="pinM" class="mut" aria-live="polite"></p></div>
 <div class="card"><h3>Shift reminder</h3>
-<div class="chk"><input type="checkbox" id="remOn"><span>Remind me to log hours (off by default)</span></div>
+<div class="chk"><input type="checkbox" id="remOn"><span>Remind me to log hours <i class="lbp">(off by default)</i></span></div>
 <label for="remT">After typical shift end</label><input type="time" id="remT" value="18:00">
 <p class="mut"><b>How it works, honestly:</b> if you haven't logged a shift for today or yesterday, a banner shows when you open the app. A phone notification is best-effort only: this app has no server, so it can't wake your phone. On iPhone, web apps can show notifications only when added to the Home Screen (iOS 16.4+), and even then only while the app is open or recently active. Android is similar. Don't rely on it; the banner on open is the dependable part.</p>
 <p id="remM" class="mut" aria-live="polite"></p></div>
@@ -1031,7 +1031,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v98",CACHE_VERSION="l19hours-v98"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v99",CACHE_VERSION="l19hours-v99"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1057,6 +1057,9 @@ function reportText(o){o=o||{};const tl=(TIERS.find(x=>x[0]===o.tier)||[0,o.tier
  return L.join("\n");}
 /* Show the 'rates updated' banner when the last-seen version differs. Brand-new installs (no data, no setup) are marked seen silently. */
 function ratesBannerDue(seen,cur,existing){const id=cur&&cur.id;if(!id||seen===id)return false;if(!seen&&!existing)return false;return true;}
+/* v99: Share week is a Local 19 beta; other locals send fixes through Report a problem */
+function weekShareOn(n){return localId(n)==="19";}
+function tourCards(n){return weekShareOn(n)?TOUR_CARDS:TOUR_CARDS.filter(c=>c[0]!=="Share a week");}
 const TOUR_CARDS=[["Log a shift","Tap ＋ Add, pick the date, pier, job and shift, then enter hours. Rates fill in from the contract. Open “More details” for OT, travel and miles."],
  ["History & calendar","History lists every shift by month, with week, month, quarter and year totals. Switch to Calendar to tap a day, or search by job, pier or note."],
  ["Share a week","On the Week tab tap Share week. Choose hours only (no pay) or hours plus a pay estimate, then paste it wherever you need."],
@@ -1943,7 +1946,7 @@ function renderWeek(){const list=weekEntries(entries,wk),t=summarize(list),we=ad
 $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previous week">◀</button><div class="t">${wk.slice(5)} → ${we.slice(5)}<div class="mut">Sat–Fri · ${wk.slice(0,4)}</div></div><button id="nw" aria-label="Next week">▶</button></div>
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${hasPay(t)?money(payTotal(t)).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">${[t.travel?"Travel "+r2(t.travel)+"h"+(!hidePay&&t.travelPay?" · "+money(t.travelPay):""):"",t.miles?r2(t.miles)+" mi"+(!hidePay&&t.milePay?" · "+money(t.milePay)+" reimbursement (not wages)":""):""].filter(Boolean).join(" · ")}</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
- ${weekHolHtml(wk)}${weekSwHtml(wk)}<div class="row" style="margin-bottom:12px"><button class="p" id="sh">Share week</button><button id="tw">This week</button></div>
+ ${weekHolHtml(wk)}${weekSwHtml(wk)}<div class="row" style="margin-bottom:12px">${weekShareOn(curLocal())?'<button class="p" id="sh">Share week</button>':""}<button id="tw">This week</button></div>
  ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}${isWknd(e)?` <span class="badge">Wknd OT</span>`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}${isStopWork(e.date,curLocal())&&swNight(e.shift)?` <span class="badge sw">Stop work night</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
  $("v-week").insertAdjacentHTML("beforeend",upHolHtml(todayS()));
@@ -1952,7 +1955,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  async function doShare(noPay){const text=weekText(entries,wk,{noPay});
   if(navigator.share){try{await navigator.share({title:"ILWU LIFE hours "+wk,text});return;}catch(e){if(e&&e.name==="AbortError")return;}}
   try{await navigator.clipboard.writeText(text);alert("Summary copied to clipboard.");}catch(e){prompt("Copy summary:",text);}}
- $("sh").onclick=()=>{const o=document.createElement("div");o.className="sheet";
+ if($("sh"))$("sh").onclick=()=>{const o=document.createElement("div");o.className="sheet";
   o.innerHTML='<div><h3>Share week</h3><button class="p" data-m="hours">Share hours only (no pay)</button><button data-m="full">Share hours + pay estimate</button><button data-m="x">Cancel</button></div>';
   o.onclick=ev=>{const m=ev.target.dataset&&ev.target.dataset.m;if(ev.target===o||m){o.remove();if(m==="hours")doShare(true);if(m==="full")doShare(false);}};
   document.body.appendChild(o);};
@@ -2043,20 +2046,37 @@ function calView(){const y=+cm.slice(0,4),mo=+cm.slice(5)-1,wk=monthGrid(y,mo),d
  return `<div class="card nav"><button id="cp" aria-label="Previous month">◀</button><div class="t">${MON[mo]} ${y}<div class="mut">${r2(mt)}h this month</div></div><button id="cn" aria-label="Next month">▶</button></div>
  <div class="card"><div class="cal">${head}${cells}</div><div class="jump" style="margin-top:10px">${monthSel("cj",cm)}</div><button type="button" id="cto" class="full" style="margin-top:10px;width:100%">Today</button>${monthHolHtml(cm)}</div>${det}`;}
 function upSR(){const el=$("hsr");if(el){el.innerHTML=searchResults();el.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>openEntry(b.dataset.h));}}
+/* v99: shrink-to-fit work runs once per frame and only when the WIDTH changes. Android fires resize for height-only changes (address bar while scrolling, keyboard opening on a text field); those never change a one-line fit. */
+const onWidth=(()=>{const fs=[];let w=window.innerWidth,q=0;window.addEventListener("resize",()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;if(window.innerWidth===w)return;w=window.innerWidth;fs.forEach(f=>{try{f();}catch(e){}});});},{passive:true});return f=>{fs.push(f);};})();
 /* v82: if a full label (e.g. "Quarter") still can't fit on one line (very large phone font scaling), the row switches to Wk/Mo/Qtr/Yr */
 function segFit(){const g=document.getElementById("hk");if(!g)return;g.classList.remove("short");if([...g.querySelectorAll(".fl")].some(f=>f.scrollWidth>f.parentNode.clientWidth+0.5||f.getBoundingClientRect().width>f.parentNode.clientWidth+0.5))g.classList.add("short");}
 window.l19SegFit=segFit;
 /* v83: Week/History labels, headings, totals and buttons stay on one line: shrink the font (to 11px at most) and, if still too wide, use data-short */
 const FIT_SEL=".holl .hn,.stat b,.stat span,.rng,h3,h4,.card>.row>div>span.mut,button";
-function fitView(id){const v=document.getElementById(id);if(!v||v.classList.contains("hide"))return;
- v.querySelectorAll(FIT_SEL).forEach(el=>{if(el.closest(".hide,.cal,.seg,.acts"))return;if(el.dataset.full!=null){el.textContent=el.dataset.full;delete el.dataset.full;}el.style.fontSize="";el.classList.add("fit1");
+function fitEl(el){if(!el)return;if(el.dataset.full!=null){el.textContent=el.dataset.full;delete el.dataset.full;}el.style.fontSize="";el.classList.add("fit1");
   if(!el.clientWidth)return;const over=()=>el.scrollWidth>el.clientWidth+0.5;let fs=parseFloat(getComputedStyle(el).fontSize),n=0;
   while(over()&&fs>11&&n<60){fs-=0.5;n++;el.style.fontSize=fs+"px";}
   if(over()&&el.dataset.short&&el.children.length===0){el.dataset.full=el.textContent;el.textContent=el.dataset.short;el.style.fontSize="";fs=parseFloat(getComputedStyle(el).fontSize);n=0;while(over()&&fs>11&&n<60){fs-=0.5;n++;el.style.fontSize=fs+"px";}}
-  if(over()){if(el.dataset.full!=null){el.textContent=el.dataset.full;delete el.dataset.full;}el.classList.remove("fit1");el.style.fontSize="";}});
+  if(over()){if(el.dataset.full!=null){el.textContent=el.dataset.full;delete el.dataset.full;}el.classList.remove("fit1");el.style.fontSize="";}}
+function fitView(id){const v=document.getElementById(id);if(!v||v.classList.contains("hide"))return;
+ v.querySelectorAll(FIT_SEL).forEach(el=>{if(el.closest(".hide,.cal,.seg,.acts,.locseg"))return;fitEl(el);});
  v.querySelectorAll("table").forEach(t=>{if(t.closest(".hide"))return;const pe=t.parentElement,pc=getComputedStyle(pe),pw=pe.clientWidth-parseFloat(pc.paddingLeft)-parseFloat(pc.paddingRight);t.style.fontSize="";t.classList.add("fitT");if(!pw)return;
   let fs=parseFloat(getComputedStyle(t).fontSize),n=0;while(t.offsetWidth>pw+0.5&&fs>11&&n<60){fs-=0.5;n++;t.style.fontSize=fs+"px";}
   if(t.offsetWidth>pw+0.5){t.classList.remove("fitT");t.style.fontSize="";}});}
+/* v99: Backup tab + backup banner, same one-line rule as v82/v83 (shrink to 11px, data-short). A button pair that would have to shrink below 80% of the text size stacks full-width instead;
+   a label or checkbox text whose (parenthetical) would wrap puts the parenthetical on its own line. Runs on tab open, text-size change and width change only - never on scroll. */
+function fitLines(el,upTo){const r=document.createRange();r.selectNodeContents(el);if(upTo)r.setEndBefore(upTo);const t=[];for(const q of r.getClientRects()){if(q.width<1)continue;if(!t.some(y=>Math.abs(y-q.top)<q.height*0.5))t.push(q.top);}return t.length;}
+function fitBox(id){const v=document.getElementById(id);if(!v||v.classList.contains("hide")||!v.offsetParent&&id!=="banners")return;
+ v.querySelectorAll(".row.stk").forEach(r=>r.classList.remove("stk"));v.querySelectorAll(".lb2").forEach(x=>x.classList.remove("lb2"));
+ v.querySelectorAll("label,.chk>span").forEach(l=>{if(l.style.fontSize)l.style.fontSize="";const sp=l.querySelector(":scope>span.mut,:scope>.lbp");if(!l.offsetParent||!sp||fitLines(l)<2)return;l.classList.add("lb2");
+  let fs=parseFloat(getComputedStyle(l).fontSize),n=0;while(fitLines(l,sp)>1&&fs>11&&n<40){fs-=0.5;n++;l.style.fontSize=fs+"px";}});
+ fitView(id);const base=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;
+ const bad=[...v.querySelectorAll(".row")].filter(r=>{const bs=[...r.children].filter(b=>b.tagName==="BUTTON"&&b.offsetParent);return bs.length>1&&bs.some(b=>!b.classList.contains("fit1")||parseFloat(getComputedStyle(b).fontSize)<base*0.8);});
+ if(bad.length){bad.forEach(r=>r.classList.add("stk"));fitView(id);}}
+function fitData(){fitBox("banners");fitBox("v-data");}
+/* v99: stray two-line buttons on Ships and Chat at large text: same shrink-to-fit, button by button */
+function fitStrays(){["clrL","ndPh","chSet"].forEach(id=>{const e=document.getElementById(id);if(e&&e.offsetParent)fitEl(e);});}
+window.l19FitData=fitData;
 window.l19Fit=fitView;
 /* v84: playlist button stays one line: shrink (to 11px at most) if the text is wider than the button */
 function musFit(reset){const a=document.getElementById("musicBtn");if(!a||!a.clientWidth)return;if(reset)a.style.fontSize="";let fs=parseFloat(getComputedStyle(a).fontSize),n=0;while(a.scrollWidth>a.clientWidth+0.5&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}
@@ -2078,12 +2098,12 @@ function hdrFit(){const h=document.getElementById("hdr"),m=h&&h.querySelector(".
  h.classList.remove("tight");t.style.fontSize="";l.style.fontSize="";const mid=e=>{const r=e.getBoundingClientRect();return (r.top+r.bottom)/2;},one=()=>Math.abs(mid(t)-mid(l))<4&&Math.abs(mid(l)-mid(m))<4&&h.scrollWidth<=h.clientWidth;
  let ft=parseFloat(getComputedStyle(t).fontSize),fl=parseFloat(getComputedStyle(l).fontSize),n=0;
  while(!one()&&n<120&&(ft>14||fl>12)){if(n===10)h.classList.add("tight");ft=Math.max(14,ft-0.5);fl=Math.max(12,fl-0.5);n++;t.style.fontSize=ft+"px";l.style.fontSize=fl+"px";}}
-window.l19HdrFit=hdrFit;addEventListener("resize",hdrFit);setTimeout(()=>{hdrFit();new MutationObserver(hdrFit).observe(document.documentElement,{attributes:true,attributeFilter:["data-ts"]});const n=document.getElementById("hdLn");if(n)new MutationObserver(hdrFit).observe(n,{childList:true,characterData:true,subtree:true});},0);
+window.l19HdrFit=hdrFit;onWidth(hdrFit);setTimeout(()=>{hdrFit();new MutationObserver(()=>{hdrFit();if(typeof fitData==="function"){fitData();fitStrays();}}).observe(document.documentElement,{attributes:true,attributeFilter:["data-ts"]});const n=document.getElementById("hdLn");if(n)new MutationObserver(hdrFit).observe(n,{childList:true,characterData:true,subtree:true});},0);
 /* v93: ⏭ skip to the next main-playlist song from its start (wraps last to first); if muted it only moves the position */
 let musToastT=0;function musSkip(){const a=musEl();if(!a)return;musI=(musI+1)%PLAYLIST.length;a.loop=PLAYLIST.length===1;a.src=PLAYLIST[musI].src;try{a.currentTime=0;}catch(e){}
  if(musOn())a.play().then(()=>{musStarted=true;},()=>{});const t=document.getElementById("musToast");if(t){t.textContent="♪ "+PLAYLIST[musI].title;t.classList.add("on");clearTimeout(musToastT);musToastT=setTimeout(()=>t.classList.remove("on"),2000);}}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hdSkip"))musSkip();});
-setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()=>musI};addEventListener("resize",()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data")musFit(1);return r;})(show);},0);/* v88: The Rusty Hook (Local 19 Pensioners Club newsletter) link at the bottom of History; one line: shrink, then short label */
+setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()=>musI};onWidth(()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data"){musFit(1);fitData();}else{fitBox("banners");if(curV==="ships"||curV==="chat")fitStrays();}return r;})(show);},0);/* v88: The Rusty Hook (Local 19 Pensioners Club newsletter) link at the bottom of History; one line: shrink, then short label */
 /* v90: Waterfront Federal Credit Union (the longshore credit union) link, stacked under The Rusty Hook; opens in a new tab (never framed) */
 /* v96: California locals get the ILWU Credit Union instead (serves ILWU members in California; logo = ilwucu.org header logo img/ilwu_logo.svg, rendered to PNG) */
 const WF_FULL="Waterfront FCU",WF_SHORT="Waterfront",WF_HTML='<div class="musw wfw"><a id="wfBtn" class="musb" href="https://www.waterfrontfcu.org/" target="_blank" rel="noopener" aria-label="Waterfront Federal Credit Union (opens in new tab)"><img src="img/waterfront-fcu.png" alt="" width="32" height="32"><span>'+WF_FULL+'</span></a></div>';
@@ -2091,11 +2111,11 @@ function wfSwap(){const a=document.getElementById("wfBtn");if(!a)return;const c=
 window.l19WfSwap=wfSwap;
 function wfFit(){const a=document.getElementById("wfBtn");if(!a||!a.clientWidth)return;const C=cuCfg(curLocal()),t=a.querySelector("span");t.textContent=C.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=C.short;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
-addEventListener("resize",()=>wfFit());window.l19WfFit=wfFit;
+onWidth(()=>wfFit());window.l19WfFit=wfFit;
 const TGP_FULL="✊ ILWU Ten Guiding Principles",TGP_SHORT="✊ Ten Guiding Principles",TGP_HTML='<div class="musw tgpw"><a id="tgpBtn" class="musb" href="https://www.ilwu.org/about/ten-guiding-principles/" target="_blank" rel="noopener" aria-label="ILWU Ten Guiding Principles">'+TGP_FULL+'</a></div>';
 function tgpFit(){const a=document.getElementById("tgpBtn");if(!a||!a.clientWidth)return;a.textContent=TGP_FULL;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=TGP_SHORT;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
-addEventListener("resize",()=>tgpFit());window.l19TgpFit=tgpFit;
+onWidth(()=>tgpFit());window.l19TgpFit=tgpFit;
 const RH_FULL="📰 The Rusty Hook — Pensioners newsletter",RH_SHORT="📰 The Rusty Hook";
 function pensSwap(){const a=document.getElementById("rhBtn");if(!a)return;const c=pensCfg(curLocal());a.parentNode.classList.toggle("hide",!c);if(!c)return;if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);}rhFit();}
 function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML);wfSwap();}
@@ -2119,8 +2139,8 @@ function rhClose(){const d=document.getElementById("rhv");if(!d)return;d.remove(
  const b=document.getElementById(rhBtnId);if(b)b.focus();}
 addEventListener("popstate",()=>{if(document.getElementById("rhv")&&!(history.state&&history.state.l19rh))rhClose();});
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#rhBtn,#tgpBtn");if(!b)return;e.preventDefault();const P=pensCfg(curLocal());rhOpen(b.id==="tgpBtn"?TGP:P&&!P.rh?{url:P.href,title:P.title,ftitle:P.ftitle,music:false,btn:"rhBtn"}:null);});
-addEventListener("resize",rhBarFit);window.l19Rh={open:rhOpen,close:rhClose};addEventListener("resize",rhFit);
-setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);addEventListener("resize",()=>{fitView("v-hist");fitView("v-week");});addEventListener("resize",()=>segFit());
+onWidth(rhBarFit);window.l19Rh={open:rhOpen,close:rhClose};onWidth(rhFit);
+setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);onWidth(()=>{fitView("v-hist");fitView("v-week");fitData();fitStrays();});onWidth(()=>segFit());
 /* v83: short one-line period range, e.g. "Oct 1 – Dec 31, 2026" */
 function rangeShort(a,b){const M3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],f=d=>M3[+d.slice(5,7)-1]+" "+(+d.slice(8,10));
  return a.slice(0,4)===b.slice(0,4)?f(a)+" – "+f(b)+", "+b.slice(0,4):f(a)+", "+a.slice(0,4)+" – "+f(b)+", "+b.slice(0,4);}
@@ -2399,7 +2419,7 @@ function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=toda
   else if(ratesBannerDue(seen,RATES_VERSION,existing)){h+=`<div class="ban" role="status"><b>Rates updated: ${esc(RATES_VERSION.label)}</b><div class="mut" style="margin:4px 0 10px">Default pay rates follow this schedule. Saved shifts keep the rates they were saved with.</div><div class="row"><button type="button" class="p" id="rvX">Dismiss</button></div></div>`;}}
  const rs=reminderStatus(entries,new Date(),remCfg());
  if(rs.show&&LS(REMS,"")!==t){h+=`<div class="ban" role="status"><b>Log your hours</b><div class="mut" style="margin:4px 0 10px">${esc(rs.msg)}</div><div class="row"><button type="button" class="p" id="remGo">Add a shift</button><button type="button" id="remX">Dismiss</button></div></div>`;}
- b.innerHTML=h;
+ b.innerHTML=h;if(h&&typeof fitBox==="function")requestAnimationFrame(()=>fitBox("banners"));
  if($("bkNow"))$("bkNow").onclick=doBackup;
  if($("bkLater"))$("bkLater").onclick=()=>{LSset(BKS,addDays(todayS(),3));renderBanners();};
  if($("remGo"))$("remGo").onclick=()=>{LSset(REMS,todayS());renderBanners();if(editId)resetForm();retTo="week";show("add");};
@@ -2519,7 +2539,7 @@ function localSet(n){n=localId(n);const was=curLocal();try{localStorage.setItem(
  $("dpier").innerHTML='<option value="">— none —</option>'+pierOptsHtml(curLocal());$("djob").innerHTML=jobOpts().replace("— select job —","— none —");
  tierUI();if(!editId){rateDirty=false;applyDefaults();}if(typeof pierHrs==="function")pierHrs();
  if(n!==was&&$("ndP")&&$("ndP").value===LOCALS[was].need&&!(typeof ndEdit!=="undefined"&&ndEdit)){$("ndP").value=LOCALS[n].need;try{renderNdShips();}catch(e){}}
- locRender();try{renderShips();}catch(e){}
+ locRender();try{renderShips();}catch(e){}if(n!==was&&curV==="week")renderWeek();
  if(n!==was&&window.l19ChatLocal)window.l19ChatLocal(n);if(window.l19Pegs)window.l19Pegs();}
 function localSheet(){if(document.querySelector(".locsheet"))return;const o=document.createElement("div");o.className="sheet locsheet";
  o.innerHTML='<div role="dialog" aria-modal="true" aria-labelledby="lsT"><h3 id="lsT" style="margin:0">Your local</h3><div id="lsW"></div><p class="mut" style="margin:0">New shifts use this local\'s jobs and contract rates. Chat switches to this local\'s room. Saved shifts don\'t change.</p><button type="button" class="p" data-m="x">Done</button></div>';
@@ -2649,8 +2669,8 @@ $("ysGo").onclick=()=>openYear($("ysY").value,$("ysN").checked);
 /* --- first-run tour --- */
 function tourOpen(){if($("tour"))return;let i=0;const d=document.createElement("div");d.id="tour";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-labelledby","tourT");document.body.appendChild(d);ovInert(true);
  const fin=()=>{LSset(TOURK,"1");d.remove();ovInert(false);};
- const paint=()=>{const c=TOUR_CARDS[i],last=i===TOUR_CARDS.length-1;
-  d.innerHTML=`<div class="tc"><div class="tn">Tip ${i+1} of ${TOUR_CARDS.length}</div><h2 id="tourT">${esc(c[0])}</h2><p>${esc(c[1])}</p><div class="row">${i?'<button type="button" id="tBk">Back</button>':""}<button type="button" class="p" id="tNx">${last?"Done":"Next"}</button></div><div class="row"><button type="button" class="link" id="tSk">Skip tour</button></div></div>`;
+ const TC=tourCards(curLocal()),paint=()=>{const c=TC[i],last=i===TC.length-1;
+  d.innerHTML=`<div class="tc"><div class="tn">Tip ${i+1} of ${TC.length}</div><h2 id="tourT">${esc(c[0])}</h2><p>${esc(c[1])}</p><div class="row">${i?'<button type="button" id="tBk">Back</button>':""}<button type="button" class="p" id="tNx">${last?"Done":"Next"}</button></div><div class="row"><button type="button" class="link" id="tSk">Skip tour</button></div></div>`;
   $("tNx").onclick=()=>{if(last)fin();else{i++;paint();}};if($("tBk"))$("tBk").onclick=()=>{i--;paint();};$("tSk").onclick=fin;$("tNx").focus({preventScroll:true});};
  paint();}
 function tourMaybe(){if(!tourDue(LS(TOURK,""),!!$("setup")||setupNeeded(entries.length,LS(SUD,"")),!!$("lock")))return;tourOpen();}
@@ -2856,10 +2876,12 @@ window.addEventListener("resize",()=>{clearTimeout(pgZRt);pgZRt=setTimeout(()=>{
  g.addEventListener("touchstart",e=>{if(pend){clearTimeout(pend.t);pend=null;}
   if(pgDrag){if(e.touches.length>1)end(false);return;}
   if(e.touches.length!==1){return;}const sl=canStart(e.target);if(!sl)return;const t=e.touches[0];lx=t.clientX;ly=t.clientY;
-  pend={k:sl.dataset.k,x:t.clientX,y:t.clientY,t:setTimeout(()=>{if(!pend)return;const k=pend.k;pend=null;begin(k,lx,ly,true);},450)};},{passive:true});
- document.addEventListener("touchmove",e=>{const t=e.touches[0];if(pgDrag){e.preventDefault();if(e.touches.length>1){end(false);return;}over(t.clientX,t.clientY);return;}
-  if(pend&&t){lx=t.clientX;ly=t.clientY;if(e.touches.length>1||Math.hypot(t.clientX-pend.x,t.clientY-pend.y)>10){clearTimeout(pend.t);pend=null;}}},{passive:false});
- const tEnd=e=>{if(pend){clearTimeout(pend.t);pend=null;}if(pgDrag){const t=e.changedTouches&&e.changedTouches[0];if(t&&e.type==="touchend")over(t.clientX,t.clientY);if(e.cancelable)e.preventDefault();end(e.type==="touchend");}};
+  pend={k:sl.dataset.k,x:t.clientX,y:t.clientY,t:setTimeout(()=>{if(!pend)return;const k=pend.k;pend=null;begin(k,lx,ly,true);},450)};tmOn();},{passive:true});
+ /* v99: the blocking (non-passive) touchmove listener is attached only while a peg press/drag is live, so ordinary page scrolling on every tab stays on the fast (compositor) path */
+ let tmA=false;const tmOn=()=>{if(!tmA){tmA=true;document.addEventListener("touchmove",tmH,{passive:false});}},tmOff=()=>{if(tmA&&!pend&&!pgDrag){tmA=false;document.removeEventListener("touchmove",tmH,{passive:false});}};
+ const tmH=e=>{const t=e.touches[0];if(pgDrag){e.preventDefault();if(e.touches.length>1){end(false);return;}over(t.clientX,t.clientY);return;}
+  if(pend&&t){lx=t.clientX;ly=t.clientY;if(e.touches.length>1||Math.hypot(t.clientX-pend.x,t.clientY-pend.y)>10){clearTimeout(pend.t);pend=null;tmOff();}}};
+ const tEnd=e=>{if(pend){clearTimeout(pend.t);pend=null;}if(pgDrag){const t=e.changedTouches&&e.changedTouches[0];if(t&&e.type==="touchend")over(t.clientX,t.clientY);if(e.cancelable)e.preventDefault();end(e.type==="touchend");}setTimeout(tmOff,0);};
  document.addEventListener("touchend",tEnd,{passive:false});document.addEventListener("touchcancel",tEnd);
  g.addEventListener("contextmenu",e=>{if(pend||pgDrag||(e.target.closest&&e.target.closest(".slip")&&pgTouchAt&&Date.now()-pgTouchAt<1500))e.preventDefault();});
  /* mouse */
@@ -3653,7 +3675,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chat
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
