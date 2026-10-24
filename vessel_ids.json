@@ -19,6 +19,10 @@
   "checked": "2026-10-19",
   "imo": null
  },
+ "BERGAMOT ACE": {
+  "checked": "2026-10-24",
+  "imo": "9403281"
+ },
  "BUDAPEST EXPRESS": {
   "checked": "2026-10-19",
   "imo": "9450430"
@@ -46,6 +50,10 @@
  "CMA CGM ALMAVIVA": {
   "checked": "2026-10-16",
   "imo": "9450648"
+ },
+ "CMA CGM ARKANSAS": {
+  "checked": "2026-10-24",
+  "imo": "9722651"
  },
  "CMA CGM BYBLOS": {
   "checked": "2026-10-16",
@@ -79,6 +87,10 @@
   "checked": "2026-10-19",
   "imo": "9423592"
  },
+ "EUPHONY ACE": {
+  "checked": "2026-10-24",
+  "imo": "9293595"
+ },
  "EUROPEAN HIGHWAY": {
   "checked": "2026-10-19",
   "imo": "9206011"
@@ -91,6 +103,10 @@
   "checked": "2026-10-19",
   "imo": "9935210"
  },
+ "EVER MAGUS": {
+  "checked": "2026-10-24",
+  "imo": "9935375"
+ },
  "EVER MODE": {
   "checked": "2026-10-19",
   "imo": "9935296"
@@ -102,6 +118,10 @@
  "EVER SALUTE": {
   "checked": "2026-10-19",
   "imo": "9300477"
+ },
+ "EVER SIGMA": {
+  "checked": "2026-10-24",
+  "imo": "9300398"
  },
  "EVER SMILE": {
   "checked": "2026-10-19",
@@ -123,9 +143,17 @@
   "checked": "2026-10-19",
   "imo": "9450442"
  },
+ "GLORIOUS ACE": {
+  "checked": "2026-10-24",
+  "imo": "9561277"
+ },
  "GLOVIS LEGEND": {
   "checked": "2026-10-19",
   "imo": "1063281"
+ },
+ "GLOVIS SUMMIT": {
+  "checked": "2026-10-24",
+  "imo": "9702417"
  },
  "GLOVIS TREASURE": {
   "checked": "2026-10-19",
@@ -134,6 +162,10 @@
  "GLOVIS TRUST": {
   "checked": "2026-10-19",
   "imo": "9983140"
+ },
+ "HMM VANCOUVER": {
+  "checked": "2026-10-24",
+  "imo": "9463085"
  },
  "HYUNDAI FORWARD": {
   "checked": "2026-10-19",
@@ -166,6 +198,14 @@
  "LOTUS A": {
   "checked": "2026-10-17",
   "imo": "9461465"
+ },
+ "MAERSK MAMMOTH": {
+  "checked": "2026-10-24",
+  "imo": "9928229"
+ },
+ "MAERSK SARNIA": {
+  "checked": "2026-10-24",
+  "imo": "9289946"
  },
  "MAERSK TORINO": {
   "checked": "2026-10-19",
@@ -210,6 +250,10 @@
  "MSC DESIREE": {
   "checked": "2026-10-17",
   "imo": "9745665"
+ },
+ "MSC ELISABETTA": {
+  "checked": "2026-10-24",
+  "imo": "9954747"
  },
  "MSC FLORA": {
   "checked": "2026-10-16",
@@ -323,6 +367,10 @@
   "checked": "2026-10-19",
   "imo": "9338876"
  },
+ "SANTA BARBARA": {
+  "checked": "2026-10-24",
+  "imo": "9430399"
+ },
  "SANTA RITA": {
   "checked": "2026-10-19",
   "imo": "9619098"
@@ -363,6 +411,10 @@
   "checked": "2026-10-19",
   "imo": "9338838"
  },
+ "THEBEN": {
+  "checked": "2026-10-24",
+  "imo": "9722302"
+ },
  "THEMIS LEADER": {
   "checked": "2026-10-19",
   "imo": "9553115"
@@ -387,6 +439,10 @@
   "checked": "2026-10-16",
   "imo": "9226047"
  },
+ "WESTWOOD OLYMPIA": {
+  "checked": "2026-10-24",
+  "imo": "9226061"
+ },
  "WESTWOOD RAINIER": {
   "checked": "2026-10-16",
   "imo": "9226035"
@@ -410,6 +466,10 @@
  "YM PLUM": {
   "checked": "2026-10-19",
   "imo": "9198264"
+ },
+ "YM TROPHY": {
+  "checked": "2026-10-24",
+  "imo": "9789996"
  },
  "YM TUTORIAL": {
   "checked": "2026-10-19",
