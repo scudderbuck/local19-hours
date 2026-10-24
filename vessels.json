@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-23T13:45:06-07:00",
+ "updated": "2026-10-23T17:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -139,16 +139,6 @@
    "imo": "9332925"
   },
   {
-   "vessel": "OOCL SAN FRANCISCO",
-   "service": "PNW1",
-   "terminal": "T18",
-   "agent": "Inchcape",
-   "eta": "2026-10-23T06:00",
-   "etd": "2026-10-24T04:00",
-   "port": "Seattle",
-   "imo": "9199268"
-  },
-  {
    "vessel": "ARC ENDEAVOR",
    "service": "",
    "terminal": "EB1",
@@ -202,17 +192,6 @@
    "imo": "9226035"
   },
   {
-   "vessel": "ARC HONOR",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-24T06:00",
-   "etd": "2026-10-24T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9505089"
-  },
-  {
    "vessel": "YM TUTORIAL",
    "service": "FP2",
    "terminal": "Husky",
@@ -221,6 +200,17 @@
    "etd": "2026-10-30T18:00",
    "port": "Tacoma",
    "imo": "9792618"
+  },
+  {
+   "vessel": "ARC HONOR",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-24T10:30",
+   "etd": "2026-10-24T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9505089"
   },
   {
    "vessel": "YM WEALTH",
@@ -342,8 +332,8 @@
    "service": "",
    "terminal": "Blair",
    "agent": "Inchcape",
-   "eta": "2026-10-27T17:00",
-   "etd": "2026-10-28T04:00",
+   "eta": "2026-10-27T19:00",
+   "etd": "2026-10-28T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9777888"
@@ -390,17 +380,6 @@
    "imo": "9409027"
   },
   {
-   "vessel": "PATARA",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-28T06:00",
-   "etd": "2026-10-28T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9491898"
-  },
-  {
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
@@ -410,17 +389,6 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
-  },
-  {
-   "vessel": "PATARA",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-28T19:00",
-   "etd": "2026-10-29T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9491898"
   },
   {
    "vessel": "CMA CGM DUTCH HARBOR",
@@ -433,6 +401,17 @@
    "imo": "9389409"
   },
   {
+   "vessel": "PATARA",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-29T06:00",
+   "etd": "2026-10-29T20:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9491898"
+  },
+  {
    "vessel": "ONE DURBAN",
    "service": "PN3",
    "terminal": "WUT",
@@ -441,6 +420,17 @@
    "etd": "2026-10-31T04:00",
    "port": "Tacoma",
    "imo": "9567673"
+  },
+  {
+   "vessel": "PATARA",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-29T21:00",
+   "etd": "2026-10-30T19:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9491898"
   },
   {
    "vessel": "Century Highway",
