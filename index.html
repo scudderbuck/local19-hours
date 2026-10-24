@@ -419,10 +419,11 @@ html,body{background:#00214e}
 #splash{position:fixed;inset:0;z-index:2147483000;opacity:1;background:#dfe0db;color:#00214e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spf 1.6s linear forwards;-webkit-tap-highlight-color:transparent}
 #splash img{--spw:calc(100vw - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));--sph:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));width:min(calc(var(--spw) * .92),calc(var(--sph) * .92 * .690625));height:auto;max-width:none;max-height:none;object-fit:contain;display:block;flex:0 0 auto}@supports(height:100dvh){#splash img{--spw:calc(100dvw - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));--sph:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}} /* v104: KING of the DOCKS logo (663x960) as big as it fits: largest contain size inside the viewport minus safe-area insets and a ~4% margin each side (8% total), portrait and landscape; vw/vh based so text size never changes it */
 #splash b{font-size:1.5rem;letter-spacing:.14em;color:#fff}#splash b i{font-style:normal;color:#ffd23f}
-@keyframes spf{0%,87.5%{opacity:1;visibility:visible}99.9%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
-body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast):not(#upd):not(#l19err){visibility:hidden;animation:spa 1.6s step-end forwards}
-@keyframes spa{0%,87.4%{visibility:hidden}87.5%,100%{visibility:visible}}
-@media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){animation:spb 0s .4s forwards}@keyframes spb{to{visibility:visible}}}
+@keyframes spf{0%,87.5%{opacity:1;visibility:visible;pointer-events:auto}99.9%{opacity:0;visibility:visible;pointer-events:auto}100%{opacity:0;visibility:hidden;pointer-events:none}}
+#splash2{position:fixed;inset:0;z-index:2147482999;background:#01132f;display:flex;align-items:center;justify-content:center;animation:spf2 3.2s linear forwards;-webkit-tap-highlight-color:transparent}#splash2 img{display:block;width:min(100vw,calc(100vh * .7451));height:auto;max-width:none;max-height:none;object-fit:contain;-webkit-mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 96%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 96%,transparent);mask-composite:intersect}@supports(height:100dvh){#splash2 img{width:min(100dvw,calc(100dvh * .7451))}}@keyframes spf2{0%,93.75%{opacity:1;visibility:visible;pointer-events:auto}99.9%{opacity:0;visibility:visible;pointer-events:auto}100%{opacity:0;visibility:hidden;pointer-events:none}} /* v106: second splash, Harry Bridges portrait (img/bridges.jpg 1080x1449, from Daniel's original, colour-graded to the logo blues: navy #01132f edges, blue glow behind the head), right after the logo: the logo fades over it at 1.4-1.6 s (crossfade), the portrait shows to 3.0 s and fades by 3.2 s; as big as fits (contain), logo navy #01132f matching the graded photo's edges, feathered so it blends; image only. pointer-events:auto in the keyframes: without it the discrete 'none' at 100% flipped in halfway through and taps fell through */
+body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast):not(#upd):not(#l19err):not(#splash2){visibility:hidden;animation:spa 3.2s step-end forwards}html.spdone body>*:not(#splash):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast):not(#upd):not(#l19err):not(#splash2){visibility:visible;animation:none}
+@keyframes spa{0%,93.7%{visibility:hidden}93.75%,100%{visibility:visible}}
+@media(prefers-reduced-motion:reduce){#splash{animation:spr 0s .4s forwards}#splash2{animation:spr 0s 1.2s forwards}@keyframes spr{to{opacity:0;visibility:hidden;pointer-events:none}}body>*:not(#splash):not(#splash2):not(.sheet):not(#lv):not(#pgGh):not(#pgDt):not(#eqToast){animation:spb 0s 1.2s forwards}@keyframes spb{to{visibility:visible}}}
 /* v63: ship gear card */
 .gr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 4px}
 .gr .gb{min-height:44px;padding:0 14px;font-weight:700;font-size:.9375rem;background:#00214e;color:#fff;border:2px solid #ffd23f;border-radius:10px}
@@ -483,7 +484,7 @@ body.gopen{overflow:hidden}
 #gearG .glinks a{display:block;min-height:44px;padding:8px 10px;margin-top:6px;border:1px solid #ffd23f;border-radius:10px;text-decoration:none;font-weight:700;overflow-wrap:anywhere}
 #gearG .glinks a span{display:block;font-weight:400;color:#e6ecf7;font-size:.875rem;margin-top:2px}
 </style></head><body style="background:#00214e">
-<div id="splash" aria-hidden="true"><img src="img/splash.jpg" alt="KING of the DOCKS" width="663" height="960" fetchpriority="high" decoding="sync"></div>
+<div id="splash" aria-hidden="true"><img src="img/splash.jpg" alt="KING of the DOCKS" width="663" height="960" fetchpriority="high" decoding="sync"></div><div id="splash2" aria-hidden="true"><img src="img/bridges.jpg" alt="" width="1080" height="1449" decoding="async"></div>
 <header id="hdr"><span class="hdt"><img id="hdLogo" src="img/logo-header.png" alt="KING of the DOCKS" width="77" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"></span> <button type="button" id="hdLoc" class="hdl" aria-haspopup="dialog" aria-label="Your local: Local 19. Change local"><span id="hdLn">Local 19</span> <span aria-hidden="true">▾</span></button><span class="hdmw"><button type="button" id="hdSkip" class="hdm" aria-label="Skip to next song">⏭</button><button type="button" id="hdMus" class="hdm" aria-pressed="true" aria-label="Background music on. Tap to mute">🔊</button></span></header><div id="musToast" role="status" aria-live="polite"></div><audio id="bgm" preload="none"></audio>
 <main>
 <div id="banners"></div>
@@ -668,7 +669,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v105",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v106",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -683,10 +684,10 @@ try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted(
 (function(){if(typeof window==="undefined"||!window.addEventListener)return;var shown=false;window.addEventListener("error",function(ev){if(shown||!document.body)return;shown=true;try{var d=document.createElement("div");d.id="l19err";d.setAttribute("role","alert");
  d.innerHTML='<b>Something went wrong.</b> Your data is still on this phone &mdash; please don\'t reinstall. <button type="button" id="l19errB">Open Backup</button> <button type="button" id="l19errX">Close</button>';document.body.appendChild(d);
  document.getElementById("l19errB").onclick=function(){d.remove();try{show("data");}catch(e){}};document.getElementById("l19errX").onclick=function(){d.remove();};}catch(e){}});})();
-function splashMs(reduced){return reduced?400:1600}
-(function(){if(typeof document==="undefined")return;var e=document.getElementById("splash");if(!e)return;var d=function(){if(e&&e.parentNode)e.parentNode.removeChild(e);e=null};
+function splashMs(reduced){return reduced?1200:3200}
+(function(){if(typeof document==="undefined")return;var e=document.getElementById("splash"),e2=document.getElementById("splash2");if(!e&&!e2)return;var d=function(){[e,e2].forEach(function(x){if(x&&x.parentNode)x.parentNode.removeChild(x)});e=e2=null;try{document.documentElement.classList.add("spdone")}catch(x){}};
 var r=false;try{r=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}
-e.addEventListener("click",d);e.addEventListener("touchstart",d,{passive:true});/* v104: 1.6 s in total from the first paint (1.4 s shown + 0.2 s fade, CSS spf; was 1.2 s in v103). Timed from the browser's first paint (or the first frame), and if the app needs longer than that the splash goes as soon as the script is done; the app script runs underneath and is never held back by it. */
+[e,e2].forEach(function(x){if(x){x.addEventListener("click",d);x.addEventListener("touchstart",d,{passive:true});}});/* v106: two splashes, 3.2 s in total (logo 1.6 s then the Harry Bridges portrait 1.6 s); a tap anywhere skips both and shows the app at once (html.spdone); reduced motion: 0.4 s + 0.8 s, no fades. v104: 1.6 s in total from the first paint (1.4 s shown + 0.2 s fade, CSS spf; was 1.2 s in v103). Timed from the browser's first paint (or the first frame), and if the app needs longer than that the splash goes as soon as the script is done; the app script runs underneath and is never held back by it. */
 var fp=function(){try{var pe=performance.getEntriesByType("paint");for(var i=0;i<pe.length;i++)if(pe[i].name==="first-paint"||pe[i].name==="first-contentful-paint")return pe[i].startTime;}catch(x){}return -1};
 var go=function(){var t=fp(),left=t>=0?splashMs(r)-(performance.now()-t):splashMs(r);setTimeout(d,Math.max(0,left))};if(fp()>=0||typeof requestAnimationFrame!=="function")go();else requestAnimationFrame(function(){go()});})();
 "use strict";
@@ -1105,7 +1106,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v105",CACHE_VERSION="l19hours-v105"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v106",CACHE_VERSION="l19hours-v106"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
