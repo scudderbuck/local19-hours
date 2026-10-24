@@ -57,7 +57,10 @@ h3,h4{margin:0 0 8px;font-size:1.125rem}h4{font-size:.875rem;text-transform:uppe
 button,input,select{font:inherit;color:var(--fg)}
 button{min-height:48px;padding:0 16px;border-radius:10px;border:1px solid var(--bd);background:var(--card);cursor:pointer}
 button.p{background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600}
-.musw{container-type:inline-size;margin:0 0 12px}.rhw{margin:16px 0 4px}.wfw{margin:8px 0 4px}.tgpw{margin:8px 0 0}#tgpBtn{font-size:1em;background:transparent;color:#fff;border:2px solid #ffd23f;font-weight:700}#wfBtn{font-size:1em;background:#fff;color:#00214e;border:2px solid #ffd23f;font-weight:700;gap:8px}#wfBtn img{width:32px;height:32px;flex:0 0 32px;border-radius:6px;background:#fff}#wfBtn.cu img{width:auto;height:24px;flex:0 0 auto;border-radius:0}#rhv{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;background:#fff}html.rhopen,html.rhopen body{overflow:hidden}#rhbar{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;white-space:nowrap;padding:4px 8px;padding-top:max(4px,env(safe-area-inset-top));background:var(--pri);color:#fff;font-weight:700;font-size:1rem;overflow:hidden}#rhBack{min-height:44px;padding:0 12px;border-radius:22px;border:2px solid #ffd23f;background:transparent;color:#ffd23f;font:inherit;flex:0 0 auto}.rht{flex:1 1 auto;min-width:0;text-align:center;overflow:hidden}#rhExt{color:#ffd23f;flex:0 0 auto;min-height:44px;display:flex;align-items:center;padding:0 4px}#rhf{flex:1 1 auto;width:100%;border:0;background:#fff}#rhBtn{font-size:1em;background:#ffd23f;color:#00214e;border-color:#ffd23f;font-weight:700}.musb{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;min-height:48px;padding:0 12px;border-radius:999px;background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600;text-decoration:none;white-space:nowrap;overflow:hidden;font-size:min(1em,6.4cqw)}
+.musw{container-type:inline-size;margin:0 0 12px}.rhw{margin:16px 0 4px}.wfw{margin:8px 0 4px}.tgpw{margin:8px 0 0}#tgpBtn{font-size:1em;background:transparent;color:#fff;border:2px solid #ffd23f;font-weight:700}#wfBtn{font-size:1em;background:#fff;color:#00214e;border:2px solid #ffd23f;font-weight:700;gap:8px}#wfBtn img{width:32px;height:32px;flex:0 0 32px;border-radius:6px;background:#fff}#wfBtn.cu img{width:auto;height:24px;flex:0 0 auto;border-radius:0}
+#fidBtn{font-size:1em;background:#fff;color:#00214e;border:2px solid #ffd23f;font-weight:700;gap:8px}
+#fidBtn img{width:101px;height:24px;flex:0 0 101px;object-fit:contain}
+.fdw{margin:8px 0 4px}#rhv{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;background:#fff}html.rhopen,html.rhopen body{overflow:hidden}#rhbar{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;white-space:nowrap;padding:4px 8px;padding-top:max(4px,env(safe-area-inset-top));background:var(--pri);color:#fff;font-weight:700;font-size:1rem;overflow:hidden}#rhBack{min-height:44px;padding:0 12px;border-radius:22px;border:2px solid #ffd23f;background:transparent;color:#ffd23f;font:inherit;flex:0 0 auto}.rht{flex:1 1 auto;min-width:0;text-align:center;overflow:hidden}#rhExt{color:#ffd23f;flex:0 0 auto;min-height:44px;display:flex;align-items:center;padding:0 4px}#rhf{flex:1 1 auto;width:100%;border:0;background:#fff}#rhBtn{font-size:1em;background:#ffd23f;color:#00214e;border-color:#ffd23f;font-weight:700}.musb{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;min-height:48px;padding:0 12px;border-radius:999px;background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600;text-decoration:none;white-space:nowrap;overflow:hidden;font-size:min(1em,6.4cqw)}
 button.d{color:var(--dan)}
 button.link{border:0;background:none;color:var(--acc);font-weight:600;padding:0;min-height:44px}
 input,select{width:100%;min-height:48px;padding:6px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
@@ -662,7 +665,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v100",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v101",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1097,7 +1100,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v100",CACHE_VERSION="l19hours-v100"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v101",CACHE_VERSION="l19hours-v101"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -2300,6 +2303,11 @@ setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()
 const WF_FULL="Waterfront FCU",WF_SHORT="Waterfront",WF_HTML='<div class="musw wfw"><a id="wfBtn" class="musb" href="https://www.waterfrontfcu.org/" target="_blank" rel="noopener" aria-label="Waterfront Federal Credit Union (opens in new tab)"><img src="img/waterfront-fcu.png" alt="" width="32" height="32"><span>'+WF_FULL+'</span></a></div>';
 function wfSwap(){const a=document.getElementById("wfBtn");if(!a)return;const c=cuCfg(curLocal()),im=a.querySelector("img");if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);im.src=c.img;im.width=c.w;im.height=c.h;}a.classList.toggle("cu",c===CU_CFG);a.querySelector("span").textContent=c.full;wfFit();if(typeof pensSwap==="function")pensSwap();}
 window.l19WfSwap=wfSwap;
+/* v101: Fidelity (401k/IRA) link for every local, directly under the bank button (Waterfront FCU or ILWU Credit Union); same white style, opens in a new tab */
+const FID_FULL="Fidelity Investments",FID_SHORT="Fidelity",FID_HTML='<div class="musw fdw"><a id="fidBtn" class="musb" href="https://www.fidelity.com/" target="_blank" rel="noopener" aria-label="Fidelity Investments (opens in new tab)"><img src="img/fidelity.png" alt="" width="101" height="24" onload="if(window.l19FidFit)l19FidFit()"><span>'+FID_FULL+'</span></a></div>';
+function fidFit(){const a=document.getElementById("fidBtn");if(!a||!a.clientWidth)return;const t=a.querySelector("span");t.textContent=FID_FULL;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
+ while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=FID_SHORT;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
+onWidth(()=>fidFit());window.l19FidFit=fidFit;
 function wfFit(){const a=document.getElementById("wfBtn");if(!a||!a.clientWidth)return;const C=cuCfg(curLocal()),t=a.querySelector("span");t.textContent=C.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=C.short;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 onWidth(()=>wfFit());window.l19WfFit=wfFit;
@@ -2309,7 +2317,7 @@ function tgpFit(){const a=document.getElementById("tgpBtn");if(!a||!a.clientWidt
 onWidth(()=>tgpFit());window.l19TgpFit=tgpFit;
 const RH_FULL="📰 The Rusty Hook — Pensioners newsletter",RH_SHORT="📰 The Rusty Hook";
 function pensSwap(){const a=document.getElementById("rhBtn");if(!a)return;const c=pensCfg(curLocal());a.parentNode.classList.toggle("hide",!c);if(!c)return;if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);}rhFit();}
-function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML);wfSwap();}
+function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML+FID_HTML);wfSwap();}
 function rhFit(){const a=document.getElementById("rhBtn");if(!a||!a.clientWidth)return;const P=pensCfg(curLocal())||PENS_RH;a.textContent=P.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=P.short;a.style.fontSize="";fs=parseFloat(getComputedStyle(a).fontSize);n=0;while(over()&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 window.l19RhFit=rhFit;
@@ -2331,7 +2339,7 @@ function rhClose(){const d=document.getElementById("rhv");if(!d)return;d.remove(
 addEventListener("popstate",()=>{if(document.getElementById("rhv")&&!(history.state&&history.state.l19rh))rhClose();});
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#rhBtn,#tgpBtn");if(!b)return;e.preventDefault();const P=pensCfg(curLocal());rhOpen(b.id==="tgpBtn"?TGP:P&&!P.rh?{url:P.href,title:P.title,ftitle:P.ftitle,music:false,btn:"rhBtn"}:null);});
 onWidth(rhBarFit);window.l19Rh={open:rhOpen,close:rhClose};onWidth(rhFit);
-setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);onWidth(()=>{fitView("v-hist");fitView("v-week");fitData();fitStrays();pgFitSoon();});onWidth(()=>segFit());
+setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();fidFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);onWidth(()=>{fitView("v-hist");fitView("v-week");fitData();fitStrays();pgFitSoon();});onWidth(()=>segFit());
 /* v83: short one-line period range, e.g. "Oct 1 – Dec 31, 2026" */
 function rangeShort(a,b){const M3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],f=d=>M3[+d.slice(5,7)-1]+" "+(+d.slice(8,10));
  return a.slice(0,4)===b.slice(0,4)?f(a)+" – "+f(b)+", "+b.slice(0,4):f(a)+", "+a.slice(0,4)+" – "+f(b)+", "+b.slice(0,4);}
