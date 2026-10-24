@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-24T11:45:05-07:00",
+ "updated": "2026-10-24T13:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -64,17 +64,6 @@
    "etd": "2026-10-27T04:00",
    "port": "Tacoma",
    "imo": "9450416"
-  },
-  {
-   "vessel": "ARC INDEPENDENCE",
-   "service": "",
-   "terminal": "T7",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-22T21:00",
-   "etd": "2026-10-24T12:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9332925"
   },
   {
    "vessel": "ARC ENDEAVOR",
