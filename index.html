@@ -33,7 +33,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
 .locseg button small{font-size:max(12px,.75rem);font-weight:600;color:var(--mut);overflow-wrap:anywhere;text-align:center;max-width:100%}
 .locseg button[aria-checked=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 -3px #ffd23f}
 .locseg button[aria-checked=true] small{color:var(--prifg)}
-.locd{margin:4px 0 0;font-weight:600}
+.locd{margin:4px 0 0;font-weight:600}.cash{display:grid;gap:8px;margin:8px 0 4px}.cash .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cashn{margin:0}
 .locseg .loch{grid-column:1/-1;font-size:max(12px,.8125rem);font-weight:800;color:var(--mut);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em}
 .locsheet .locseg,#suLoc,#locSegB{max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain;padding:2px}
 /* v77: 5 columns so no region leaves a lone chip; labels stay on one line */
@@ -57,7 +57,7 @@ h3,h4{margin:0 0 8px;font-size:1.125rem}h4{font-size:.875rem;text-transform:uppe
 button,input,select{font:inherit;color:var(--fg)}
 button{min-height:48px;padding:0 16px;border-radius:10px;border:1px solid var(--bd);background:var(--card);cursor:pointer}
 button.p{background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600}
-.musw{container-type:inline-size;margin:0 0 12px}.rhw{margin:16px 0 4px}.wfw{margin:8px 0 4px}.tgpw{margin:8px 0 0}#tgpBtn{font-size:1em;background:transparent;color:#fff;border:2px solid #ffd23f;font-weight:700}#wfBtn{font-size:1em;background:#fff;color:#00214e;border:2px solid #ffd23f;font-weight:700;gap:8px}#wfBtn img{width:32px;height:32px;flex:0 0 32px;border-radius:6px;background:#fff}#rhv{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;background:#fff}html.rhopen,html.rhopen body{overflow:hidden}#rhbar{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;white-space:nowrap;padding:4px 8px;padding-top:max(4px,env(safe-area-inset-top));background:var(--pri);color:#fff;font-weight:700;font-size:1rem;overflow:hidden}#rhBack{min-height:44px;padding:0 12px;border-radius:22px;border:2px solid #ffd23f;background:transparent;color:#ffd23f;font:inherit;flex:0 0 auto}.rht{flex:1 1 auto;min-width:0;text-align:center;overflow:hidden}#rhExt{color:#ffd23f;flex:0 0 auto;min-height:44px;display:flex;align-items:center;padding:0 4px}#rhf{flex:1 1 auto;width:100%;border:0;background:#fff}#rhBtn{font-size:1em;background:#ffd23f;color:#00214e;border-color:#ffd23f;font-weight:700}.musb{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;min-height:48px;padding:0 12px;border-radius:999px;background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600;text-decoration:none;white-space:nowrap;overflow:hidden;font-size:min(1em,6.4cqw)}
+.musw{container-type:inline-size;margin:0 0 12px}.rhw{margin:16px 0 4px}.wfw{margin:8px 0 4px}.tgpw{margin:8px 0 0}#tgpBtn{font-size:1em;background:transparent;color:#fff;border:2px solid #ffd23f;font-weight:700}#wfBtn{font-size:1em;background:#fff;color:#00214e;border:2px solid #ffd23f;font-weight:700;gap:8px}#wfBtn img{width:32px;height:32px;flex:0 0 32px;border-radius:6px;background:#fff}#wfBtn.cu img{width:auto;height:24px;flex:0 0 auto;border-radius:0}#rhv{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;background:#fff}html.rhopen,html.rhopen body{overflow:hidden}#rhbar{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;white-space:nowrap;padding:4px 8px;padding-top:max(4px,env(safe-area-inset-top));background:var(--pri);color:#fff;font-weight:700;font-size:1rem;overflow:hidden}#rhBack{min-height:44px;padding:0 12px;border-radius:22px;border:2px solid #ffd23f;background:transparent;color:#ffd23f;font:inherit;flex:0 0 auto}.rht{flex:1 1 auto;min-width:0;text-align:center;overflow:hidden}#rhExt{color:#ffd23f;flex:0 0 auto;min-height:44px;display:flex;align-items:center;padding:0 4px}#rhf{flex:1 1 auto;width:100%;border:0;background:#fff}#rhBtn{font-size:1em;background:#ffd23f;color:#00214e;border-color:#ffd23f;font-weight:700}.musb{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;min-height:48px;padding:0 12px;border-radius:999px;background:var(--pri);color:var(--prifg);border:1px solid var(--acc);font-weight:600;text-decoration:none;white-space:nowrap;overflow:hidden;font-size:min(1em,6.4cqw)}
 button.d{color:var(--dan)}
 button.link{border:0;background:none;color:var(--acc);font-weight:600;padding:0;min-height:44px}
 input,select{width:100%;min-height:48px;padding:6px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
@@ -580,6 +580,7 @@ body.gopen{overflow:hidden}
 <a id="dpCall" class="bt p off" href="#" aria-disabled="true" aria-label="Call BA (enter the number above)">📞 Call BA</a>
 <a class="bt p" href="tel:+18002754598" id="twCall">📞 Travel Washington (1-800-ASK-ILWU)</a>
 <a class="bt p" href="tel:+12066237461" id="hallCall">📞 Local 19 hall: 206-623-7461</a>
+<a class="bt p hide" href="#" id="offCall">📞 Local office</a>
 <a class="bt" href="https://docs.nwseaportalliance.com/Vessel/Schedule.pdf" target="_blank" rel="noopener">NWSA vessel schedule (PDF) ↗</a>
 <a class="bt" href="https://www.ilwu23.org" target="_blank" rel="noopener">Local 23 Tacoma ↗</a>
 <a class="bt" href="https://ilwu21.org" target="_blank" rel="noopener">ILWU Local 21 ↗</a>
@@ -626,7 +627,9 @@ const LOCAL_KEY="l19.local",MAIN_LOCALS=["19","23","52","98"];
    except Local 12 which the listing shows without a division label). They work under the PCLCD like 19/23, so rates/contract are the same.
    ship: which NWSA ship feed to show (null = none for that port); need: Needs-tab port value. */
 /* v76: regions for the picker */
-const LOCAL_REGIONS=[["Washington",["19","23","52","98","4","7","21","24","25","27","32","47","51"]],["Oregon",["8","12","40","50","53"]]];
+const LOCAL_REGIONS=[["Washington",["19","23","52","98","4","7","21","24","25","27","32","47","51"]],["Oregon",["8","12","40","50","53"]],
+ /* v96: California longshore-division locals (63 OCU left out: office workers, not dispatched). Three rows so no region leaves a lone chip. */
+ ["California · South",["13","63","94","29","46"]],["California · Bay Area",["10","34","91"]],["California · North",["54","18","14"]]];
 const LOCAL_IDS=LOCAL_REGIONS.flatMap(r=>r[1]),OUT_LOCALS=LOCAL_IDS.filter(n=>!MAIN_LOCALS.includes(n));
 function localRegion(n){const r=LOCAL_REGIONS.find(x=>x[1].includes(String(n)));return r?r[0]:"";}
 const PMA_DOCS="https://www.pmanet.org/wp-content/uploads/2025/03/";
@@ -655,9 +658,22 @@ const LOCALS={
  ["47","Olympia","Olympia","Olympia","360-357-5915","PO Box 355, Olympia, WA 98507","ls"],
  ["50","Astoria","Astoria","Other","503-325-2271","491 Industry Street, Astoria, OR 97103","ls"],
  ["51","Pt Gamble","Port Gamble","Other","425-218-1572","PO Box 125, Port Gamble, WA 98364","ls"],
- ["53","Newport","Newport, OR","Other","541-265-2191","606 SW 13th Street, Newport, OR 97365","ls"]]
- .forEach(([n,short,port,need,hall,addr,kind])=>{const tr={ls:"longshore",clerk:"marine clerks",fm:"walking bosses & foremen",lsc:"longshore & marine clerks",lscf:"longshore, clerks & foremen"}[kind];
-  LOCALS[n]={n,short,trade:port+" "+tr,port,ship:null,need,hall,tel:"+1"+hall.replace(/\D/g,""),addr,room:"LOCAL"+n,out:true,kind,doc:(kind==="clerk"?LOCALS["52"]:kind==="fm"?LOCALS["98"]:LOCALS["19"]).doc};});
+ ["53","Newport","Newport, OR","Other","541-265-2191","606 SW 13th Street, Newport, OR 97365","ls"],
+ /* v96: California. Office address/phone = ilwu.org/contact/ilwu-local-unions-2; 8th field = published dispatch line (shown first, office second):
+    13 = ilwu13.com bulletin 24-18 (Dispatchers, Wilmington hall); 63 = ilwu63.net/contact-info (live dispatcher); 10 = SF dispatch hall, 301 Beach St (sfbalma.org directory). */
+ ["13","LA/LB","Los Angeles / Long Beach","Other","310-830-1130","630 S. Centre St, San Pedro, CA 90731","ls","310-233-5400"],
+ ["63","LA clerks","Los Angeles / Long Beach","Other","310-521-6363","350 W. 5th St, Ste 200, San Pedro, CA 90731","clerk","310-831-7763"],
+ ["94","LA bosses","Los Angeles / Long Beach","Other","310-832-1109","180 E. Ocean Blvd, Ste 1020, Long Beach, CA 90802","fm"],
+ ["29","San Diego","San Diego","Other","619-477-4593","1000 Bay Marina Dr, Ste 102, National City, CA 91950","lscf"],
+ ["46","Hueneme","Port Hueneme","Other","805-488-2944","PO Box 100, Port Hueneme, CA 93041","lsc"],
+ ["10","SF Bay","SF Bay Area","Other","415-776-8100","400 North Point St, San Francisco, CA 94133","ls","415-635-2700"],
+ ["34","SF clerks","SF Bay Area","Other","415-362-8852","4 Berry St, San Francisco, CA 94107","clerk"],
+ ["91","SF bosses","SF Bay Area","Other","510-536-3795","1851 Embarcadero Rd, Oakland, CA 94606","fm"],
+ ["54","Stockton","Stockton","Other","209-464-1827","22 N. Union St, Stockton, CA 95205","ls"],
+ ["18","W Sac","West Sacramento","Other","916-371-0469","PO Box 980068, West Sacramento, CA 95798","ls"],
+ ["14","Eureka","Eureka","Other","707-442-0490","1126 5th St, Eureka, CA 95501","lsc"]]
+ .forEach(([n,short,port,need,office,addr,kind,disp])=>{const hall=disp||office;const tr={ls:"longshore",clerk:"marine clerks",fm:"walking bosses & foremen",lsc:"longshore & marine clerks",lscf:"longshore, clerks & foremen"}[kind];
+  LOCALS[n]={n,short,trade:port+" "+tr,port,ship:null,need,hall,tel:"+1"+hall.replace(/\D/g,""),addr,room:"LOCAL"+n,out:true,kind,...(disp?{office,offTel:"+1"+office.replace(/\D/g,"")}:{}),doc:(kind==="clerk"?LOCALS["52"]:kind==="fm"?LOCALS["98"]:LOCALS["19"]).doc};});
 function localId(v){v=String(v==null?"":v).replace(/\D/g,"");return LOCAL_IDS.includes(v)?v:"19";}
 function curLocal(){let v="";try{v=localStorage.getItem(LOCAL_KEY)||"";}catch(e){}return localId(v);}
 /* outport piers: only terminals named in a source (Port of Portland T4 = Toyota autos, T6 = autos + Oregon Container Terminal; Port of Grays Harbor
@@ -737,14 +753,19 @@ const CLERK_JOBS=[
 const CLERK_SEATTLE=["Checker","Supervisor","Chief","Supercargo","Yard planner","EC (Exception clerk)"];
 /* v74: Local 98. WBF Agreement 2022-2028 wage schedule pp.69-70 (Walking Boss/Foreman, also CFS Foreman p.81): one rate, no experience tiers. */
 const WBF_JOBS=[["Walking boss / Foreman","","Foreman","direct","Pacific Coast Walking Bosses and Foremen's Agreement 2022-2028 wage schedule (134% of longshore Skill I). 30% Men = walking bosses/foremen (WBF index, 2.3)"]];
-function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||TAC_JOBS.find(j=>j[0]===v)||PCL_JOBS.find(j=>j[0]===v)||CLERK_JOBS.find(j=>j[0]===v)||WBF_JOBS.find(j=>j[0]===v)||null;}
+function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||TAC_JOBS.find(j=>j[0]===v)||CA_JOBS.find(j=>j[0]===v)||PCL_JOBS.find(j=>j[0]===v)||CLERK_JOBS.find(j=>j[0]===v)||WBF_JOBS.find(j=>j[0]===v)||null;}
 const CLASS_SHORT={"Basic":"Basic","Clerk Supervisor":"Clerk Supervisor","Kitchen/Tower/Computer Clerk":"Kitchen/Tower/Computer","Chief/Supercargo (30%)":"Chief/Supercargo 30%"};
 /* v74: job picker groups for a local: [label, [[value,text],...]] in order; ["__c"] = the Custom… option. Every local keeps every job (so editing an old shift never loses its job); the local's own group comes first. */
 /* v76: outport job lists. Auto ships: Portland T4/T6 (Port of Portland terminal pages) and Grays Harbor T4 (Port of Grays Harbor / Daily World 2024:
    RoRo carriers, ILWU Local 24). Reach stacker at Portland: Port of Portland T6 "fully grounded reach stacker operation". */
-const OUT_EXTRA={"8":["Auto driver (stevedore pay)","Auto driver (trucker pay)","Reach stacker"],"24":["Auto driver (stevedore pay)","Auto driver (trucker pay)"]};
+const OUT_EXTRA={"8":["Auto driver (stevedore pay)","Auto driver (trucker pay)","Reach stacker"],"24":["Auto driver (stevedore pay)","Auto driver (trucker pay)"],
+ /* v96: LA/LB (Local 13) and Bay Area (Local 10) job lists: CA_JOBS names + PMA codes already in JOBS. Skill classes per PCLCD 4.32; dispatch categories per
+    Local 13 Class A Dispatch Rules (ilwu13.com) and the PCLCD California addenda. Boards themselves are not modelled (Pegs stays Local 19 only). */
+ "13":["UTR driver","0008","0025","0029","0053","0038","0028","0052","0061","0062","0063","0083","0084","0093","0009","0007","Swingman (crane)"],
+ "10":["UTR driver","0029","0037","0038","0028","0052","0061","0083","0084","0093","0009","0007","Dock signalman (crane)","Pin man","Bus driver (dock)","Hook-on man","Stickman","Gang relief"]};
+function pmaName(c){for(const g in JOBS)for(const [k,nm] of JOBS[g])if(k===c)return nm;return "";}
 function localJobGroups(n){n=localId(n);
- if(LOCALS[n].out){const K=LOCALS[n].kind,j2=v=>{const j=seattleJob(v);return[v,v+(j&&j[1]?" · "+j[1]:j&&j[2]?" · "+(CLASS_SHORT[j[2]]||j[2]):"")];};
+ if(LOCALS[n].out){const K=LOCALS[n].kind,j2=v=>{const j=seattleJob(v);if(!j&&pmaName(v))return[v,v+" "+pmaName(v)];return[v,v+(j&&j[1]?" · "+j[1]:j&&j[2]?" · "+(CLASS_SHORT[j[2]]||j[2]):j?" · rate: enter yours":"")];};
   const ex=(OUT_EXTRA[n]||[]).map(j2),pc=["Contract 4.32 jobs (no PMA code)",PCL_JOBS.map(([v,c,k])=>[v,v+" · "+k])];
   const cw=Object.keys(JOBS).filter(g=>g!=="Foreman").map(g=>["PMA "+g+" jobs (coastwide)",JOBS[g].map(([c,nm])=>[c,c+" "+nm])]);
   const ck=["Local "+n+" clerk jobs (PCCCD)",[...CLERK_JOBS,...SEATTLE_JOBS.filter(j=>CLERK_SEATTLE.includes(j[0]))].map(([v,c,k])=>[v,v+" · "+(CLASS_SHORT[k]||k)])];
@@ -765,6 +786,28 @@ function jobSelectHtml(n){const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;
    0063 REACH STACKER are group A08 Longshore Skill 3 (PMA Occupation Codes and Rates 2024): same codes/class as the PMA list entries. */
 const TAC_JOBS=[["Straddle carrier","0093","Skill 3","direct","PCLCD 4.32 Skill III: Strad Driver; PMA 0093 Straddle Carrier Operator (A08 Skill 3)"],
  ["Reach stacker","0063","Skill 3","direct","PCLCD 4.32 Skill III: Reachstacker; PMA 0063 Reach Stacker (A08 Skill 3)"]];
+/* v96: California job names with no separate PMA list entry (same row format). Codes left blank where no PMA code is known (never invented). */
+const CA_JOBS=[["UTR driver","0036","Skill 1","inferred","PCLCD 4.32 Skill I: Tractor (semi-truck) Driver; LA/LB UTR Drivers addendum (Semitractor Dispatch Board). PMA 0036 Tractor-Semi-Dock is the closest code (inferred, verify on your stub)."],
+ ["Swingman (crane)","","","none","PCLCD California Crane Operations addendum: one extra swingman per crane at LA/LB. No PMA code or skill class found: enter your rate."],
+ ["Dock signalman (crane)","","","none","PCLCD California Crane Operations addendum: one dock signalman per crane in Oakland. No PMA code or skill class found: enter your rate."],
+ ["Pin man","","","none","PCLCD Local 10 Day & Night Dock Preference addendum. No PMA code or skill class found: enter your rate."],
+ ["Bus driver (dock)","","","none","PCLCD Local 10 Day & Night Dock Preference addendum. No PMA code or skill class found: enter your rate."],
+ ["Hook-on man","","","none","PCLCD Local 10 Day & Night Dock Preference addendum. No PMA code or skill class found: enter your rate."],
+ ["Stickman","","","none","PCLCD Local 10 Day & Night Dock Preference addendum. No PMA code or skill class found: enter your rate."],
+ ["Gang relief","","","none","PCLCD Local 10 Day & Night Dock Preference addendum. No PMA code or skill class found: enter your rate."]];
+/* v96: California ports have no free schedule feed the app can read yet: show the public schedule pages (brief: POLA, LBCT, Port of Oakland, TraPac, Port Hueneme, Port of San Diego, Port of West Sacramento). */
+const CA_SHIP_LINKS={"LA":[["Port of LA ships","https://portoflosangeles.org/business/supply-chain/ships"],["LBCT vessel schedule","https://portal.lbct.com/Operations/VesselSchedule"]],
+ "Bay":[["Port of Oakland vessels","https://oaklandportal.portofoakland.com/vesselOperation"],["TraPac Oakland schedule","https://oakland.trapac.com/vessel-schedule/"]],
+ "SD":[["Port of San Diego schedule","https://www.portofsandiego.org/press-releases/general-press-releases/port-san-diego-launches-new-online-ship-schedule-0"]],
+ "Hue":[["Port Hueneme vessels","https://www.portofhueneme.org/vessel-schedule/"]],"Stk":[["Port of Stockton vessel log","https://www.portofstockton.com/daily-vessel-log/"]],
+ "WSac":[["Port of West Sacramento","https://portofsacramento.com/"]],"Eur":[]};
+const CA_SHIP_OF={"13":"LA","63":"LA","94":"LA","10":"Bay","34":"Bay","91":"Bay","29":"SD","46":"Hue","54":"Stk","18":"WSac","14":"Eur"};
+const CU_CFG={full:"ILWU Credit Union",short:"ILWU CU",href:"https://www.ilwucu.org/",img:"img/ilwu-cu.png",w:107,h:24,aria:"ILWU Credit Union (opens in new tab)"},
+ WF_CFG={full:"Waterfront FCU",short:"Waterfront",href:"https://www.waterfrontfcu.org/",img:"img/waterfront-fcu.png",w:32,h:32,aria:"Waterfront Federal Credit Union (opens in new tab)"};
+function cuCfg(n){return CA_SHIP_OF[localId(n)]?CU_CFG:WF_CFG;}
+function caShipLinks(n){const k=CA_SHIP_OF[localId(n)];return k?CA_SHIP_LINKS[k]:null;}
+function caShipsHtml(n){const L=caShipLinks(n),E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+ return '<p class="mut cashn">Live list not available for this port yet.</p>'+(L.length?'<div class="cash">'+L.map(([t,u])=>'<a class="bt" href="'+E(u)+'" target="_blank" rel="noopener">'+E(t)+' ↗</a>').join("")+'</div>':'<p class="mut" style="margin:0">No public schedule page found for '+E(LOCALS[localId(n)].port)+'.</p>');}
 /* ===== PIER DEFAULT HOURS (cruise work sheets) — EDIT HERE =====
    Prefills the Hours box when you pick the pier + job on a new shift; you can always edit it. Keys = job value in the picker.
    P91 = Terminal 91 cruise sheet (stevedore co. Metro); P66 = Pier 66 sheet (Norwegian Bliss/Encore Sat-Sun 2023). Pay class is NOT changed by this. */
@@ -970,7 +1013,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v95",CACHE_VERSION="l19hours-v95"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v96",CACHE_VERSION="l19hours-v96"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -2024,16 +2067,19 @@ let musToastT=0;function musSkip(){const a=musEl();if(!a)return;musI=(musI+1)%PL
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hdSkip"))musSkip();});
 setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()=>musI};addEventListener("resize",()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data")musFit(1);return r;})(show);},0);/* v88: The Rusty Hook (Local 19 Pensioners Club newsletter) link at the bottom of History; one line: shrink, then short label */
 /* v90: Waterfront Federal Credit Union (the longshore credit union) link, stacked under The Rusty Hook; opens in a new tab (never framed) */
+/* v96: California locals get the ILWU Credit Union instead (serves ILWU members in California; logo = ilwucu.org header logo img/ilwu_logo.svg, rendered to PNG) */
 const WF_FULL="Waterfront FCU",WF_SHORT="Waterfront",WF_HTML='<div class="musw wfw"><a id="wfBtn" class="musb" href="https://www.waterfrontfcu.org/" target="_blank" rel="noopener" aria-label="Waterfront Federal Credit Union (opens in new tab)"><img src="img/waterfront-fcu.png" alt="" width="32" height="32"><span>'+WF_FULL+'</span></a></div>';
-function wfFit(){const a=document.getElementById("wfBtn");if(!a||!a.clientWidth)return;const t=a.querySelector("span");t.textContent=WF_FULL;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
- while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=WF_SHORT;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
+function wfSwap(){const a=document.getElementById("wfBtn");if(!a)return;const c=cuCfg(curLocal()),im=a.querySelector("img");if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);im.src=c.img;im.width=c.w;im.height=c.h;}a.classList.toggle("cu",c===CU_CFG);a.querySelector("span").textContent=c.full;wfFit();}
+window.l19WfSwap=wfSwap;
+function wfFit(){const a=document.getElementById("wfBtn");if(!a||!a.clientWidth)return;const C=cuCfg(curLocal()),t=a.querySelector("span");t.textContent=C.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
+ while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=C.short;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 addEventListener("resize",()=>wfFit());window.l19WfFit=wfFit;
 const TGP_FULL="✊ ILWU Ten Guiding Principles",TGP_SHORT="✊ Ten Guiding Principles",TGP_HTML='<div class="musw tgpw"><a id="tgpBtn" class="musb" href="https://www.ilwu.org/about/ten-guiding-principles/" target="_blank" rel="noopener" aria-label="ILWU Ten Guiding Principles">'+TGP_FULL+'</a></div>';
 function tgpFit(){const a=document.getElementById("tgpBtn");if(!a||!a.clientWidth)return;a.textContent=TGP_FULL;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=TGP_SHORT;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 addEventListener("resize",()=>tgpFit());window.l19TgpFit=tgpFit;
 const RH_FULL="📰 The Rusty Hook — Pensioners newsletter",RH_SHORT="📰 The Rusty Hook";
-function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML);}
+function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML);wfSwap();}
 function rhFit(){const a=document.getElementById("rhBtn");if(!a||!a.clientWidth)return;a.textContent=RH_FULL;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=RH_SHORT;a.style.fontSize="";fs=parseFloat(getComputedStyle(a).fontSize);n=0;while(over()&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 window.l19RhFit=rhFit;
@@ -2095,6 +2141,7 @@ function wireHist(){
  document.querySelectorAll("#v-hist [data-a]").forEach(b=>b.onclick=()=>addOn(b.dataset.a));}
 let shipData=null,shipStale=false;
 function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");
+ if(caShipLinks(curLocal())){sum.innerHTML=caShipsHtml(curLocal());list.innerHTML="";up.textContent="";if(typeof renderNdShips==="function")renderNdShips();return;}
  if(!shipData){if(typeof renderNdShips==="function")renderNdShips();sum.innerHTML='<p class="mut">Ship schedule unavailable right now (offline or not published yet). Try Refresh.</p>';list.innerHTML="";up.textContent="";return;}
  const today=fmtDate(new Date()),v=shipData.vessels||[];
  const LL=LOCALS[curLocal()],hp=LL.ship||"Seattle";sum.innerHTML=(!LL.ship?["No ship feed for "+LL.port+" (the app's list covers Seattle and Tacoma, NWSA). Seattle:"]:hp!=="Seattle"?[hp+" (home port, Local "+curLocal()+"):"]:[]).concat(shipSummary(v,today,null,hp)).map(x=>`<div><b>${esc(x)}</b></div>`).join("");
@@ -2440,7 +2487,8 @@ function locPaint(root,id){if(!root)return;root.innerHTML=locSegHtml(id);locWire
 function locRender(){const c=curLocal(),L=LOCALS[c];
  $("hdLn").textContent="Local "+c;$("hdLoc").setAttribute("aria-label","Your local: Local "+c+", "+L.trade+". Change local");document.title=localTitle(c);
  const d=$("docContract");if(d){d.href=L.doc.url;d.title=L.doc.name+" (PDF on pmanet.org)";d.setAttribute("aria-label","Current Contract: "+L.doc.name+", PDF, opens in a new tab");}
- const h=$("hallCall");if(h){h.href="tel:"+L.tel;h.textContent="📞 Local "+c+" hall: "+L.hall;}
+ const h=$("hallCall");if(h){h.href="tel:"+L.tel;h.textContent="📞 Local "+c+(L.office?" dispatch: ":" hall: ")+L.hall;}if(window.l19WfSwap)window.l19WfSwap();const tw=$("twCall");if(tw)tw.classList.toggle("hide",!!CA_SHIP_OF[c]); /* v96: Travel Washington line is for WA/OR locals */
+ const oc=$("offCall");if(oc){oc.classList.toggle("hide",!L.office);if(L.office){oc.href="tel:"+L.offTel;oc.textContent="📞 Local "+c+" office: "+L.office;}}
  locPaint($("locSegD"),"locSegB");locPaint($("suLocW"),"suLoc");locPaint($("lsW"),"lsSeg");}
 function localSet(n){n=localId(n);const was=curLocal();try{localStorage.setItem(LOCAL_KEY,n);}catch(e){}
  PIERS=localPiers(n);const pv=$("pier").value,pc=$("pierC").value,jv=$("job").value,old=pv==="__c"?pc:pv;
@@ -3587,7 +3635,7 @@ window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")
 })();}
 
 if(typeof module!=="undefined")module.exports={pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
-if(typeof module!=="undefined")Object.assign(module.exports,{pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
+if(typeof module!=="undefined")Object.assign(module.exports,{cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
