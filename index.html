@@ -681,7 +681,17 @@ function curLocal(){let v="";try{v=localStorage.getItem(LOCAL_KEY)||"";}catch(e)
 const OUT_PIERS={"8":["Terminal 4","Terminal 6"],"24":["Terminal 4"]};
 /* v79: Pegs (dispatch peg boards + equipment board) are Local 19's dispatch system; other locals have their own, so the tab is hidden for them */
 function pegsOn(n){return localId(n===undefined?curLocal():n)==="19";}
-function localPiers(n){n=localId(n);return n==="23"?TAC_PIERS:LOCALS[n].out?(OUT_PIERS[n]||[LOCALS[n].port]):SEA_PIERS;}
+const CA_SHIP_OF={"13":"LA","63":"LA","94":"LA","10":"Bay","34":"Bay","91":"Bay","29":"SD","46":"Hue","54":"Stk","18":"WSac","14":"Eur"};
+/* v98: California terminal lists, grouped by port (names + berths from the port authorities; see v98 report). No default hours for CA terminals. */
+const CA_PIERS={
+ "LA":[["Los Angeles",["APM Terminals (Pier 400)","Fenix Marine (Pier 300)","TraPac LA (B136-147)","Yusen YTI (B212-225)","Everport LA (B226-236)","WBCT China Shipping (B100-103)","WBCT LA TiL (B121-127)","Pasha (B174-181)","Pasha (B206-209)","SSA Marine (B54-55)","POLA breakbulk (B153-155)","WWL autos (B195-199)","LA Cruise Terminal (B91-93)"]],
+  ["Long Beach",["LBCT (Pier E)","TTI (Pier T)","ITS (Pier G)","PCT (Pier J)","SSA Pier A","SSA Pier C (Matson)","SSA Pier F","Toyota autos (Pier B)","LB Cruise Terminal"]]],
+ "Bay":[["Oakland",["OICT (B55-60)","TraPac Oakland (B25-33)","Everport Oakland (B35-38)","Matson/SSA Oakland (B61-63)"]]],
+ "SD":[["San Diego",["Tenth Avenue Marine Terminal","National City Marine Terminal","B Street Cruise Terminal","Broadway Pier"]]]};
+function localPierGroups(n){const k=CA_SHIP_OF[localId(n)];return k&&CA_PIERS[k]?CA_PIERS[k]:null;}
+function localPiers(n){n=localId(n);const g=localPierGroups(n);if(g)return g.flatMap(x=>x[1]);return n==="23"?TAC_PIERS:LOCALS[n].out?(OUT_PIERS[n]||[LOCALS[n].port]):SEA_PIERS;}
+function pierOptsHtml(n){const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),o=p=>"<option>"+E(p)+"</option>",g=localPierGroups(n);
+ return g?g.map(([l,ps])=>'<optgroup label="'+E(l)+'">'+ps.map(o).join("")+"</optgroup>").join(""):localPiers(n).map(o).join("");}
 function localTitle(n){return "ILWU LIFE · Local "+localId(n);}
 let PIERS=localPiers(curLocal());
 const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman"],["0006","Frontman/Slingman"],["0007","Holdman"],["0008","Jitney Driver"],["0009","Lasher"],["0012","Car Man"],["0150","CFS Utility Man"],["0011","PMA Training (L/S)"]],
@@ -802,7 +812,6 @@ const CA_SHIP_LINKS={"LA":[["Port of LA ships","https://portoflosangeles.org/bus
  "SD":[["Port of San Diego schedule","https://www.portofsandiego.org/press-releases/general-press-releases/port-san-diego-launches-new-online-ship-schedule-0"]],
  "Hue":[["Port Hueneme vessels","https://www.portofhueneme.org/vessel-schedule/"]],"Stk":[["Port of Stockton vessel log","https://www.portofstockton.com/daily-vessel-log/"]],
  "WSac":[["Port of West Sacramento","https://portofsacramento.com/"]],"Eur":[]};
-const CA_SHIP_OF={"13":"LA","63":"LA","94":"LA","10":"Bay","34":"Bay","91":"Bay","29":"SD","46":"Hue","54":"Stk","18":"WSac","14":"Eur"};
 const CU_CFG={full:"ILWU Credit Union",short:"ILWU CU",href:"https://www.ilwucu.org/",img:"img/ilwu-cu.png",w:107,h:24,aria:"ILWU Credit Union (opens in new tab)"},
  WF_CFG={full:"Waterfront FCU",short:"Waterfront",href:"https://www.waterfrontfcu.org/",img:"img/waterfront-fcu.png",w:32,h:32,aria:"Waterfront Federal Credit Union (opens in new tab)"};
 function cuCfg(n){return CA_SHIP_OF[localId(n)]?CU_CFG:WF_CFG;}
@@ -1022,7 +1031,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v97",CACHE_VERSION="l19hours-v97"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v98",CACHE_VERSION="l19hours-v98"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1834,7 +1843,7 @@ const save=()=>{localStorage.setItem(KEY,JSON.stringify(entries));if(typeof rend
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let editId=null,selDate=null,retTo="week",hk="week",hv="list",cm=fmtDate(new Date()).slice(0,7),cd=null,sf={q:"",from:"",to:""},pendJump=null,ha=weekStart(fmtDate(new Date())),hidePay=false;try{hidePay=localStorage.getItem("l19.hidepay")==="1"}catch(e){}
 let wk=weekStart(fmtDate(new Date()));
-$("pier").innerHTML=PIERS.map(p=>`<option>${p}</option>`).join("")+'<option value="__c">Custom…</option>';
+$("pier").innerHTML=pierOptsHtml(curLocal())+'<option value="__c">Other / custom…</option>';
 $("job").innerHTML=jobSelectHtml(curLocal());
 const lastKey="l19hours.last";
 function setToday(){$("date").value=selDate||fmtDate(new Date());}
@@ -2478,7 +2487,7 @@ $("sth").value=LS(STH,"0")==="0"?"":LS(STH,"");$("sth").onchange=()=>{const v=Ma
 /* --- 4c. experience tier + default pier/job settings --- */
 const tierLabel=t=>(TIERS.find(x=>x[0]===t)||["",t])[1];
 $("tman").innerHTML=TIERS.slice().reverse().map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
-$("dpier").innerHTML='<option value="">— none —</option>'+PIERS.map(p=>`<option>${esc(p)}</option>`).join("");
+$("dpier").innerHTML='<option value="">— none —</option>'+pierOptsHtml(curLocal());
 function jobOpts(){const t=document.createElement("select");t.innerHTML=$("job").innerHTML;const c=[...t.options].find(o=>o.value==="__c");if(c)c.remove();return t.innerHTML;}
 $("djob").innerHTML=jobOpts().replace("— select job —","— none —");
 function tierUI(){const auto=LS(TMODE,"manual")==="auto",st=num(LS(STH,"0"));$("tmode").value=auto?"auto":"manual";
@@ -2502,12 +2511,12 @@ function locRender(){const c=curLocal(),L=LOCALS[c];
  locPaint($("locSegD"),"locSegB");locPaint($("suLocW"),"suLoc");locPaint($("lsW"),"lsSeg");}
 function localSet(n){n=localId(n);const was=curLocal();try{localStorage.setItem(LOCAL_KEY,n);}catch(e){}
  PIERS=localPiers(n);const pv=$("pier").value,pc=$("pierC").value,jv=$("job").value,old=pv==="__c"?pc:pv;
- $("pier").innerHTML=PIERS.map(p=>`<option>${esc(p)}</option>`).join("")+'<option value="__c">Custom…</option>';
+ $("pier").innerHTML=pierOptsHtml(n)+'<option value="__c">Other / custom…</option>';
  if(PIERS.includes(old)){$("pier").value=old;$("pierC").classList.add("hide");}
  else if(editId||pv==="__c"){$("pier").value="__c";$("pierC").value=old;$("pierC").classList.remove("hide");}
  else{const dp=LS(DPIER,"");$("pier").value=PIERS.includes(dp)?dp:PIERS[0];$("pierC").classList.add("hide");}
  $("job").innerHTML=jobSelectHtml(n);$("job").value=jv;
- $("dpier").innerHTML='<option value="">— none —</option>'+PIERS.map(p=>`<option>${esc(p)}</option>`).join("");$("djob").innerHTML=jobOpts().replace("— select job —","— none —");
+ $("dpier").innerHTML='<option value="">— none —</option>'+pierOptsHtml(curLocal());$("djob").innerHTML=jobOpts().replace("— select job —","— none —");
  tierUI();if(!editId){rateDirty=false;applyDefaults();}if(typeof pierHrs==="function")pierHrs();
  if(n!==was&&$("ndP")&&$("ndP").value===LOCALS[was].need&&!(typeof ndEdit!=="undefined"&&ndEdit)){$("ndP").value=LOCALS[n].need;try{renderNdShips();}catch(e){}}
  locRender();try{renderShips();}catch(e){}
@@ -2604,7 +2613,7 @@ function openReport(){if($("rpSheet"))return;const o=document.createElement("div
  <div class="row" style="margin-top:8px"><button type="button" class="p" id="rpGo">Share / copy report</button><button type="button" id="rpCx">Cancel</button></div>
  <p id="rpM" class="mut" aria-live="polite" style="margin:0"></p></div>`;
  document.body.appendChild(o);
- $("rpJ").innerHTML=jobOpts().replace("— select job —","— none —");$("rpP").innerHTML='<option value="">— none —</option>'+PIERS.map(p=>`<option>${esc(p)}</option>`).join("")+'<option value="(other / missing pier)">Other / missing pier</option>';
+ $("rpJ").innerHTML=jobOpts().replace("— select job —","— none —");$("rpP").innerHTML='<option value="">— none —</option>'+pierOptsHtml(curLocal())+'<option value="(other / missing pier)">Other / missing pier</option>';
  $("rpT2").innerHTML=TIERS.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
  if([...$("rpJ").options].some(x=>x.value===curJob))$("rpJ").value=curJob;if([...$("rpP").options].some(x=>x.value===curPier))$("rpP").value=curPier;
  $("rpS").value=$("shift").value;$("rpT2").value=$("tier").value;
@@ -3645,7 +3654,7 @@ window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")
 })();}
 
 if(typeof module!=="undefined")module.exports={pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourDue,yearSummary,yearText,yearCSV};
-if(typeof module!=="undefined")Object.assign(module.exports,{localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
+if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
