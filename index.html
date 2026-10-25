@@ -111,8 +111,8 @@ button,input,select{font-size:1rem}
 .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.seg button{padding:0 4px;font-weight:600}
 .seg button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
 .mh{position:sticky;top:0;z-index:2;background:var(--pri);color:var(--prifg);font-weight:700;font-size:1.0625rem;padding:10px 14px;border-radius:10px;margin:14px 0 8px;display:flex;justify-content:space-between;gap:8px}
-.dh{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;margin:10px 2px 4px;font-weight:700}
-.dh .tot{font-weight:700;color:var(--fg)}.dh button.link{font-size:.9375rem;min-width:44px}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;margin:10px 0 6px;padding:0 4px 0 12px;font-weight:700;background:#15396b;color:#fff;border-radius:10px;white-space:nowrap} /* v111: readable day headers on the navy page (white 11.6:1, yellow link 8.6:1) */
+.dh .tot{font-weight:700;color:#dce6f3}.dh{overflow:hidden}.dh .badge.hol,.dh .badge.sw{font-size:max(12px,.82em)}.dh .badge.sw{display:inline-block;width:auto;position:static}.dh>span:first-child{min-width:0}.dh button.link{color:#ffd23f;flex:0 0 auto}.dh button.link{font-size:.9375rem;min-width:44px}
 .he{display:block;width:100%;text-align:left;min-height:56px;padding:10px 12px;margin-bottom:6px;border-radius:var(--r);background:var(--card);border:1px solid var(--bd);color:var(--fg)}
 .he .l1{display:flex;justify-content:space-between;gap:8px;font-weight:700}.he .l2{font-size:.9375rem;color:var(--mut)}.he .l1,.he .l2{overflow-wrap:anywhere;min-width:0}.he .l1>span:last-child{white-space:nowrap;flex:0 0 auto}.he .l1>span:first-child{min-width:0;overflow-wrap:break-word}label[for=dpNum],label[for=dpNum2]{white-space:nowrap;font-size:min(1em,5.2vw)} /* v81: BA label on one line */
 .vt{display:grid;grid-template-columns:1fr 1fr;gap:6px}.vt button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
@@ -676,7 +676,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v110",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v111",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1159,7 +1159,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v110",CACHE_VERSION="l19hours-v110"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v111",CACHE_VERSION="l19hours-v111"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -2481,7 +2481,11 @@ function renderHist(){const kinds=[["week","Week","Wk"],["month","Month","Mo"],[
  <button type="button" id="hys" style="width:100%;margin-top:10px">Year summary (${esc(ha.slice(0,4))})</button>
  ${t.count?`<h4>By job</h4><table>${grp(t.byJob)}</table><h4>By pier</h4><table>${grp(t.byPier)}</table>`:'<p class="mut" style="margin:8px 0 0">No shifts in this period.</p>'}</div>
  ${groups.length?list:'<div class="card mut">No saved shifts yet. Tap Add to log your first one.</div>'}`}`;
- wireHist();}
+ wireHist();dhFit();}
+/* v111: keep each History day header on one line: shrink its date/badge text (not under 12px); the + Add link keeps its size */
+function dhFit(){document.querySelectorAll("#v-hist .dh").forEach(d=>{const s=d.firstElementChild;if(!s||!d.clientWidth)return;s.style.fontSize="";const ov=()=>d.scrollWidth>d.clientWidth+0.5;let fs=0,n=0;const shrink=()=>{s.style.fontSize="";fs=parseFloat(getComputedStyle(s).fontSize);n=0;while(ov()&&fs>12&&n<40){fs-=0.5;n++;s.style.fontSize=fs+"px";}};shrink();
+ if(ov()){s.querySelectorAll(".badge.sw,.badge.hol").forEach(b=>{if(!b.title)b.title=b.textContent.trim();b.textContent=b.classList.contains("sw")?"◆ Stop work":b.textContent.replace(/^🎉\s*/,"");});shrink();}});}
+setTimeout(()=>{onWidth(()=>{if(curV==="hist")dhFit();});new MutationObserver(()=>{if(curV==="hist")dhFit();}).observe(document.documentElement,{attributes:true,attributeFilter:["data-ts"]});},0);
 function wireHist(){
  document.querySelectorAll("#hv button").forEach(b=>b.onclick=()=>{hv=b.dataset.hv;if(hv==="cal"){cm=(cd||ha||fmtDate(new Date())).slice(0,7);}renderHist();if(hv==="list"&&pendJump){const d=pendJump;pendJump=null;jumpTo(d);}});
  $("hq").oninput=()=>{sf.q=$("hq").value;upSR();};$("hf").onchange=()=>{sf.from=$("hf").value;upSR();};$("ht").onchange=()=>{sf.to=$("ht").value;upSR();};
