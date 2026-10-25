@@ -212,6 +212,11 @@ html,body{overscroll-behavior-x:none} /* v62: a sideways board swipe must not tr
 .chm.me{align-self:flex-end;background:#ffd23f;color:#00214e}
 .chm .who{font-weight:700;font-size:.9375rem}.chm .tx{white-space:pre-wrap;font-size:1.125rem}
 .chm .mt{font-size:.875rem;opacity:.9;margin-top:2px}.chm button{min-height:44px;padding:0 10px;font-size:.9375rem;margin-left:6px}
+.chm .mt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}.chm .mt button{margin-left:0;white-space:nowrap;min-width:44px}.chm .tx.flt{font-style:italic;opacity:.9}
+.chblk{margin:2px 0 0;text-align:center}.crg{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px}.crg button{min-height:44px;white-space:nowrap;padding:0 6px}
+.crg button[aria-pressed=true]{background:#00214e;color:#ffd23f;border-color:#00214e}.chbl{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)}.chbl>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chbl button{min-height:44px;white-space:nowrap;flex:0 0 auto}
+.chr .rcat{font-weight:800}.chr button{white-space:nowrap}
+#chCard .row,#crSheet .row{flex-wrap:wrap}#chCard .row>button,#crSheet .row>button{flex:1 1 auto;white-space:nowrap}.chr .row button{flex:1 1 auto}
 .chm.me button{background:#00214e;color:#ffd23f;border-color:#00214e}
 .chsend{display:flex;gap:8px;margin-top:10px;align-items:flex-end}.chsend textarea{min-height:52px;resize:none;flex:1}.chsend button{min-width:84px}
 .chnote{border-left:4px solid #ffd23f;padding:6px 10px;margin:10px 0;background:#0a2f66;border-radius:6px}
@@ -544,6 +549,8 @@ body.gopen{overflow:hidden}
 <div class="card"><h3>Rates &amp; app</h3>
 <p class="mut" id="verInfo" style="margin-top:0"></p>
 <p class="mut" id="aboutOwn">KING of the DOCKS is an independent app by Daniel White. Not affiliated with or endorsed by the ILWU or PMA.<br><b id="notOff">Not an official ILWU or PMA app.</b><br>© 2026 Daniel White. All rights reserved.</p>
+<p class="mut" id="chatRules"><b>Chat rules:</b> be respectful. No harassment, hate, threats or spam. Tap <b>Report</b> on a message that breaks the rules, or <b>Block</b> to hide someone. Admins review every report.</p>
+<p class="mut" id="contactLn"><b>Report a problem / contact:</b> <span id="contactV"></span></p>
 <div class="musw"><a id="musicBtn" class="musb" href="https://suno.com/s/weM2IQiWNmoNdTu9" target="_blank" rel="noopener">🎵 Longshore — the playlist</a></div>
 <div class="row"><button type="button" id="rpBtn">Report a problem</button><button type="button" id="tourBtn">Replay tour</button></div>
 <p class="mut" style="margin-bottom:0">Reports are text you paste to the beta organizer. Nothing is sent from this app.</p></div>
@@ -676,7 +683,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v111",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v112",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1159,7 +1166,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v111",CACHE_VERSION="l19hours-v111"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v112",CACHE_VERSION="l19hours-v112"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -2661,7 +2668,7 @@ function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b
    Not included: the screen-lock PIN, caches, and the internal raw copies. */
 const L19_SET_SKIP=/^(l19hours\.v1|l19\.stubs|l19\.pegs|l19\.pegs\.night|l19\.equip|l19\.gear|l19\.needs|l19\.pin|l19ships\.v1|l19\.shared|l19\.eqSlots|l19\.appVer|l19\.lastBackup|l19\.pegs\.v45raw|l19\.pegs\.v51raw|l19\.pegs\.bullbak|l19-bull-names)$|\.bad$|raw$/;
 function l19SettingsExport(){const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&!L19_SET_SKIP.test(k)){const v=localStorage.getItem(k);if(v!=null&&v.length<20000)o[k]=v;}}}catch(e){}return o;}
-function l19SettingsImport(set,replace){let n=0;if(!set||typeof set!=="object"||Array.isArray(set))return 0;for(const k of Object.keys(set)){if(typeof k!=="string"||k.indexOf("l19")!==0||L19_SET_SKIP.test(k)||typeof set[k]!=="string")continue;if(!replace&&LS(k,null)!=null)continue;LSset(k,set[k]);n++;}return n;}
+function l19SettingsImport(set,replace){let n=0;if(!set||typeof set!=="object"||Array.isArray(set))return 0;for(const k of Object.keys(set)){if(typeof k!=="string"||k.indexOf("l19")!==0||L19_SET_SKIP.test(k)||typeof set[k]!=="string")continue;if(!replace&&LS(k,null)!=null){if(k===CHAT_BLOCK_KEY){try{LSset(k,JSON.stringify(chatBlockClean(JSON.parse(LS(k,"[]")).concat(JSON.parse(set[k])))));n++;}catch(e){}}continue;}LSset(k,set[k]);n++;}return n;}
 async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:stubsGet(),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),pegsNight:lsJson(PGKN,null)?pegsClean(lsJson(PGKN,null)):undefined,equip:eqClean(lsJson(EQK,null)),gear:gearStoreClean((lsJson("l19.gear",null)||{}).cards),ba:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),pgp:pgpList(),pgpFiled:pgpFiledMap(),settings:l19SettingsExport(),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
@@ -2988,6 +2995,7 @@ function openReport(){if($("rpSheet"))return;const o=document.createElement("div
   const r=await sendText("KING of the DOCKS problem report",t);$("rpM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Report shared. Paste it to the beta organizer if needed.":r==="copied"?"Report copied. Paste it to the beta organizer.":"Copy the report from the box, then paste it to the beta organizer.";};
  setTimeout(()=>{try{$("rpK").focus({preventScroll:true});}catch(e){}},50);}
 $("rpBtn").onclick=$("rpFt").onclick=openReport;
+setTimeout(()=>{if($("contactV"))$("contactV").innerHTML=contactHtml(APP_CONTACT);},0); /* APP_CONTACT is defined further down */
 /* --- year summary --- */
 function ysYears(){const y=histYears(histMonths(entries,todayS()));return y.length?y:[todayS().slice(0,4)];}
 function ysFill(){const ys=ysYears(),cur=$("ysY").value;$("ysY").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("ysY").value=ys.includes(cur)?cur:ys[0];}
@@ -3974,6 +3982,45 @@ function chatTagName(n,loc){const t=" · L"+String(loc).replace(/\D/g,"").slice(
 function chatSplitTag(n){const m=/^(.*\S) · L(\d{1,3})$/.exec(String(n||""));return m?{name:m[1],local:m[2]}:{name:String(n||""),local:""};}
 function chatText(s){return String(s==null?"":s).replace(/\r/g,"").trim().slice(0,500);}
 function chatCanSend(last,now){return !last||now-last>=CHAT_GAP;}
+/* v112: chat safeguards (Apple 1.2 / Google Play UGC). Client-side filter on send and display: slurs (blocked on send, masked on display),
+   threats (blocked on send, hidden on display), spam (repeat flooding, rate, link spam, character flooding). Word lists are ROT13 so the
+   source isn't a wall of slurs. A server-side/AI filter can be plugged in later: set window.l19ChatFilterRemote = async (text,ctx) => ({ok,why})
+   and send() awaits it after the local check (the local check always runs first). */
+const CHAT_SLURS="avttre,avttref,avttn,avttnf,puvax,puvaxf,tbbx,tbbxf,fcvp,fcvpf,jrgonpx,jrgonpxf,xvxr,xvxrf,ornare,ornaref,pbba,pbbaf,wvtnobb,enturnq,enturnqf,gbjryurnq,gbjryurnqf,fnaqavttre,cnxv,cnxvf,genaal,genaavrf,snttbg,snttbgf,snt,sntf,qlxr,qlxrf,ergneq,ergneqf,ergneqrq,cbepuzbaxrl,mvccreurnq".split(",").map(chatRot),CHAT_SLURS_SQ="avttre,avttn,snttbg,jrgonpx,gbjryurnq,enturnq,wvtnobb,fnaqavttre,cbepuzbaxrl,mvccreurnq".split(",").map(chatRot);
+function chatRot(s){return s.replace(/[a-z]/g,c=>String.fromCharCode((c.charCodeAt(0)-84)%26+97));}
+/* char-for-char normalisation (same length, so match positions map back to the original text) */
+function chatNorm(s){const m={"0":"o","1":"i","!":"i","|":"i","3":"e","4":"a","@":"a","5":"s","$":"s","7":"t","+":"t","8":"b","9":"g"};return String(s||"").toLowerCase().replace(/[01!|34@57+89$]/g,c=>m[c]||c);}
+const CHAT_SLUR_RE=new RegExp("(^|[^a-z])("+CHAT_SLURS.slice().sort((a,b)=>b.length-a.length).join("|")+")(?=$|[^a-z])","g");
+const CHAT_THREAT_RE=[/\b(i ?('ll|will|am going to|'m going to|m gonna|'m gonna|am gonna|gonna|ima|imma)|we ?('ll|will|are gonna|gonna))\s+(kill|shoot|stab|murder|beat|hurt|jump|bomb|burn)\b/,
+ /\b(kill|shoot|stab|murder|strangle)\s+(you|u|ya|y'all|yall|him|her|them|everyone|every one|all of you)\b/,/\b(you'?re|you are|ur|your)\s+(dead|gonna die|going to die)\b(?! to (me|us|them|him|her))/,
+ /\b(bomb|shoot up|blow up|burn down)\s+(the |this |that )?(hall|terminal|dock|docks|pier|office|union|building|ship|boat)\b/,/\bhope (you|u) die\b/,/\bkys\b/,/\bkill yourself\b/];
+const CHAT_LINK_RE=/(https?:\/\/|www\.)\S+|\b[a-z0-9-]+\.(com|net|org|io|co|ru|xyz|top|info|biz|ly|me|app|shop|live|link|click|gg)\b(\/\S*)?/gi;
+function chatSlurHits(text){const n=chatNorm(text),hits=[];let m;CHAT_SLUR_RE.lastIndex=0;while((m=CHAT_SLUR_RE.exec(n))){const st=m.index+m[1].length;hits.push([st,st+m[2].length]);}
+ const sq=n.replace(/[^a-z]/g,"");return {hits,squash:!hits.length&&CHAT_SLURS_SQ.some(w=>sq.includes(w))};}
+function chatThreat(text){const n=chatNorm(text).replace(/[’`]/g,"'").replace(/\s+/g," ");return CHAT_THREAT_RE.some(r=>r.test(n));}
+function chatLinks(text){return (String(text||"").match(CHAT_LINK_RE)||[]).length;}
+/* check before sending. hist = this phone's recent sends [{t:text,ms}] */
+function chatCheck(text,hist,now){const t=chatText(text);if(!t)return {ok:false,why:"empty",msg:""};now=now||Date.now();hist=(hist||[]).filter(h=>h&&now-h.ms<300000);
+ const s=chatSlurHits(t);if(s.hits.length||s.squash)return {ok:false,why:"hate",msg:"Not sent: the message contains a slur. Chat rules: no hate or harassment."};
+ if(chatThreat(t))return {ok:false,why:"threat",msg:"Not sent: the message reads like a threat. Chat rules: no threats or violence."};
+ if(chatLinks(t)>2)return {ok:false,why:"links",msg:"Not sent: too many links in one message (2 max)."};
+ if(/(.)\1{14,}/su.test(t)||/(\b\S+\b)(\s+\1\b){7,}/i.test(t))return {ok:false,why:"flood",msg:"Not sent: looks like spam (repeated characters or words)."};
+ const k=chatNorm(t).replace(/\s+/g," ");if(hist.some(h=>chatNorm(h.t).replace(/\s+/g," ")===k&&now-h.ms<300000))return {ok:false,why:"repeat",msg:"Not sent: you already posted that message."};
+ if(hist.filter(h=>now-h.ms<60000).length>=5)return {ok:false,why:"rate",msg:"Not sent: too many messages in a minute. Wait a moment."};
+ return {ok:true,why:"",msg:""};}
+/* display: mask slurs, hide threats / squashed slurs. Returns {text,hidden} */
+function chatShow(text){const t=String(text||"");if(chatThreat(t))return {text:"Message hidden by the chat filter (possible threat).",hidden:true};const s=chatSlurHits(t);if(s.squash)return {text:"Message hidden by the chat filter.",hidden:true};
+ if(!s.hits.length)return {text:t,hidden:false};let o="",p=0;for(const [a,b] of s.hits){o+=t.slice(p,a)+"●".repeat(Math.max(3,b-a));p=b;}return {text:o+t.slice(p),hidden:false,masked:true};}
+/* reports: the category rides in the existing 'reason' field ("Spam: note") so the reports rules don't change */
+const CHAT_REASONS=["Harassment","Hate","Threat","Spam","Other"];
+/* v112: support contact for About. PLACEHOLDER until Daniel gives a real address: set APP_CONTACT to an email and it shows as a mailto link. */
+const APP_CONTACT="";
+function contactHtml(c){c=String(c||"").trim();return /^[^@\s<>"]+@[^@\s<>"]+\.[a-z]{2,}$/i.test(c)?'<a href="mailto:'+c+'?subject=KING%20of%20the%20DOCKS">'+c+'</a>':'[contact email to be added] – for now use the Report a problem button below.';}
+function chatReason(cat,note){const c=CHAT_REASONS.includes(cat)?cat:"Other",n=chatText(note).replace(/\s+/g," ").slice(0,200-c.length-2);return n?c+": "+n:c;}
+function chatReasonSplit(r){const m=/^(Harassment|Hate|Threat|Spam|Other)(?::\s*([\s\S]*))?$/.exec(String(r||""));return m?{cat:m[1],note:m[2]||""}:{cat:"",note:String(r||"")};}
+/* block list (this phone only): l19.chatBlocked = [{uid,name,at}] — part of l19.* so it rides in backups */
+const CHAT_BLOCK_KEY="l19.chatBlocked";
+function chatBlockClean(a){const seen=new Set();return (Array.isArray(a)?a:[]).filter(x=>x&&typeof x.uid==="string"&&x.uid&&x.uid.length<=128&&!seen.has(x.uid)&&seen.add(x.uid)).map(x=>({uid:x.uid,name:chatName(x.name)||"?",at:x.at||""}));}
 /* v53: shared boards (pure helpers) + roles */
 const SHARE_TAKES=100,SHARE_MAX_JSON=600000;
 function shareId(name){return String(name==null?"":name).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40).replace(/-+$/,"");}
@@ -4010,6 +4057,11 @@ const ls=(k,d)=>{try{return localStorage.getItem(k)||d;}catch(e){return d;}},lss
 const lc=()=>ls(CK(),""),coast=()=>ls(CHAT_SCOPE_KEY,"")==="coast",cc=()=>lc()?(coast()?CHAT_COAST:lc()):"",bc=()=>ls(KC,"")||(ls(KN,"")&&cc()?CHAT_DEFAULT_CODE:"");let gen=0,roleMaps={},roleSubs={},roleErrs={};
 let FB=null,fbP=null,unsub=null,msgs=[],chan=CHAT_CHANNELS.includes(ls(KH,""))?ls(KH,""):"Ideas",lastSend=0,settings=false,err="",note="";
 let panel="",roles={},rolesUnsub=null,rolesCode="",rolesErr="",reps=null,repErr="",pnote="";const lis=[];
+/* v112: block list + this phone's recent sends (for the repeat/rate checks) */
+let sendHist=[],repMsgs={};
+function blocked(){try{return chatBlockClean(JSON.parse(localStorage.getItem(CHAT_BLOCK_KEY)||"[]"));}catch(e){return [];}}
+function blockSave(a){lss(CHAT_BLOCK_KEY,JSON.stringify(chatBlockClean(a)));}
+function isBlocked(u){return !!u&&blocked().some(x=>x.uid===u);}
 function load(){if(fbP)return fbP;fbP=(async()=>{const app=await import(CHAT_SDK+"firebase-app.js"),au=await import(CHAT_SDK+"firebase-auth.js"),fs=await import(CHAT_SDK+"firebase-firestore.js");
  const a=app.getApps().length?app.getApp():app.initializeApp(CHAT_CFG),auth=au.getAuth(a),db=fs.getFirestore(a);
  if(!auth.currentUser)await au.signInAnonymously(auth);
@@ -4042,21 +4094,23 @@ function fillId(){const u=uid(),el=g("chUid");if(!el)return;el.textContent=u||"L
 function paintSetup(){const c=g("chCard");c.innerHTML=head()+'<label for="chN">Your display name (shown to coworkers)</label><input id="chN" maxlength="30" autocomplete="off" value="'+E(ls(KN,""))+'" placeholder="e.g. Sam B.">'+
  '<label for="chC">Coworker invite code</label><input id="chC" maxlength="30" autocomplete="off" autocapitalize="characters" value="'+E(lc()||defCode())+'" placeholder="Invite code">'+
  '<p class="mut">Ask a Local '+curLocal()+' coworker for the code (each local has its own room). Letters, numbers, - and _ only (3–30).</p><div class="row"><button type="button" class="p" id="chGo">Join chat</button>'+(ls(KN,"")&&cc()?'<button type="button" id="chBk">Cancel</button>':"")+'</div><p id="chSt" aria-live="polite">'+E(note)+'</p>'+
- '<h4>My ID (uid)</h4><code id="chUid">Loading…</code><div class="row"><button type="button" id="chCp">Copy</button></div><p class="mut" id="chCpM" aria-live="polite" style="margin:0"></p><p class="mut" id="chRl" style="margin:4px 0 0"></p>'+
+ '<h4>My ID (uid)</h4><code id="chUid">Loading…</code><div class="row"><button type="button" id="chCp">Copy</button></div><p class="mut" id="chCpM" aria-live="polite" style="margin:0"></p><p class="mut" id="chRl" style="margin:4px 0 0"></p>'+blockHtml()+
  '<details open><summary>Owner: make the first admin</summary><ol><li>Tap Copy above.</li><li>Open the Firebase console, project ilwu-life-chat, Firestore Database, Data.</li><li>Go to <b>rooms</b> → <b>'+E(cc()||defCode())+'</b> (this local\'s room; add it if missing) → <b>roles</b>. Add a document: Document ID = your ID (paste); fields <b>role</b> (string) = <b>admin</b>, <b>name</b> (string) = your display name, <b>setAt</b> (timestamp) = now.</li><li>Come back here and open Chat again. You now see ADMIN, People and Reports.</li></ol><p class="mut">Your ID belongs to this phone and browser. If site data is cleared or you use a new device you get a new ID, so keep a second admin.</p></details>';
  g("chGo").onclick=()=>{const n=chatName(g("chN").value),k=chatCode(g("chC").value);if(!n){g("chSt").textContent="Please enter a display name.";return;}if(!k){g("chSt").textContent="The code needs 3–30 letters or numbers.";return;}
   const ch=k!==lc();lss(KN,n);lss(CK(),k);settings=false;note="";if(ch){msgs=[];const cd=g("chCard");if(cd)cd.innerHTML="";}stop();open();if(FB)rolesStart();toTop();};
  if(g("chBk"))g("chBk").onclick=()=>{settings=false;note="";open();toTop();};
  g("chCp").onclick=async()=>{const u=uid();if(!u){g("chCpM").textContent="Your ID isn't ready yet (needs internet).";return;}
   try{await navigator.clipboard.writeText(u);g("chCpM").textContent="Copied.";}catch(e){try{const r=document.createRange();r.selectNodeContents(g("chUid"));const sl=window.getSelection();sl.removeAllRanges();sl.addRange(r);g("chCpM").textContent=document.execCommand&&document.execCommand("copy")?"Copied.":"Selected: press and hold to copy.";}catch(x){g("chCpM").textContent="Press and hold the ID to copy it.";}}};
+ c.querySelectorAll("[data-ub]").forEach(b=>b.onclick=()=>{const u=b.dataset.ub,x=blocked().find(y=>y.uid===u);blockSave(blocked().filter(y=>y.uid!==u));paintSetup();const s=g("chBlM");if(s)s.textContent=(x?x.name:"They")+" is unblocked. Their messages show again.";});
  fillId();if(!FB)load().then(()=>{if(cc())rolesStart();fillId();}).catch(e=>{if(g("chUid"))g("chUid").textContent="Not available: "+friendly(e);});}
+function blockHtml(){const b=blocked();return '<h4 id="chBlH">Blocked people</h4>'+(b.length?b.map(x=>'<div class="chbl"><span>'+E(x.name)+' <small class="mut">ID …'+E(x.uid.slice(-6))+'</small></span><button type="button" data-ub="'+E(x.uid)+'" aria-label="Unblock '+E(x.name)+'">Unblock</button></div>').join(""):'<p class="mut" style="margin:0">Nobody is blocked. Tap Block on a message to hide that person’s messages on this phone.</p>')+'<p class="mut" id="chBlM" aria-live="polite" style="margin:4px 0 0"></p>';}
 function fmt(ms){if(!ms)return"sending…";const d=new Date(ms),n=new Date(),t=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});return d.toDateString()===n.toDateString()?t:d.toLocaleDateString([],{month:"short",day:"numeric"})+" "+t;}
 function paintMain(){const c=g("chCard");if(!g("chL")){
  c.innerHTML=head()+'<p class="mut" style="margin:0">Room: <b id="chRm"></b> · You: <b id="chMe"></b> · <button type="button" class="link" id="chSet">Change name / code / My ID</button></p><div class="row" id="chRb"></div>'+
  '<div class="chtabs" role="group" aria-label="Chat channels">'+CHAT_CHANNELS.map(x=>'<button type="button" data-c="'+x+'">'+x+'</button>').join("")+'</div>'+
  '<p id="chSt" aria-live="polite"></p><div class="chlist" id="chL" role="log" aria-live="polite" tabindex="0"></div>'+
  '<form class="chsend" id="chF" autocomplete="off"><textarea id="chT" maxlength="500" rows="2" aria-label="Message" placeholder="Message to #'+E(chan)+'"></textarea><button type="submit" class="p" id="chS">Send</button></form>'+
- '<p class="mut" style="margin:6px 0 0">Report any message that is abusive. Moderators and admins can remove messages.</p>';
+ '<p class="mut" id="chRules" style="margin:6px 0 0"><b>Chat rules:</b> no harassment, hate, threats or spam. Tap Report or Block on any message.</p>';
  g("chSet").onclick=()=>{settings=true;stop();paint();toTop();};
  c.querySelectorAll(".chtabs button").forEach(b=>b.onclick=()=>{chan=b.dataset.c;lss(KH,chan);const L0=g("chL");if(L0)delete L0.dataset.s;paintMain();toTop();});
  g("chF").onsubmit=ev=>{ev.preventDefault();send();};
@@ -4068,24 +4122,30 @@ function paintMain(){const c=g("chCard");if(!g("chL")){
  if(g("chPp"))g("chPp").onclick=()=>{panel="people";pnote="";paint();toTop();};
  document.querySelectorAll(".chtabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===chan)));
  g("chT").placeholder="Message to #"+chan;g("chSt").textContent=err;
- const me=uid(),L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,list=msgs.filter(m=>m.channel===chan),rl=role();
- L.innerHTML=list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me);return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+who(m.name)+badge(m.uid)+'</div><div class="tx">'+E(m.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep">Report</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>';
+ const me=uid(),L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,all=msgs.filter(m=>m.channel===chan),bl=new Set(blocked().map(x=>x.uid)),list=all.filter(m=>m.uid===me||!bl.has(m.uid)),nh=all.length-list.length,rl=role();
+ L.innerHTML=(list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me),sh=mine?{text:m.text}:chatShow(m.text);return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+who(m.name)+badge(m.uid)+'</div><div class="tx'+(sh.hidden?" flt":"")+'">'+E(sh.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep" aria-label="Report this message">Report</button><button type="button" data-a="blk" aria-label="Block '+E(chatSplitTag(m.name).name)+'">Block</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>')+(nh?'<p class="mut chblk">'+nh+' message'+(nh===1?"":"s")+' hidden from blocked people. Manage in Change name / code / My ID.</p>':"");
  L.querySelectorAll("button[data-a]").forEach(b=>b.onclick=()=>act(b.dataset.a,b.closest(".chm").dataset.id));
  if(near||!L.dataset.s){L.scrollTop=L.scrollHeight;L.dataset.s="1";}}
 function back(){panel="";pnote="";open();toTop();}
+function repName(u){if(!u)return"?";if(u===uid())return"you";const m=msgs.slice().reverse().find(x=>x.uid===u);if(m)return chatSplitTag(m.name).name+" (ID …"+u.slice(-6)+")";const r=roles[u];return r&&r.name?r.name+" (ID …"+u.slice(-6)+")":"ID …"+u.slice(-6);}
 function toTop(){if(window.l19Top)window.l19Top();}
 async function repsLoad(){try{await load();rolesStart();const f=FB.fs,s=await f.getDocs(f.query(f.collection(FB.db,"reports"),f.where("room","==",cc()),f.limit(100)));
-  reps=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,messageId:String(x.messageId||""),reason:String(x.reason||""),reporter:String(x.reporter||""),ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).sort((a,b)=>b.ms-a.ms);repErr="";}
+  reps=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,messageId:String(x.messageId||""),reason:String(x.reason||""),reporter:String(x.reporter||""),ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).sort((a,b)=>b.ms-a.ms);repErr="";
+  /* v112: fetch reported messages that aren't in the live last-100 list (reads only; same messages path) */
+  for(const r of reps){if(!r.messageId||msgs.some(m=>m.id===r.messageId)||repMsgs[r.messageId]!==undefined)continue;try{const d=await f.getDoc(f.doc(FB.db,"rooms",cc(),"messages",r.messageId));const x=d.exists()?d.data():null;repMsgs[r.messageId]=x?{id:d.id,text:String(x.text||""),name:String(x.name||"?"),uid:x.uid}:null;}catch(e){}}}
  catch(e){reps=[];repErr=/permission/.test(e&&e.code||"")?"Couldn't load reports. The server rules may not be updated yet, or you aren't a moderator or admin.":friendly(e);}
  if(panel==="reports")paintPanel();}
 function paintPanel(){const c=g("chCard");
  if(panel==="reports"){const me=uid();
   c.innerHTML=head()+'<h4>Reports (this room)</h4><div class="row"><button type="button" id="chBk2">Back to chat</button><button type="button" id="chRf">Refresh</button></div><p id="chSt" aria-live="polite">'+E(repErr||pnote)+'</p>'+
-   (reps===null?'<p class="mut">Loading…</p>':reps.length?reps.map(r=>{const m=msgs.find(x=>x.id===r.messageId);return'<div class="chr" data-r="'+E(r.id)+'" data-m="'+E(r.messageId)+'"><div class="who">'+(m?E(m.name)+badge(m.uid):"(message not loaded)")+' <small>'+E(fmt(r.ms))+'</small></div><div class="tx" style="white-space:pre-wrap">'+(m?E(m.text):"Not in the last 100 messages, or already deleted.")+'</div><p class="mut" style="margin:4px 0">Reason: '+E(r.reason||"(none given)")+'</p><div class="row"><button type="button" class="p" data-x="delm">Delete message &amp; resolve</button><button type="button" data-x="res">Resolve (remove report)</button></div></div>';}).join(""):(repErr?"":'<p class="mut">No open reports. Good.</p>'));
+   '<p class="mut" style="margin:0">You decide: Dismiss keeps the message; Remove message deletes it for everyone. Nothing happens automatically.</p>'+
+   (reps===null?'<p class="mut">Loading…</p>':reps.length?reps.map(r=>{const m=msgs.find(x=>x.id===r.messageId)||repMsgs[r.messageId],rs=chatReasonSplit(r.reason),fl=m&&chatShow(m.text).hidden;return'<div class="chr" data-r="'+E(r.id)+'" data-m="'+E(r.messageId)+'"><div class="who">'+(m?E(m.name)+badge(m.uid):"(message gone)")+'</div><div class="tx" style="white-space:pre-wrap">'+(m?E(m.text):"Already deleted, or no longer available.")+'</div>'+(fl?'<p class="mut" style="margin:2px 0">Hidden in chat by the filter.</p>':"")+
+   '<p style="margin:4px 0"><span class="rcat">Reason: '+E(rs.cat||"Other")+'</span>'+(rs.note?' – '+E(rs.note):"")+'</p><p class="mut" style="margin:0 0 4px">Reported by '+E(repName(r.reporter))+' · '+E(fmt(r.ms))+'</p><div class="row"><button type="button" data-x="res">Dismiss</button><button type="button" class="d" data-x="delm"'+(m?"":" disabled")+'>Remove message</button></div></div>';}).join(""):(repErr?"":'<p class="mut">No open reports. Good.</p>'));
   g("chBk2").onclick=back;g("chRf").onclick=()=>{reps=null;repErr="";pnote="";paintPanel();repsLoad();};
   c.querySelectorAll(".chr button[data-x]").forEach(b=>b.onclick=async()=>{const box=b.closest(".chr"),rid=box.dataset.r,mid=box.dataset.m,f=FB.fs;
-   try{if(b.dataset.x==="delm"){if(!confirm("Delete this message for everyone and resolve the report?"))return;if(mid)await f.deleteDoc(f.doc(FB.db,"rooms",cc(),"messages",mid));}
-    await f.deleteDoc(f.doc(FB.db,"reports",rid));reps=reps.filter(x=>x.id!==rid);pnote="Done.";}catch(e){pnote="Couldn't do that. "+(/permission/.test(e&&e.code||"")?"Not allowed (rules not updated, or you aren't a moderator).":friendly(e));}
+   try{if(b.dataset.x==="delm"){if(!confirm("Remove this message for everyone? The report is closed too."))return;if(mid)await f.deleteDoc(f.doc(FB.db,"rooms",cc(),"messages",mid));}
+    else if(!confirm("Dismiss this report? The message stays."))return;
+    await f.deleteDoc(f.doc(FB.db,"reports",rid));reps=reps.filter(x=>x.id!==rid);pnote=b.dataset.x==="delm"?"Message removed.":"Report dismissed.";}catch(e){pnote="Couldn't do that. "+(/permission/.test(e&&e.code||"")?"Not allowed (rules not updated, or you aren't a moderator).":friendly(e));}
    paintPanel();});return;}
  if(panel==="people"){const me=uid(),ppl=rolePeople(msgs,roles);
   c.innerHTML=head()+'<h4>People (admins only)</h4><div class="row"><button type="button" id="chBk2">Back to chat</button></div><div class="chwarn" role="note">Roles belong to a phone/browser ID. Only another admin can remove or change an admin, and you can’t change your own role: keep at least two admins so the room is never left without one.</div><p id="chSt" aria-live="polite">'+E(pnote)+'</p>'+
@@ -4101,21 +4161,37 @@ function paintPanel(){const c=g("chCard");
 function paint(){if(settings||!ls(KN,"")||!cc())paintSetup();else if(panel)paintPanel();else paintMain();}
 async function send(){const t=chatText(g("chT").value),now=Date.now();if(!t)return;if(!chatCanSend(lastSend,now)){err="Slow down a little: one message every 2 seconds.";g("chSt").textContent=err;return;}
  if(!FB){err="Not connected yet.";g("chSt").textContent=err;return;}
+ const me=uid(),hist=sendHist.concat(msgs.filter(m=>m.uid===me).map(m=>({t:m.text,ms:m.ms||now}))),ck=chatCheck(t,hist,now);
+ if(!ck.ok){err=ck.msg;g("chSt").textContent=err;return;}
  lastSend=now;g("chS").disabled=true;err="";
- try{const f=FB.fs;await f.addDoc(f.collection(FB.db,"rooms",cc(),"messages"),{text:t,name:cc()===CHAT_COAST?chatTagName(ls(KN,""),curLocal()):chatName(ls(KN,"")),uid:FB.auth.currentUser.uid,channel:chan,createdAt:f.serverTimestamp()});g("chT").value="";err="";}
+ /* hook for a later server-side/AI filter (none today) */
+ if(typeof window.l19ChatFilterRemote==="function"){try{const r=await window.l19ChatFilterRemote(t,{room:cc(),uid:me,channel:chan});if(r&&r.ok===false){err="Not sent: "+(r.why||"the chat filter refused this message.");if(g("chS"))g("chS").disabled=false;if(g("chSt"))g("chSt").textContent=err;return;}}catch(e){}}
+ try{const f=FB.fs;await f.addDoc(f.collection(FB.db,"rooms",cc(),"messages"),{text:t,name:cc()===CHAT_COAST?chatTagName(ls(KN,""),curLocal()):chatName(ls(KN,"")),uid:FB.auth.currentUser.uid,channel:chan,createdAt:f.serverTimestamp()});g("chT").value="";err="";sendHist.push({t,ms:now});sendHist=sendHist.slice(-10);}
  catch(e){err="Message not sent. "+friendly(e);}
  if(g("chS"))g("chS").disabled=false;if(g("chSt"))g("chSt").textContent=err;}
 async function act(a,id){if(!FB)return;const f=FB.fs;try{
  if(a==="del"){if(!confirm("Delete this message for everyone?"))return;await f.deleteDoc(f.doc(FB.db,"rooms",cc(),"messages",id));err="";}
- else{const r=prompt("Why are you reporting this message? (optional, up to 200 characters)","");if(r===null)return;await f.addDoc(f.collection(FB.db,"reports"),{messageId:String(id).slice(0,100),room:cc(),reason:String(r).slice(0,200),reporter:FB.auth.currentUser.uid,createdAt:f.serverTimestamp()});err="Thanks. The message was reported.";}
+ else if(a==="blk"){const m=msgs.find(x=>x.id===id);if(!m||!m.uid||m.uid===uid())return;const n=chatSplitTag(m.name).name||"this person";
+  if(!confirm("Block "+n+"? Their messages are hidden on this phone. They aren't told. Unblock any time in Change name / code / My ID."))return;blockSave(blocked().concat([{uid:m.uid,name:n,at:new Date().toISOString().slice(0,10)}]));err=n+" is blocked. Their messages are hidden on this phone.";paintMain();}
+ else{repSheet(id);return;}
  }catch(e){err=(a==="del"?"Couldn't delete. ":"Couldn't send the report. ")+friendly(e);}
  if(g("chSt"))g("chSt").textContent=err;}
+/* v112: report sheet: reason (Harassment, Hate, Threat, Spam, Other) + optional note. Category rides in the existing 'reason' field. */
+function repSheet(id){if(g("crSheet"))return;const o=document.createElement("div");o.className="sheet";o.id="crSheet";let cat="";
+ o.innerHTML='<div role="dialog" aria-modal="true" aria-labelledby="crT"><h3 id="crT" style="margin:0">Report message</h3><p class="mut" style="margin:0">Why are you reporting it?</p><div class="crg" role="group" aria-label="Reason">'+CHAT_REASONS.map(r=>'<button type="button" data-cr="'+r+'" aria-pressed="false">'+r+'</button>').join("")+'</div>'+
+  '<label for="crN">Note (optional)</label><input id="crN" maxlength="150" autocomplete="off" placeholder="What happened?"><p id="crM" class="mut" aria-live="polite" style="margin:0"></p><div class="row"><button type="button" class="p" id="crS">Send report</button><button type="button" id="crX">Cancel</button></div></div>';
+ document.body.appendChild(o);const close=()=>{o.remove();};o.onclick=ev=>{if(ev.target===o)close();};g("crX").onclick=close;
+ o.querySelectorAll("[data-cr]").forEach(b=>b.onclick=()=>{cat=b.dataset.cr;o.querySelectorAll("[data-cr]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));g("crM").textContent="";});
+ g("crS").onclick=async()=>{if(!cat){g("crM").textContent="Pick a reason first.";return;}if(!FB){g("crM").textContent="Not connected yet.";return;}g("crS").disabled=true;
+  try{const f=FB.fs;await f.addDoc(f.collection(FB.db,"reports"),{messageId:String(id).slice(0,100),room:cc(),reason:chatReason(cat,g("crN").value),reporter:FB.auth.currentUser.uid,createdAt:f.serverTimestamp()});close();err="Thanks, an admin will review.";if(g("chSt"))g("chSt").textContent=err;}
+  catch(e){g("crS").disabled=false;g("crM").textContent="Couldn't send the report. "+friendly(e);}};
+ setTimeout(()=>{const b=o.querySelector("[data-cr]");if(b)b.focus();},0);}
 async function open(){panel="";const my=++gen;if(settings||!ls(KN,"")||!cc()){paint();return;}
  paintMain();err="Connecting…";g("chSt").textContent=err;
  try{await load();}catch(e){err=friendly(e);if(g("chSt"))g("chSt").textContent=err;return;}
  if(my!==gen)return;rolesStart();paintMain();
  if(!g("chL")||unsub)return;err="";const code=cc(),f=FB.fs,q=f.query(f.collection(FB.db,"rooms",code,"messages"),f.orderBy("createdAt","desc"),f.limit(100));
- unsub=f.onSnapshot(q,s=>{if(code!==cc()||my!==gen)return;msgs=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,text:String(x.text||""),name:String(x.name||"?"),uid:x.uid,channel:x.channel,ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).reverse();err=s.metadata.fromCache&&navigator.onLine===false?"Offline: showing saved messages.":"";if(g("chL"))paintMain();},
+ unsub=f.onSnapshot(q,s=>{if(code!==cc()||my!==gen)return;msgs=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,text:String(x.text||""),name:String(x.name||"?"),uid:x.uid,channel:x.channel,ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).reverse();err=s.metadata.fromCache&&navigator.onLine===false?"Offline: showing saved messages.":/^(Offline|Connecting)/.test(err)?"":err;if(g("chL"))paintMain();},
   e=>{err=friendly(e);stop();if(g("chSt"))g("chSt").textContent=err;});}
 window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
 /* v74: switching local = switching chat room: drop the old listener and messages, repaint the header, re-attach for the new room */
@@ -4126,7 +4202,7 @@ window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")
 })();}
 
 if(typeof module!=="undefined")module.exports={cwogMigrate,PGP_KEY,PGPF_KEY,PGP_LABEL,PGP_REMIND,PGP_JOB,pgpOn,pgpSh,pgpConflict,pgpWeek,pgpClean,pgpMerge,pgpDay,NL_X,NL_KEY,nlApplies,CWOG_JOB,CWOG_HRS,CWOG_RATE,CWOG_RATE2,CWOG_PAY,cwogPayFor,isCwog,cwogSplit,l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
-if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
+if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,chatNorm,chatSlurHits,chatThreat,chatLinks,chatCheck,chatShow,chatReason,chatReasonSplit,CHAT_REASONS,CHAT_BLOCK_KEY,chatBlockClean,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
