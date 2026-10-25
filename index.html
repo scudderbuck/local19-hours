@@ -216,6 +216,14 @@ html,body{overscroll-behavior-x:none} /* v62: a sideways board swipe must not tr
 .chblk{margin:2px 0 0;text-align:center}.crg{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px}.crg button{min-height:44px;white-space:nowrap;padding:0 6px}
 .crg button[aria-pressed=true]{background:#00214e;color:#ffd23f;border-color:#00214e}.chbl{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line,#ddd)}.chbl>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chbl button{min-height:44px;white-space:nowrap;flex:0 0 auto}
 .ctl{display:flex;align-items:center;min-height:44px;width:100%;white-space:nowrap;overflow:hidden;font-weight:700;color:var(--acc);text-decoration:underline;text-underline-offset:3px}
+.mcw{margin:8px 0 4px}#merchBtn.musb{font:inherit;font-size:1em;font-weight:700;cursor:pointer;background:#fff;color:#00214e;border:2px solid #ffd23f;border-radius:999px;min-height:48px;width:100%;padding:0 12px;gap:8px;box-shadow:none}
+.mchd{display:flex;align-items:center;gap:10px}.mchd h3{margin:0}.mchd img{flex:0 0 auto;height:58px;width:auto}
+.mcl{display:grid;gap:10px}.mcit{display:grid;grid-template-columns:88px minmax(0,1fr);gap:8px 12px;align-items:center;padding:10px;border:1px solid var(--bd);border-radius:12px}
+.mcit>img{width:88px;height:88px;object-fit:cover;border-radius:10px;background:#00214e}.mcit>img.mclogo{object-fit:contain;padding:6px}
+.mctx{min-width:0}.mcn{font-weight:800;overflow-wrap:anywhere}.mcp{font-weight:700;font-size:1.125rem}.mcno{font-size:.9375rem;overflow-wrap:anywhere}
+.mcbuy{grid-column:1/-1;display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:999px;background:#ffd23f;color:#00214e;font-weight:800;font-size:1.125rem;text-decoration:none;white-space:nowrap;overflow:hidden;border:1px solid #00214e}
+.mcsq{margin:0}.mcres{border:0;cursor:pointer;font-family:inherit}.mcres>span{white-space:nowrap}.mcrow{flex-wrap:wrap}.mcrow>button,.mcr .row>button{flex:1 1 auto;white-space:nowrap;min-height:44px}.mch4{margin:0}.mcok{font-weight:700;color:#0b6b2e;margin:4px 0}.mcerr{color:var(--dan);font-weight:600;margin:4px 0;min-height:0}.mcr{padding:10px;border:1px solid var(--bd);border-radius:12px;display:grid;gap:4px}.mcst{font-weight:800}.mcst-picked{color:#0b6b2e}.mcst-cancelled{color:var(--dan)}#merchSheet select,#merchSheet input{min-height:44px}
+@media(prefers-color-scheme:dark){.mcok,.mcst-picked{color:#7ee2a0}}.mcsq a{color:var(--acc);font-weight:700;overflow-wrap:anywhere;display:inline-block;min-height:44px;line-height:44px}
 .chr .rcat{font-weight:800}.chr button{white-space:nowrap}
 #chCard .row,#crSheet .row{flex-wrap:wrap}#chCard .row>button,#crSheet .row>button{flex:1 1 auto;white-space:nowrap}.chr .row button{flex:1 1 auto}
 .chm.me button{background:#00214e;color:#ffd23f;border-color:#00214e}
@@ -684,7 +692,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v113",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v114",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1167,7 +1175,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v113",CACHE_VERSION="l19hours-v113"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v114",CACHE_VERSION="l19hours-v114"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -2438,6 +2446,71 @@ const BPO_LBL={bpoBtn:["🏥 Benefit Plans Office","🏥 Benefit Plans"],bpoCall
 function bpoFit(){for(const id of Object.keys(BPO_LBL)){const a=document.getElementById(id);if(!a||!a.clientWidth)continue;const t=a.querySelector("span"),L=BPO_LBL[id];t.textContent=L[0];a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=L[1];while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}}
 onWidth(()=>bpoFit());window.l19BpoFit=bpoFit;
+/* merch sheet: views "list" | "res" (reserve form) | "mine" | "admin". Reservations use the chat identity (name + Firebase uid) and the Local 19 board room
+   (window.l19Fb.code()); room admins manage them. If the merchReservations rules aren't deployed yet every call fails with a clear message and nothing is saved. */
+let mcView="list",mcItem=null,mcMsg="",mcData=null,mcErr="",mcOnReg=0;
+const mcE=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function mcVis(){return merchItems(MERCH,curLocal());}
+function mcFb(){return window.l19Fb||null;}
+function mcErrText(e){if(/permission/.test(e&&e.code||""))return"Reservations aren't open yet (the server hasn't been set up for them). Nothing was saved. Try again later or ask Daniel at the hall.";const F=mcFb();return F&&F.friendly?F.friendly(e):"Couldn't reach the server. Try again.";}
+function mcWhen(ms){if(!ms)return"just now";const d=new Date(ms);return d.toLocaleDateString([],{month:"short",day:"numeric"})+" "+d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}
+function mcRow(r,admin){const st=MERCH_STATUS[r.status]||r.status;return '<div class="mcr" data-rid="'+mcE(r.id)+'"><div class="mcn">'+mcE(r.item)+'</div><div>'+(r.size?"Size "+mcE(r.size)+" · ":"")+"Qty "+mcE(r.qty)+(admin?" · <b>"+mcE(r.name)+"</b>":"")+'</div><div class="mut">'+mcE(mcWhen(r.ms))+' · <span class="mcst mcst-'+mcE(r.status)+'">'+mcE(st)+'</span></div>'+(r.note?'<div class="mut mcno">Note: '+mcE(r.note)+'</div>':'')+
+ (r.status==="reserved"?'<div class="row">'+(admin?'<button type="button" class="p" data-ra="picked">Picked up</button>':'')+'<button type="button" class="d" data-ra="cancelled">Cancel</button></div>':'')+'</div>';}
+async function mcLoad(which){mcData=null;mcErr="";mcPaint();const F=mcFb();try{const FB=await F.ready(),f=FB.fs,me=F.uid();
+  const q=which==="admin"?f.query(f.collection(FB.db,MERCH_RES_COL),f.where("room","==",F.code()),f.limit(300)):f.query(f.collection(FB.db,MERCH_RES_COL),f.where("uid","==",me),f.limit(100));
+  const s=await f.getDocs(q);mcData=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return {id:d.id,item:String(x.item||""),size:String(x.size||""),qty:x.qty,note:String(x.note||""),name:String(x.name||""),status:String(x.status||""),ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};})
+   .sort((a,b)=>(a.status==="reserved"?0:1)-(b.status==="reserved"?0:1)||b.ms-a.ms);}
+ catch(e){mcData=[];mcErr=mcErrText(e);}if(mcView===which)mcPaint();}
+function mcPaint(){const box=document.getElementById("mcBody");if(!box)return;const F=mcFb(),vis=mcVis(),hasRes=vis.some(x=>x.mode==="reserve");let h="";
+ if(mcView==="list"){h='<div class="mcl">'+merchHtml(MERCH,curLocal())+'</div>'+(mcMsg?'<p class="mcok" role="status">'+mcE(mcMsg)+'</p>':'')+
+   (hasRes?'<div class="row mcrow"><button type="button" id="mcMine">My reservations</button>'+(F&&F.isAdmin&&F.isAdmin()?'<button type="button" id="mcAdm">Reservations (admin)</button>':'')+'</div>':'')+
+   (vis.some(x=>x.mode==="square")?'<p class="mut mcsq">Secure checkout by Square. Questions: <a href="mailto:'+MERCH_MAIL+'?subject=KING%20of%20the%20DOCKS%20merch">'+MERCH_MAIL+'</a></p>':'<p class="mut mcsq">Questions: <a href="mailto:'+MERCH_MAIL+'?subject=KING%20of%20the%20DOCKS%20merch">'+MERCH_MAIL+'</a></p>');}
+ else if(mcView==="res"){const x=mcItem,joined=F&&F.joined&&F.joined();
+  h='<h4 class="mch4">Reserve – pay at hall</h4><div class="mcn">'+mcE(x.name)+'</div>'+(x.price?'<div class="mcp">'+mcE(x.price)+'</div>':'')+
+   (joined?(x.sizes.length?'<label for="mcSz">Size</label><select id="mcSz"><option value="">Choose a size</option>'+x.sizes.map(z=>'<option>'+mcE(z)+'</option>').join("")+'</select>':'')+
+   '<label for="mcQ">Quantity</label><select id="mcQ">'+[1,2,3,4,5].map(n=>'<option>'+n+'</option>').join("")+'</select><label for="mcN">Note (optional)</label><input id="mcN" maxlength="150" autocomplete="off" placeholder="e.g. hold until Friday">'+
+   '<p class="mut" style="margin:4px 0 0">Reserving as <b>'+mcE(F.name())+'</b> (your Chat name). Pay and pick up at the hall.</p><p id="mcM" class="mcerr" aria-live="polite">'+mcE(mcErr)+'</p><div class="row mcrow"><button type="button" class="p" id="mcGo">Reserve</button><button type="button" id="mcBk">Back</button></div>'
+   :'<p>To reserve, set up Chat first: your Chat name tells Daniel who the item is for.</p><div class="row mcrow"><button type="button" class="p" id="mcChat">Open Chat setup</button><button type="button" id="mcBk">Back</button></div>');}
+ else{const adm=mcView==="admin";h='<h4 class="mch4">'+(adm?"Reservations (admin)":"My reservations")+'</h4>'+(mcMsg?'<p class="mcok" role="status">'+mcE(mcMsg)+'</p>':'')+(mcErr?'<p class="mcerr" role="alert">'+mcE(mcErr)+'</p>':'')+
+   (mcData===null?'<p class="mut">Loading…</p>':mcData.length?'<div class="mcl">'+mcData.map(r=>mcRow(r,adm)).join("")+'</div>':(mcErr?'':'<p class="mut">'+(adm?"No reservations yet.":"You have no reservations.")+'</p>'))+
+   '<div class="row mcrow"><button type="button" id="mcBk">Back</button>'+(adm?'<button type="button" id="mcRf">Refresh</button>':'')+'</div>';}
+ box.innerHTML=h;const g=id=>document.getElementById(id);
+ if(g("mcMine"))g("mcMine").onclick=()=>{const F=mcFb();mcMsg="";if(!F||!F.joined()){mcView="mine";mcData=[];mcErr="Set up Chat first (name + code) to see your reservations.";mcPaint();return;}mcView="mine";mcLoad("mine");};
+ if(g("mcAdm"))g("mcAdm").onclick=()=>{mcMsg="";mcView="admin";mcLoad("admin");};
+ if(g("mcRf"))g("mcRf").onclick=()=>{mcMsg="";mcLoad("admin");};
+ if(g("mcBk"))g("mcBk").onclick=()=>{mcView="list";mcErr="";mcPaint();};
+ if(g("mcChat"))g("mcChat").onclick=()=>{const o=g("merchSheet");if(o)o.remove();if(typeof show==="function")show("chat");};
+ box.querySelectorAll("[data-res]").forEach(b=>b.onclick=()=>{mcItem=mcVis().find(x=>x.id===b.dataset.res);if(!mcItem)return;mcView="res";mcErr="";mcMsg="";mcPaint();const F=mcFb();if(F&&F.joined())F.ready().catch(()=>{});});
+ if(g("mcSz"))g("mcSz").onchange=()=>{mcErr="";g("mcM").textContent="";};
+ if(g("mcGo"))g("mcGo").onclick=async()=>{const F=mcFb(),x=mcItem,sz=g("mcSz")?g("mcSz").value:"";if(x.sizes.length&&!sz){g("mcM").textContent="Choose a size first.";return;}
+  g("mcGo").disabled=true;g("mcM").textContent="Saving…";
+  try{const FB=await F.ready(),f=FB.fs,me=F.uid();const open=await f.getDocs(f.query(f.collection(FB.db,MERCH_RES_COL),f.where("uid","==",me),f.limit(100)));
+   if(open.docs.filter(d=>d.data().status==="reserved").length>=MERCH_MAX_OPEN)throw {code:"mc/too-many"};
+   const d=merchResDoc(x,{size:sz,qty:g("mcQ").value,note:g("mcN").value,name:F.name(),uid:me,room:F.code(),local:curLocal()});if(!merchResOk(d))throw {code:"mc/bad"};
+   await f.addDoc(f.collection(FB.db,MERCH_RES_COL),Object.assign(d,{createdAt:f.serverTimestamp()}));mcMsg="Reserved – pay and pick up at the hall.";mcView="mine";mcLoad("mine");}
+  catch(e){mcErr=e&&e.code==="mc/too-many"?"You already have "+MERCH_MAX_OPEN+" open reservations. Pick those up or cancel one first.":e&&e.code==="mc/bad"?"Couldn't reserve: set up your Chat name first.":mcErrText(e);if(g("mcM"))g("mcM").textContent=mcErr;if(g("mcGo"))g("mcGo").disabled=false;}};
+ box.querySelectorAll("[data-ra]").forEach(b=>b.onclick=async()=>{const rid=b.closest(".mcr").dataset.rid,to=b.dataset.ra,r=(mcData||[]).find(z=>z.id===rid),adm=mcView==="admin";if(!r)return;
+  if(!confirm(to==="picked"?"Mark "+r.item+" ("+(r.size?r.size+", ":"")+"qty "+r.qty+") for "+r.name+" as picked up?":"Cancel this reservation"+(adm?" for "+r.name:"")+"?"))return;
+  try{const F=mcFb(),FB=await F.ready(),f=FB.fs;await f.updateDoc(f.doc(FB.db,MERCH_RES_COL,rid),{status:to,updatedAt:f.serverTimestamp()});mcMsg=to==="picked"?"Marked as picked up.":"Reservation cancelled.";}
+  catch(e){mcMsg="";mcErr=mcErrText(e);}mcLoad(mcView);});
+ setTimeout(merchFit,0);}
+function merchOpen(){if(!merchOn(MERCH,curLocal())||document.getElementById("merchSheet"))return;const o=document.createElement("div");o.className="sheet";o.id="merchSheet";mcView="list";mcMsg="";mcErr="";mcData=null;
+ o.innerHTML='<div role="dialog" aria-modal="true" aria-labelledby="mcT"><div class="mchd"><img src="'+MERCH_LOGO+'" alt="" width="40" height="58"><h3 id="mcT">🛍️ Merch</h3></div><div id="mcBody"></div><div class="row"><button type="button" id="mcX">Close</button></div></div>';
+ document.body.appendChild(o);const close=()=>{o.remove();const b=document.getElementById("merchBtn");if(b)b.focus();};o.onclick=e=>{if(e.target===o)close();};document.getElementById("mcX").onclick=close;
+ o.addEventListener("keydown",e=>{if(e.key==="Escape")close();});mcPaint();
+ const F=mcFb();if(F&&F.on&&!mcOnReg){mcOnReg=1;F.on(()=>{if(mcView==="list"&&document.getElementById("merchSheet"))mcPaint();});}
+ if(mcVis().some(x=>x.mode==="reserve")&&F&&F.joined&&F.joined())F.ready().then(()=>{if(mcView==="list"&&document.getElementById("merchSheet"))mcPaint();}).catch(()=>{});
+ setTimeout(()=>{const x=document.getElementById("mcX");if(x)x.focus({preventScroll:true});merchFit();},0);}
+/* the History button: rendered only if MERCH has any valid item at all; shown only when an item is visible for the current local */
+function merchBtnHtml(){return merchItems(MERCH).length?'<div class="musw mcw" id="mcWrap" hidden><button type="button" id="merchBtn" class="musb" aria-label="KING of the DOCKS merch: t-shirts and magnets"><span>'+MERCH_FULL+'</span></button></div>':"";}
+function merchSync(){const w=document.getElementById("mcWrap");if(w)w.hidden=!merchOn(MERCH,curLocal());}
+function fitOne(a,full,short,min){const t=a.querySelector("span")||a;t.textContent=full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
+ while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()&&short){t.textContent=short;while(over()&&fs>(min||11)&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
+function merchFit(){merchSync();const a=document.getElementById("merchBtn");if(a&&a.clientWidth)fitOne(a,MERCH_FULL,MERCH_SHORT);
+ document.querySelectorAll("#merchSheet .mcres").forEach(b=>{if(b.clientWidth)fitOne(b,"Reserve – pay at hall","Reserve",12);});
+ document.querySelectorAll("#merchSheet a.mcbuy,#merchSheet .mcrow button,#merchSheet .mcr button").forEach(b=>{if(!b.clientWidth)return;b.style.fontSize="";let fs=parseFloat(getComputedStyle(b).fontSize),n=0;while(b.scrollWidth>b.clientWidth+0.5&&fs>12&&n<40){fs-=0.5;n++;b.style.fontSize=fs+"px";}});}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#merchBtn");if(b)merchOpen();});
+onWidth(()=>merchFit());window.l19MerchFit=merchFit;
 function wfFit(){const a=document.getElementById("wfBtn");if(!a||!a.clientWidth)return;const C=cuCfg(curLocal()),t=a.querySelector("span");t.textContent=C.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){t.textContent=C.short;while(over()&&fs>11&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 onWidth(()=>wfFit());window.l19WfFit=wfFit;
@@ -2447,7 +2520,7 @@ function tgpFit(){const a=document.getElementById("tgpBtn");if(!a||!a.clientWidt
 onWidth(()=>tgpFit());window.l19TgpFit=tgpFit;
 const RH_FULL="📰 The Rusty Hook — Pensioners newsletter",RH_SHORT="📰 The Rusty Hook";
 function pensSwap(){const a=document.getElementById("rhBtn");if(!a)return;const c=pensCfg(curLocal());a.parentNode.classList.toggle("hide",!c);if(!c)return;if(a.getAttribute("href")!==c.href){a.href=c.href;a.setAttribute("aria-label",c.aria);}rhFit();}
-function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML+FID_HTML+BPO_HTML);wfSwap();}
+function rhAdd(){const v=document.getElementById("v-hist");if(!v||document.getElementById("rhBtn"))return;v.insertAdjacentHTML("beforeend",'<div class="musw rhw"><a id="rhBtn" class="musb" href="https://www.ilwu19.com/rustyhook" target="_blank" rel="noopener" aria-label="The Rusty Hook, Local 19 Pensioners Club newsletter">'+RH_FULL+'</a></div>'+TGP_HTML+WF_HTML+FID_HTML+BPO_HTML+merchBtnHtml());wfSwap();}
 function rhFit(){const a=document.getElementById("rhBtn");if(!a||!a.clientWidth)return;const P=pensCfg(curLocal())||PENS_RH;a.textContent=P.full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()){a.textContent=P.short;a.style.fontSize="";fs=parseFloat(getComputedStyle(a).fontSize);n=0;while(over()&&fs>11&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
 window.l19RhFit=rhFit;
@@ -2470,7 +2543,7 @@ addEventListener("popstate",()=>{if(document.getElementById("rhv")&&!(history.st
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#rhBtn,#tgpBtn");if(!b)return;e.preventDefault();const P=pensCfg(curLocal());rhOpen(b.id==="tgpBtn"?TGP:P&&!P.rh?{url:P.href,title:P.title,ftitle:P.ftitle,music:false,btn:"rhBtn"}:null);});
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#bpoBtn");if(!b)return;e.preventDefault();rhOpen(BPO);});
 onWidth(rhBarFit);window.l19Rh={open:rhOpen,close:rhClose};onWidth(rhFit);
-setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();fidFit();bpoFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);onWidth(()=>{fitView("v-hist");fitView("v-week");fitData();fitStrays();pgFitSoon();});onWidth(()=>segFit());
+setTimeout(()=>{renderHist=(f=>function(){const r=f.apply(this,arguments);rhAdd();fitView("v-hist");rhFit();tgpFit();wfFit();fidFit();bpoFit();merchFit();return r;})(renderHist);renderWeek=(f=>function(){const r=f.apply(this,arguments);fitView("v-week");return r;})(renderWeek);},0);onWidth(()=>{fitView("v-hist");fitView("v-week");fitData();fitStrays();pgFitSoon();});onWidth(()=>segFit());
 /* v83: short one-line period range, e.g. "Oct 1 – Dec 31, 2026" */
 function rangeShort(a,b){const M3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],f=d=>M3[+d.slice(5,7)-1]+" "+(+d.slice(8,10));
  return a.slice(0,4)===b.slice(0,4)?f(a)+" – "+f(b)+", "+b.slice(0,4):f(a)+", "+a.slice(0,4)+" – "+f(b)+", "+b.slice(0,4);}
@@ -4014,6 +4087,32 @@ function chatShow(text){const t=String(text||"");if(chatThreat(t))return {text:"
  if(!s.hits.length)return {text:t,hidden:false};let o="",p=0;for(const [a,b] of s.hits){o+=t.slice(p,a)+"●".repeat(Math.max(3,b-a));p=b;}return {text:o+t.slice(p),hidden:false,masked:true};}
 /* reports: the category rides in the existing 'reason' field ("Spam: note") so the reports rules don't change */
 const CHAT_REASONS=["Harassment","Hate","Threat","Spam","Other"];
+/* v114: KING of the DOCKS merch. Every local can see Square items; "reserve" items are hall pick-up items for the listed locals only.
+   TO ADD AN ITEM: put the photo in img/merch/ and add an object to MERCH, e.g.
+     Square (pay online):  {id:"tshirt", name:"KING of the DOCKS T-shirt", price:"$25", img:"img/merch/tshirt.jpg", mode:"square", url:"https://square.link/u/XXXXXXX", note:"Sizes S–3XL"}
+     Reserve at the hall:  {id:"hoodie", name:"KING of the DOCKS Hoodie", price:"$45 – pay at the hall", img:"img/merch/hoodie.jpg", mode:"reserve", locals:["19"], sizes:["S","M","L","XL","2XL"], note:"Made by Daniel"}
+   name is required; Square items need an https url; reserve items need no url. locals (e.g. ["19"]) limits who sees the item (default: every local).
+   price, img (must be under img/merch/, else the logo is shown), sizes (up to 12, each up to 10 chars), note and id (letters/numbers/-) are optional.
+   If no item is visible for the user's local the Merch button and section stay completely hidden. */
+const MERCH=[];
+const MERCH_LOGO="img/logo-header.png",MERCH_FULL="🛍️ KING of the DOCKS Merch",MERCH_SHORT="🛍️ Merch",MERCH_MAIL="kingofthedocks.app@gmail.com",MERCH_RES_COL="merchReservations",MERCH_MAX_OPEN=5;
+function merchSlug(s){return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40).replace(/-+$/,"");}
+function merchItems(list,local){return (Array.isArray(list)?list:[]).filter(x=>{if(!x||typeof x.name!=="string"||!x.name.trim())return false;const m=x.mode==="reserve"?"reserve":"square";
+  if(m==="square"&&!(typeof x.url==="string"&&/^https:\/\/[^\s"'<>]+$/i.test(x.url.trim())))return false;
+  if(local!==undefined&&Array.isArray(x.locals)&&x.locals.length&&!x.locals.map(String).includes(String(local)))return false;return true;})
+ .map(x=>{const m=x.mode==="reserve"?"reserve":"square",name=x.name.trim().slice(0,80);return {id:(typeof x.id==="string"&&merchSlug(x.id))||merchSlug(name)||"item",mode:m,name,price:typeof x.price==="string"?x.price.trim().slice(0,30):"",
+  img:typeof x.img==="string"&&/^img\/merch\/[A-Za-z0-9._-]+$/.test(x.img.trim())?x.img.trim():MERCH_LOGO,url:m==="square"?x.url.trim():"",note:typeof x.note==="string"?x.note.trim().slice(0,120):"",
+  locals:Array.isArray(x.locals)?x.locals.map(String).filter(l=>/^\d{1,3}$/.test(l)):[],sizes:Array.isArray(x.sizes)?x.sizes.map(z=>String(z).trim().slice(0,10)).filter(Boolean).slice(0,12):[]};});}
+function merchOn(list,local){return merchItems(list===undefined?MERCH:list,local).length>0;}
+function merchHtml(list,local){const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ return merchItems(list,local).map((x,i)=>'<div class="mcit" data-mid="'+E(x.id)+'"><img src="'+E(x.img)+'" alt="'+(x.img===MERCH_LOGO?"":E(x.name))+'" loading="lazy" decoding="async"'+(x.img===MERCH_LOGO?' class="mclogo"':'')+'><div class="mctx"><div class="mcn">'+E(x.name)+'</div>'+(x.price?'<div class="mcp">'+E(x.price)+'</div>':'')+(x.note?'<div class="mut mcno">'+E(x.note)+'</div>':'')+(x.mode==="reserve"&&x.sizes.length?'<div class="mut mcno">Sizes: '+E(x.sizes.join(", "))+'</div>':'')+'</div>'+
+  (x.mode==="reserve"?'<button type="button" class="mcbuy mcres" data-res="'+E(x.id)+'" aria-label="Reserve '+E(x.name)+', pay and pick up at the hall"><span>Reserve – pay at hall</span></button>'
+  :'<a class="mcbuy" data-mi="'+i+'" href="'+E(x.url)+'" target="_blank" rel="noopener noreferrer" aria-label="Buy '+E(x.name)+(x.price?", "+E(x.price):"")+' (Square checkout, opens in your browser)">Buy</a>')+'</div>').join("");}
+/* reservation doc (keys must match the Firestore rule whitelist) */
+function merchResDoc(item,o){o=o||{};const q=Math.round(Number(o.qty));return {itemId:String(item.id).slice(0,40),item:String(item.name).slice(0,80),size:item.sizes&&item.sizes.length?(item.sizes.includes(o.size)?o.size:""):"",qty:q>=1&&q<=5?q:1,
+ note:String(o.note==null?"":o.note).replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim().slice(0,150),name:String(o.name||"").slice(0,30),uid:String(o.uid||""),room:String(o.room||""),local:String(o.local||"").replace(/\D/g,"").slice(0,3),status:"reserved"};}
+function merchResOk(d){return !!(d&&d.itemId&&d.item&&d.name&&d.uid&&d.room&&d.local&&d.qty>=1&&d.qty<=5);}
+const MERCH_STATUS={reserved:"Reserved",picked:"Picked up",cancelled:"Cancelled"};
 /* v112/v113: support contact for About (Daniel's app address since v113). A valid email shows as a 44px tap-to-email link, shrunk to fit one line. */
 function ctFit(){const a=document.getElementById("contactA");if(!a||!a.clientWidth)return;a.style.fontSize="";let fs=parseFloat(getComputedStyle(a).fontSize),n=0;while(a.scrollWidth>a.clientWidth+0.5&&fs>12&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}
 const APP_CONTACT="kingofthedocks.app@gmail.com";
@@ -4204,7 +4303,7 @@ window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")
 })();}
 
 if(typeof module!=="undefined")module.exports={cwogMigrate,PGP_KEY,PGPF_KEY,PGP_LABEL,PGP_REMIND,PGP_JOB,pgpOn,pgpSh,pgpConflict,pgpWeek,pgpClean,pgpMerge,pgpDay,NL_X,NL_KEY,nlApplies,CWOG_JOB,CWOG_HRS,CWOG_RATE,CWOG_RATE2,CWOG_PAY,cwogPayFor,isCwog,cwogSplit,l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
-if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,chatNorm,chatSlurHits,chatThreat,chatLinks,chatCheck,chatShow,chatReason,chatReasonSplit,CHAT_REASONS,CHAT_BLOCK_KEY,chatBlockClean,contactHtml,APP_CONTACT,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
+if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,chatNorm,chatSlurHits,chatThreat,chatLinks,chatCheck,chatShow,chatReason,chatReasonSplit,CHAT_REASONS,CHAT_BLOCK_KEY,chatBlockClean,contactHtml,APP_CONTACT,MERCH,merchItems,merchOn,merchHtml,merchResDoc,merchResOk,merchSlug,MERCH_STATUS,MERCH_RES_COL,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
