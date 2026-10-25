@@ -234,6 +234,7 @@ footer#ft{color:#d5e0f0}footer#ft button.link{color:#ffd23f;text-decoration:unde
 @media print{body>*:not(#ysum){display:none!important}#ysum{position:static!important;overflow:visible!important;background:#fff!important;color:#000!important;padding:0!important}#ysum .noprint{display:none!important}#ysum *{color:#000!important;border-color:#888!important;background:transparent!important}.stat{break-inside:avoid}}
 
 #upW button[aria-pressed=true],#tsz button[aria-pressed=true]{background:var(--pri);color:var(--prifg);border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:700}
+.cwb{width:100%;min-height:48px;margin-top:8px;font-size:1.0625rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:clip;padding:6px 10px}.cwb[aria-pressed="true"]{background:#00214e;color:#ffd23f;border-color:#00214e}.cwsp{white-space:nowrap}.badge.nlg{color:#00214e;border-color:#5b8fd6;font-weight:800;white-space:nowrap}.nlsw{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;margin-top:10px;padding:6px 14px;font-size:1.0625rem;font-weight:800;white-space:nowrap;overflow:hidden;text-align:left}.nlsw .nlt{flex:1 1 auto;min-width:0}.nlsw .nls{flex:0 0 auto}.nlk{flex:0 0 auto;position:relative;width:52px;height:30px;border-radius:15px;background:#9aa3ad;transition:background .15s}.nlk::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}.nlsw[aria-checked="true"] .nlk{background:#00214e}.nlsw[aria-checked="true"] .nlk::after{left:25px}.cwdn{display:flex;gap:8px}.cwdn button{flex:1 1 0;min-height:48px;font-weight:800;font-size:1.0625rem;padding:6px 8px}.cwdn button[aria-pressed="true"]{background:#00214e;color:#ffd23f;border-color:#00214e}.cwsl{margin-top:6px}.cwsl>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cwsl b{font-weight:800}.badge.cwg{color:#00214e;border-color:#00214e;font-weight:800;background:#ffd23f}/* v109 CWOG */
 .badge{display:inline-block;font-size:.875rem;font-weight:600;border:1px solid var(--bd);border-radius:8px;padding:0 8px;margin-left:4px;color:var(--mut)}
 table{width:100%;border-collapse:collapse}td{padding:4px 0}td:last-child{text-align:right;white-space:nowrap}
 .chk{display:flex;align-items:center;gap:8px}.chk{min-height:44px}.chk input{width:28px;min-height:28px}
@@ -497,6 +498,8 @@ body.gopen{overflow:hidden}
 <label for="pier">Pier</label><select id="pier"></select>
 <input id="pierC" class="hide" placeholder="Custom pier / terminal" style="margin-top:8px">
 <label for="job">Job</label><select id="job"></select>
+<button type="button" id="cwogB" class="cwb hide" aria-pressed="false">CWOG (10-hr guarantee)</button><div id="cwogH" class="hide" style="margin-top:6px"><div class="cwdn" role="group" aria-label="CWOG shift"><button type="button" data-cw="1st" aria-pressed="false">Day</button><button type="button" data-cw="2nd" aria-pressed="false">Night</button></div><div class="mut cwsl" id="cwogSl"></div><div class="mut">No work supplied: 10 hours. Pier and ship are optional. Edit if needed.</div></div>
+<div id="nlRow" class="hide"><button type="button" id="nlB" class="nlsw" role="switch" aria-checked="false"><span class="nlk" aria-hidden="true"></span><span class="nlt">Night list</span><span class="nls">Off</span></button><div class="mut" id="nlH" style="margin-top:4px">Local 52 setting. On: weekday night (2nd) shifts pay the day rate × 1.3.</div></div>
 <input id="jobC" class="hide" placeholder="Custom code / job name" style="margin-top:8px">
 <div id="upW" class="hide"><label>Up slot <span class="mut">(optional; no effect on pay/hours)</span></label>
 <div class="row"><button type="button" id="up1" data-up="first" aria-pressed="false">First up (AM)</button><button type="button" id="up2" data-up="second" aria-pressed="false">Second up (PM)</button></div></div>
@@ -669,7 +672,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v108",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v109",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -835,10 +838,32 @@ const CLERK_JOBS=[
 ["Rail planner","","Chief/Supercargo (30%)","direct","PCCCD 4.36: Planning – Rail 30% occupation code, paid at the Chief Supervisor/Supercargo/Planning skill rate (4.312)"],
 ["Vessel planner","","Chief/Supercargo (30%)","direct","PCCCD 4.33: vessel planners covered by a Supplemental Agreement get the Chief Supervisor and Supercargo skill rate"]];
 /* Seattle-list jobs that are clerk jobs: shown in the Local 52 group (not twice) when Local 52 is chosen */
+/* v109: Local 52 CWOG = 10-hour guarantee for days the company cannot supply work, paid at supervisor pay (Daniel). Straight time, no OT. Local 52 only.
+   Rate = Clerk Supervisor skill rate, PCCCD 2022-2028 sec. 4.32 ("clerks, while employed as supervisors, shall receive the Clerk Supervisor Skill Rate") and the 4.312 table by date and work-experience tier
+   (2026-27: $61.25 at 4,001+ hours). CWOG itself is not in the coastwise PCCCD (no "CWOG"/10-hour no-work guarantee there; 3.22 gives 4 hours when ordered and not turned to), so it is a local rule per Daniel: shown with "verify". */
+/* v109: Local 52 CWOG pay = Daniel's exact NIGHT figures: 8 h at $84.96 + 2 h at $95.28 = $870.24 (fixed, not from the date/tier tables; editable per entry).
+   Day and night are set independently in CWOG_PAY (day:null would fall back to the night figures, flagged "verify").
+   CWOG itself is not in the coastwise PCCCD. Matching contract class: 2026-27 Kitchen/Tower/Computer Clerk, 4,001+ hrs, no cargo penalty
+   (PCCCD 4.312-4.314, wage schedule p.140): 2nd shift $84.69 (Daniel: $84.96), 1st/2nd-shift OT $95.28; DAY = 1st shift $63.52 + OT $95.28
+   (night = 1.333333 x day per 4.313; OT is 1.5 x day on both shifts per 4.314). Shipped per Daniel instead: day = night / 1.3. */
+const NL_X=1.3;/* Daniel: Local 52 night list = day rate x 1.3 on weekday nights (PCCCD 4.152 says 2nd shift = 1.333333 x; no "night list" in the coastwise PCCCD) */
+/* night figures are authoritative (Daniel, from a real paycheck); day is derived (night / 1.3) and shown as "verify" */
+const CWOG_PAY={night:{r:84.96,o:95.28},day:{r:Math.round(84.96/NL_X*100)/100,o:Math.round(95.28/NL_X*100)/100}};/* day = night / 1.3 (Daniel): 65.3538 -> 65.35, 73.2923 -> 73.29 */
+function cwogNight(s){return s==="2nd"||s==="3rd";}
+function cwogPayFor(s){const n=cwogNight(s);return{...((n?CWOG_PAY.night:CWOG_PAY.day)||CWOG_PAY.night),night:n,set:n||!!CWOG_PAY.day};}
+const CWOG_RATE=CWOG_PAY.night.r,CWOG_RATE2=CWOG_PAY.night.o;
+const CWOG_JOB="CWOG (10-hr guarantee)",CWOG_HRS=10,CWOG_BASE_H=8,CWOG_JOBS=[[CWOG_JOB,"","Clerk Supervisor","user","Local 52 CWOG: 10-hour guarantee for days the company cannot supply work (Daniel; local rule, not in the coastwise PCCCD). Pay per Daniel: night 8 h at $84.96 + 2 h at $95.28 = $870.24; day = night / 1.3: 8 h at $65.35 + 2 h at $73.29 = $669.38."]];
+function isCwog(e){return !!e&&(typeof e==="string"?e:e.job)===CWOG_JOB;}
+/* v109: Local 52 "Night list" (Daniel): when ON, weekday (Mon-Fri, non-holiday) 2nd-shift (night) entries get straight time = 1st-shift day rate x 1.3.
+   Weekend/holiday nights keep the existing all-OT logic (PCCCD 4.152). 3rd shift keeps its contract rate. Stored in l19.nightList (in backups). */
+const NL_KEY="l19.nightList";function nightListOn(){try{return localStorage.getItem(NL_KEY)==="1";}catch(e){return false;}}
+function nlApplies(o){return !!o&&o.local==="52"&&o.on&&o.shift==="2nd"&&!isCwog(o.job)&&!isWknd(o.date)&&!isHol(o.date);}
+function cwogRates(e){const d=cwogPayFor(e.shift),r=e.rate==null||e.rate===""?d.r:num(e.rate),o=e.otRate==null||e.otRate===""?d.o:num(e.otRate),h=num(e.hours),a=Math.min(h,CWOG_BASE_H),b=Math.max(0,h-CWOG_BASE_H);return{r,o,a,b,pay:Math.round((a*r+b*o)*100)/100};}
+function cwogSplit(e){const c=cwogRates(e),f=x=>"$"+x.toFixed(2);return (cwogNight(e.shift)?"Night ":"Day ")+r2(c.a)+" × "+f(c.r)+(c.b?" + "+r2(c.b)+" × "+f(c.o):"");}
 const CLERK_SEATTLE=["Checker","Supervisor","Chief","Supercargo","Yard planner","EC (Exception clerk)"];
 /* v74: Local 98. WBF Agreement 2022-2028 wage schedule pp.69-70 (Walking Boss/Foreman, also CFS Foreman p.81): one rate, no experience tiers. */
 const WBF_JOBS=[["Walking boss / Foreman","","Foreman","direct","Pacific Coast Walking Bosses and Foremen's Agreement 2022-2028 wage schedule (134% of longshore Skill I). 30% Men = walking bosses/foremen (WBF index, 2.3)"]];
-function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||TAC_JOBS.find(j=>j[0]===v)||CA_JOBS.find(j=>j[0]===v)||PCL_JOBS.find(j=>j[0]===v)||CLERK_JOBS.find(j=>j[0]===v)||WBF_JOBS.find(j=>j[0]===v)||null;}
+function seattleJob(v){return SEATTLE_JOBS.find(j=>j[0]===v)||TAC_JOBS.find(j=>j[0]===v)||CA_JOBS.find(j=>j[0]===v)||PCL_JOBS.find(j=>j[0]===v)||CLERK_JOBS.find(j=>j[0]===v)||WBF_JOBS.find(j=>j[0]===v)||CWOG_JOBS.find(j=>j[0]===v)||null;}
 const CLASS_SHORT={"Basic":"Basic","Clerk Supervisor":"Clerk Supervisor","Kitchen/Tower/Computer Clerk":"Kitchen/Tower/Computer","Chief/Supercargo (30%)":"Chief/Supercargo 30%"};
 /* v74: job picker groups for a local: [label, [[value,text],...]] in order; ["__c"] = the Custom… option. Every local keeps every job (so editing an old shift never loses its job); the local's own group comes first. */
 /* v76: outport job lists. Auto ships: Portland T4/T6 (Port of Portland terminal pages) and Grays Harbor T4 (Port of Grays Harbor / Daily World 2024:
@@ -863,7 +888,7 @@ function localJobGroups(n){n=localId(n);
  const sea=only=>SEATTLE_JOBS.filter(j=>!only||!isClerk(j)).map(([v,c])=>[v,v+(c?" · "+c:"")]);
  const pcl=["Contract 4.32 jobs (no PMA code)",PCL_JOBS.map(([v,c,k])=>[v,v+" · "+k])];
  const pma=skipF=>["Other (PMA list)",Object.keys(JOBS).filter(g=>!(skipF&&g==="Foreman")).flatMap(g=>JOBS[g].map(([c,nm])=>[c,c+" "+nm+" ("+g+")"]))];
- if(n==="52")return[["Local 52 clerk jobs (PCCCD)",[...CLERK_JOBS,...SEATTLE_JOBS.filter(isClerk)].map(([v,c,k])=>[v,v+" · "+(CLASS_SHORT[k]||k)])],["Seattle longshore jobs",sea(true)],pcl,["__c"],pma(false),tac];
+ if(n==="52")return[["Local 52 clerk jobs (PCCCD)",[[CWOG_JOB,CWOG_JOB+" · day/night pay"],...CLERK_JOBS,...SEATTLE_JOBS.filter(isClerk)].map(([v,c,k])=>[v,v+" · "+(CLASS_SHORT[k]||k)])],["Seattle longshore jobs",sea(true)],pcl,["__c"],pma(false),tac];
  if(n==="98")return[["Local 98 walking bosses / foremen (WBF)",[...WBF_JOBS.map(([v])=>[v,v]),...JOBS.Foreman.map(([c,nm])=>[c,c+" "+nm])]],["__c"],["Longshore jobs",sea(false)],pcl,pma(true),tac];
  return[[n==="23"?"Longshore jobs":"Seattle jobs",[...(n==="23"?TAC_JOBS.map(([v,c])=>[v,v+" · "+c]):[]),...sea(false)]],pcl,["__c"],pma(false),...(n==="23"?[]:[tac])];}
 function jobSelectHtml(n){const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -1001,13 +1026,13 @@ function swNight(shift){return shift==="2nd"||shift==="3rd";}
 function holNoWork(h){return !!h&&/^No work/.test(h.sched);}
 /* pay: a shift SAVED (v75+) on a holiday carries e.hol. Unless OT was typed by hand, every paid hour is at the entry's OT rate
    (1st/2nd: 1.5x basic; 3rd: the 3rd-shift OT rate, 1.8x basic, 4.153). Older saved shifts keep their stored pay. */
-function holAuto(e){if(!e||!e.hol||isWknd(e))return false;const m=e.otManual!=null?e.otManual:num(e.ot)>0;return !m;}
+function holAuto(e){if(!e||!e.hol||isWknd(e)||isCwog(e))return false;const m=e.otManual!=null?e.otManual:num(e.ot)>0;return !m;}
 const WKND_NOTE="Weekend: all hours OT; 3rd shift paid 8h at 1.5x";function wkndNote(sh){return sh==="3rd"?WKND_NOTE:"Weekend: all hours OT";}
 /* v45: weekend 3rd shift = 1.5x BASE (1st-shift ST) = 3rd ST rate x 1.5/1.6, min 8 paid hrs on Basic; 1st/2nd weekend unchanged (OT rate) */
 function wkndRate(e,r,o){return e.shift==="3rd"?r*1.5/1.6:o;}
 function autoOT(hours,shift,date){if(isWknd(date)||isHol(date))return Math.round(num(hours)*100)/100;return Math.round(Math.max(0,num(hours)-OT_THRESH(shift))*100)/100;}
 /* typed/stored override wins; legacy entries (no flag) with OT>0 are treated as manual */
-function effOT(e){if(isWknd(e)||holAuto(e))return num(e.hours);const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
+function effOT(e){if(isCwog(e))return 0;if(isWknd(e)||holAuto(e))return num(e.hours);const m=e.otManual!=null?e.otManual:num(e.ot)>0;return m?num(e.ot):autoOT(e.hours,e.shift);}
 function calcHours(s,e){const a=toMin(s),b=toMin(e);if(a==null||b==null)return null;let d=b-a;if(d<=0)d+=1440;return Math.round(d/60*100)/100;}
 function parseDate(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
 function fmtDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -1019,6 +1044,7 @@ function guarMin(e){return e&&jobClass(e.job)==="Basic"?(e.shift==="3rd"&&isWknd
 function paidHours(e){return Math.max(num(e.hours),guarMin(e));}
 function guarNote(e){const m=guarMin(e);return m&&num(e.hours)<m?"guarantee: paid "+m+"h":"";}
 function entryPay(e){const r=e.rate==null||e.rate===""?null:num(e.rate);if(r==null)return null;
+ if(isCwog(e))return cwogRates(e).pay;/* v109: CWOG = first 8 h at the CWOG rate + hours past 8 at the second CWOG rate (Daniel: 8 x $84.96 + 2 x $95.28); weekend/holiday rules do not apply */
  const o=e.otRate==null||e.otRate===""?r*OT_RATIO(e.shift):num(e.otRate);if(isWknd(e))return Math.round(paidHours(e)*wkndRate(e,r,o)*100)/100;if(holAuto(e))return Math.round(paidHours(e)*o*100)/100;const ot=effOT(e),reg=Math.max(0,paidHours(e)-ot);
  return Math.round((reg*r+ot*o)*100)/100;}
 /* hours = total paid hours incl. OT; OT is the portion of hours that is overtime */
@@ -1080,7 +1106,7 @@ function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekE
  const L=["KING of the DOCKS – Hours, week of "+ws+" to "+we,""];
  if(!list.length)L.push("No shifts logged.");
  for(const e of list){const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][parseDate(e.date).getDay()];
-  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(isWknd(e))s+=" [Weekend: all hours OT"+(e.shift==="3rd"?"; 3rd shift paid 8h at 1.5x":"")+"]";else if(holAuto(e))s+=" [Holiday: "+e.hol+", all hours OT]";else if(isHol(e))s+=" [Holiday: "+holLabel(e.date)+"]";if(isStopWork(e.date,curLocal())&&swNight(e.shift))s+=" [Stop work meeting night]";
+  let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(e.nl)s+=" [Night list ×1.3]";if(isCwog(e))s+=" [CWOG: 10-hr guarantee, no work supplied; "+cwogSplit(e)+"]";else if(isWknd(e))s+=" [Weekend: all hours OT"+(e.shift==="3rd"?"; 3rd shift paid 8h at 1.5x":"")+"]";else if(holAuto(e))s+=" [Holiday: "+e.hol+", all hours OT]";else if(isHol(e))s+=" [Holiday: "+holLabel(e.date)+"]";if(isStopWork(e.date,curLocal())&&swNight(e.shift))s+=" [Stop work meeting night]";
   s+=" – "+[e.pier,e.employer,e.vessel,jobLabel(e.job)].filter(Boolean).join(", ");
   if(num(e.travel)>0||num(e.miles)>0)s+=" ["+[num(e.travel)>0?"travel "+r2(num(e.travel))+"h":"",num(e.miles)>0?r2(num(e.miles))+" mi":""].filter(Boolean).join(", ")+"]";
   if(upApplies(e.job)&&upLabel(e.upSlot))s+=" ["+upLabel(e.upSlot)+"]";
@@ -1106,7 +1132,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v108",CACHE_VERSION="l19hours-v108"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v109",CACHE_VERSION="l19hours-v109"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -2026,16 +2052,38 @@ const tierKey="l19hours.tier";let rateDirty=false;
 $("tier").innerHTML=TIERS.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 function curTier(){let m="manual",t="",tot=0;try{m=localStorage.getItem("l19.tierMode")==="auto"?"auto":"manual";t=localStorage.getItem(tierKey)||"";const st=num(localStorage.getItem("l19.startHrs"));tot=st+entries.reduce((x,e)=>x+num(e.hours),0);}catch(e){}return effectiveTier(m,t,tot,"4001+");}
 $("tier").value=curTier();
-function applyDefaults(){if(rateDirty)return;const j=$("job").value,dt=$("date").value,P=ratePeriod(dt);const d=j&&j!=="__c"?defaultRates(j,$("shift").value,$("tier").value,dt):null;
+function applyDefaults(){if(rateDirty)return;const j=$("job").value,dt=$("date").value,P=ratePeriod(dt);let d=j&&j!=="__c"?defaultRates(j,$("shift").value,$("tier").value,dt):null;
+ let nl=false;if(d&&d.rate!=null&&nlApplies({local:curLocal(),on:nightListOn(),shift:$("shift").value,job:j,date:dt})){const dd=defaultRates(j,"1st",$("tier").value,dt);if(dd&&dd.rate!=null){d={...d,rate:Math.round(dd.rate*NL_X*100)/100};nl=dd.rate;}}
  $("rate").value=d&&d.rate!=null?d.rate.toFixed(2):"";$("otrate").value=d&&d.otRate!=null?d.otRate.toFixed(2):"";
  {const g=jobClass(j);$("rhint").textContent=d?"Contract "+P.label+" (eff. "+P.id+") for this date; edit to override.":(j&&g&&!P?"Date is before the 2022-2028 contract – enter your rate.":g&&P&&RATES[g]&&!P.t[g]?"No "+P.label+" "+g+" rate in the app – enter yours.":"Enter rate to estimate pay.");}
  const sj=seattleJob(j);if(sj&&sj[3]==="inferred"&&d)$("rhint").textContent+=" Code/class mapping for this job is inferred ("+sj[1]+", "+sj[2]+") – verify.";
+ if(nl)$("rhint").textContent+=" Night list: day rate $"+nl.toFixed(2)+" × 1.3 = $"+d.rate.toFixed(2)+" (weekday night).";
+ if(isCwog(j)){const c=cwogPayFor($("shift").value),m=x=>"$"+x.toFixed(2);$("rate").value=c.r.toFixed(2);$("otrate").value=c.o.toFixed(2);$("rhint").textContent=(c.set?(c.night?"CWOG night rate (Local 52, from a real paycheck): ":"CWOG day rate (Local 52) = night ÷ 1.3 (derived – verify): "):"CWOG day rate not set yet – using the night rate (verify): ")+"8 × "+m(c.r)+" + 2 × "+m(c.o)+" = "+m(8*c.r+2*c.o)+". Second rate is for hours past 8. Edit to override.";}
  if(d&&jobClass(j)==="Foreman")$("rhint").textContent+=" Walking Boss/Foreman rate (WBF Agreement). Extended time / the 8 ST + 2 OT guarantee (WBF 2.3, 3.11) are not added automatically: put paid OT hours in OT.";
  if(j==="0054")$("rhint").textContent+=" Contract 4.32 note: Hatch Boss Tender applies to Tacoma, Anacortes and Port Angeles only.";}
 $("rate").oninput=$("otrate").oninput=()=>{rateDirty=true;};
 $("tier").onchange=()=>{try{if(localStorage.getItem("l19.tierMode")!=="auto")localStorage.setItem(tierKey,$("tier").value);}catch(e){}applyDefaults();};
 $("shift").onchange=applyDefaults;
-$("job").onchange=()=>{$("jobC").classList.toggle("hide",$("job").value!=="__c");applyDefaults();pierHrs();};
+/* v109: CWOG (Local 52): button + job option; choosing it fills 10 h, 1st-shift supervisor straight-time rate, no OT; pier optional ("No pier") */
+function cwogPier(on){const p=$("pier");let o=p.querySelector('option[data-cwog]');if(on&&!o){o=document.createElement("option");o.value="";o.dataset.cwog="1";o.textContent="No pier (no work supplied)";p.insertBefore(o,p.firstChild);}if(!on&&o){const was=p.value==="";o.remove();if(was)p.value=PIERS[0];}}
+function nlUI(){const on=nightListOn(),r=$("nlRow"),b=$("nlB");if(!r)return;r.classList.toggle("hide",curLocal()!=="52");b.setAttribute("aria-checked",String(on));b.querySelector(".nls").textContent=on?"On":"Off";}
+$("nlB").onclick=()=>{try{localStorage.setItem(NL_KEY,nightListOn()?"0":"1");}catch(e){}nlUI();if(!editId){rateDirty=false;applyDefaults();}};setTimeout(nlUI,0);
+function cwogDN(){const s=$("shift").value,n=cwogNight(s),m=x=>"$"+x.toFixed(2);document.querySelectorAll("#cwogH [data-cw]").forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.cw==="2nd")===n)));
+ $("cwogSl").innerHTML=[["Day","1st"],["Night","2nd"]].map(([l,sh])=>{const c=cwogPayFor(sh);return `<div data-short="${l}: 8 × ${m(c.r)} + 2 × ${m(c.o)}"><b>${l}:</b> 8 × ${m(c.r)} + 2 × ${m(c.o)} = ${m(8*c.r+2*c.o)}</div>`;}).join("");cwogSlFit();}
+/* keep each Day/Night split on one line: shrink to 13px, then drop the "= total" part */
+function cwogSlFit(){document.querySelectorAll("#cwogSl>div").forEach(d=>{if(!d.clientWidth)return;d.style.fontSize="";const ov=()=>d.scrollWidth>d.clientWidth+0.5;let fs=parseFloat(getComputedStyle(d).fontSize),n=0;while(ov()&&fs>13&&n<40){fs-=0.5;n++;d.style.fontSize=fs+"px";}
+ if(ov()){const s=d.dataset.short,l=s.split(":")[0];d.innerHTML="<b>"+l+":</b>"+s.slice(l.length+1);d.style.fontSize="";fs=parseFloat(getComputedStyle(d).fontSize);n=0;while(ov()&&fs>13&&n<40){fs-=0.5;n++;d.style.fontSize=fs+"px";}}});}
+setTimeout(()=>onWidth(()=>{if(isCwog($("job").value))cwogDN();}),0);
+document.querySelectorAll("#cwogH [data-cw]").forEach(b=>b.onclick=()=>{$("shift").value=b.dataset.cw;rateDirty=false;applyDefaults();otHint();cwogDN();});
+$("shift").addEventListener("change",()=>{if(isCwog($("job").value))cwogDN();});
+function cwogUI(fill){nlUI();const on=isCwog($("job").value),b=$("cwogB"),show52=curLocal()==="52";if(b){b.classList.toggle("hide",!show52&&!on);b.setAttribute("aria-pressed",String(on));}cwogFit();$("cwogH").classList.toggle("hide",!on);cwogPier(on);
+ if(on&&fill){$("shift").value="2nd";$("hrs").value=CWOG_HRS;hrsAuto=null;$("ot").value="";$("pier").value="";$("pierC").classList.add("hide");rateDirty=false;applyDefaults();}if(on)cwogDN();otHint();}
+$("job").onchange=()=>{$("jobC").classList.toggle("hide",$("job").value!=="__c");const c=isCwog($("job").value);applyDefaults();if(!c)pierHrs();cwogUI(c);};
+/* fit the CWOG button on one line: shrink the text (not under 14px), then the short label; the full name stays in aria-label */
+const CWOG_SHORT="CWOG · 10-hr";function cwogFit(){const b=$("cwogB");if(!b||!b.clientWidth)return;b.textContent=CWOG_JOB;b.style.fontSize="";b.setAttribute("aria-label",CWOG_JOB);const over=()=>b.scrollWidth>b.clientWidth+0.5;let fs=parseFloat(getComputedStyle(b).fontSize),n=0;
+ while(over()&&fs>14&&n<40){fs-=0.5;n++;b.style.fontSize=fs+"px";}if(over()){b.textContent=CWOG_SHORT;b.style.fontSize="";fs=parseFloat(getComputedStyle(b).fontSize);while(over()&&fs>13&&n<80){fs-=0.5;n++;b.style.fontSize=fs+"px";}}}
+setTimeout(()=>{onWidth(cwogFit);cwogFit();},0);setTimeout(()=>new MutationObserver(()=>{cwogFit();if(isCwog($("job").value))cwogDN();}).observe(document.documentElement,{attributes:true,attributeFilter:["data-ts"]}),0);
+$("cwogB").onclick=()=>{if(isCwog($("job").value)){$("job").value="";}else{$("job").value=CWOG_JOB;}$("job").dispatchEvent(new Event("change"));};
 let upSlot="";
 function setUp(v){upSlot=v||"";$("up1").setAttribute("aria-pressed",upSlot==="first");$("up2").setAttribute("aria-pressed",upSlot==="second");}
 function upShow(){const a=upApplies($("job").value);$("upW").classList.toggle("hide",!a);if(!a)setUp("");}
@@ -2044,7 +2092,7 @@ $("job").addEventListener("change",upShow);
 function setX(o){$("extras").classList.toggle("hide",!o);$("xt").setAttribute("aria-expanded",o);$("xt").textContent="More details "+(o?"▴":"▾");}
 $("xt").onclick=()=>setX($("extras").classList.contains("hide"));
 function otHint(){const h=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);const a=h==null?0:autoOT(h,$("shift").value,$("date").value);
- guarHint();holUI();if(isWknd($("date").value)){$("othint").textContent=($("shift").value==="3rd"?WKND_NOTE+" (1.5x base for Basic min 8h; no straight time).":"Weekend: all hours OT (every paid hour at the OT rate; no straight time).");return;}
+ guarHint();holUI();if(isCwog($("job").value)){$("othint").textContent="CWOG: 8 h at the rate + 2 h at the second rate (Day or Night above); weekend/holiday OT does not apply.";return;}if(isWknd($("date").value)){$("othint").textContent=($("shift").value==="3rd"?WKND_NOTE+" (1.5x base for Basic min 8h; no straight time).":"Weekend: all hours OT (every paid hour at the OT rate; no straight time).");return;}
  if(isHol($("date").value)){$("othint").textContent=$("ot").value===""?"Contract holiday: all hours OT (every paid hour at the OT rate"+($("shift").value==="3rd"?", 3rd shift OT = 1.8x basic":"")+"). Type a value to override.":"Manual override on a holiday (auto would be all "+a+"h OT). Clear to return to auto.";return;}
  $("othint").textContent=$("ot").value===""?"Auto OT: "+a+"h (over "+OT_THRESH($("shift").value)+"h on "+$("shift").value+"). Type a value to override.":"Manual override (auto would be "+a+"h). Clear to return to auto.";}
 /* v75: holiday badge under the Add-page date */
@@ -2068,17 +2116,17 @@ function resetForm(){$("f").reset();editId=null;setToday();$("ot").value="";otHi
  $("ftitle").textContent="Add shift";$("save").textContent="Save shift";$("cancel").classList.add("hide");
  {const dp=LS(DPIER,""),dj=LS(DJOB,"");if(dp&&PIERS.includes(dp))$("pier").value=dp;if(dj&&[...$("job").options].some(o=>o.value===dj))$("job").value=dj;upShow();}
  $("tier").value=curTier();
- rateDirty=false;applyDefaults();hrsAuto=null;pierHrs();refreshQuick();}
+ rateDirty=false;applyDefaults();hrsAuto=null;pierHrs();refreshQuick();if(typeof cwogUI==="function")cwogUI(false);}
 $("cancel").onclick=()=>{resetForm();show(retTo,"back");retTo="week";};
 $("f").onsubmit=ev=>{ev.preventDefault();
  const pier=$("pier").value==="__c"?$("pierC").value.trim():$("pier").value;
  const job=$("job").value==="__c"?$("jobC").value.trim():$("job").value;
  let hours=$("hrs").value===""?calcHours($("st").value,$("en").value):num($("hrs").value);
  if(hours==null||hours<=0){alert("Enter start/end times or hours.");return;}
- const otManual=$("ot").value.trim()!=="";const ot=otManual?num($("ot").value):autoOT(hours,$("shift").value,$("date").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
+ const cw=isCwog(job),otManual=cw?false:$("ot").value.trim()!=="";const ot=cw?0:otManual?num($("ot").value):autoOT(hours,$("shift").value,$("date").value);if(ot>hours){alert("OT hours can't exceed total hours.");return;}
  const e={id:editId||uid(),date:$("date").value,pier,employer:$("emp").value.trim(),vessel:$("ves").value.trim(),job,shift:$("shift").value,upSlot:upApplies(job)?upSlot:"",
   start:$("st").value,end:$("en").value,hours,ot,otManual,rate:$("rate").value,otRate:$("otrate").value,travel:$("trv").value,miles:$("mi").value,note:$("note").value.trim()};
- {const hl=holLabel(e.date);if(hl)e.hol=hl;}
+ {const hl=holLabel(e.date);if(hl)e.hol=hl;}if(nlApplies({local:curLocal(),on:nightListOn(),shift:e.shift,job:e.job,date:e.date}))e.nl=1;
  {const old=editId?entries.find(x=>x.id===editId):null;
   if(num(e.travel)>0)e.travelRate=old&&hasV(old.travelRate)?old.travelRate:r4(travelRateFor($("tier").value,e.date));
   if(num(e.miles)>0)e.mileRate=old&&hasV(old.mileRate)?old.mileRate:r4(CFG.mileRate);}
@@ -2087,10 +2135,10 @@ $("f").onsubmit=ev=>{ev.preventDefault();
  wk=weekStart(e.date);selDate=null;refreshEmp();resetForm();if(retTo==="hist"){ha=e.date;}show(retTo,"back");retTo="week";};
 function editEntry(id,from){const e=entries.find(x=>x.id===id);if(!e)return;retTo=from||"week";const by=from&&curV===from?window.pageYOffset:null;show("add");backY=by;editId=id;$("qpW").classList.add("hide");if($("cbW"))$("cbW").classList.add("hide");
  $("date").value=e.date;
- if(PIERS.includes(e.pier)||!e.pier){$("pier").value=e.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=e.pier;$("pierC").classList.remove("hide");}
+ cwogPier(isCwog(e));if(PIERS.includes(e.pier)||!e.pier){$("pier").value=isCwog(e)&&!e.pier?"":e.pier||PIERS[0];$("pierC").classList.add("hide");}else{$("pier").value="__c";$("pierC").value=e.pier;$("pierC").classList.remove("hide");}
  const known=[...$("job").options].some(o=>o.value===e.job&&e.job);
  if(known||!e.job){$("job").value=e.job||"";$("jobC").classList.add("hide");}else{$("job").value="__c";$("jobC").value=e.job;$("jobC").classList.remove("hide");}
- setUp(e.upSlot);upShow();setUp(upApplies(e.job)?e.upSlot:"");
+ setUp(e.upSlot);upShow();setUp(upApplies(e.job)?e.upSlot:"");cwogUI(false);
  $("emp").value=e.employer||"";$("ves").value=e.vessel||"";$("shift").value=e.shift;$("st").value=e.start||"";$("en").value=e.end||"";
  rateDirty=true;$("hrs").value=e.hours;$("ot").value=(e.otManual!=null?e.otManual:num(e.ot)>0)?e.ot:"";$("rate").value=e.rate||"";$("otrate").value=e.otRate||"";$("trv").value=e.travel||"";$("mi").value=e.miles||"";$("note").value=e.note||"";
  tmHint();setX(!!(e.travel||e.miles||e.note||e.employer||e.vessel||e.start||e.end||(e.otManual!=null?e.otManual:num(e.ot)>0)));otHint();
@@ -2101,7 +2149,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${hasPay(t)?money(payTotal(t)).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">${[t.travel?"Travel "+r2(t.travel)+"h"+(!hidePay&&t.travelPay?" · "+money(t.travelPay):""):"",t.miles?r2(t.miles)+" mi"+(!hidePay&&t.milePay?" · "+money(t.milePay)+" reimbursement (not wages)":""):""].filter(Boolean).join(" · ")}</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
  ${weekHolHtml(wk)}${weekSwHtml(wk)}<div class="row" style="margin-bottom:12px">${weekShareOn(curLocal())?'<button class="p" id="sh">Share week</button>':""}<button id="tw">This week</button></div>
- ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}${isWknd(e)?` <span class="badge">Wknd OT</span>`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}${isStopWork(e.date,curLocal())&&swNight(e.shift)?` <span class="badge sw">Stop work night</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
+ ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}${e.nl?` <span class="badge nlg">Night list ×1.3</span>`:""}${isCwog(e)?` <span class="badge cwg">CWOG</span> <span class="cwsp">${esc(cwogSplit(e))}</span>`:isWknd(e)?` <span class="badge">Wknd OT</span>`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}${isStopWork(e.date,curLocal())&&swNight(e.shift)?` <span class="badge sw">Stop work night</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
  $("v-week").insertAdjacentHTML("beforeend",upHolHtml(todayS()));
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
@@ -2146,7 +2194,7 @@ function upHolHtml(today){const l=upcomingHolidays(today,4),sw=nextStopWork(toda
 function monthHolHtml(m){const y=m.slice(0,4),l=holidaysInYear(y).filter(h=>h.date.slice(0,7)===m||h.observed.slice(0,7)===m),sw=SW_LOCALS.includes(curLocal())?firstThursday(+y,+m.slice(5,7)):"";
  return (sw?`<div class="mut" style="margin-top:10px"><b>◆ ${SW_LABEL}:</b> ${esc(shDate(sw))} (Local 19 stop‑work meeting)</div>`:"")+(l.length?`<div class="mut" style="margin-top:10px"><b>★ Contract holidays:</b> ${l.map(h=>esc(shDate(h.date))+" "+esc(h.name)+(h.observed!==h.date?" (obs. "+esc(shDate(h.observed))+")":"")).join("; ")}</div>`:"");}
 function entRow(e){const p=hidePay?null:entryPay(e),up=upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:"";
- return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${esc([e.pier,e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}</div>${trvLine(e)}</button>`;}
+ return `<button type="button" class="he" data-h="${esc(e.id)}"><div class="l1"><span>${esc(jobLabel(e.job)||"(no job)")}</span><span>${r2(num(e.hours))}h${p!=null?" · "+money(p):""}</span></div><div class="l2">${e.nl?`<span class="badge nlg">Night list ×1.3</span> `:""}${isCwog(e)?`<span class="badge cwg">CWOG</span> <span class="cwsp">${esc(cwogSplit(e))}</span>${e.pier?" · ":""}`:""}${esc([e.pier,isCwog(e)?"":e.shift+" shift"].filter(Boolean).join(" · "))}${up}${effOT(e)?` · OT ${r2(effOT(e))}`:""}${guarNote(e)?` · ${guarNote(e)}`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}</div>${trvLine(e)}</button>`;}
 function trvLine(e){const th=num(e.travel),mi=num(e.miles);if(!(th>0||mi>0))return "";const tp=travelPay(e),mp=mileagePay(e);
  return `<div class="l2">${[th>0?"Travel "+r2(th)+"h"+(!hidePay&&tp!=null?" · "+money(tp):""):"",mi>0?r2(mi)+" mi"+(!hidePay&&mp!=null?" · "+money(mp)+" reimb.":""):""].filter(Boolean).join(" · ")}</div>`;}
 function entPayLines(e){const w=entryPay(e),tp=travelPay(e),mp=mileagePay(e),th=num(e.travel),mi=num(e.miles);if(w==null&&!(th>0)&&!(mi>0))return "";
@@ -2310,7 +2358,7 @@ window.l19HdrFit=hdrFit;onWidth(hdrFit);setTimeout(()=>{hdrFit();new MutationObs
 let musToastT=0;function musSkip(){const a=musEl();if(!a)return;const s=musNext();a.loop=false;if(a.getAttribute("src")!==s.src)a.src=s.src;try{a.currentTime=0;}catch(e){}/* v108: on July 5 skip restarts Bloody Thursday Sirens (the only song that day) */
  if(musOn())a.play().then(()=>{musStarted=true;},()=>{});const t=document.getElementById("musToast");if(t){const hb=document.getElementById("hdr");if(hb&&hb.offsetHeight){const y=hb.getBoundingClientRect().bottom;t.style.top=y>0?Math.round(y+8)+"px":"";}/* v105: song toast just under the (now taller) header, or the CSS default when it is scrolled away */t.textContent="♪ "+musL[musI].title;t.classList.add("on");clearTimeout(musToastT);musToastT=setTimeout(()=>t.classList.remove("on"),2000);}}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hdSkip"))musSkip();});
-setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()=>musI,list:()=>musL,isBloodyThursday,musList};onWidth(()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data"){musFit(1);fitData();}else{fitBox("banners");if(curV==="ships"||curV==="chat")fitStrays();if(curV==="pegs")pgFitSoon();}if(curV!=="pegs"&&typeof pgFo!=="undefined"&&pgFo)pgFocusOff(false);return r;})(show);
+setTimeout(musUI,0);window.l19Music={PLAYLIST,musOn,el:musEl,skip:musSkip,idx:()=>musI,list:()=>musL,isBloodyThursday,musList};onWidth(()=>musFit(1));setTimeout(()=>{show=(f=>function(){const r=f.apply(this,arguments);if(curV==="add"&&typeof cwogFit==="function")cwogFit();if(curV==="data"){musFit(1);fitData();}else{fitBox("banners");if(curV==="ships"||curV==="chat")fitStrays();if(curV==="pegs")pgFitSoon();}if(curV!=="pegs"&&typeof pgFo!=="undefined"&&pgFo)pgFocusOff(false);return r;})(show);
  pgRender=(f=>function(){const r=f.apply(this,arguments);if(pgFo)pgFocusTitle();pgFitSoon();return r;})(pgRender);pgGlRender=(f=>function(){const r=f.apply(this,arguments);pgFitSoon();return r;})(pgGlRender);eqRender=(f=>function(){const r=f.apply(this,arguments);pgFitSoon();return r;})(eqRender);},0);/* v88: The Rusty Hook (Local 19 Pensioners Club newsletter) link at the bottom of History; one line: shrink, then short label */
 /* v90: Waterfront Federal Credit Union (the longshore credit union) link, stacked under The Rusty Hook; opens in a new tab (never framed) */
 /* v96: California locals get the ILWU Credit Union instead (serves ILWU members in California; logo = ilwucu.org header logo img/ilwu_logo.svg, rendered to PNG) */
@@ -2779,7 +2827,7 @@ function localSet(n){n=localId(n);const was=curLocal();try{localStorage.setItem(
  else{const dp=LS(DPIER,"");$("pier").value=PIERS.includes(dp)?dp:PIERS[0];$("pierC").classList.add("hide");}
  $("job").innerHTML=jobSelectHtml(n);$("job").value=jv;
  $("dpier").innerHTML='<option value="">— none —</option>'+pierOptsHtml(curLocal());$("djob").innerHTML=jobOpts().replace("— select job —","— none —");
- tierUI();if(!editId){rateDirty=false;applyDefaults();}if(typeof pierHrs==="function")pierHrs();
+ tierUI();if(!editId){rateDirty=false;applyDefaults();}if(typeof pierHrs==="function")pierHrs();if(typeof cwogUI==="function")cwogUI(false);
  if(n!==was&&$("ndP")&&$("ndP").value===LOCALS[was].need&&!(typeof ndEdit!=="undefined"&&ndEdit)){$("ndP").value=LOCALS[n].need;try{renderNdShips();}catch(e){}}
  locRender();try{renderShips();}catch(e){}if(n!==was&&curV==="week")renderWeek();
  if(n!==was&&window.l19ChatLocal)window.l19ChatLocal(n);if(window.l19Pegs)window.l19Pegs();}
@@ -4021,7 +4069,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chat
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={NL_X,NL_KEY,nlApplies,CWOG_JOB,CWOG_HRS,CWOG_RATE,CWOG_RATE2,CWOG_PAY,cwogPayFor,isCwog,cwogSplit,l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
