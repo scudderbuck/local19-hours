@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-26T11:45:05-07:00",
+ "updated": "2026-10-26T14:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -514,16 +514,6 @@
    "imo": "9398371"
   },
   {
-   "vessel": "SANTA RITA",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-03T08:00",
-   "etd": "2026-11-06T15:00",
-   "port": "Tacoma",
-   "imo": "9619098"
-  },
-  {
    "vessel": "HYUNDAI FORWARD",
    "service": "PN3",
    "terminal": "WUT",
@@ -928,6 +918,16 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
+  },
+  {
+   "vessel": "SANTA RITA",
+   "service": "WC4/TP5",
+   "terminal": "Husky",
+   "agent": "",
+   "eta": "2026-11-11T21:56",
+   "etd": "2026-11-15T04:56",
+   "port": "Tacoma",
+   "imo": "9619098"
   },
   {
    "vessel": "SUPREME ACE",
