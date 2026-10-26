@@ -1,15 +1,15 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-26T02:45:05-07:00",
+ "updated": "2026-10-26T07:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
    "status": "ok",
    "credit": "Port of Grays Harbor vessel schedule",
    "source": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpAomeTT0eQnICFNJZD2-7wMPnOBeK_3wGTR_Uf2FOr7UibmUqkliQyL2A9QuzSC_VvbBS7rVo3dpD/pub?output=csv",
-   "parsed": 15,
-   "current": 7,
+   "parsed": 11,
+   "current": 8,
    "latest": "2026-11-04"
   },
   "Olympia": {
@@ -88,14 +88,15 @@
    "imo": "9505065"
   },
   {
-   "vessel": "WESTWOOD RAINIER",
-   "service": "EB Service 1",
-   "terminal": "T18",
-   "agent": "Talon Marine Services LLC",
-   "eta": "2026-10-23T22:00",
-   "etd": "2026-10-25T02:00",
-   "port": "Seattle",
-   "imo": "9226035"
+   "vessel": "Soo Shin",
+   "service": "",
+   "terminal": "T4",
+   "agent": "",
+   "eta": "2026-10-24T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "9166704"
   },
   {
    "vessel": "YM TUTORIAL",
@@ -140,17 +141,6 @@
    "imo": "9544920"
   },
   {
-   "vessel": "Soo Shin",
-   "service": "",
-   "terminal": "T4",
-   "agent": "",
-   "eta": "2026-10-25T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false,
-   "imo": "9166704"
-  },
-  {
    "vessel": "POLARIS MILA",
    "service": "",
    "terminal": "EB1",
@@ -174,7 +164,7 @@
   },
   {
    "vessel": "COSCO VENICE",
-   "service": "CPV",
+   "service": "Ad Hoc",
    "terminal": "T18",
    "agent": "COSCO SHIPPING LINES",
    "eta": "2026-10-26T05:00",
@@ -184,7 +174,7 @@
   },
   {
    "vessel": "CMA CGM FORT JAMES",
-   "service": "CPNW",
+   "service": "Ad Hoc",
    "terminal": "T18",
    "agent": "Norton Lilly International",
    "eta": "2026-10-26T06:00",
@@ -212,6 +202,16 @@
    "port": "Tacoma",
    "vessel_type": "Ro-Ro",
    "imo": "8227525"
+  },
+  {
+   "vessel": "Chip Barge",
+   "service": "",
+   "terminal": "T3",
+   "agent": "",
+   "eta": "2026-10-27T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false
   },
   {
    "vessel": "EVER SALUTE",
