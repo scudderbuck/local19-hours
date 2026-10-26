@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-26T08:45:06-07:00",
+ "updated": "2026-10-26T11:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -699,16 +699,6 @@
    "imo": "9268538"
   },
   {
-   "vessel": "SM MUMBAI",
-   "service": "",
-   "terminal": "T18",
-   "agent": "",
-   "eta": "2026-11-06T09:00",
-   "etd": "2026-11-07T12:00",
-   "port": "Seattle",
-   "imo": "9401051"
-  },
-  {
    "vessel": "NORTH STAR",
    "service": "Tote - AK2",
    "terminal": "TOTE",
@@ -844,6 +834,16 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "8767329"
+  },
+  {
+   "vessel": "SM MUMBAI",
+   "service": "",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-09T04:30",
+   "etd": "2026-11-10T07:30",
+   "port": "Seattle",
+   "imo": "9401051"
   },
   {
    "vessel": "GLOVIS LEGEND",
@@ -1146,6 +1146,16 @@
    "etd": "2026-11-20T00:00",
    "port": "Tacoma",
    "imo": "9300453"
+  },
+  {
+   "vessel": "SM SEOUL",
+   "service": "",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-18T02:00",
+   "etd": "2026-11-19T05:00",
+   "port": "Seattle",
+   "imo": "9456953"
   },
   {
    "vessel": "MATSON KODIAK",
