@@ -1,16 +1,16 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-26T07:45:05-07:00",
+ "updated": "2026-10-26T08:45:06-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
    "status": "ok",
    "credit": "Port of Grays Harbor vessel schedule",
    "source": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpAomeTT0eQnICFNJZD2-7wMPnOBeK_3wGTR_Uf2FOr7UibmUqkliQyL2A9QuzSC_VvbBS7rVo3dpD/pub?output=csv",
-   "parsed": 11,
-   "current": 8,
-   "latest": "2026-11-04"
+   "parsed": 14,
+   "current": 11,
+   "latest": "2026-11-17"
   },
   "Olympia": {
    "status": "stale",
@@ -164,7 +164,7 @@
   },
   {
    "vessel": "COSCO VENICE",
-   "service": "Ad Hoc",
+   "service": "CPV",
    "terminal": "T18",
    "agent": "COSCO SHIPPING LINES",
    "eta": "2026-10-26T05:00",
@@ -534,17 +534,6 @@
    "imo": "9330707"
   },
   {
-   "vessel": "Glovis Legend",
-   "service": "",
-   "terminal": "T4",
-   "agent": "",
-   "eta": "2026-11-04T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false,
-   "imo": "1063281"
-  },
-  {
    "vessel": "R.J. PFEIFFER",
    "service": "Matson - AK",
    "terminal": "WST",
@@ -583,16 +572,6 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
-  },
-  {
-   "vessel": "BUDAPEST EXPRESS",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-04T15:12",
-   "etd": "2026-11-07T22:12",
-   "port": "Tacoma",
-   "imo": "9450430"
   },
   {
    "vessel": "MSC FLORA",
@@ -635,16 +614,6 @@
    "etd": "2026-11-06T04:00",
    "port": "Seattle",
    "imo": "9979022"
-  },
-  {
-   "vessel": "CORNEILLE",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-11-05T11:55",
-   "etd": "2026-11-08T17:55",
-   "port": "Tacoma",
-   "imo": "9409170"
   },
   {
    "vessel": "GLOVIS TREASURE",
@@ -771,6 +740,17 @@
    "imo": "9984431"
   },
   {
+   "vessel": "Glovis Legend",
+   "service": "",
+   "terminal": "T4",
+   "agent": "",
+   "eta": "2026-11-07T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "1063281"
+  },
+  {
    "vessel": "COSCO SANTOS",
    "service": "CPV",
    "terminal": "T18",
@@ -792,14 +772,24 @@
    "imo": "1041843"
   },
   {
-   "vessel": "LOTUS A",
-   "service": "CPNW",
-   "terminal": "T18",
+   "vessel": "CORNEILLE",
+   "service": "PN1",
+   "terminal": "WUT",
    "agent": "",
-   "eta": "2026-11-07T16:00",
-   "etd": "2026-11-09T01:00",
-   "port": "Seattle",
-   "imo": "9461465"
+   "eta": "2026-11-07T15:00",
+   "etd": "2026-11-10T04:00",
+   "port": "Tacoma",
+   "imo": "9409170"
+  },
+  {
+   "vessel": "BUDAPEST EXPRESS",
+   "service": "WC4/TP5",
+   "terminal": "Husky",
+   "agent": "",
+   "eta": "2026-11-07T18:00",
+   "etd": "2026-11-09T15:00",
+   "port": "Tacoma",
+   "imo": "9450430"
   },
   {
    "vessel": "GLOVIS TRUST",
@@ -824,6 +814,16 @@
    "imo": "9338838"
   },
   {
+   "vessel": "LOTUS A",
+   "service": "CPNW",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-08T18:00",
+   "etd": "2026-11-11T18:00",
+   "port": "Seattle",
+   "imo": "9461465"
+  },
+  {
    "vessel": "SWIFT ACE",
    "service": "",
    "terminal": "Blair",
@@ -835,14 +835,15 @@
    "imo": "9338838"
   },
   {
-   "vessel": "ONE MODERN",
-   "service": "PN3",
-   "terminal": "WUT",
+   "vessel": "New Orleans",
+   "service": "",
+   "terminal": "T1",
    "agent": "",
-   "eta": "2026-11-08T23:00",
-   "etd": "2026-11-11T17:00",
-   "port": "Tacoma",
-   "imo": "9475636"
+   "eta": "2026-11-09T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "8767329"
   },
   {
    "vessel": "GLOVIS LEGEND",
@@ -865,6 +866,27 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "1063281"
+  },
+  {
+   "vessel": "ONE MODERN",
+   "service": "PN3",
+   "terminal": "WUT",
+   "agent": "",
+   "eta": "2026-11-10T05:00",
+   "etd": "2026-11-12T03:00",
+   "port": "Tacoma",
+   "imo": "9475636"
+  },
+  {
+   "vessel": "Josco Ningzhou",
+   "service": "",
+   "terminal": "T2",
+   "agent": "",
+   "eta": "2026-11-11T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "1068853"
   },
   {
    "vessel": "EVER STRONG",
@@ -939,26 +961,6 @@
    "imo": "9978951"
   },
   {
-   "vessel": "YM MANDATE",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-11-12T23:00",
-   "etd": "2026-11-16T05:00",
-   "port": "Tacoma",
-   "imo": "9438523"
-  },
-  {
-   "vessel": "XIN ZHAN JIANG",
-   "service": "CPV",
-   "terminal": "T18",
-   "agent": "",
-   "eta": "2026-11-13T02:00",
-   "etd": "2026-11-14T07:00",
-   "port": "Seattle",
-   "imo": "9378814"
-  },
-  {
    "vessel": "OOCL OAKLAND",
    "service": "PNW1",
    "terminal": "T18",
@@ -999,6 +1001,16 @@
    "imo": "9273674"
   },
   {
+   "vessel": "YM MANDATE",
+   "service": "PN1",
+   "terminal": "WUT",
+   "agent": "",
+   "eta": "2026-11-15T05:00",
+   "etd": "2026-11-17T17:00",
+   "port": "Tacoma",
+   "imo": "9438523"
+  },
+  {
    "vessel": "THEBEN",
    "service": "",
    "terminal": "EB1",
@@ -1028,16 +1040,6 @@
    "etd": "2026-11-20T00:04",
    "port": "Seattle",
    "imo": "9722651"
-  },
-  {
-   "vessel": "HMM VANCOUVER",
-   "service": "PN3",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-11-16T04:30",
-   "etd": "2026-11-19T18:30",
-   "port": "Tacoma",
-   "imo": "9463085"
   },
   {
    "vessel": "GLORIOUS ACE",
@@ -1072,6 +1074,27 @@
    "imo": "9561277"
   },
   {
+   "vessel": "Glovis Caravel",
+   "service": "",
+   "terminal": "T4",
+   "agent": "",
+   "eta": "2026-11-17T00:00",
+   "etd": null,
+   "port": "Aberdeen",
+   "eta_time": false,
+   "imo": "9441594"
+  },
+  {
+   "vessel": "HMM VANCOUVER",
+   "service": "PN3",
+   "terminal": "WUT",
+   "agent": "",
+   "eta": "2026-11-17T05:00",
+   "etd": "2026-11-19T03:00",
+   "port": "Tacoma",
+   "imo": "9463085"
+  },
+  {
    "vessel": "EUPHONY ACE",
    "service": "",
    "terminal": "Blair",
@@ -1104,16 +1127,6 @@
    "imo": "9289946"
   },
   {
-   "vessel": "SANTA BARBARA",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-17T08:00",
-   "etd": "2026-11-20T04:00",
-   "port": "Tacoma",
-   "imo": "9430399"
-  },
-  {
    "vessel": "TOURMALINE ACE",
    "service": "",
    "terminal": "Blair",
@@ -1133,16 +1146,6 @@
    "etd": "2026-11-20T00:00",
    "port": "Tacoma",
    "imo": "9300453"
-  },
-  {
-   "vessel": "EVER SIGMA",
-   "service": "TPN",
-   "terminal": "PCT",
-   "agent": "",
-   "eta": "2026-11-18T05:00",
-   "etd": "2026-11-21T05:00",
-   "port": "Tacoma",
-   "imo": "9300398"
   },
   {
    "vessel": "MATSON KODIAK",
@@ -1226,6 +1229,16 @@
    "etd": "2026-11-20T20:00",
    "port": "Tacoma",
    "imo": "8419142"
+  },
+  {
+   "vessel": "XIN ZHAN JIANG",
+   "service": "CPV",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-20T09:30",
+   "etd": "2026-11-21T14:30",
+   "port": "Seattle",
+   "imo": "9378814"
   },
   {
    "vessel": "NORTH STAR",
