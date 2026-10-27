@@ -407,7 +407,7 @@ body.pgfo #hdr{display:none}
 #pgWrap.side .bbph img{cursor:zoom-in}
 .ban{background:var(--card);border:2px solid var(--acc);border-radius:var(--r);padding:12px 16px;margin-bottom:var(--s)}
 .pg{height:14px;border-radius:7px;background:var(--bd);border:1px solid var(--mut);overflow:hidden;margin:8px 0}.pg>i{display:block;height:100%;background:var(--acc)}
-#hrsHint,#hrsRule{text-wrap:pretty}#hrsRule b{font-weight:700}
+.chk.hide{display:none}#hrsHint,#hrsRule{text-wrap:pretty}.dcal{width:100%;margin-top:8px;min-height:44px}.cpop .dii{padding:8px 0;border-bottom:1px solid var(--bd)}.cpop .dii .l1,.cpop .dit{display:flex;justify-content:space-between;gap:8px}.cpop .dit{padding-top:8px}.cpop .pf>b{display:block;margin-bottom:2px}#hrsRule b{font-weight:700}
 .pcw{margin:0 0 12px}.pcw.card .row{margin-top:6px}.pcw .row button{flex:1 1 auto;min-height:48px;white-space:nowrap}.pcl{font-weight:800}.pcl.short{color:var(--dan)}
 .ql1{white-space:nowrap;overflow:hidden;min-width:0;margin:3px 0}.ql1 .big{font-size:1.5em}.ql1 .mut{font-size:1em}.pgest{font-weight:800}.qpg{position:relative}.qmk{position:absolute;top:0;bottom:0;width:3px;margin-left:-1px;background:var(--fg)}
 .qyr{margin:8px 0 4px}.qyr button{flex:1 1 auto;min-height:48px;white-space:nowrap}#qyIn{flex:1 1 40%;min-height:48px;min-width:0}.qdet summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:700}.qdet p{text-wrap:pretty;margin:4px 0}
@@ -512,7 +512,7 @@ body.gopen{overflow:hidden}
 <h3 id="ftitle">Add shift</h3>
 <div id="cbW"><button type="button" id="cb" class="p cbb">↩ Call back <span>same job again</span></button><div class="mut cbl" id="cbL" aria-live="polite"></div></div>
 <div id="qpW" class="hide"><label style="margin-top:0">Recent <span class="mut">(tap to fill pier, job, shift)</span></label><div class="ltr" id="qp"></div><button type="button" id="rep" style="width:100%;margin-top:8px">↻ Repeat last shift…</button></div>
-<label for="date">Date</label><div class="row dategrp"><button type="button" id="dprev" aria-label="Previous day">◀</button><input type="date" id="date" required min="2000-01-01" max="2099-12-31"><button type="button" id="dnext" aria-label="Next day">▶</button><button type="button" id="dtoday" class="p">Today</button></div><div id="holB" class="holb hide" role="status" aria-live="polite"></div>
+<label for="date">Date</label><div class="row dategrp"><button type="button" id="dprev" aria-label="Previous day">◀</button><input type="date" id="date" required min="2000-01-01" max="2099-12-31"><button type="button" id="dnext" aria-label="Next day">▶</button><button type="button" id="dtoday" class="p">Today</button></div><button type="button" id="dcal" class="dcal">📅 Calendar with logged jobs</button><div id="holB" class="holb hide" role="status" aria-live="polite"></div>
 <div id="pgpW" class="hide"><button type="button" id="pgpB" class="pgqb" aria-expanded="false" aria-controls="pgpP">PGP: available, no job</button><div class="mut pgqr" id="pgpR">File PGP on paper at the hall — PMA approves only if no work was provided.</div>
 <div id="pgpP" class="hide"><div class="mut">Marks the date above as <b>available, no job</b>. Not a paid shift: 0 hours, $0.</div><div class="cwdn" role="group" aria-label="PGP shift" style="margin-top:6px"><button type="button" data-pg="day" aria-pressed="true">Day</button><button type="button" data-pg="night" aria-pressed="false">Night</button></div>
 <label for="pgpN">Note <span class="mut">(optional)</span></label><input id="pgpN" maxlength="200" placeholder="e.g. checked in, no job">
@@ -613,10 +613,11 @@ body.gopen{overflow:hidden}
 <label for="pinNew2">Repeat new PIN</label><input id="pinNew2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
 <div class="row" style="margin-top:12px"><button id="pinSet" class="p">Set PIN</button><button id="pinRm" class="d hide">Remove PIN</button></div>
 <p id="pinM" class="mut" aria-live="polite"></p></div>
-<div class="card"><h3>Shift reminder</h3>
-<div class="chk"><input type="checkbox" id="remOn"><span>Remind me to log hours <i class="lbp">(off by default)</i></span></div>
-<label for="remT">After typical shift end</label><input type="time" id="remT" value="18:00">
-<p class="mut"><b>How it works, honestly:</b> if you haven't logged a shift for today or yesterday, a banner shows when you open the app. A phone notification is best-effort only: this app has no server, so it can't wake your phone. On iPhone, web apps can show notifications only when added to the Home Screen (iOS 16.4+), and even then only while the app is open or recently active. Android is similar. Don't rely on it; the banner on open is the dependable part.</p>
+<div class="card"><h3>Reminders</h3>
+<div class="chk hide" id="prW"><input type="checkbox" id="pgpRemOn"><span>PGP filing reminder <i class="lbp">(off by default)</i></span></div>
+<div class="chk"><input type="checkbox" id="remOn"><span>Evening “Log today's shift?” nudge <i class="lbp">(off by default)</i></span></div>
+<label for="remT">Nudge time</label><input type="time" id="remT" value="18:00">
+<p class="mut"><b>How it works, honestly:</b> PGP reminder: on a week with a day marked PGP, a “File PGP at the hall” banner shows until you tap Filed at hall. Nudge: from your nudge time on, if nothing is logged for today, a “Log today's shift?” banner shows (earlier in the day it asks about yesterday). A phone notification is best-effort only: this app has no server, so it can't wake your phone. On iPhone, web apps can show notifications only when added to the Home Screen (iOS 16.4+), and even then only while the app is open or recently active. Android is similar. Don't rely on it; the banner on open is the dependable part.</p>
 <p id="remM" class="mut" aria-live="polite"></p></div>
 </section>
 <section id="v-pegs" class="hide">
@@ -697,7 +698,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v118",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v119",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1198,6 +1199,11 @@ function histMonths(all,today,extra){const s=new Set();(Array.isArray(all)?all:[
  [today,extra].forEach(x=>{if(typeof x==="string"&&/^\d{4}-\d{2}/.test(x))s.add(x.slice(0,7));});return [...s].sort().reverse();}
 function histYears(months){return [...new Set(months.map(m=>m.slice(0,4)))];}
 function monthLabel(m){return MON[+m.slice(5,7)-1]+" "+m.slice(0,4);}
+/* v119: one day's job info for the calendar popup: job/class, shift, hours (straight/OT; flex hours are part of OT), where, pay, and a total */
+function dayInfo(all,date,pgp){const l=(all||[]).filter(e=>e&&e.date===date).sort((a,b)=>(a.shift||"")<(b.shift||"")?-1:1);let H=0,O=0,P=0,anyP=false;
+ const items=l.map(e=>{const ot=effOT(e),h=num(e.hours),w=entryPay(e),tp=travelPay(e),pay=w==null&&tp==null?null:Math.round(((w||0)+(tp||0))*100)/100,g=jobClass(e.job);H+=h;O+=ot;if(pay!=null){P+=pay;anyP=true;}
+  return{id:e.id,job:jobLabel(e.job)||e.job||"(no job)",cls:g?(CLASS_SHORT[g]||g):"",shift:isCwog(e)?"CWOG":(e.shift||"")+" shift",hours:r2(h),st:r2(Math.max(0,h-ot)),ot:r2(ot),where:[e.pier,e.vessel].filter(Boolean).join(" · "),pay,guar:guarNote(e)};});
+ return{date,items,pgp:(pgp||[]).filter(m=>m&&m.date===date),total:{hours:r2(H),ot:r2(O),pay:anyP?Math.round(P*100)/100:null}};}
 function dayTotals(all){const o={};for(const e of all){const t=o[e.date]||(o[e.date]={hours:0,count:0});t.hours+=num(e.hours);t.count++;}return o;}
 function searchEntries(all,f){f=f||{};const q=String(f.q||"").trim().toLowerCase(),words=q?q.split(/\s+/):[];
  return all.filter(e=>{if(f.from&&e.date<f.from)return false;if(f.to&&e.date>f.to)return false;
@@ -1239,7 +1245,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v118",CACHE_VERSION="l19hours-v118"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v119",CACHE_VERSION="l19hours-v119"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1369,10 +1375,15 @@ async function hashPin(pin,salt){const d=new TextEncoder().encode(salt+":"+pin),
 async function verifyPin(pin,salt,hash){if(!validPin(pin)||!salt||!hash)return false;return (await hashPin(pin,salt))===hash;}
 function shouldLock(hiddenAt,now,pinSet,ms){return !!pinSet&&hiddenAt!=null&&now-hiddenAt>(ms==null?60000:ms);}
 /* Shift reminder: cfg {on,time:"HH:MM" typical shift end}. After that time look at today+yesterday; before it, yesterday+day before. */
-function reminderStatus(all,now,cfg){if(!cfg||!cfg.on)return {show:false};const today=fmtDate(now),mn=toMin(cfg.time||"18:00"),cur=now.getHours()*60+now.getMinutes(),after=cur>=(mn==null?1080:mn);
- const days=after?[today,addDays(today,-1)]:[addDays(today,-1),addDays(today,-2)];
- if(all.some(e=>days.includes(e.date)))return {show:false};
- return {show:true,days,msg:after?"No hours logged for today or yesterday yet.":"No hours logged for yesterday yet."};}
+/* v119: evening "Log today's shift?" nudge: from the member's time on, today only; earlier in the day, yesterday only. A PGP day (no work) counts as logged. */
+function reminderStatus(all,now,cfg,pgpDates){if(!cfg||!cfg.on)return {show:false};const today=fmtDate(now),mn=toMin(cfg.time||"18:00"),cur=now.getHours()*60+now.getMinutes(),after=cur>=(mn==null?1080:mn);
+ const days=after?[today]:[addDays(today,-1)];
+ if((all||[]).some(e=>e&&days.includes(e.date))||(pgpDates||[]).some(d=>days.includes(d)))return {show:false};
+ return {show:true,days,title:after?"Log today's shift?":"Log yesterday's shift?",msg:after?"Nothing logged for today yet.":"Nothing logged for yesterday yet."};}
+/* v119: PGP filing reminder (Local 19, off by default): a PGP day this payroll week (Sat-Fri, up to today) and the week's paper not marked filed. */
+const PGPR_KEY="l19.pgpRem",PGPR_SNZ="l19.pgpRemS",PGPR_NOTE="l19.pgpRemN";
+function pgpRemStatus(list,filed,today,on){if(!on)return {show:false};const ws=weekStart(today),d=(list||[]).filter(m=>m&&m.date>=ws&&m.date<=today).sort((a,b)=>a.date<b.date?-1:1);
+ if(!d.length||(filed&&filed[ws]))return {show:false};return {show:true,ws,days:d,msg:"PGP day"+(d.length>1?"s":"")+": "+d.map(pgpDay).join(", ")+". PMA approves only if no work was provided."};}
 function msUntil(time,now){const m=toMin(time||"18:00");const t=new Date(now);t.setHours(Math.floor(m/60),m%60,0,0);if(t<=now)t.setDate(t.getDate()+1);return t-now;}
 
 /* ===== UI ===== */
@@ -2157,6 +2168,7 @@ function openPicker(){const d=$("date");try{if(d.showPicker)d.showPicker();}catc
  d.addEventListener("pointerdown",()=>{lastOpen=Date.now();});
  d.addEventListener("click",openPicker);
  d.addEventListener("focus",()=>{if(Date.now()-lastOpen>800)openPicker();});}
+$("dcal").onclick=()=>{const v=$("date").value;pd=/^\d{4}-\d{2}-\d{2}$/.test(v)?v:null;openCalPop("add",pd);};
 $("dprev").onclick=()=>shiftDate(-1);$("dnext").onclick=()=>shiftDate(1);
 $("dtoday").onclick=()=>{$("date").value=fmtDate(new Date());$("date").dispatchEvent(new Event("change",{bubbles:true}));};
 function refreshEmp(){$("empl").innerHTML=[...new Set(entries.map(e=>e.employer).filter(Boolean).concat(["Metro"]))].map(x=>`<option value="${esc(x)}">`).join("");}
@@ -2204,7 +2216,7 @@ $("pgpX").onclick=()=>{$("pgpP").classList.add("hide");$("pgpB").setAttribute("a
 $("pgpS").onclick=()=>{const date=$("date").value,sh=pgpCur();if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){pgpMsg("Pick a date first.",true);return;}const m={date,sh},d=pgpDay(m);
  if(pgpConflict(m,entries)){pgpMsg("You already logged a "+pgpShLabel(sh)+" shift on "+d.slice(0,9)+". PGP is only for a shift with no work, so it was not saved.",true);return;}
  const cur=pgpList();if(cur.some(x=>x.date===date&&x.sh===sh)){pgpMsg("Already marked: "+d+" is saved as PGP available.",true);return;}
- cur.push({id:uid(),date,sh,note:$("pgpN").value.trim().slice(0,200),at:new Date().toISOString()});pgpSave(cur);
+ cur.push({id:uid(),date,sh,note:$("pgpN").value.trim().slice(0,200),at:new Date().toISOString()});pgpSave(cur);if(typeof firePgpRem==="function")firePgpRem();
  $("pgpP").classList.add("hide");$("pgpB").setAttribute("aria-expanded","false");pgpMsg("Saved: "+d+" – PGP available, no job. Not a paid shift (0 h, $0). Remember the paper at the hall.");};
 /* delete a PGP marker from Week or History */
 document.addEventListener("click",ev=>{const b=ev.target.closest&&ev.target.closest("[data-pgx]");if(!b)return;const id=b.dataset.pgx,m=pgpList().find(x=>x.id===id);if(!m)return;
@@ -2296,13 +2308,13 @@ function renderWeek(){const list=weekEntries(entries,wk),t=summarize(list),we=ad
 $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previous week">◀</button><div class="t">${wk.slice(5)} → ${we.slice(5)}<div class="mut">Sat–Fri · ${wk.slice(0,4)}</div></div><button id="nw" aria-label="Next week">▶</button></div>
  <div class="stats"><div class="stat pri"><b>${r2(t.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(t.ot)}</b><span>OT</span></div><div class="stat"><b>${hasPay(t)?money(payTotal(t)).replace(/\.00$/,""):"–"}</b><span>Pay est.</span></div></div>${payChkHtml(wk)}
  ${list.length?`<div class="card">${t.travel||t.miles?`<div class="mut" style="margin-bottom:8px">${[t.travel?"Travel "+r2(t.travel)+"h"+(!hidePay&&t.travelPay?" · "+money(t.travelPay):""):"",t.miles?r2(t.miles)+" mi"+(!hidePay&&t.milePay?" · "+money(t.milePay)+" reimbursement (not wages)":""):""].filter(Boolean).join(" · ")}</div>`:""}<h4 style="margin-top:0">By pier</h4><table>${grp(t.byPier)}</table><h4>By job</h4><table>${grp(t.byJob)}</table></div>`:'<div class="card mut">No shifts this week.</div>'}
- ${pgpWeekHtml(wk)}${weekHolHtml(wk)}${weekSwHtml(wk)}<div class="row" style="margin-bottom:12px">${weekShareOn(curLocal())?'<button class="p" id="sh">Share week</button>':""}<button id="tw">This week</button></div>
+ ${pgpWeekHtml(wk)}${weekHolHtml(wk)}${weekSwHtml(wk)}<div class="row" style="margin-bottom:12px">${weekShareOn(curLocal())?'<button class="p" id="sh">Share week</button>':""}<button id="tw">This week</button></div><button type="button" id="wcal" class="dcal" style="margin:0 0 12px">📅 Calendar with logged jobs</button>
  ${list.length?`<div class="card">${list.map(e=>`<div class="ent"><div><b>${e.date.slice(5)} · ${esc(e.shift)}</b> · ${r2(num(e.hours))}h${effOT(e)?` (OT ${r2(effOT(e))})`:""}${guarNote(e)?` <span class="badge">${guarNote(e)}</span>`:""}${e.nl?` <span class="badge nlg">Night list ×1.3</span>`:""}${isCwog(e)?` <span class="badge cwg">CWOG</span> <span class="cwsp">${esc(cwogSplit(e))}</span>`:isWknd(e)?` <span class="badge">Wknd OT</span>`:""}${isHol(e)?` <span class="badge hol">${esc(holShort(e.date))}${holAuto(e)?" · OT":""}</span>`:""}${isStopWork(e.date,curLocal())&&swNight(e.shift)?` <span class="badge sw">Stop work night</span>`:""}<div class="mut">${esc([e.pier,jobLabel(e.job)].filter(Boolean).join(" · "))}${upApplies(e.job)&&upLabel(e.upSlot)?`<span class="badge">${e.upSlot==="first"?"1st up AM":"2nd up PM"}</span>`:""}</div></div>
  <div class="acts"><button data-e="${e.id}" aria-label="Edit">✎</button><button class="d" data-x="${e.id}" aria-label="Delete">🗑</button></div></div>`).join("")}</div>`:""}`;
  $("v-week").insertAdjacentHTML("beforeend",upHolHtml(todayS()));
  if($("pgpF"))$("pgpF").onchange=()=>{const o=pgpFiledMap();if($("pgpF").checked)o[wk]=true;else delete o[wk];try{localStorage.setItem(PGPF_KEY,JSON.stringify(o));}catch(e){}};
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
- $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};
+ $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};$("wcal").onclick=()=>{const td=fmtDate(new Date());pd=null;openCalPop("week",td>=wk&&td<=addDays(wk,6)?td:wk);};
  async function doShare(noPay){const text=weekText(entries,wk,{noPay});
   if(navigator.share){try{await navigator.share({title:"KING of the DOCKS hours "+wk,text});return;}catch(e){if(e&&e.name==="AbortError")return;}}
   try{await navigator.clipboard.writeText(text);alert("Summary copied to clipboard.");}catch(e){prompt("Copy summary:",text);}}
@@ -2328,7 +2340,7 @@ const OVL_SEL=".sheet,.cpop,#ysum,#setup,#tour,#lock,#lv,#gear";
 function ovlTop(n){if(!n||n.nodeType!==1||!n.matches||!n.matches(OVL_SEL))return;const f=()=>{n.scrollTop=0;for(const k of n.children)if(k.scrollTop)k.scrollTop=0;const g=n.querySelector("#gearB");if(g)g.scrollTop=0;};f();requestAnimationFrame(f);}
 try{new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(ovlTop))).observe(document.body,{childList:true});}catch(e){}
 let backY=null;
-function show(v,how){if(v==="pegs"&&!pegsOn())v="add";const from=curV;if(how!=="back")backY=null;curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);
+function show(v,how){if(v==="pegs"&&!pegsOn())v="add";const from=curV;if(how!=="back")backY=null;curV=v;for(const x of["add","ships","pegs","chat","week","hist","data"])$("v-"+x).classList.toggle("hide",x!==v);if(v==="data"&&typeof renderRem==="function")renderRem();
  document.querySelectorAll(".tabs button").forEach(b=>{const on=b.dataset.v===v;b.classList.toggle("on",on);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});if(v==="week")renderWeek();if(v==="hist")renderHist();if(v==="ships")loadShips();if(window.l19Chat)window.l19Chat(v);if(v==="pegs"&&window.l19Sh)window.l19Sh.open();
  if(how==="back"&&backY!=null){const y=backY;backY=null;pageTo(y);requestAnimationFrame(()=>pageTo(y));}else pageTop();}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.v==="add"&&editId)resetForm();if(b.dataset.v==="add")retTo="week";show(b.dataset.v);});
@@ -2366,21 +2378,28 @@ function wireMonthSel(id,cb){const mS=$(id+"m"),yS=$(id+"y");if(!mS||!yS)return;
  mS.onchange=()=>{yS.value=mS.value.slice(0,4);cb(mS.value);};
  yS.onchange=()=>{const m=ms().find(x=>x.slice(0,4)===yS.value);if(m){mS.value=m;cb(m);}};}
 let pm=null,pd=null,popEl=null;
+function dayInfoHtml(d,nopay){const di=dayInfo(entries,d,pgpOn(curLocal())?pgpList():[]);
+ const it=di.items.map(x=>`<div class="dii"><div class="l1"><b>${esc(x.job)}</b>${!nopay&&x.pay!=null?`<span>${money(x.pay)}</span>`:""}</div><div class="mut">${esc([x.cls,x.shift,x.hours+"h"+(x.ot?" ("+x.st+" ST + "+x.ot+" OT)":""),x.guar].filter(Boolean).join(" · "))}</div>${x.where?`<div class="mut">${esc(x.where)}</div>`:""}</div>`).join("");
+ const pg=di.pgp.map(m=>`<div class="dii"><span class="badge pgqg">PGP</span> ${esc(pgpShLabel(m.sh))}: available, no job</div>`).join("");
+ const tot=di.items.length>1?`<div class="dit"><b>Total ${di.total.hours}h${di.total.ot?" (OT "+di.total.ot+")":""}</b>${!nopay&&di.total.pay!=null?`<b>${money(di.total.pay)}</b>`:""}</div>`:"";
+ return (it||pg?it+pg+tot:'<div class="mut">No shifts logged this day.</div>');}
 function calPopHtml(){const y=+pm.slice(0,4),mo=+pm.slice(5)-1,wk=monthGrid(y,mo),dt=dayTotals(entries),today=fmtDate(new Date());
  const head=["Sat","Sun","Mon","Tue","Wed","Thu","Fri"].map(d=>`<div class="wdh" aria-hidden="true">${d}</div>`).join("");
  const cells=wk.map(r=>r.map(c=>{const t=dt[c.date],hl=holLabel(c.date);return `<button type="button" class="cd${c.inMonth?"":" out"}${c.date===today?" today":""}${c.date===pd?" sel":""}${hl?" hol":""}${isStopWork(c.date,curLocal())?" sw":""}" data-pd="${c.date}" aria-pressed="${c.date===pd}" aria-label="${esc(shDate(c.date))}${c.date===today?", today":""}${hl?", holiday: "+esc(hl):""}${isStopWork(c.date,curLocal())?", "+SW_LABEL:""}${t?", "+r2(t.hours)+" hours":""}"><span>${c.day}${hl?'<span class="hm" aria-hidden="true"> ★</span>':""}${isStopWork(c.date,curLocal())?'<span class="swm" aria-hidden="true"> ◆</span>':""}</span>${t?`<small><span class="dot"></span>${r2(t.hours)}</small>`:""}</button>`}).join("")).join("");
  let foot="";if(pd){const l=entries.filter(e=>e.date===pd),h=l.reduce((x,e)=>x+num(e.hours),0);
-  foot=`<div class="pf" aria-live="polite">${isHol(pd)?`<div class="hbad">🎉 ${esc(holLabel(pd))}</div>`:""}<b>${esc(shDate(pd))}${l.length?" · "+r2(h)+"h":""}</b><div class="mut">${l.length?"List scrolled to this day.":"No shifts this day. List shows the nearest earlier day."}</div><div class="row"><button type="button" class="p" id="pAdd">＋ Add</button><button type="button" id="pDone">Done</button></div></div>`;}
+  foot=`<div class="pf" aria-live="polite">${isHol(pd)?`<div class="hbad">🎉 ${esc(holLabel(pd))}</div>`:""}<b>${esc(shDate(pd))}${l.length?" · "+r2(h)+"h":""}</b>${dayInfoHtml(pd,hidePay)}<div class="row">${popMode==="add"?'<button type="button" class="p" id="pUse">Use this date</button>':'<button type="button" class="p" id="pAdd">＋ Add shift</button>'}<button type="button" id="pDone">Close</button></div></div>`;}
  return `<div role="dialog" aria-modal="true" aria-labelledby="pT"><div class="ph"><h3 id="pT">Calendar</h3><button type="button" id="pX" aria-label="Close calendar">✕</button></div>
  <div class="card nav"><button type="button" id="pP" aria-label="Previous month">◀</button><div class="t">${MON[mo]} ${y}</div><button type="button" id="pN" aria-label="Next month">▶</button></div>
  <div class="cal">${head}${cells}</div>${foot}</div>`;}
-function openCalPop(){if(popEl)return;pm=(pd||selDate||fmtDate(new Date())).slice(0,7);if(!pd)pd=null;popEl=document.createElement("div");popEl.className="cpop";popEl.onclick=ev=>{if(ev.target===popEl)closeCalPop();};
+let popMode="hist";
+function openCalPop(mode,d){if(popEl)return;popMode=mode||"hist";if(d)pd=d;pm=(pd||selDate||fmtDate(new Date())).slice(0,7);if(!pd)pd=null;popEl=document.createElement("div");popEl.className="cpop";popEl.onclick=ev=>{if(ev.target===popEl)closeCalPop();};
  document.body.appendChild(popEl);try{history.pushState({l19cal:1},"");}catch(e){}
  ["main","#bbar","header"].forEach(q=>{const el=document.querySelector(q);if(el)el.setAttribute("inert","");});paintCalPop();}
 function paintCalPop(foc){popEl.innerHTML=calPopHtml();
- popEl.querySelectorAll("[data-pd]").forEach(b=>b.onclick=()=>{pd=b.dataset.pd;pm=pd.slice(0,7);jumpTo(pd);paintCalPop("pAdd");});
+ popEl.querySelectorAll("[data-pd]").forEach(b=>b.onclick=()=>{pd=b.dataset.pd;pm=pd.slice(0,7);if(popMode==="hist")jumpTo(pd);paintCalPop(popMode==="add"?"pUse":"pAdd");const f=popEl.querySelector(".pf");if(f)f.scrollIntoView({block:"nearest"});});
  $("pP").onclick=()=>{pm=fmtDate(new Date(+pm.slice(0,4),+pm.slice(5)-2,1)).slice(0,7);paintCalPop("pP");};$("pN").onclick=()=>{pm=fmtDate(new Date(+pm.slice(0,4),+pm.slice(5),1)).slice(0,7);paintCalPop("pN");};
- $("pX").onclick=closeCalPop;if($("pDone"))$("pDone").onclick=closeCalPop;if($("pAdd"))$("pAdd").onclick=()=>{const d=pd;closeCalPop();addOn(d);};
+ $("pX").onclick=closeCalPop;if($("pDone"))$("pDone").onclick=closeCalPop;if($("pAdd"))$("pAdd").onclick=()=>{const d=pd,m=popMode;closeCalPop();addOn(d);if(m==="week")retTo="week";};
+ if($("pUse"))$("pUse").onclick=()=>{const d=pd;closeCalPop();$("date").value=d;$("date").dispatchEvent(new Event("change",{bubbles:true}));};
  const f=$(foc||"pX");if(f)f.focus({preventScroll:true});}
 function removeCalPop(){if(!popEl)return false;popEl.remove();popEl=null;["main","#bbar","header"].forEach(q=>{const el=document.querySelector(q);if(el&&!$("lock")&&!$("setup"))el.removeAttribute("inert");});return true;}
 function closeCalPop(){if(removeCalPop()&&history.state&&history.state.l19cal){try{history.back();}catch(e){}}}
@@ -2939,13 +2958,16 @@ function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=toda
  {const seen=LS(RSEEN,""),existing=entries.length>0||LS(SUD,"")==="1";
   if(!seen&&!existing){/* brand-new install: nothing to announce */LSset(RSEEN,RATES_VERSION.id);}
   else if(ratesBannerDue(seen,RATES_VERSION,existing)){h+=`<div class="ban" role="status"><b>Rates updated: ${esc(RATES_VERSION.label)}</b><div class="mut" style="margin:4px 0 10px">Default pay rates follow this schedule. Saved shifts keep the rates they were saved with.</div><div class="row"><button type="button" class="p" id="rvX">Dismiss</button></div></div>`;}}
- const rs=reminderStatus(entries,new Date(),remCfg());
- if(rs.show&&LS(REMS,"")!==t){h+=`<div class="ban" role="status"><b>Log your hours</b><div class="mut" style="margin:4px 0 10px">${esc(rs.msg)}</div><div class="row"><button type="button" class="p" id="remGo">Add a shift</button><button type="button" id="remX">Dismiss</button></div></div>`;}
+ {const pr=pgpRemNow();if(pr.show&&LS(PGPR_SNZ,"")!==t){h+=`<div class="ban" role="status"><b>File PGP at the hall</b><div class="mut" style="margin:4px 0 10px">${esc(pr.msg)}</div><div class="row"><button type="button" class="p" id="prF">Filed at hall</button><button type="button" id="prX">Later</button></div></div>`;}}
+ const rs=remNow();
+ if(rs.show&&LS(REMS,"")!==t){h+=`<div class="ban" role="status"><b>${esc(rs.title)}</b><div class="mut" style="margin:4px 0 10px">${esc(rs.msg)}</div><div class="row"><button type="button" class="p" id="remGo">Add a shift</button><button type="button" id="remX">Dismiss</button></div></div>`;}
  b.innerHTML=h;if(h&&typeof fitBox==="function")requestAnimationFrame(()=>fitBox("banners"));
  if($("bkNow"))$("bkNow").onclick=doBackup;
  if($("bkLater"))$("bkLater").onclick=()=>{LSset(BKS,addDays(todayS(),3));renderBanners();};
  if($("remGo"))$("remGo").onclick=()=>{LSset(REMS,todayS());renderBanners();if(editId)resetForm();retTo="week";show("add");};
  if($("remX"))$("remX").onclick=()=>{LSset(REMS,todayS());renderBanners();};
+ if($("prF"))$("prF").onclick=()=>{const pr=pgpRemNow();if(pr.ws){const o=pgpFiledMap();o[pr.ws]=true;try{localStorage.setItem(PGPF_KEY,JSON.stringify(o));}catch(e){}}renderBanners();if(curV==="week")renderWeek();};
+ if($("prX"))$("prX").onclick=()=>{LSset(PGPR_SNZ,todayS());renderBanners();};
  if($("rvX"))$("rvX").onclick=()=>{LSset(RSEEN,RATES_VERSION.id);renderBanners();};}
 /* v70: official PMA Dockworker Self-Service Portal (pay stubs) under the stub check. Exact domain only (PMA warns of phishing);
    opens in a new tab and the service worker never touches other origins. */
@@ -3143,15 +3165,22 @@ let hiddenAt=null;
 /* --- 8. shift reminder --- */
 let remTimer=null;
 function scheduleRem(){clearTimeout(remTimer);const c=remCfg();if(!c.on)return;remTimer=setTimeout(()=>{fireRem();scheduleRem();},Math.min(msUntil(c.time,new Date())+1000,2147000000));}
-function fireRem(){renderBanners();const rs=reminderStatus(entries,new Date(),remCfg());if(!rs.show||LS(REMS,"")===todayS())return;
- try{if("Notification" in window&&Notification.permission==="granted"){const t="Log your hours",o={body:rs.msg,tag:"l19rem"};
-  if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(r=>r&&r.showNotification?r.showNotification(t,o):new Notification(t,o)).catch(()=>{});else new Notification(t,o);}}catch(e){}}
-function renderRem(){const c=remCfg();$("remOn").checked=c.on;$("remT").value=c.time;$("remT").disabled=!c.on;}
-function saveRem(){LSset(REM,JSON.stringify({on:$("remOn").checked,time:$("remT").value||"18:00"}));renderRem();renderBanners();scheduleRem();}
-$("remOn").onchange=async()=>{saveRem();const m=$("remM");if(!$("remOn").checked){m.textContent="Reminder off.";return;}
- if(!("Notification" in window)){m.textContent="This browser has no notification support. You'll still see a banner when you open the app.";return;}
+function remNow(){return reminderStatus(entries,new Date(),remCfg(),pgpList().map(m=>m.date));}
+function pgpRemOn(){return LS(PGPR_KEY,"")==="1"&&pgpOn(curLocal());}
+function pgpRemNow(){return pgpRemStatus(pgpList(),pgpFiledMap(),todayS(),pgpRemOn());}
+/* local notification only (no server push): through the service worker when there is one, else the page */
+function l19Notify(t,body,tag){try{if(!("Notification" in window)||Notification.permission!=="granted")return false;const o={body,tag,icon:"icon-192.png"};
+ if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(r=>r&&r.showNotification?r.showNotification(t,o):new Notification(t,o)).catch(()=>{});else new Notification(t,o);return true;}catch(e){return false;}}
+function fireRem(){renderBanners();const rs=remNow();if(!rs.show||LS(REMS,"")===todayS())return;l19Notify(rs.title,rs.msg,"l19rem");}
+/* PGP reminder: banner whenever due; one notification per day at most (on open, or right after marking a PGP day) */
+function firePgpRem(){renderBanners();const pr=pgpRemNow(),t=todayS();if(!pr.show||LS(PGPR_SNZ,"")===t||LS(PGPR_NOTE,"")===t)return;if(l19Notify("File PGP at the hall",pr.msg,"l19pgp"))LSset(PGPR_NOTE,t);}
+function renderRem(){const c=remCfg();$("remOn").checked=c.on;$("remT").value=c.time;$("remT").disabled=!c.on;$("prW").classList.toggle("hide",!pgpOn(curLocal()));$("pgpRemOn").checked=LS(PGPR_KEY,"")==="1";}
+async function remPerm(m){if(!("Notification" in window)){m.textContent="This browser has no notification support. You'll still see a banner when you open the app.";return;}
  let p=Notification.permission;if(p==="default"){try{p=await Notification.requestPermission();}catch(e){}}
- m.textContent=p==="granted"?"Reminder on. A notification can appear only while the app is open or recently active; the banner on open is the dependable part.":"Notifications aren't allowed, so you'll only see the in-app banner when you open the app.";};
+ m.textContent=p==="granted"?"On. A notification can appear only while the app is open or recently active; the banner on open is the dependable part.":"Notifications aren't allowed, so you'll only see the in-app banner when you open the app.";}
+$("pgpRemOn").onchange=async()=>{LSset(PGPR_KEY,$("pgpRemOn").checked?"1":"0");const m=$("remM");if(!$("pgpRemOn").checked){m.textContent="PGP reminder off.";renderBanners();return;}await remPerm(m);firePgpRem();};
+function saveRem(){LSset(REM,JSON.stringify({on:$("remOn").checked,time:$("remT").value||"18:00"}));renderRem();renderBanners();scheduleRem();}
+$("remOn").onchange=async()=>{saveRem();const m=$("remM");if(!$("remOn").checked){m.textContent="Nudge off.";return;}await remPerm(m);};
 $("remT").onchange=saveRem;
 /* ===== v35 UI ===== */
 function ovInert(on){setInert(on||!!$("lock")||!!$("setup"));}
@@ -3221,9 +3250,9 @@ function tourOpen(){if($("tour"))return;let i=0;const d=document.createElement("
 function tourMaybe(){if(!tourDue(LS(TOURK,""),!!$("setup")||setupNeeded(entries.length,LS(SUD,"")),!!$("lock")))return;tourOpen();}
 $("tourBtn").onclick=()=>{if($("lock")||$("setup"))return;tourOpen();};
 /* --- wiring --- */
-document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();}else{if(shouldLock(hiddenAt,Date.now(),!!pinCfg()))lockNow();hiddenAt=null;renderBanners();scheduleRem();}});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();}else{if(shouldLock(hiddenAt,Date.now(),!!pinCfg()))lockNow();hiddenAt=null;renderBanners();scheduleRem();firePgpRem();}});
 renderLastBk();renderPin();renderRem();cxInfo();
-lockNow();setupShow();renderBanners();scheduleRem();tourMaybe();
+lockNow();setupShow();renderBanners();scheduleRem();setTimeout(firePgpRem,1500);tourMaybe();
 
 resetForm();refreshEmp();
 /* v100: updates apply in place - never uninstall/reinstall. A new version installs in the background (sw.js: network-first, skipWaiting + clients.claim);
@@ -4419,7 +4448,7 @@ window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chat
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
-if(typeof module!=="undefined")module.exports={jobHrs,jobDefHours,hrsMaxHint,DEFH_10,DEFH_CRANE,stubLine,PGP_EST,prevQuarter,earnOf,pgpEstimate,qLabel,QUAL,QY_KEY,pyEnd,payrollYear,qualHours,vacBasic,vacWeeks,qualStats,cwogMigrate,hootMigrate,hootOldPay,wkndRate,PGP_KEY,PGPF_KEY,PGP_LABEL,PGP_REMIND,PGP_JOB,pgpOn,pgpSh,pgpConflict,pgpWeek,pgpClean,pgpMerge,pgpDay,NL_X,NL_KEY,nlApplies,CWOG_JOB,CWOG_HRS,CWOG_RATE,CWOG_RATE2,CWOG_PAY,cwogPayFor,isCwog,cwogSplit,l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")module.exports={dayInfo,reminderStatus,pgpRemStatus,jobHrs,jobDefHours,hrsMaxHint,DEFH_10,DEFH_CRANE,stubLine,PGP_EST,prevQuarter,earnOf,pgpEstimate,qLabel,QUAL,QY_KEY,pyEnd,payrollYear,qualHours,vacBasic,vacWeeks,qualStats,cwogMigrate,hootMigrate,hootOldPay,wkndRate,PGP_KEY,PGPF_KEY,PGP_LABEL,PGP_REMIND,PGP_JOB,pgpOn,pgpSh,pgpConflict,pgpWeek,pgpClean,pgpMerge,pgpDay,NL_X,NL_KEY,nlApplies,CWOG_JOB,CWOG_HRS,CWOG_RATE,CWOG_RATE2,CWOG_PAY,cwogPayFor,isCwog,cwogSplit,l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,chatNorm,chatSlurHits,chatThreat,chatLinks,chatCheck,chatShow,chatReason,chatReasonSplit,CHAT_REASONS,CHAT_BLOCK_KEY,chatBlockClean,contactHtml,APP_CONTACT,MERCH,merchItems,merchOn,merchHtml,merchResDoc,merchResOk,merchSlug,MERCH_STATUS,MERCH_RES_COL,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
