@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-27T05:45:05-07:00",
+ "updated": "2026-10-27T08:45:07-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -533,16 +533,6 @@
    "port": "Tacoma"
   },
   {
-   "vessel": "ONE FANTASTIC",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-04T05:00",
-   "etd": "2026-11-08T00:00",
-   "port": "Tacoma",
-   "imo": "9936381"
-  },
-  {
    "vessel": "ONE MAJESTY",
    "service": "PN1",
    "terminal": "WUT",
@@ -845,6 +835,16 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "1063281"
+  },
+  {
+   "vessel": "ONE FANTASTIC",
+   "service": "FP2",
+   "terminal": "Husky",
+   "agent": "",
+   "eta": "2026-11-09T15:00",
+   "etd": "2026-11-13T10:00",
+   "port": "Tacoma",
+   "imo": "9936381"
   },
   {
    "vessel": "GLOVIS LEGEND",
@@ -1209,16 +1209,6 @@
    "etd": "2026-11-20T04:00",
    "port": "Seattle",
    "imo": "9954747"
-  },
-  {
-   "vessel": "YM TROPHY",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-19T09:30",
-   "etd": "2026-11-23T04:30",
-   "port": "Tacoma",
-   "imo": "9789996"
   },
   {
    "vessel": "WESTWOOD OLYMPIA",
