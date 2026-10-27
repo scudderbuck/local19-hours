@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- KING of the DOCKS. Copyright (c) 2026 Daniel White. All rights reserved. No permission is granted to copy, modify, distribute, or use this software or its source code, in whole or in part, without prior written permission from the copyright holder. See LICENSE. -->
+<!-- Longshore Life (formerly KING of the DOCKS). Copyright (c) 2026 Daniel White. All rights reserved. No permission is granted to copy, modify, distribute, or use this software or its source code, in whole or in part, without prior written permission from the copyright holder. See LICENSE. -->
 <html lang="en" style="background:#00214e"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -11,8 +11,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="KING DOCKS">
-<title>KING of the DOCKS</title>
+<meta name="apple-mobile-web-app-title" content="Longshore">
+<title>Longshore Life</title>
 <style>
 :root{--bg:#f3f5f8;--card:#fff;--fg:#14202e;--mut:#5b6b7d;--pri:#00214e;--prifg:#fff;--acc:#00214e;--bd:#d5dde6;--dan:#b3261e;--r:12px;--s:12px}
 @media(prefers-color-scheme:dark){:root{--bg:#10151c;--card:#1a222c;--fg:#e8eef5;--mut:#9aabbd;--pri:#00214e;--prifg:#fff;--acc:#ffd23f;--bd:#4a5b6d;--dan:#ff8a80}}
@@ -436,7 +436,7 @@ a.bt:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
 .nd .nb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.nd .nb button{min-height:44px;padding:0 14px}
 html,body{background:#00214e}
 #splash{position:fixed;inset:0;z-index:2147483000;opacity:1;background:#dfe0db;color:#00214e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:spf 1.6s linear forwards;-webkit-tap-highlight-color:transparent}
-#splash img{--spw:calc(100vw - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));--sph:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));width:min(calc(var(--spw) * .92),calc(var(--sph) * .92 * .690625));height:auto;max-width:none;max-height:none;object-fit:contain;display:block;flex:0 0 auto}@supports(height:100dvh){#splash img{--spw:calc(100dvw - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));--sph:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}} /* v104: KING of the DOCKS logo (663x960) as big as it fits: largest contain size inside the viewport minus safe-area insets and a ~4% margin each side (8% total), portrait and landscape; vw/vh based so text size never changes it */
+#splash img{--spw:calc(100vw - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));--sph:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));width:min(calc(var(--spw) * .92),calc(var(--sph) * .92 * .690625));height:auto;max-width:none;max-height:none;object-fit:contain;display:block;flex:0 0 auto}@supports(height:100dvh){#splash img{--spw:calc(100dvw - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));--sph:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}} /* v104: Longshore Life logo (663x960) as big as it fits: largest contain size inside the viewport minus safe-area insets and a ~4% margin each side (8% total), portrait and landscape; vw/vh based so text size never changes it */
 #splash b{font-size:1.5rem;letter-spacing:.14em;color:#fff}#splash b i{font-style:normal;color:#ffd23f}
 @keyframes spf{0%,87.5%{opacity:1;visibility:visible;pointer-events:auto}99.9%{opacity:0;visibility:visible;pointer-events:auto}100%{opacity:0;visibility:hidden;pointer-events:none}}
 #splash2{position:fixed;inset:0;z-index:2147482999;background:#01132f;display:flex;align-items:center;justify-content:center;animation:spf2 3.2s linear forwards;-webkit-tap-highlight-color:transparent}#splash2 img{display:block;width:min(100vw,calc(100vh * .7451));height:auto;max-width:none;max-height:none;object-fit:contain;-webkit-mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 96%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 4%,#000 96%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 96%,transparent);mask-composite:intersect}@supports(height:100dvh){#splash2 img{width:min(100dvw,calc(100dvh * .7451))}}@keyframes spf2{0%,93.75%{opacity:1;visibility:visible;pointer-events:auto}99.9%{opacity:0;visibility:visible;pointer-events:auto}100%{opacity:0;visibility:hidden;pointer-events:none}} /* v106: second splash, Harry Bridges portrait (img/bridges.jpg 1080x1449, from Daniel's original, colour-graded to the logo blues: navy #01132f edges, blue glow behind the head), right after the logo: the logo fades over it at 1.4-1.6 s (crossfade), the portrait shows to 3.0 s and fades by 3.2 s; as big as fits (contain), logo navy #01132f matching the graded photo's edges, feathered so it blends; image only. pointer-events:auto in the keyframes: without it the discrete 'none' at 100% flipped in halfway through and taps fell through */
@@ -503,8 +503,8 @@ body.gopen{overflow:hidden}
 #gearG .glinks a{display:block;min-height:44px;padding:8px 10px;margin-top:6px;border:1px solid #ffd23f;border-radius:10px;text-decoration:none;font-weight:700;overflow-wrap:anywhere}
 #gearG .glinks a span{display:block;font-weight:400;color:#e6ecf7;font-size:.875rem;margin-top:2px}
 </style></head><body style="background:#00214e">
-<div id="splash" aria-hidden="true"><img src="img/splash.jpg" alt="KING of the DOCKS" width="663" height="960" fetchpriority="high" decoding="sync"></div><div id="splash2" aria-hidden="true"><img src="img/bridges.jpg" alt="" width="1080" height="1449" decoding="async"></div>
-<header id="hdr"><span class="hdt"><img id="hdLogo" src="img/logo-header.png" alt="KING of the DOCKS" width="77" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"></span> <button type="button" id="hdLoc" class="hdl" aria-haspopup="dialog" aria-label="Your local: Local 19. Change local"><span id="hdLn">Local 19</span> <span aria-hidden="true">▾</span></button><span class="hdmw"><button type="button" id="hdSkip" class="hdm" aria-label="Skip to next song">⏭</button><button type="button" id="hdMus" class="hdm" aria-pressed="true" aria-label="Background music on. Tap to mute">🔊</button></span></header><div id="musToast" role="status" aria-live="polite"></div><audio id="bgm" preload="none"></audio>
+<div id="splash" aria-hidden="true"><img src="img/splash.jpg" alt="Longshore Life" width="663" height="960" fetchpriority="high" decoding="sync"></div><div id="splash2" aria-hidden="true"><img src="img/bridges.jpg" alt="" width="1080" height="1449" decoding="async"></div>
+<header id="hdr"><span class="hdt"><img id="hdLogo" src="img/logo-header.png" alt="Longshore Life" width="76" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"></span> <button type="button" id="hdLoc" class="hdl" aria-haspopup="dialog" aria-label="Your local: Local 19. Change local"><span id="hdLn">Local 19</span> <span aria-hidden="true">▾</span></button><span class="hdmw"><button type="button" id="hdSkip" class="hdm" aria-label="Skip to next song">⏭</button><button type="button" id="hdMus" class="hdm" aria-pressed="true" aria-label="Background music on. Tap to mute">🔊</button></span></header><div id="musToast" role="status" aria-live="polite"></div><audio id="bgm" preload="none"></audio>
 <main>
 <div id="banners"></div>
 <section id="v-add">
@@ -562,7 +562,7 @@ body.gopen{overflow:hidden}
 <p class="mut" style="margin-bottom:0">Travel time is paid at one-half the basic straight-time hourly rate for your rate tier (Supp. IV 5.11, same rule as the Time Book workbook). Mileage is a reimbursement and is always shown apart from wages.</p></div>
 <div class="card"><h3>Rates &amp; app</h3>
 <p class="mut" id="verInfo" style="margin-top:0"></p>
-<p class="mut" id="aboutOwn">KING of the DOCKS is an independent app by Daniel White. Not affiliated with or endorsed by the ILWU or PMA.<br><b id="notOff">Not an official ILWU or PMA app.</b><br>© 2026 Daniel White. All rights reserved.</p>
+<p class="mut" id="aboutOwn">Longshore Life is an independent app by Daniel White. Not affiliated with or endorsed by the ILWU or PMA.<br><b id="notOff">Not an official ILWU or PMA app.</b><br>© 2026 Daniel White. All rights reserved.</p>
 <p class="mut" id="chatRules"><b>Chat rules:</b> be respectful. No harassment, hate, threats or spam. Tap <b>Report</b> on a message that breaks the rules, or <b>Block</b> to hide someone. Admins review every report.</p>
 <p class="mut" id="contactLn"><b>Report a problem / contact:</b> <span id="contactV"></span></p>
 <div class="musw"><a id="musicBtn" class="musb" href="https://suno.com/s/weM2IQiWNmoNdTu9" target="_blank" rel="noopener">🎵 Longshore — the playlist</a></div>
@@ -690,7 +690,7 @@ body.gopen{overflow:hidden}
 <div class="card waonly"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). <b>Ships coming</b> lists Seattle container terminals only (T5, T18); T91 is cruise, no container calls. The Needs <b>At berth now</b> box covers more ports. <b>⚙️ Gear</b> opens a lashing/cone/catwalk card for that ship, filled in by coworkers and shared in your chat room (photos stay on your phone).</p>
 <p class="mut" style="margin:8px 0 0"><b>Sources:</b> Seattle and Tacoma: Northwest Seaport Alliance Vessel Schedule Forecast (Tacoma includes car ships and breakbulk). Aberdeen: Port of Grays Harbor vessel schedule (dates only). Olympia: Port of Olympia vessel announcements (dates only). Everett: Port of Everett shipping schedule. Port Angeles: Port of Port Angeles ship schedule. Longview and Vancouver WA: no public schedule; Columbia River Pilots dispatch is used only when it is current. "leaves ?" means the source gives no departure time.</p></div>
 </section>
-<footer id="ft">KING of the DOCKS <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button><small id="ftc">© 2026 Daniel White. All rights reserved.</small></footer>
+<footer id="ft">Longshore Life <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button><small id="ftc">© 2026 Daniel White. All rights reserved.</small></footer>
 </main>
 <div id="bbar"><nav class="tabs" aria-label="Main"><button type="button" data-v="add" class="on" aria-label="Add shift"><span class="ti" aria-hidden="true">➕</span><span class="tl">Add</span></button><button type="button" data-v="ships" aria-label="Ships"><span class="ti" aria-hidden="true">🚢</span><span class="tl">Ships</span></button><button type="button" data-v="pegs" aria-label="Pegs"><span class="ti" aria-hidden="true">📌</span><span class="tl">Pegs</span></button><button type="button" data-v="chat" aria-label="Chat"><span class="ti" aria-hidden="true">💬</span><span class="tl">Chat</span></button><button type="button" data-v="week" aria-label="Week"><span class="ti" aria-hidden="true">📅</span><span class="tl">Week</span></button><button type="button" data-v="hist" aria-label="History"><span class="ti" aria-hidden="true">🕘</span><span class="tl lg">History</span><span class="ts" aria-hidden="true">Hist.</span></button><button type="button" data-v="data" aria-label="Backup"><span class="ti" aria-hidden="true">💾</span><span class="tl lg">Backup</span><span class="ts" aria-hidden="true">Bkup</span></button></nav><nav class="docs" aria-label="Documents"><a id="docSafety" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Marine_Safety_Code_2022.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Marine Safety Code, 2022 Revision (PDF on pmanet.org)" aria-label="ILWU Safety Handbook: Pacific Coast Marine Safety Code, 2022 Revision, PDF, opens in a new tab"><b aria-hidden="true">⛑️</b><span>ILWU Safety Handbook</span></a><a id="docContract" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Longshore_Contract_Document_2022-2028.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Longshore Contract Document, July 1, 2022 – July 1, 2028 (PDF on pmanet.org)" aria-label="Current Contract: Pacific Coast Longshore Contract Document 2022 to 2028, PDF, opens in a new tab"><b aria-hidden="true">📄</b><span>Current Contract</span></a></nav></div>
 <script>
@@ -698,7 +698,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v119",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v120",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -796,7 +796,7 @@ function localPierGroups(n){const k=CA_SHIP_OF[localId(n)];return k&&CA_PIERS[k]
 function localPiers(n){n=localId(n);const g=localPierGroups(n);if(g)return g.flatMap(x=>x[1]);return n==="23"?TAC_PIERS:LOCALS[n].out?(OUT_PIERS[n]||[LOCALS[n].port]):SEA_PIERS;}
 function pierOptsHtml(n){const E=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),o=p=>"<option>"+E(p)+"</option>",g=localPierGroups(n);
  return g?g.map(([l,ps])=>'<optgroup label="'+E(l)+'">'+ps.map(o).join("")+"</optgroup>").join(""):localPiers(n).map(o).join("");}
-function localTitle(n){return "KING of the DOCKS · Local "+localId(n);}
+function localTitle(n){return "Longshore Life · Local "+localId(n);}
 let PIERS=localPiers(curLocal());
 const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman"],["0006","Frontman/Slingman"],["0007","Holdman"],["0008","Jitney Driver"],["0009","Lasher"],["0012","Car Man"],["0150","CFS Utility Man"],["0011","PMA Training (L/S)"]],
 "Skill 1":[["0023","Button Pusher"],["0025","Combo Lift/Jitney"],["0026","Crane Chaser"],["0028","Hatch Tender"],["0029","Lift Truck Operator"],["0031","Rail Car Pusher"],["0033","Skilled Holdman"],["0036","Tractor-Semi-Dock"],["0037","Utility Lift Driver"],["0038","Winch Driver"],["0052","Gang Boss"],["0054","Hatch Boss Tender"],["0003","Boatman"],["0030","Payloader Operator"],["0070","Bulldozer/Caterpillar"],["0071","D.O.T. Truck Driver"],["0047","UTR Ro/Ro Ship (WA)"]],
@@ -1214,7 +1214,7 @@ const UP_JOBS=["Sling man","Stevedore","Extra Stevedore","Crane op"];
 function upApplies(job){return UP_JOBS.includes(job);}
 function upLabel(v){return v==="first"?"First up (AM)":v==="second"?"Second up (PM)":"";}
 function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekEntries(all,ws),t=summarize(list),we=addDays(ws,6);const pgw=pgpWeek(opts&&opts.pgp?opts.pgp:(pgpOn(curLocal())?pgpList():[]),ws);
- const L=["KING of the DOCKS – Hours, week of "+ws+" to "+we,""];
+ const L=["Longshore Life – Hours, week of "+ws+" to "+we,""];
  if(!list.length)L.push("No shifts logged.");
  for(const e of list){const wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][parseDate(e.date).getDay()];
   let s=wd+" "+e.date.slice(5)+" "+e.shift+": "+r2(num(e.hours))+"h";if(effOT(e))s+=" (OT "+r2(effOT(e))+")";if(e.nl)s+=" [Night list ×1.3]";if(isCwog(e))s+=" [CWOG: 10-hr guarantee, no work supplied; "+cwogSplit(e)+"]";else if(isWknd(e))s+=" [Weekend: all hours OT"+(e.shift==="3rd"?"; 3rd shift at 1.8x":"")+"]";else if(holAuto(e))s+=" [Holiday: "+e.hol+", all hours OT]";else if(isHol(e))s+=" [Holiday: "+holLabel(e.date)+"]";if(isStopWork(e.date,curLocal())&&swNight(e.shift))s+=" [Stop work meeting night]";
@@ -1245,7 +1245,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v119",CACHE_VERSION="l19hours-v119"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v120",CACHE_VERSION="l19hours-v120"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1264,7 +1264,7 @@ function payTotal(t){return Math.round((t.pay+t.travelPay)*100)/100;}
 function hasPay(t){return !!(t.anyPay||t.travelPay>0);}
 const KIND_LABEL={rate:"Wrong rate",job:"Missing job",pier:"Missing pier",other:"Other"};
 function reportText(o){o=o||{};const tl=(TIERS.find(x=>x[0]===o.tier)||[0,o.tier||""])[1];
- const L=["KING of the DOCKS – problem report","App version: "+APP_VERSION+" ("+CACHE_VERSION+")","Rates version: "+RATES_VERSION.label+" ("+RATES_VERSION.id+")","Local: "+(o.local?"Local "+localId(o.local):"Local "+curLocal()),
+ const L=["Longshore Life – problem report","App version: "+APP_VERSION+" ("+CACHE_VERSION+")","Rates version: "+RATES_VERSION.label+" ("+RATES_VERSION.id+")","Local: "+(o.local?"Local "+localId(o.local):"Local "+curLocal()),
   "","What's wrong: "+(KIND_LABEL[o.kind]||KIND_LABEL.other),"Job: "+(o.job?(jobLabel(o.job)||o.job):"(none selected)"),"Pier: "+(o.pier||"(none selected)"),"Shift: "+(o.shift||"(none selected)"),"Rate tier: "+(tl||"(unknown)"),
   "","Details:",String(o.text||"").trim()||"(none)"];
  if(o.ua)L.push("","Device: "+String(o.ua).slice(0,140));
@@ -1291,7 +1291,7 @@ function yearSummary(all,year){const y=String(year),l=(all||[]).filter(e=>e&&typ
    jobs:Object.keys(t.byJob).map(k=>({name:k==="?"?"(none)":k,hours:rd2(t.byJob[k].hours),pay:rd2(t.byJob[k].pay),anyPay:t.byJob[k].anyPay})).sort((a,b)=>b.hours-a.hours||(a.name<b.name?-1:1)),
    shifts3:["1st","2nd","3rd"].map(sh=>{const sl=l.filter(e=>e.shift===sh),st=summarize(sl);return{shift:sh,label:sh==="1st"?"1st (day)":sh==="2nd"?"2nd (night)":"3rd (hoot owl)",count:sl.length,hours:rd2(st.hours),ot:rd2(st.ot),pay:rd2(st.pay),anyPay:st.anyPay};}),
    qual:(()=>{const py=payrollYear(y+"-06-15");let h=0;for(const e of all||[])if(e&&e.date>=py.start&&e.date<=py.end)h+=qualHours(e);h=rd2(h);return{...py,hours:h,need800:Math.max(0,rd2(QUAL.partial-h)),need1300:Math.max(0,rd2(QUAL.full-h))};})(),holShifts:l.filter(e=>isHol(e)).length,holHours:rd2(l.filter(e=>isHol(e)).reduce((x,e)=>x+num(e.hours),0))};}
-function yearText(all,year,opts){const nopay=!!(opts&&opts.noPay),y=yearSummary(all,year),L=["KING of the DOCKS – Year summary "+y.year,""];
+function yearText(all,year,opts){const nopay=!!(opts&&opts.noPay),y=yearSummary(all,year),L=["Longshore Life – Year summary "+y.year,""];
  if(!y.shifts){L.push("No shifts logged in "+y.year+".");return L.join("\n");}
  L.push("Total hours: "+r2(y.hours),"Straight / OT: "+r2(y.straight)+" / "+r2(y.ot),"Days worked: "+y.days,"Shifts: "+y.shifts);if(y.holShifts)L.push("Holiday shifts: "+y.holShifts+" ("+r2(y.holHours)+"h)");
  if(!nopay&&y.hasPay){L.push("Total pay (entered rates, gross est.): "+money(y.total));if(y.anyPay)L.push("  Shift wages: "+money(y.wages));if(y.travelPay)L.push("  Travel pay: "+money(y.travelPay));}
@@ -1862,7 +1862,7 @@ function pegBoardText(name,b,now,gd){now=now instanceof Date&&!isNaN(now)?now:ne
   const gt=(gd.glog||[]).filter(t=>t.d===day);L.push("Global pegs taken today:");if(!gt.length)L.push("none yet");for(const t of gt)L.push("• "+t.peg+" – "+t.person+" ("+t.board+" #"+t.num+")");}
  const td=(b.takes||[]).filter(t=>t.d===day);L.push("","Taken today ("+pegDateLong(day)+"):");
  if(!td.length)L.push("none yet");for(const t of td)L.push("• "+t.job+" – "+t.person+(t.pos?" ("+pegWhere2(b,t.pos)+")":""));
- L.push("","Shared "+pegWhen(now)+" from KING of the DOCKS");return L.join("\n");}
+ L.push("","Shared "+pegWhen(now)+" from Longshore Life");return L.join("\n");}
 function pegWhen(d){d=d instanceof Date?d:new Date(d);if(isNaN(d))return"";const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],h=d.getHours(),m=d.getMinutes();
  return M[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear()+" "+((h%12)||12)+":"+(m<10?"0":"")+m+" "+(h<12?"AM":"PM");}
 function pegWhere(k,cols){const m=k.split("-"),r=+m[0],c=+m[1];return"#"+pegNum(r,c,cols)+" (row "+r+", col "+c+")";}
@@ -1872,7 +1872,7 @@ function pegText(name,b,now){const ks=Object.keys(b.pegs).sort((x,y)=>{const p=x
  const f=ks.filter(k=>b.pegs[k].n||b.pegs[k].note);
  if(!f.length)L.push("No positions filled in.");else{L.push("Positions (reading order, left to right, top to bottom):");
   for(const k of f){const v=b.pegs[k];L.push(pegWhere(k,b.cols)+": "+(v.n||"(no name)")+(v.note?" – "+v.note:"")+(v.me?" ★ me":""));}}
- L.push("","Shared "+pegWhen(now)+" from KING of the DOCKS");return L.join("\n");}
+ L.push("","Shared "+pegWhen(now)+" from Longshore Life");return L.join("\n");}
 /* ===== v60: Equipment reserve board (rows = equipment unit numbers in sections; each row has a Day and a Night name slot). Stored in localStorage "l19.equip", separate from the peg boards. ===== */
 const EQSK="l19.eqSlots",EQMIG="l19.eqUnseed61",EQ_RULES_MSG="Reservations need the new server rules — ask an admin.";
 const EQ_NAME="Equipment reserve — Pier 18",EQ_ID="equipment-reserve-pier-18",EQK="l19.equip",EQ_MAX=60,EQ_MARK="eq:type",EQ_KIND="equip-v1",EQ_PHOTO="photo";
@@ -1970,7 +1970,7 @@ function eqText(b,now){now=now instanceof Date&&!isNaN(now)?now:new Date();const
  const line=(r,s,lab)=>{const v=r[s];if(!v)return;const st=eqStamp(v);L.push("  "+r.u+" "+lab+": "+v.n+(v.o?" ("+v.o+")":"")+(st?" ["+st+"]":""));};
  if(!c.d&&!c.n)L.push("No units reserved.");
  for(const sec of eqSections(b)){const has=sec.rows.some(x=>x.r.d||x.r.n);if(!has)continue;L.push(sec.name+":");for(const x of sec.rows){line(x.r,"d","Day");line(x.r,"n","Night");}}
- L.push("",c.d+" Day, "+c.n+" Night reserved of "+c.units+" units.","Shared "+pegWhen(now)+" from KING of the DOCKS");return L.join("\n");}
+ L.push("",c.d+" Day, "+c.n+" Night reserved of "+c.units+" units.","Shared "+pegWhen(now)+" from Longshore Life");return L.join("\n");}
 function eqSnapModel(b,now){now=now instanceof Date&&!isNaN(now)?now:new Date();const sl=v=>v?{n:v.n,o:v.o,st:eqStamp(v)}:null;
  return{title:EQ_NAME,when:pegWhen(now),updated:b.updated?pegWhen(b.updated):"",count:eqCount(b),sections:eqSections(b).map(s=>({name:s.name,rows:s.rows.map(x=>({u:x.r.u,t:x.r.t,d:sl(x.r.d),n:sl(x.r.n)}))}))};}
 function letterTitle(vs,eta){return (String(vs||"Ship letter").trim()+" "+(eta||"")).trim();}
@@ -2041,7 +2041,7 @@ function gearStoreClean(c){const o={};if(!c||typeof c!=="object")return o;
   o[k]={d:d,ms:Math.max(0,Math.floor(Number(e.ms))||0),by:String(e.by||"").slice(0,128),byName:String(e.byName||"").replace(/[\u0000-\u001f]/g," ").trim().slice(0,30),st:e.st==="shared"?"shared":"local",code:/^[A-Z0-9_-]{3,30}$/.test(String(e.code||""))?String(e.code):""};}
  return o;}
 function gearStoreMerge(a,b){const x=gearStoreClean(a),y=gearStoreClean(b),o={...x};for(const k of Object.keys(y))if(!o[k]||y[k].ms>o[k].ms)o[k]=y[k];return o;}
-/* v63/v64: built-in gear reference guide. Drawings made for KING of the DOCKS (not copied). v64: openly licensed photos (bundled in img/, credited) and links to real diagrams. */
+/* v63/v64: built-in gear reference guide. Drawings made for Longshore Life (not copied). v64: openly licensed photos (bundled in img/, credited) and links to real diagrams. */
 const GEAR_SVG_BOX='fill="#dbe5f5" stroke="#00214e" stroke-width="2"',GEAR_SVG_CC='fill="#7f93b5" stroke="#00214e" stroke-width="1.5"',GEAR_SVG_Y='fill="#ffd23f" stroke="#00214e" stroke-width="1.5"';
 function gearConeSvg(x,kind,label){const c=x+40;let s=`<rect x="${x+8}" y="12" width="64" height="34" ${GEAR_SVG_BOX}/><rect x="${c-14}" y="34" width="28" height="12" ${GEAR_SVG_CC}/><rect x="${x+8}" y="74" width="64" height="34" ${GEAR_SVG_BOX}/><rect x="${c-14}" y="74" width="28" height="12" ${GEAR_SVG_CC}/>`;
  s+=`<polygon points="${c-8},52 ${c-5},40 ${c+5},40 ${c+8},52" ${GEAR_SVG_Y}/><rect x="${c-15}" y="52" width="30" height="8" ${GEAR_SVG_Y}/>`;
@@ -2149,7 +2149,7 @@ ${gearFig("bridge")}${gearFig("stern")}${gearLinksHtml("bridge")}`],
 ${gearFig("tb")}${gearLinksHtml("tb")}`],
  ["hatch","Hatch covers",`<p><b>Pontoon / lift-away:</b> separate lids that the crane lifts off and sets aside. <b>Folding / hydraulic:</b> hinged panels that fold open.</p>${gearFig("hatch")}<p><b>Hatchless bays:</b> no lids. Cell guides run up above the deck, so boxes are held by the guides and usually aren't lashed. <b>Cell guides in the hold:</b> steel rails at the box corners; boxes inside guides don't need lashing.</p>${gearFig("cells")}${gearLinksHtml("hatch")}`]];
 function gearGuideHtml(){return GEAR_GUIDE.map(([id,t,h])=>`<section class="gsec gg" id="gg-${id}"><h3>${t}</h3>${h}</section>`).join("")+
- `<section class="gsec gg"><h3>Please note</h3><p>This is general background, not instructions. Always go by the ship's lashing plan and Cargo Securing Manual, your foreman or walking boss, and the safety code.</p><p class="gmut">Drawings made for KING of the DOCKS. Photos from Wikimedia Commons under the open licences shown under each one. "All sets" (single pull) / "double pull" cones and "standard / Chinese" lashing are Local 19 longshore usage. Background from public guides: MacGregor container securing catalogue (semi-automatic twistlocks, midlocks, Equalash, turnbuckles); Standard Club / IIMS "Container securing"; CR Classification container securing guidelines (cross lashing); ClassNK container stowage and securing guidelines (lashing bridges, cell guides); TT Club "Cargo integrity at sea"; Wärtsilä encyclopedia (twistlock).</p></section>`;}
+ `<section class="gsec gg"><h3>Please note</h3><p>This is general background, not instructions. Always go by the ship's lashing plan and Cargo Securing Manual, your foreman or walking boss, and the safety code.</p><p class="gmut">Drawings made for Longshore Life. Photos from Wikimedia Commons under the open licences shown under each one. "All sets" (single pull) / "double pull" cones and "standard / Chinese" lashing are Local 19 longshore usage. Background from public guides: MacGregor container securing catalogue (semi-automatic twistlocks, midlocks, Equalash, turnbuckles); Standard Club / IIMS "Container securing"; CR Classification container securing guidelines (cross lashing); ClassNK container stowage and securing guidelines (lashing bridges, cell guides); TT Club "Cargo integrity at sea"; Wärtsilä encyclopedia (twistlock).</p></section>`;}
 if(typeof document!=="undefined"){
 const $=id=>document.getElementById(id),KEY="l19hours.v1";
 let entries=[];try{const raw=localStorage.getItem(KEY)||"[]",c=cleanEntries(JSON.parse(raw));entries=c.ok;if(!c.bad.length&&(cwogMigrate(entries)+hootMigrate(entries)))localStorage.setItem(KEY,JSON.stringify(entries));
@@ -2316,7 +2316,7 @@ $("v-week").innerHTML=`<div class="card nav"><button id="pw" aria-label="Previou
  $("pw").onclick=()=>{wk=addDays(wk,-7);renderWeek();};$("nw").onclick=()=>{wk=addDays(wk,7);renderWeek();};
  $("tw").onclick=()=>{wk=weekStart(fmtDate(new Date()));renderWeek();};$("wcal").onclick=()=>{const td=fmtDate(new Date());pd=null;openCalPop("week",td>=wk&&td<=addDays(wk,6)?td:wk);};
  async function doShare(noPay){const text=weekText(entries,wk,{noPay});
-  if(navigator.share){try{await navigator.share({title:"KING of the DOCKS hours "+wk,text});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+  if(navigator.share){try{await navigator.share({title:"Longshore Life hours "+wk,text});return;}catch(e){if(e&&e.name==="AbortError")return;}}
   try{await navigator.clipboard.writeText(text);alert("Summary copied to clipboard.");}catch(e){prompt("Copy summary:",text);}}
  if($("sh"))$("sh").onclick=()=>{const o=document.createElement("div");o.className="sheet";
   o.innerHTML='<div><h3>Share week</h3><button class="p" data-m="hours">Share hours only (no pay)</button><button data-m="full">Share hours + pay estimate</button><button data-m="x">Cancel</button></div>';
@@ -2578,7 +2578,7 @@ async function mcLoad(which){mcData=null;mcErr="";mcPaint();const F=mcFb();try{c
 function mcPaint(){const box=document.getElementById("mcBody");if(!box)return;const F=mcFb(),vis=mcVis(),hasRes=vis.some(x=>x.mode==="reserve");let h="";
  if(mcView==="list"){h='<div class="mcl">'+merchHtml(MERCH,curLocal())+'</div>'+(mcMsg?'<p class="mcok" role="status">'+mcE(mcMsg)+'</p>':'')+
    (hasRes?'<div class="row mcrow"><button type="button" id="mcMine">My reservations</button>'+(F&&F.isAdmin&&F.isAdmin()?'<button type="button" id="mcAdm">Reservations (admin)</button>':'')+'</div>':'')+
-   (vis.some(x=>x.mode==="square")?'<p class="mut mcsq">Secure checkout by Square. Questions: <a href="mailto:'+MERCH_MAIL+'?subject=KING%20of%20the%20DOCKS%20merch">'+MERCH_MAIL+'</a></p>':'<p class="mut mcsq">Questions: <a href="mailto:'+MERCH_MAIL+'?subject=KING%20of%20the%20DOCKS%20merch">'+MERCH_MAIL+'</a></p>');}
+   (vis.some(x=>x.mode==="square")?'<p class="mut mcsq">Secure checkout by Square. Questions: <a href="mailto:'+MERCH_MAIL+'?subject=Longshore%20Life%20merch">'+MERCH_MAIL+'</a></p>':'<p class="mut mcsq">Questions: <a href="mailto:'+MERCH_MAIL+'?subject=Longshore%20Life%20merch">'+MERCH_MAIL+'</a></p>');}
  else if(mcView==="res"){const x=mcItem,joined=F&&F.joined&&F.joined();
   h='<h4 class="mch4">Reserve – pay at hall</h4><div class="mcn">'+mcE(x.name)+'</div>'+(x.price?'<div class="mcp">'+mcE(x.price)+'</div>':'')+
    (joined?(x.sizes.length?'<label for="mcSz">Size</label><select id="mcSz"><option value="">Choose a size</option>'+x.sizes.map(z=>'<option>'+mcE(z)+'</option>').join("")+'</select>':'')+
@@ -2616,7 +2616,7 @@ function merchOpen(){if(!merchOn(MERCH,curLocal())||document.getElementById("mer
  if(mcVis().some(x=>x.mode==="reserve")&&F&&F.joined&&F.joined())F.ready().then(()=>{if(mcView==="list"&&document.getElementById("merchSheet"))mcPaint();}).catch(()=>{});
  setTimeout(()=>{const x=document.getElementById("mcX");if(x)x.focus({preventScroll:true});merchFit();},0);}
 /* the History button: rendered only if MERCH has any valid item at all; shown only when an item is visible for the current local */
-function merchBtnHtml(){return merchItems(MERCH).length?'<div class="musw mcw" id="mcWrap" hidden><button type="button" id="merchBtn" class="musb" aria-label="KING of the DOCKS merch: t-shirts and magnets"><span>'+MERCH_FULL+'</span></button></div>':"";}
+function merchBtnHtml(){return merchItems(MERCH).length?'<div class="musw mcw" id="mcWrap" hidden><button type="button" id="merchBtn" class="musb" aria-label="Longshore Life merch: t-shirts and magnets"><span>'+MERCH_FULL+'</span></button></div>':"";}
 function merchSync(){const w=document.getElementById("mcWrap");if(w)w.hidden=!merchOn(MERCH,curLocal());}
 function fitOne(a,full,short,min){const t=a.querySelector("span")||a;t.textContent=full;a.style.fontSize="";const over=()=>a.scrollWidth>a.clientWidth+0.5;let fs=parseFloat(getComputedStyle(a).fontSize),n=0;
  while(over()&&fs>13&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}if(over()&&short){t.textContent=short;while(over()&&fs>(min||11)&&n<80){fs-=0.5;n++;a.style.fontSize=fs+"px";}}}
@@ -3116,7 +3116,7 @@ tierUI();
 /* --- 4d. first-run welcome / setup --- */
 function setupShow(){if($("setup")){if(!$("lock"))setInert(true);return;}if($("lock")||!setupNeeded(entries.length,LS(SUD,"")))return;
  const d=document.createElement("div");d.id="setup";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-labelledby","suT");
- d.innerHTML=`<div class="su"><h2 id="suT">Welcome to KING of the DOCKS 👋</h2><p class="mut" style="margin:0 0 8px">Quick setup (about 10 seconds). Already at full scale or have lots of hours? Tell us here.</p>
+ d.innerHTML=`<div class="su"><h2 id="suT">Welcome to Longshore Life 👋</h2><p class="mut" style="margin:0 0 8px">Quick setup (about 10 seconds). Already at full scale or have lots of hours? Tell us here.</p>
  <label style="margin-top:4px">Your local</label><div id="suLocW"></div>
  <label for="suH" style="margin-top:8px">How many hours do you have so far?</label><input type="number" id="suH" step="0.25" min="0" inputmode="decimal" placeholder="0" aria-describedby="suTier"><div class="mut" style="margin-top:4px">Total career / registered hours. 0 is fine if you're brand new.</div>
  <div class="tierbox" id="suTier" aria-live="polite"></div>
@@ -3141,7 +3141,7 @@ function eraseAll(){try{Object.keys(localStorage).filter(k=>k.indexOf("l19")===0
 let lockFails=0,lockWait=0;
 function setInert(on){["main","#bbar","header"].forEach(s=>{const el=document.querySelector(s);if(el){if(on)el.setAttribute("inert","");else el.removeAttribute("inert");el.setAttribute("aria-hidden",String(on));}});}
 function lockNow(){if(!pinCfg()||$("lock"))return;const d=document.createElement("div");d.id="lock";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-label","App locked");
- d.innerHTML=`<div class="lk"><div class="big" style="margin-bottom:8px">KING of the DOCKS is locked</div><label for="lpin" style="margin-top:0">Enter your 4-digit PIN</label><input id="lpin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" style="text-align:center;font-size:1.5rem;letter-spacing:.5em"><div id="lmsg" class="mut" aria-live="polite" style="min-height:1.4em;margin-top:6px"></div><button type="button" class="p" id="lgo" style="width:100%;margin-top:8px">Unlock</button><button type="button" class="link" id="lforgot" style="margin-top:10px">Forgot PIN?</button></div>`;
+ d.innerHTML=`<div class="lk"><div class="big" style="margin-bottom:8px">Longshore Life is locked</div><label for="lpin" style="margin-top:0">Enter your 4-digit PIN</label><input id="lpin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" style="text-align:center;font-size:1.5rem;letter-spacing:.5em"><div id="lmsg" class="mut" aria-live="polite" style="min-height:1.4em;margin-top:6px"></div><button type="button" class="p" id="lgo" style="width:100%;margin-top:8px">Unlock</button><button type="button" class="link" id="lforgot" style="margin-top:10px">Forgot PIN?</button></div>`;
  document.body.appendChild(d);setInert(true);
  const msg=t=>{$("lmsg").textContent=t;};
  async function tryU(){const c=pinCfg();if(!c){d.remove();setInert(false);return;}if(Date.now()<lockWait){msg("Too many tries. Wait a few seconds.");return;}
@@ -3210,7 +3210,7 @@ function openReport(){if($("rpSheet"))return;const o=document.createElement("div
  $("rpS").value=$("shift").value;$("rpT2").value=$("tier").value;
  const close=()=>{o.remove();};$("rpCx").onclick=close;o.onclick=ev=>{if(ev.target===o)close();};
  $("rpGo").onclick=async()=>{const t=reportText({kind:$("rpK").value,job:$("rpJ").value,pier:$("rpP").value,shift:$("rpS").value,tier:$("rpT2").value,text:$("rpX").value,ua:navigator.userAgent});
-  const r=await sendText("KING of the DOCKS problem report",t);$("rpM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Report shared. Paste it to the beta organizer if needed.":r==="copied"?"Report copied. Paste it to the beta organizer.":"Copy the report from the box, then paste it to the beta organizer.";};
+  const r=await sendText("Longshore Life problem report",t);$("rpM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Report shared. Paste it to the beta organizer if needed.":r==="copied"?"Report copied. Paste it to the beta organizer.":"Copy the report from the box, then paste it to the beta organizer.";};
  setTimeout(()=>{try{$("rpK").focus({preventScroll:true});}catch(e){}},50);}
 $("rpBtn").onclick=$("rpFt").onclick=openReport;
 setTimeout(()=>{if($("contactV"))$("contactV").innerHTML=contactHtml(APP_CONTACT);ctFit();onWidth(ctFit);new MutationObserver(ctFit).observe(document.documentElement,{attributes:true,attributeFilter:["data-ts"]});show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data")ctFit();return r;})(show);},0); /* APP_CONTACT is defined further down */
@@ -3218,7 +3218,7 @@ setTimeout(()=>{if($("contactV"))$("contactV").innerHTML=contactHtml(APP_CONTACT
 function ysYears(){const y=histYears(histMonths(entries,todayS()));return y.length?y:[todayS().slice(0,4)];}
 function ysFill(){const ys=ysYears(),cur=$("ysY").value;$("ysY").innerHTML=ys.map(y=>`<option>${y}</option>`).join("");$("ysY").value=ys.includes(cur)?cur:ys[0];}
 function yearHtml(y,nopay){const tb=(a,f)=>a.map(f).join("");
- return `<h2>Year summary ${esc(y.year)}</h2><div class="mut">KING of the DOCKS · generated ${esc(todayS())}${nopay?" · hours only":""}</div>
+ return `<h2>Year summary ${esc(y.year)}</h2><div class="mut">Longshore Life · generated ${esc(todayS())}${nopay?" · hours only":""}</div>
  ${y.shifts?`<div class="stats" style="margin-top:12px"><div class="stat pri"><b>${r2(y.hours)}</b><span>Hours</span></div><div class="stat"><b>${r2(y.straight)}/${r2(y.ot)}</b><span data-short="ST/OT">Straight/OT</span></div><div class="stat"><b>${y.days}</b><span>Days</span></div></div>${y.holShifts?`<p class="mut">Holiday shifts: ${y.holShifts} (${r2(y.holHours)}h)</p>`:""}
  ${nopay?"":`<div class="card"><span class="mut">Total pay est. (wages + travel)</span><div class="big">${y.hasPay?money(y.total):"–"}</div>${y.hasPay?`<div class="mut">${y.anyPay?"Shift wages "+money(y.wages):""}${y.travelPay?(y.anyPay?" · ":"")+"Travel pay "+money(y.travelPay):""}</div>`:""}</div>`}
  ${y.travelHours||y.miles?`<div class="card"><h4 style="margin-top:0">Travel &amp; mileage</h4><table>${y.travelHours?`<tr><td>Travel hours</td><td>${r2(y.travelHours)}h${nopay?"":" · "+money(y.travelPay)}</td></tr>`:""}${y.miles?`<tr><td>Miles</td><td>${r2(y.miles)} mi${nopay?"":" · "+money(y.milePay)}</td></tr>`:""}</table>${!nopay&&y.miles?`<div class="mut">Mileage is a reimbursement, not wages.</div>`:""}</div>`:""}
@@ -3234,7 +3234,7 @@ function openYear(year,nopay){if($("ysum"))return;const d=document.createElement
  document.body.appendChild(d);ovInert(true);$("ysHo").checked=!!nopay;paint();
  $("ysHo").onchange=()=>{nopay=$("ysHo").checked;paint();};
  $("ysCl").onclick=()=>{d.remove();ovInert(false);};$("ysPr").onclick=()=>{try{window.print();}catch(e){$("ysM").textContent="Printing isn't available here.";}};
- $("ysSh").onclick=async()=>{const r=await sendText("KING of the DOCKS year summary "+year,yearText(entries,year,{noPay:nopay}));$("ysM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Shared.":r==="copied"?"Summary copied to clipboard.":"Copy the text from the box.";};
+ $("ysSh").onclick=async()=>{const r=await sendText("Longshore Life year summary "+year,yearText(entries,year,{noPay:nopay}));$("ysM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Shared.":r==="copied"?"Summary copied to clipboard.":"Copy the text from the box.";};
  $("ysCs").onclick=async()=>{const r=await shareFile("local19-year-"+year+(nopay?"-hours-only":"")+".csv","text/csv",yearCSV(entries,year,{noPay:nopay}));$("ysM").textContent=r==="cancel"?"Cancelled.":r==="shared"?"Shared CSV.":"CSV downloaded.";};
  setTimeout(()=>{try{$("ysCl").focus({preventScroll:true});}catch(e){}},50);}
 ysFill();$("ysN").checked=hidePay;
@@ -3701,11 +3701,11 @@ function pegSnapBlob(m){return new Promise((res,rej)=>{try{const pad=16,hh=72,co
   x.textAlign="left";x.textBaseline="alphabetic";x.fillStyle="#5b6b7d";x.font="700 11px "+F;x.fillText(String(ce.r),cx+5,cy+14);const nx=cx+5+x.measureText(String(ce.r)).width+5;
   x.fillStyle=ce.n?"#14202e":"#8a99a8";x.font=(ce.n?"700 ":"italic 500 ")+"13px "+F;x.fillText(fit(ce.n||"(blank)",cx+m.cw-6-nx),nx,cy+16);
   const pr=10,need=ce.pegs.length*(pr*2+4);let px=cx+m.cw-6-pr-(Math.max(0,need-(m.cw-12)));ce.pegs.slice().reverse().forEach((p,i)=>chip(p,Math.max(cx+pr+4,px-i*(pr*2+4)),cy+m.ch-pr-6,pr));}
- x.fillStyle="#5b6b7d";x.font="500 12px "+F;x.textAlign="left";x.textBaseline="alphabetic";x.fillText("Shared from KING of the DOCKS · slip names and pegs only",pad,H-10);
+ x.fillStyle="#5b6b7d";x.font="500 12px "+F;x.textAlign="left";x.textBaseline="alphabetic";x.fillText("Shared from Longshore Life · slip names and pegs only",pad,H-10);
  cv.toBlob(b=>b?res(b):rej(new Error("encode")),"image/png");}catch(e){rej(e);}});}
 async function pegShareSnap(name,b,gOn,m){const now=new Date();if(m)m.textContent="Making the board picture…";let bl;
  try{bl=await pegSnapBlob(pegSnapModel(name,b,gOn,now));}catch(e){if(m)m.textContent="Couldn't draw the board picture on this phone.";return;}
- const r=await shareImgs([new File([bl],pegSnapName(name,now),{type:"image/png"})],name+" – board picture",name+" – board picture, "+pegWhen(now)+" (KING of the DOCKS)",m);if(r==="cancel"&&m)m.textContent="";}
+ const r=await shareImgs([new File([bl],pegSnapName(name,now),{type:"image/png"})],name+" – board picture",name+" – board picture, "+pegWhen(now)+" (Longshore Life)",m);if(r==="cancel"&&m)m.textContent="";}
 $("pgSnap").onclick=()=>{if(pgEq){eqShareSnap(eqView().b,$("pgM"));return;}const name=pgCur();pegShareSnap(pgSideName(name),pgBoard(name),pegGlobalsOn(pgD,name),$("pgM"));};
 
 $("pgJC").innerHTML=PEG_COLORS.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
@@ -3903,11 +3903,11 @@ function eqSnapBlob(m){return new Promise((res,rej)=>{try{const pad=16,hh=78,F="
   for(const r of s.rows){x.fillStyle="#00214e";x.fillRect(pad+2,y+2,uw-4,rh-4);x.textBaseline="alphabetic";x.fillStyle="#ffffff";x.font="900 18px "+F;x.fillText(fit(r.u,uw-14),pad+8,y+(r.t?21:29));
    if(r.t){x.fillStyle="#ffd23f";x.font="700 11px "+F;x.fillText(fit(r.t,uw-14),pad+8,y+37);}
    slot(r.d,pad+uw,y);slot(r.n,pad+uw+sw,y);x.strokeStyle="#2a4a8a";x.lineWidth=1;x.beginPath();x.moveTo(pad,y+rh-0.5);x.lineTo(W-pad,y+rh-0.5);x.stroke();y+=rh;}}
- x.fillStyle="#b9c8e6";x.font="500 12px "+F;x.textBaseline="alphabetic";x.fillText("Shared from KING of the DOCKS · unit reservations only",pad,H-10);
+ x.fillStyle="#b9c8e6";x.font="500 12px "+F;x.textBaseline="alphabetic";x.fillText("Shared from Longshore Life · unit reservations only",pad,H-10);
  cv.toBlob(b=>b?res(b):rej(new Error("encode")),"image/png");}catch(e){rej(e);}});}
 async function eqShareSnap(b,m){const now=new Date();if(m)m.textContent="Making the board picture…";let bl;
  try{bl=await eqSnapBlob(eqSnapModel(b,now));}catch(e){if(m)m.textContent="Couldn't draw the board picture on this phone.";return;}
- const r=await shareImgs([new File([bl],pegSnapName(EQ_NAME,now),{type:"image/png"})],EQ_NAME+" – board picture",EQ_NAME+" – board picture, "+pegWhen(now)+" (KING of the DOCKS)",m);if(r==="cancel"&&m)m.textContent="";}
+ const r=await shareImgs([new File([bl],pegSnapName(EQ_NAME,now),{type:"image/png"})],EQ_NAME+" – board picture",EQ_NAME+" – board picture, "+pegWhen(now)+" (Longshore Life)",m);if(r==="cancel"&&m)m.textContent="";}
 /* read-only shared view: scale the board to the card width */
 function eqRoFit(){const w=document.querySelector("#pgSh .eqro");if(!w)return;const b=w.querySelector(".eqb");if(!b)return;b.style.zoom="1";const z=Math.min(1,Math.max(0.5,(w.clientWidth-2)/b.offsetWidth));b.style.zoom=String(Math.floor(z*100)/100);}
 window.addEventListener("resize",()=>{if(pgShared)eqRoFit();});
@@ -4174,7 +4174,7 @@ function gearImgView(blob){const g=gearCur;if(!g)return;lvTeardown();lv.open=tru
  document.addEventListener("keydown",onKey);lv.off=()=>{document.removeEventListener("keydown",onKey);zm.off();};
  $("lvzi").onclick=zm.zin;$("lvzo").onclick=zm.zout;$("lvzf").onclick=zm.fit;$("lvc").onclick=lvClose;$("lvx").onclick=lvClose;$("lvx").focus({preventScroll:true});
  const fn=(g.vessel.replace(/[^\w\- ]+/g,"").trim().replace(/\s+/g,"_")||"ship")+"_lashing_diagram.jpg";
- $("lvs").onclick=()=>shareImgs([new File([blob],fn,{type:"image/jpeg"})],g.vessel+" lashing diagram",g.vessel+" lashing diagram (KING of the DOCKS)",null);
+ $("lvs").onclick=()=>shareImgs([new File([blob],fn,{type:"image/jpeg"})],g.vessel+" lashing diagram",g.vessel+" lashing diagram (Longshore Life)",null);
  $("lvk").onclick=async()=>{try{await lPut({id:uid(),k:"gear|"+g.vk,vessel:g.vessel,eta:"",etd:"",added:new Date().toISOString(),src:"gal",blob:blob});$("lvk").textContent="Saved ✓";gearPics();}catch(e){$("lvk").textContent="Couldn't save";}};}
 /* reference guide */
 function gearGuide(topic){if(!$("gearG")){const d=document.createElement("div");d.id="gearG";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-labelledby","ggT");
@@ -4233,15 +4233,15 @@ function chatShow(text){const t=String(text||"");if(chatThreat(t))return {text:"
  if(!s.hits.length)return {text:t,hidden:false};let o="",p=0;for(const [a,b] of s.hits){o+=t.slice(p,a)+"●".repeat(Math.max(3,b-a));p=b;}return {text:o+t.slice(p),hidden:false,masked:true};}
 /* reports: the category rides in the existing 'reason' field ("Spam: note") so the reports rules don't change */
 const CHAT_REASONS=["Harassment","Hate","Threat","Spam","Other"];
-/* v114: KING of the DOCKS merch. Every local can see Square items; "reserve" items are hall pick-up items for the listed locals only.
+/* v114: Longshore Life merch. Every local can see Square items; "reserve" items are hall pick-up items for the listed locals only.
    TO ADD AN ITEM: put the photo in img/merch/ and add an object to MERCH, e.g.
-     Square (pay online):  {id:"tshirt", name:"KING of the DOCKS T-shirt", price:"$25", img:"img/merch/tshirt.jpg", mode:"square", url:"https://square.link/u/XXXXXXX", note:"Sizes S–3XL"}
-     Reserve at the hall:  {id:"hoodie", name:"KING of the DOCKS Hoodie", price:"$45 – pay at the hall", img:"img/merch/hoodie.jpg", mode:"reserve", locals:["19"], sizes:["S","M","L","XL","2XL"], note:"Made by Daniel"}
+     Square (pay online):  {id:"tshirt", name:"Longshore Life T-shirt", price:"$25", img:"img/merch/tshirt.jpg", mode:"square", url:"https://square.link/u/XXXXXXX", note:"Sizes S–3XL"}
+     Reserve at the hall:  {id:"hoodie", name:"Longshore Life Hoodie", price:"$45 – pay at the hall", img:"img/merch/hoodie.jpg", mode:"reserve", locals:["19"], sizes:["S","M","L","XL","2XL"], note:"Made by Daniel"}
    name is required; Square items need an https url; reserve items need no url. locals (e.g. ["19"]) limits who sees the item (default: every local).
    price, img (must be under img/merch/, else the logo is shown), sizes (up to 12, each up to 10 chars), note and id (letters/numbers/-) are optional.
    If no item is visible for the user's local the Merch button and section stay completely hidden. */
 const MERCH=[];
-const MERCH_LOGO="img/logo-header.png",MERCH_FULL="🛍️ KING of the DOCKS Merch",MERCH_SHORT="🛍️ Merch",MERCH_MAIL="kingofthedocks.app@gmail.com",MERCH_RES_COL="merchReservations",MERCH_MAX_OPEN=5;
+const MERCH_LOGO="img/logo-header.png",MERCH_FULL="🛍️ Longshore Life Merch",MERCH_SHORT="🛍️ Merch",MERCH_MAIL="kingofthedocks.app@gmail.com",MERCH_RES_COL="merchReservations",MERCH_MAX_OPEN=5;
 function merchSlug(s){return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40).replace(/-+$/,"");}
 function merchItems(list,local){return (Array.isArray(list)?list:[]).filter(x=>{if(!x||typeof x.name!=="string"||!x.name.trim())return false;const m=x.mode==="reserve"?"reserve":"square";
   if(m==="square"&&!(typeof x.url==="string"&&/^https:\/\/[^\s"'<>]+$/i.test(x.url.trim())))return false;
@@ -4262,7 +4262,7 @@ const MERCH_STATUS={reserved:"Reserved",picked:"Picked up",cancelled:"Cancelled"
 /* v112/v113: support contact for About (Daniel's app address since v113). A valid email shows as a 44px tap-to-email link, shrunk to fit one line. */
 function ctFit(){const a=document.getElementById("contactA");if(!a||!a.clientWidth)return;a.style.fontSize="";let fs=parseFloat(getComputedStyle(a).fontSize),n=0;while(a.scrollWidth>a.clientWidth+0.5&&fs>12&&n<60){fs-=0.5;n++;a.style.fontSize=fs+"px";}}
 const APP_CONTACT="kingofthedocks.app@gmail.com";
-function contactHtml(c){c=String(c||"").trim();return /^[^@\s<>"]+@[^@\s<>"]+\.[a-z]{2,}$/i.test(c)?'<a class="ctl" id="contactA" href="mailto:'+c+'?subject=KING%20of%20the%20DOCKS" aria-label="Email '+c+'">'+c+'</a>':'[contact email to be added] – for now use the Report a problem button below.';}
+function contactHtml(c){c=String(c||"").trim();return /^[^@\s<>"]+@[^@\s<>"]+\.[a-z]{2,}$/i.test(c)?'<a class="ctl" id="contactA" href="mailto:'+c+'?subject=Longshore%20Life" aria-label="Email '+c+'">'+c+'</a>':'[contact email to be added] – for now use the Report a problem button below.';}
 function chatReason(cat,note){const c=CHAT_REASONS.includes(cat)?cat:"Other",n=chatText(note).replace(/\s+/g," ").slice(0,200-c.length-2);return n?c+": "+n:c;}
 function chatReasonSplit(r){const m=/^(Harassment|Hate|Threat|Spam|Other)(?::\s*([\s\S]*))?$/.exec(String(r||""));return m?{cat:m[1],note:m[2]||""}:{cat:"",note:String(r||"")};}
 /* block list (this phone only): l19.chatBlocked = [{uid,name,at}] — part of l19.* so it rides in backups */
