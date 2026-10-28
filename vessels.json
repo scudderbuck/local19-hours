@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-28T08:45:07-07:00",
+ "updated": "2026-10-28T11:45:06-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -77,17 +77,6 @@
    "imo": "9332925"
   },
   {
-   "vessel": "ARC ENDEAVOR",
-   "service": "",
-   "terminal": "T7",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-23T20:00",
-   "etd": "2026-10-24T19:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9505065"
-  },
-  {
    "vessel": "YM TUTORIAL",
    "service": "FP2",
    "terminal": "Husky",
@@ -107,17 +96,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9505089"
-  },
-  {
-   "vessel": "CARNATION ACE",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-24T20:00",
-   "etd": "2026-10-25T03:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9544920"
   },
   {
    "vessel": "POLARIS MILA",
@@ -318,6 +296,16 @@
    "eta_time": false
   },
   {
+   "vessel": "MATSON LANAI",
+   "service": "Ad Hoc",
+   "terminal": "WST",
+   "agent": "Matson",
+   "eta": "2026-10-30T01:30",
+   "etd": "2026-10-30T17:00",
+   "port": "Tacoma",
+   "imo": "9334143"
+  },
+  {
    "vessel": "MATSON ANCHORAGE",
    "service": "Matson - AK",
    "terminal": "WST",
@@ -359,6 +347,16 @@
    "imo": "9978676"
   },
   {
+   "vessel": "NADI CHIEF",
+   "service": "EB Service 2",
+   "terminal": "T18",
+   "agent": "Talon Marine Services LLC",
+   "eta": "2026-10-30T22:00",
+   "etd": "2026-11-01T02:00",
+   "port": "Seattle",
+   "imo": "9861885"
+  },
+  {
    "vessel": "LAVENDER ACE",
    "service": "",
    "terminal": "Blair",
@@ -368,16 +366,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9363948"
-  },
-  {
-   "vessel": "NADI CHIEF",
-   "service": "EB Service 2",
-   "terminal": "T18",
-   "agent": "Talon Marine Services LLC",
-   "eta": "2026-10-30T23:00",
-   "etd": "2026-11-01T10:00",
-   "port": "Seattle",
-   "imo": "9861885"
   },
   {
    "vessel": "CYPRESS",
@@ -417,19 +405,9 @@
    "terminal": "Husky",
    "agent": "Norton Lilly International",
    "eta": "2026-11-01T15:00",
-   "etd": "2026-11-05T18:00",
+   "etd": "2026-11-05T04:00",
    "port": "Tacoma",
    "imo": "9976197"
-  },
-  {
-   "vessel": "MSC SOLA",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-01T17:00",
-   "etd": "2026-11-03T18:00",
-   "port": "Seattle",
-   "imo": "9401104"
   },
   {
    "vessel": "MSC NITYA B",
@@ -474,6 +452,16 @@
    "imo": "9464704"
   },
   {
+   "vessel": "MSC IVANA",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-02T17:00",
+   "etd": "2026-11-05T04:00",
+   "port": "Seattle",
+   "imo": "9398371"
+  },
+  {
    "vessel": "Engiadina",
    "service": "",
    "terminal": "T2",
@@ -495,16 +483,6 @@
    "imo": "9300415"
   },
   {
-   "vessel": "MSC IVANA",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-03T07:00",
-   "etd": "2026-11-05T04:00",
-   "port": "Seattle",
-   "imo": "9398371"
-  },
-  {
    "vessel": "HYUNDAI FORWARD",
    "service": "PN3",
    "terminal": "WUT",
@@ -522,6 +500,17 @@
    "eta": "2026-11-04T02:30",
    "etd": "2026-11-04T22:00",
    "port": "Tacoma"
+  },
+  {
+   "vessel": "MORNING LUCY",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-04T06:00",
+   "etd": "2026-11-04T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9383431"
   },
   {
    "vessel": "ONE MAJESTY",
@@ -565,7 +554,18 @@
    "imo": "9978937"
   },
   {
-   "vessel": "TONGALA",
+   "vessel": "MORNING LUCY",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-04T19:00",
+   "etd": "2026-11-05T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9383431"
+  },
+  {
+   "vessel": "GLOVIS TRUST",
    "service": "",
    "terminal": "EB1",
    "agent": "Norton Lilly International",
@@ -573,7 +573,7 @@
    "etd": "2026-11-05T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
-   "imo": "9278105"
+   "imo": "9983140"
   },
   {
    "vessel": "MSC SABRINA",
@@ -584,17 +584,6 @@
    "etd": "2026-11-06T04:00",
    "port": "Seattle",
    "imo": "9979022"
-  },
-  {
-   "vessel": "TONGALA",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-05T19:00",
-   "etd": "2026-11-06T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9278105"
   },
   {
    "vessel": "GLOVIS TREASURE",
@@ -659,17 +648,6 @@
    "imo": "9984431"
   },
   {
-   "vessel": "MORNING LUCY",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-06T06:00",
-   "etd": "2026-11-06T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9383431"
-  },
-  {
    "vessel": "MAUNAWILI",
    "service": "Matson - HI2",
    "terminal": "WST",
@@ -700,17 +678,6 @@
    "imo": "9401051"
   },
   {
-   "vessel": "MORNING LUCY",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-06T19:00",
-   "etd": "2026-11-07T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9383431"
-  },
-  {
    "vessel": "Glovis Legend",
    "service": "",
    "terminal": "T4",
@@ -722,7 +689,7 @@
    "imo": "1063281"
   },
   {
-   "vessel": "NOCC ADRIATIC",
+   "vessel": "TONGALA",
    "service": "",
    "terminal": "EB1",
    "agent": "Norton Lilly International",
@@ -730,7 +697,17 @@
    "etd": "2026-11-07T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
-   "imo": "1041843"
+   "imo": "9278105"
+  },
+  {
+   "vessel": "BUDAPEST EXPRESS",
+   "service": "WC4/TP5",
+   "terminal": "Husky",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-07T06:00",
+   "etd": "2026-11-10T04:00",
+   "port": "Tacoma",
+   "imo": "9450430"
   },
   {
    "vessel": "CORNEILLE",
@@ -743,17 +720,18 @@
    "imo": "9409170"
   },
   {
-   "vessel": "BUDAPEST EXPRESS",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-07T18:00",
-   "etd": "2026-11-09T15:00",
+   "vessel": "TONGALA",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-07T19:00",
+   "etd": "2026-11-08T18:00",
    "port": "Tacoma",
-   "imo": "9450430"
+   "vessel_type": "Car Carrier",
+   "imo": "9278105"
   },
   {
-   "vessel": "GLOVIS TRUST",
+   "vessel": "NOCC ADRIATIC",
    "service": "",
    "terminal": "EB1",
    "agent": "Norton Lilly International",
@@ -761,17 +739,17 @@
    "etd": "2026-11-08T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
-   "imo": "9983140"
+   "imo": "1041843"
   },
   {
-   "vessel": "MSC YUKTA X",
-   "service": "Chinook",
-   "terminal": "T5",
+   "vessel": "ONE FANTASTIC",
+   "service": "FP2",
+   "terminal": "Husky",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-08T07:00",
-   "etd": "2026-11-10T04:00",
-   "port": "Seattle",
-   "imo": "9146467"
+   "eta": "2026-11-08T15:00",
+   "etd": "2026-11-13T18:00",
+   "port": "Tacoma",
+   "imo": "9936381"
   },
   {
    "vessel": "LOTUS A",
@@ -806,14 +784,14 @@
    "imo": "1063281"
   },
   {
-   "vessel": "ONE FANTASTIC",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-09T15:00",
-   "etd": "2026-11-13T10:00",
-   "port": "Tacoma",
-   "imo": "9936381"
+   "vessel": "MSC YUKTA X",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-09T07:00",
+   "etd": "2026-11-11T04:00",
+   "port": "Seattle",
+   "imo": "9146467"
   },
   {
    "vessel": "GLOVIS LEGEND",
@@ -856,6 +834,16 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9181560"
+  },
+  {
+   "vessel": "MSC SOLA",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-10T17:00",
+   "etd": "2026-11-12T04:00",
+   "port": "Seattle",
+   "imo": "9401104"
   },
   {
    "vessel": "Josco Ningzhou",
@@ -991,7 +979,7 @@
    "imo": "9438523"
   },
   {
-   "vessel": "THEBEN",
+   "vessel": "OTELLO",
    "service": "",
    "terminal": "EB1",
    "agent": "Norton Lilly International",
@@ -999,7 +987,7 @@
    "etd": "2026-11-15T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
-   "imo": "9722302"
+   "imo": "9316141"
   },
   {
    "vessel": "MSC DESIREE",
@@ -1022,6 +1010,17 @@
    "imo": "9722651"
   },
   {
+   "vessel": "OTELLO",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-15T19:00",
+   "etd": "2026-11-16T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9316141"
+  },
+  {
    "vessel": "WISDOM ACE",
    "service": "",
    "terminal": "Blair",
@@ -1042,6 +1041,17 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9561277"
+  },
+  {
+   "vessel": "THEBEN",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-16T06:00",
+   "etd": "2026-11-16T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9722302"
   },
   {
    "vessel": "EVER MAGUS",
@@ -1168,17 +1178,6 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
-  },
-  {
-   "vessel": "GLOVIS SUMMIT",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-19T06:00",
-   "etd": "2026-11-19T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9702417"
   },
   {
    "vessel": "MSC ELISABETTA",
