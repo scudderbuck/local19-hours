@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-28T11:45:06-07:00",
+ "updated": "2026-10-28T14:45:06-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -56,27 +56,6 @@
  },
  "vessels": [
   {
-   "vessel": "VIENNA EXPRESS",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-20T22:00",
-   "etd": "2026-10-27T04:00",
-   "port": "Tacoma",
-   "imo": "9450416"
-  },
-  {
-   "vessel": "ARC INDEPENDENCE",
-   "service": "",
-   "terminal": "T7",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-22T21:00",
-   "etd": "2026-10-24T12:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9332925"
-  },
-  {
    "vessel": "YM TUTORIAL",
    "service": "FP2",
    "terminal": "Husky",
@@ -85,28 +64,6 @@
    "etd": "2026-10-30T18:00",
    "port": "Tacoma",
    "imo": "9792618"
-  },
-  {
-   "vessel": "ARC HONOR",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-24T10:30",
-   "etd": "2026-10-24T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9505089"
-  },
-  {
-   "vessel": "POLARIS MILA",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-25T22:00",
-   "etd": "2026-10-26T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9289908"
   },
   {
    "vessel": "Anafi",
