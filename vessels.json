@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-27T14:45:06-07:00",
+ "updated": "2026-10-27T17:45:07-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -596,17 +596,6 @@
    "imo": "9978937"
   },
   {
-   "vessel": "GLOVIS TREASURE",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-05T06:00",
-   "etd": "2026-11-05T16:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9983152"
-  },
-  {
    "vessel": "TONGALA",
    "service": "",
    "terminal": "EB1",
@@ -628,17 +617,6 @@
    "imo": "9979022"
   },
   {
-   "vessel": "GLOVIS TREASURE",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-05T17:00",
-   "etd": "2026-11-06T04:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9983152"
-  },
-  {
    "vessel": "TONGALA",
    "service": "",
    "terminal": "Blair",
@@ -648,6 +626,17 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9278105"
+  },
+  {
+   "vessel": "GLOVIS TREASURE",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-05T20:00",
+   "etd": "2026-11-06T04:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9983152"
   },
   {
    "vessel": "WESTWOOD COLUMBIA",
@@ -668,6 +657,17 @@
    "etd": "2026-11-06T22:00",
    "port": "Tacoma",
    "imo": "8419166"
+  },
+  {
+   "vessel": "GLOVIS TREASURE",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-06T05:00",
+   "etd": "2026-11-06T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9983152"
   },
   {
    "vessel": "EVER MOST",
@@ -900,6 +900,17 @@
    "imo": "1068853"
   },
   {
+   "vessel": "SUPREME ACE",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-11T06:00",
+   "etd": "2026-11-11T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9610391"
+  },
+  {
    "vessel": "MSC LISBON IX",
    "service": "Chinook",
    "terminal": "T5",
@@ -939,17 +950,6 @@
    "etd": "2026-11-15T04:56",
    "port": "Tacoma",
    "imo": "9619098"
-  },
-  {
-   "vessel": "SUPREME ACE",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-12T06:00",
-   "etd": "2026-11-12T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9610391"
   },
   {
    "vessel": "LAUTOKA CHIEF",
@@ -1053,6 +1053,17 @@
    "imo": "9722651"
   },
   {
+   "vessel": "WISDOM ACE",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-16T06:00",
+   "etd": "2026-11-16T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9641833"
+  },
+  {
    "vessel": "GLORIOUS ACE",
    "service": "",
    "terminal": "EB1",
@@ -1104,17 +1115,6 @@
    "etd": "2026-11-19T03:00",
    "port": "Tacoma",
    "imo": "9463085"
-  },
-  {
-   "vessel": "EUPHONY ACE",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-17T06:00",
-   "etd": "2026-11-17T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9293595"
   },
   {
    "vessel": "TOURMALINE ACE",
@@ -1169,6 +1169,17 @@
    "imo": "9456953"
   },
   {
+   "vessel": "EUPHONY ACE",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-18T06:00",
+   "etd": "2026-11-18T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9293595"
+  },
+  {
    "vessel": "MATSON KODIAK",
    "service": "Matson - AK",
    "terminal": "WST",
@@ -1188,17 +1199,6 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
-  },
-  {
-   "vessel": "BERGAMOT ACE",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-19T06:00",
-   "etd": "2026-11-19T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9403281"
   },
   {
    "vessel": "GLOVIS SUMMIT",
