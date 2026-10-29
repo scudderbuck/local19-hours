@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-29T05:45:04-07:00",
+ "updated": "2026-10-29T08:45:03-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -87,16 +87,6 @@
    "imo": "9966764"
   },
   {
-   "vessel": "YM PLUM",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "Inchcape",
-   "eta": "2026-10-26T06:00",
-   "etd": "2026-10-28T04:00",
-   "port": "Tacoma",
-   "imo": "9198264"
-  },
-  {
    "vessel": "RED CLOUD",
    "service": "",
    "terminal": "T7",
@@ -160,16 +150,6 @@
    "imo": "9777888"
   },
   {
-   "vessel": "MATSON KODIAK",
-   "service": "Matson - AK",
-   "terminal": "WST",
-   "agent": "Matson",
-   "eta": "2026-10-27T22:00",
-   "etd": "2026-10-28T22:00",
-   "port": "Tacoma",
-   "imo": "8419166"
-  },
-  {
    "vessel": "Aristeia",
    "service": "",
    "terminal": "T2",
@@ -178,16 +158,6 @@
    "etd": null,
    "port": "Aberdeen",
    "eta_time": false
-  },
-  {
-   "vessel": "SM PORTLAND",
-   "service": "",
-   "terminal": "T18",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-28T06:00",
-   "etd": "2026-10-28T18:00",
-   "port": "Seattle",
-   "imo": "9409027"
   },
   {
    "vessel": "MIDNIGHT SUN",
