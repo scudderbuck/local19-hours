@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-29T08:45:03-07:00",
+ "updated": "2026-10-29T11:45:04-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -77,16 +77,6 @@
    "imo": "9978602"
   },
   {
-   "vessel": "CMA CGM FORT JAMES",
-   "service": "Ad Hoc",
-   "terminal": "T18",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-26T06:00",
-   "etd": "2026-10-27T18:00",
-   "port": "Seattle",
-   "imo": "9966764"
-  },
-  {
    "vessel": "RED CLOUD",
    "service": "",
    "terminal": "T7",
@@ -144,7 +134,7 @@
    "terminal": "Blair",
    "agent": "Inchcape",
    "eta": "2026-10-27T20:30",
-   "etd": "2026-10-28T18:00",
+   "etd": "2026-10-29T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9777888"
@@ -158,17 +148,6 @@
    "etd": null,
    "port": "Aberdeen",
    "eta_time": false
-  },
-  {
-   "vessel": "MIDNIGHT SUN",
-   "service": "",
-   "terminal": "TOTE",
-   "agent": "Tote Maritime Alaska Inc",
-   "eta": "2026-10-28T15:00",
-   "etd": "2026-10-29T01:00",
-   "port": "Tacoma",
-   "vessel_type": "Multipurpose",
-   "imo": "7307110"
   },
   {
    "vessel": "CMA CGM DUTCH HARBOR",
@@ -190,16 +169,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9491898"
-  },
-  {
-   "vessel": "ONE DURBAN",
-   "service": "PN3",
-   "terminal": "WUT",
-   "agent": "Norton Lilly International",
-   "eta": "2026-10-29T06:00",
-   "etd": "2026-10-31T04:00",
-   "port": "Tacoma",
-   "imo": "9567673"
   },
   {
    "vessel": "PATARA",
@@ -272,6 +241,16 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "9978676"
+  },
+  {
+   "vessel": "ONE DURBAN",
+   "service": "PN3",
+   "terminal": "WUT",
+   "agent": "Norton Lilly International",
+   "eta": "2026-10-30T15:00",
+   "etd": "2026-11-01T18:00",
+   "port": "Tacoma",
+   "imo": "9567673"
   },
   {
    "vessel": "NADI CHIEF",
@@ -463,9 +442,9 @@
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
-   "agent": "",
+   "agent": "Tote Maritime Alaska Inc",
    "eta": "2026-11-04T15:00",
-   "etd": "2026-11-05T03:00",
+   "etd": "2026-11-05T01:00",
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
@@ -585,16 +564,6 @@
    "imo": "9268538"
   },
   {
-   "vessel": "NORTH STAR",
-   "service": "Tote - AK2",
-   "terminal": "TOTE",
-   "agent": "",
-   "eta": "2026-11-06T13:00",
-   "etd": "2026-11-07T01:00",
-   "port": "Tacoma",
-   "imo": "9978676"
-  },
-  {
    "vessel": "SM MUMBAI",
    "service": "",
    "terminal": "T18",
@@ -603,6 +572,17 @@
    "etd": "2026-11-07T04:00",
    "port": "Seattle",
    "imo": "9401051"
+  },
+  {
+   "vessel": "NORTH STAR",
+   "service": "",
+   "terminal": "TOTE",
+   "agent": "Tote Maritime Alaska Inc",
+   "eta": "2026-11-06T15:00",
+   "etd": "2026-11-07T01:00",
+   "port": "Tacoma",
+   "vessel_type": "Multipurpose",
+   "imo": "9978676"
   },
   {
    "vessel": "Glovis Legend",
@@ -625,16 +605,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9278105"
-  },
-  {
-   "vessel": "BUDAPEST EXPRESS",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-07T06:00",
-   "etd": "2026-11-10T04:00",
-   "port": "Tacoma",
-   "imo": "9450430"
   },
   {
    "vessel": "CORNEILLE",
@@ -677,6 +647,16 @@
    "etd": "2026-11-13T18:00",
    "port": "Tacoma",
    "imo": "9936381"
+  },
+  {
+   "vessel": "BUDAPEST EXPRESS",
+   "service": "WC4/TP5",
+   "terminal": "Husky",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-08T15:00",
+   "etd": "2026-11-11T18:00",
+   "port": "Tacoma",
+   "imo": "9450430"
   },
   {
    "vessel": "LOTUS A",
@@ -763,16 +743,6 @@
    "imo": "9300441"
   },
   {
-   "vessel": "ONE MODERN",
-   "service": "PN3",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-11-10T05:00",
-   "etd": "2026-11-12T03:00",
-   "port": "Tacoma",
-   "imo": "9475636"
-  },
-  {
    "vessel": "PAVO LEADER",
    "service": "",
    "terminal": "Blair",
@@ -782,6 +752,16 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9181560"
+  },
+  {
+   "vessel": "ONE MODERN",
+   "service": "PN3",
+   "terminal": "WUT",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-10T15:00",
+   "etd": "2026-11-12T18:00",
+   "port": "Tacoma",
+   "imo": "9475636"
   },
   {
    "vessel": "Josco Ningzhou",
@@ -818,9 +798,9 @@
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
-   "agent": "",
+   "agent": "Tote Maritime Alaska Inc",
    "eta": "2026-11-11T15:00",
-   "etd": "2026-11-12T03:00",
+   "etd": "2026-11-12T01:00",
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
@@ -867,12 +847,13 @@
   },
   {
    "vessel": "NORTH STAR",
-   "service": "Tote - AK2",
+   "service": "",
    "terminal": "TOTE",
-   "agent": "",
-   "eta": "2026-11-13T13:00",
+   "agent": "Tote Maritime Alaska Inc",
+   "eta": "2026-11-13T15:00",
    "etd": "2026-11-14T01:00",
    "port": "Tacoma",
+   "vessel_type": "Multipurpose",
    "imo": "9978676"
   },
   {
@@ -1099,9 +1080,9 @@
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
-   "agent": "",
+   "agent": "Tote Maritime Alaska Inc",
    "eta": "2026-11-18T15:00",
-   "etd": "2026-11-19T03:00",
+   "etd": "2026-11-19T01:00",
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
@@ -1158,16 +1139,6 @@
    "imo": "9378814"
   },
   {
-   "vessel": "NORTH STAR",
-   "service": "Tote - AK2",
-   "terminal": "TOTE",
-   "agent": "",
-   "eta": "2026-11-20T13:00",
-   "etd": "2026-11-21T01:00",
-   "port": "Tacoma",
-   "imo": "9978676"
-  },
-  {
    "vessel": "MAERSK MAMMOTH",
    "service": "Oceania",
    "terminal": "T18",
@@ -1176,6 +1147,17 @@
    "etd": "2026-11-22T02:00",
    "port": "Seattle",
    "imo": "9928229"
+  },
+  {
+   "vessel": "NORTH STAR",
+   "service": "",
+   "terminal": "TOTE",
+   "agent": "Tote Maritime Alaska Inc",
+   "eta": "2026-11-20T15:00",
+   "etd": "2026-11-21T01:00",
+   "port": "Tacoma",
+   "vessel_type": "Multipurpose",
+   "imo": "9978676"
   }
  ]
 }
