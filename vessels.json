@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-10-30T11:45:04-07:00",
+ "updated": "2026-10-30T14:45:05-07:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -85,16 +85,6 @@
    "etd": null,
    "port": "Aberdeen",
    "eta_time": false
-  },
-  {
-   "vessel": "EVER SALUTE",
-   "service": "TPN",
-   "terminal": "PCT",
-   "agent": "ACGI",
-   "eta": "2026-10-27T05:00",
-   "etd": "2026-10-30T03:00",
-   "port": "Tacoma",
-   "imo": "9300477"
   },
   {
    "vessel": "FRANKFURT EXPRESS",
@@ -369,7 +359,7 @@
   },
   {
    "vessel": "MSC IVANA",
-   "service": "Chinook",
+   "service": "Ad Hoc",
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-11-03T07:00",
@@ -464,8 +454,8 @@
    "service": "",
    "terminal": "EB1",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-05T06:00",
-   "etd": "2026-11-05T18:00",
+   "eta": "2026-11-05T06:30",
+   "etd": "2026-11-05T17:30",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9983140"
