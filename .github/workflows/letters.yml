@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: "7,27,47 * * * *"
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Read GroupMe and OCR only (nothing is written)"
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -11,17 +16,18 @@ concurrency:
 jobs:
   copy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pillow
+      - run: pip install pillow rapidocr-onnxruntime
       - name: Copy new letters (read-only on GroupMe; letters go to the private room, never to this repo)
         env:
           GROUPME_TOKEN: ${{ secrets.GROUPME_TOKEN }}
           LETTERS_FB_REFRESH: ${{ secrets.LETTERS_FB_REFRESH }}
           LETTERS_ROOM: ${{ vars.LETTERS_ROOM }}
           LETTERS_POSTER: ${{ vars.LETTERS_POSTER }}
+          LETTERS_DRY_RUN: ${{ inputs.dry_run }}
         run: python scripts/fetch_letters.py

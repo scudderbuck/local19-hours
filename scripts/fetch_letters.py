@@ -7,6 +7,9 @@ Letters are written to Firestore rooms/<room>/letters (member-gated by the app's
 """
 import base64, io, json, os, sys, time, urllib.error, urllib.parse, urllib.request
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+
 GM_API = os.environ.get("GROUPME_API", "https://api.groupme.com/v3").rstrip("/")
 GROUP = os.environ.get("GROUPME_GROUP_ID", "112213694")
 ROOM = (os.environ.get("LETTERS_ROOM") or "LOCAL19").strip().upper()
@@ -23,6 +26,7 @@ MAX_DELETES = 20           # safety: never wipe more than this in one run
 UA = "l19-letters/1"
 ALLOW_HOSTS = tuple(h for h in (os.environ.get("LETTERS_ALLOW_HOSTS") or "groupme.com").split(",") if h)
 TOKEN = os.environ.get("GROUPME_TOKEN", "").strip()
+DRY = os.environ.get("LETTERS_DRY_RUN", "") in ("1", "true", "True")   # read GroupMe + OCR only, write nothing
 
 
 def log(*a):
@@ -170,21 +174,56 @@ def gm_window(cutoff):
     return msgs, complete
 
 
+_ocr = {"engine": None, "known": None, "off": False}
+
+
+def read_letter(raw):
+    """OCR the letter (on this runner) and match its vessel to the known ships. Never fatal: a letter that can't be read is simply unmatched."""
+    if _ocr["off"]:
+        return {}
+    try:
+        import letters_match as LM
+        if _ocr["engine"] is None:
+            from rapidocr_onnxruntime import RapidOCR
+            _ocr["engine"] = RapidOCR()
+            root = os.path.dirname(HERE)
+            _ocr["known"] = LM.load_known(os.path.join(root, "vessels.json"), os.path.join(root, "vessel_ids.json"))
+        return LM.parse(LM.ocr_lines(raw, _ocr["engine"]), _ocr["known"])
+    except ImportError:
+        _ocr["off"] = True
+        warn("OCR is not installed; letters are copied without a ship match.")
+    except Exception as e:
+        log("could not read letter text -", type(e).__name__, str(e)[:80])
+    return {}
+
+
+def meta_fields(info):
+    f = {}
+    for k in ("v", "vr", "vk", "imo", "voy", "ld", "sh", "tm", "ms", "ocr"):
+        if isinstance(info.get(k), str) and info[k]:
+            f[k] = s(info[k][:1500 if k == "ocr" else 60])
+    if isinstance(info.get("sc"), int) and info["sc"]:
+        f["sc"] = i(info["sc"])
+    return f
+
+
 def main():
     if not TOKEN:
         warn("GROUPME_TOKEN secret is not set; nothing to do.")
         return 0
+    if DRY:
+        log("DRY RUN: GroupMe is read and the letters are OCR'd, nothing is written anywhere.")
     try:
-        tok = fb_token()
+        tok = fb_token() if not DRY else "dry"
     except Exception as e:
         log("Could not get a Firebase sign-in for the letters bot:", type(e).__name__)
         return 1
-    if not tok:
+    if not tok and not DRY:
         warn("LETTERS_FB_REFRESH secret is not set; nothing to do.")
         return 0
     now = time.time()
     try:
-        existing = list_existing(tok)
+        existing = {} if DRY else list_existing(tok)
     except Denied:
         warn("Firestore refused the letters bot: the letters rules are not published yet (or the bot uid is not allowed). Nothing written.")
         return 0
@@ -207,13 +246,19 @@ def main():
         if lid in existing:
             continue
         try:
-            full, w, h, th, tw, thh = encode_img(img_get(url))
+            raw = img_get(url)
+            full, w, h, th, tw, thh = encode_img(raw)
+            info = read_letter(raw)
+            if DRY:
+                added += 1
+                log("would add", lid, "%dx%d" % (w, h), "| ship:", info.get("v") or "(not matched)", "[%s]" % (info.get("ms") or "-"), "| read:", info.get("vr") or "-", "| voy", info.get("voy") or "-", "| date", info.get("ld") or "-")
+                continue
             fs_req("PATCH", DOCS + "/rooms/" + ROOM + "/letters/" + lid + "/img/full", tok,
                    {"fields": {"data": s(dataurl(full)), "w": i(w), "h": i(h)}})
             fs_req("PATCH", DOCS + "/rooms/" + ROOM + "/letters/" + lid, tok,
-                   {"fields": {"t": i(ms), "w": i(w), "h": i(h), "thumb": s(dataurl(th)), "tw": i(tw), "th": i(thh)}})
+                   {"fields": dict({"t": i(ms), "w": i(w), "h": i(h), "thumb": s(dataurl(th)), "tw": i(tw), "th": i(thh)}, **meta_fields(info))})
             added += 1
-            log("added letter", lid, "%dx%d" % (w, h), "%d KB" % (len(full) // 1024))
+            log("added letter", lid, "%dx%d" % (w, h), "%d KB" % (len(full) // 1024), "| ship:", info.get("v") or "(not matched)", "[%s]" % (info.get("ms") or "-"))
         except Denied:
             warn("Firestore refused a write: letters rules not published (or bot uid not allowed).")
             return 0
@@ -221,7 +266,7 @@ def main():
             failed += 1
             log("could not copy letter", lid, "-", type(e).__name__, str(e)[:80])
     removed = 0
-    if complete:
+    if complete and not DRY:
         gone = [l for l, t in existing.items() if (l not in want and t >= (now - SHOW_DAYS * 86400) * 1000) or t < (now - KEEP_DAYS * 86400) * 1000]
         if len(gone) > MAX_DELETES:
             warn("%d letters look deleted; refusing to remove more than %d in one run." % (len(gone), MAX_DELETES))
