@@ -390,7 +390,7 @@ body.pgfo #hdr{display:none}
 #ndPt{flex:1 1 100%;min-width:0}#ndPt:empty{display:none}.nsp{width:100%;margin-top:8px;min-height:44px}.ndft{display:block;margin-top:6px;font-size:.9375rem}
 .ltr .th,.nd .nb .th{display:block;width:100%;max-width:100%;padding:0;overflow:hidden;text-align:left;min-height:48px}
 .ltr .th img,.nd .nb .th img{display:block;width:100%;height:auto;max-height:min(70vh,560px);object-fit:contain;background:#fff;border-radius:0}
-.ltr .th span,.nd .nb .th span{display:block;padding:8px 12px;font-size:1rem}
+.ltr .th span,.nd .nb .th span{display:block;padding:8px 12px;font-size:1rem;text-wrap:balance}
 /* v54: full-screen photo viewer. Own class names (the old ".sc" collided with the peg-board slip ".sc" rule, shrinking the image area to 44px). */
 #lv{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:100vw;overflow:hidden;background:#00214e;z-index:20;display:flex;flex-direction:column;color:#f2f6ff;overscroll-behavior:contain}
 #lv .cap{display:flex;align-items:center;gap:8px;padding:4px 4px 4px 12px;padding-top:max(4px,env(safe-area-inset-top));font-size:.9375rem;background:#00183a;flex:0 0 auto}
@@ -481,7 +481,6 @@ body.gopen{overflow:hidden}
 #gear .grw button{flex:1 1 45%;min-width:0;min-height:48px;color:#fff;background:#0b3170;border:2px solid #7f9cd0;font-weight:700;padding:0 8px}
 #gear .grw button.gd{color:#ffb4ab;border-color:#ffb4ab}
 #gear .grw button.hide{display:none}
-.glx:empty,.glx2:empty{display:none}.glx{display:block;margin:8px 0 0}
 .glb{min-height:48px;padding:0 14px;font-weight:700;font-size:.9375rem;background:#00214e;color:#fff;border:2px solid #7fd1ff;border-radius:10px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 #glCard .glh{margin:12px 0 6px;font-size:1rem}
 #glCard .glo{padding:8px 0;border-top:1px solid var(--bd)}#glCard .glo .glon{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;max-width:100%}
@@ -496,7 +495,7 @@ body.gopen{overflow:hidden}
 #glCard .glr .glt span{font-size:.875rem;color:var(--mut,#5b6678)}
 #glCard select.gls{width:100%;min-height:48px;font-size:1rem}
 #glCard #glB{margin-top:8px;flex-wrap:wrap}#glCard #glB button{min-height:48px;white-space:nowrap;padding:0 8px}#glCard #glB button.hide{display:none}
-#lv .bar button.gln{flex:1 1 45%}#lv .bar button{white-space:nowrap;padding:0 6px}
+#lv .bar button.gln{flex:1 1 45%}#lv .bar button{white-space:nowrap;padding:0 6px}#lv .bar button{min-width:max-content}#lv .cap .ct{text-wrap:balance}
 #glCard #glB{margin-top:8px;flex-wrap:wrap}#glCard #glB #glMore{flex:1 1 100%;order:2}#glCard #glB button{min-height:48px;white-space:nowrap;padding:0 8px}#glCard #glB button.hide{display:none}
 #gear .gth{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
 #gear .gth button{padding:0;min-height:0;aspect-ratio:1/1;overflow:hidden;border:2px solid #8ea8d6;background:#001634;border-radius:8px}
@@ -702,13 +701,13 @@ body.gopen{overflow:hidden}
 <div id="ndL"></div>
 <div class="card"><h3 style="margin-top:0">Ships coming</h3>
 <div id="shSum"></div><p id="shUp" class="mut"></p>
-<div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Letter photos stay on this device only (private, offline). Auto-removed 30 days after the ship's ETD.</p></div>
+<div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Your own letter photos stay on this device only (private, offline), auto-removed 30 days after the ship's ETD. Local 19: hall letters from the group show in the same spot (join Chat first); they are shared, so you can hide them on this phone but not delete them.</p></div>
 <div id="shList"></div>
 <div class="card hide" id="glCard" aria-labelledby="glT"><h3 style="margin-top:0" id="glT">Ship letters</h3>
 <p class="mut" id="glM" aria-live="polite" style="margin:0 0 8px"></p>
 <div id="glO"></div><div id="glU"></div>
 <div class="row" id="glB"><button type="button" id="glRf">Refresh</button><button type="button" id="glChat" class="hide">Open Chat</button></div>
-<p class="mut" id="glN" style="margin:8px 0 0">Each ship's letter is the <b>📄 Letter</b> button under its name above. This box holds letters for ships that aren't on the list and letters I couldn't match. They come from the hall's ship letters group (GroupMe), checked about every hour, last 30 days. Only people who joined Chat with the invite code can see them.</p></div>
+<p class="mut" id="glN" style="margin:8px 0 0">A ship's hall letter shows in its letter spot above, next to <b>📷 Add letter</b>. This box holds letters for ships that aren't on the list and letters I couldn't match. They come from the hall's ship letters group (GroupMe), checked about every hour, last 30 days. Only people who joined Chat with the invite code can see them.</p></div>
 <div class="card waonly"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). <b>Ships coming</b> lists Seattle container terminals only (T5, T18); T91 is cruise, no container calls. The Needs <b>At berth now</b> box covers more ports. <b>⚙️ Gear</b> opens a lashing/cone/catwalk card for that ship, filled in by coworkers and shared in your chat room (photos stay on your phone).</p>
 <p class="mut" style="margin:8px 0 0"><b>Sources:</b> Seattle and Tacoma: Northwest Seaport Alliance Vessel Schedule Forecast (Tacoma includes car ships and breakbulk). Aberdeen: Port of Grays Harbor vessel schedule (dates only). Olympia: Port of Olympia vessel announcements (dates only). Everett: Port of Everett shipping schedule. Port Angeles: Port of Port Angeles ship schedule. Longview and Vancouver WA: no public schedule; Columbia River Pilots dispatch is used only when it is current. "leaves ?" means the source gives no departure time.</p></div>
 </section>
@@ -720,7 +719,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v123",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v124",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1267,7 +1266,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v123",CACHE_VERSION="l19hours-v123"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v124",CACHE_VERSION="l19hours-v124"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1300,7 +1299,7 @@ const TOUR_CARDS=[["Log a shift","Tap ＋ Add, pick the date, pier, job and shif
  ["History & calendar","History lists every shift by month, with week, month, quarter and year totals. Switch to Calendar to tap a day, or search by job, pier or note."],
  ["Share a week","On the Week tab tap Share week. Choose hours only (no pay) or hours plus a pay estimate, then paste it wherever you need."],
  ["Back up your data","Everything stays on this phone. In the Backup tab, back up to a JSON file now and then. You can also export CSV or open a Year summary."],
- ["Ships, pegs & chat","Ships has dispatch quick links, today's needs and the ships coming. On Local 19 each ship shows a 📄 Letter button when the hall's group has posted its move letter (tap to zoom, share or save; join Chat first). Letters for ships not on the list, or that I couldn't match, are in the Ship letters box at the bottom, where you can pick the ship yourself. Pegs has your peg boards: tap a peg, then a slip circle, to place it; press and hold a slip, then drag, to move it. Admins can share a board live: everyone in the chat room sees it read-only under Shared on the Pegs tab (slip names and pegs only). Chat is an online room for coworkers with the invite code; moderators and admins show a MOD or ADMIN badge and can remove messages. Chat never sends your hours or pay. Replay this tour any time from the Backup tab."]];
+ ["Ships, pegs & chat","Ships has dispatch quick links, today's needs and the ships coming. On Local 19 the letter spot on each ship (📷 Add letter) also shows the move letter the hall's group posted for that ship: tap the thumbnail to zoom, share or save, next to any photos you add yourself (join Chat first; hall letters can be hidden on your phone, not deleted). Letters for ships not on the list, or that I couldn't match, are in the Ship letters box at the bottom, where you can pick the ship yourself. Pegs has your peg boards: tap a peg, then a slip circle, to place it; press and hold a slip, then drag, to move it. Admins can share a board live: everyone in the chat room sees it read-only under Shared on the Pegs tab (slip names and pegs only). Chat is an online room for coworkers with the invite code; moderators and admins show a MOD or ADMIN badge and can remove messages. Chat never sends your hours or pay. Replay this tour any time from the Backup tab."]];
 function tourDue(flag,setupOpen,locked){return flag!=="1"&&!setupOpen&&!locked;}
 function yearSummary(all,year){const y=String(year),l=(all||[]).filter(e=>e&&typeof e.date==="string"&&e.date.slice(0,4)===y),t=summarize(l);
  const months=[];for(let m=1;m<=12;m++){const k=y+"-"+p2(m),ml=l.filter(e=>e.date.slice(0,7)===k),mt=summarize(ml);
@@ -2753,7 +2752,7 @@ function renderShips(){const sum=$("shSum"),list=$("shList"),up=$("shUp");shRows
  up.textContent=u;
  const g=shipGroups(v,today,hp);
  if(!$("v-ships").classList.contains("hide"))try{gearStart();}catch(e){} /* v63: live shared gear cards */
- shRows=g.flatMap(r=>r.items);const _h=g.length;list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span> <a class="trk" href="${esc(trackUrl(x.vessel,x.imo))}" target="_blank" rel="noopener" style="font-size:.875rem;color:var(--acc)">Track ↗</a>${(()=>{const gk=gearKey(x.vessel,x.imo);return gk?`<span class="glx" data-lk="${esc(letterKey(x.vessel,x.eta))}"></span><div class="gr"><button type="button" class="gb" data-gk="${esc(gk)}" data-gv="${esc(x.vessel)}" data-gi="${esc(x.imo||"")}" data-gs="${esc(x.service||"")}" data-gt="${esc(x.terminal||"")}" aria-label="Gear card for ${esc(x.vessel)}">⚙️ Gear</button><span data-gsm="${esc(gk)}">${gearChipS(gk)}</span></div>`:"";})()}<div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div><div class="ltr" data-k="${esc(letterKey(x.vessel,x.eta))}" data-vs="${esc(x.vessel)}" data-eta="${esc(shDay(x.eta))}" data-etd="${esc(shDay(x.etd))}"><button type="button" class="la">📷 Add letter</button><span class="lt"></span></div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';
+ shRows=g.flatMap(r=>r.items);const _h=g.length;list.innerHTML=g.length?g.map(r=>`<div class="card"><h4 style="margin-top:0">${esc(shDate(r.key))}</h4>${r.items.map(x=>`<div class="ent"><div><b>${esc(x.vessel)}</b> <span class="badge">${esc(x.terminal)}</span> <a class="trk" href="${esc(trackUrl(x.vessel,x.imo))}" target="_blank" rel="noopener" style="font-size:.875rem;color:var(--acc)">Track ↗</a>${(()=>{const gk=gearKey(x.vessel,x.imo);return gk?`<div class="gr"><button type="button" class="gb" data-gk="${esc(gk)}" data-gv="${esc(x.vessel)}" data-gi="${esc(x.imo||"")}" data-gs="${esc(x.service||"")}" data-gt="${esc(x.terminal||"")}" aria-label="Gear card for ${esc(x.vessel)}">⚙️ Gear</button><span data-gsm="${esc(gk)}">${gearChipS(gk)}</span></div>`:"";})()}<div class="mut">${esc(x.service||"")}${x.service&&x.agent?" · ":""}${esc(x.agent||"")}</div><div class="mut">ETA ${esc(shFmt(x.eta))} · ETD ${esc(shFmt(x.etd))}</div><div class="ltr" data-k="${esc(letterKey(x.vessel,x.eta))}" data-vs="${esc(x.vessel)}" data-eta="${esc(shDay(x.eta))}" data-etd="${esc(shDay(x.etd))}"><button type="button" class="la">📷 Add letter</button><span class="lt"></span></div></div></div>`).join("")}</div>`).join(""):'<div class="card mut">No upcoming Seattle container calls in the schedule.</div>';
  try{if(window.l19Gl)window.l19Gl();}catch(e){}if(_h)refreshLetters();if(typeof renderNdShips==="function")renderNdShips();}
 async function loadShips(){
  try{const r=await fetch("vessels.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json();if(!j||!Array.isArray(j.vessels))throw 0;
@@ -2787,11 +2786,12 @@ async function refreshLetters(){
  if(!ldbOk)return markNoDb();
  let all;try{all=await lAll();}catch(e){return markNoDb();}
  const by={};for(const r of all||[])(by[r.k]=by[r.k]||[]).push(r);
- document.querySelectorAll("#shList .ltr").forEach(el=>{const a=(by[el.dataset.k]||[]).sort((x,y)=>x.added<y.added?-1:1),t=el.querySelector(".lt");
+ document.querySelectorAll("#shList .ltr").forEach(el=>{const a=(by[el.dataset.k]||[]).sort((x,y)=>x.added<y.added?-1:1),t=el.querySelector(".lt"),g=window.l19GlShared?window.l19GlShared(el.dataset.k):[];
   el.querySelector(".la").textContent=a.length?"＋ Add another":"📷 Add letter";
-  if(!a.length){t.innerHTML="";return;}
-  const last=a[a.length-1],url=URL.createObjectURL(last.blob);
-  t.innerHTML=`<button type="button" class="th lo" aria-label="Open letter photos"><img alt="" src="${url}"><span>${esc(letterLabel(last.added))}${a.length>1?" · "+a.length+" letters, tap to view all":" · tap to view full screen"}</span></button>`;});
+  const n=a.length+g.length;if(!n){t.innerHTML="";return;}
+  const last=a.concat(g).sort((x,y)=>x.added<y.added?-1:1).pop();let url="";
+  if(last.grp){const c=(by["grp|"+last.gl.id]||[])[0];url=c&&c.blob?URL.createObjectURL(c.blob):last.thumb;}else url=URL.createObjectURL(last.blob);
+  t.innerHTML=`<button type="button" class="th lo" aria-label="Open ${last.grp?"hall ":""}letter photos"><img alt="" ${url?'src="'+url+'"':""}><span>${esc((last.grp?"Hall letter · "+letterLabel(last.added).replace(/^Letter · /,""):letterLabel(last.added)))}${n>1?" · "+n+" letters, tap to view all":" · tap to view full screen"}</span></button>`;});
  }
 function markNoDb(){document.querySelectorAll("#shList .ltr").forEach(el=>{el.querySelector(".la").disabled=true;el.querySelector(".lt").innerHTML='<span class="mut">Letter photos unavailable (private storage not supported in this browser).</span>';});}
 const lfile=document.createElement("input");lfile.type="file";lfile.accept="image/*";lfile.multiple=true;lfile.id="lfile";lfile.className="hide";document.body.appendChild(lfile);
@@ -2853,22 +2853,25 @@ function lvZoomer(st,img,lab){let nw=0,nh=0,fit=1,z={s:1,x:0,y:0},fitMode=true;c
  let ro=null;if(window.ResizeObserver){ro=new ResizeObserver(onRs);ro.observe(st);}else window.addEventListener("resize",onRs);
  return{zin:()=>zoomTo(z.s*1.5),zout:()=>zoomTo(z.s/1.5),fit:toFit,state:()=>({...z,fit,nw,nh}),off:()=>{if(ro)ro.disconnect();else window.removeEventListener("resize",onRs);}};}
 async function viewer(k,vs,eta,etd,i){let a;try{a=await lByKey(k);}catch(e){return;}
+ const gs=window.l19GlShared?window.l19GlShared(k):[];if(gs.length)a=a.concat(gs).sort((x,y)=>x.added<y.added?-1:1);
+ i=Math.max(0,Math.min(i==null?a.length-1:i,a.length-1));
+ if(a.length&&a[i].grp&&!a[i].blob){try{a[i].blob=await window.l19GlBlob(a[i].gl);}catch(e){alert(/gone/.test(String(e&&e.message))?"That shared letter was removed.":"Couldn't open the shared letter. Check your connection and try again.");return;}}
  const was=lv.open;lvTeardown();
  if(!a.length){lv.open=false;if(history.state&&history.state.l19lv){try{history.back();}catch(e){}}return;}
  lv.open=true;if(!was||!(history.state&&history.state.l19lv)){try{history.pushState({l19lv:1},"");}catch(e){}}
- i=Math.max(0,Math.min(i==null?a.length-1:i,a.length-1));lv.i=i;const r=a[i];lv.url=URL.createObjectURL(r.blob);
+ lv.i=i;const r=a[i];lv.url=URL.createObjectURL(r.blob);
  const peg=String(k).startsWith("peg|")||String(k).startsWith("gear|"),need=String(k).startsWith("need|");
  const d=document.createElement("div");d.id="lv";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-label",peg||need?"Photo viewer":"Letter viewer");
- d.innerHTML=`<div class="cap"><div class="ct">${esc(vs)}${eta?" · ETA "+esc(eta):""} · ${esc(peg?(r.src==="gal"?"Photo added ":"Photo taken ")+pegWhen(r.added):letterLabel(r.added))} (${i+1}/${a.length})</div><button type="button" id="lvx" aria-label="Close viewer">✕</button></div><div class="lvst" id="lvst"><img id="lvimg" alt="${peg||need?"Photo":"Letter photo"} ${i+1} of ${a.length}" decoding="async" draggable="false" src="${lv.url}"></div><div class="lvzb" role="group" aria-label="Zoom"><button type="button" id="lvzo" aria-label="Zoom out">−</button><span id="lvzp" aria-live="polite">100%</span><button type="button" id="lvzf" aria-label="Fit to screen">Fit</button><button type="button" id="lvzi" aria-label="Zoom in">+</button></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvs">Share</button>${a.length>1?'<button type="button" id="lvsa">Share all</button>':""}<button type="button" id="lvr">Replace</button><button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">Delete</button><button type="button" id="lvc">Close</button></div>`;
+ d.innerHTML=`<div class="cap"><div class="ct">${esc(vs)}${eta?" · ETA "+esc(eta):""} · ${esc(peg?(r.src==="gal"?"Photo added ":"Photo taken ")+pegWhen(r.added):r.grp?"Hall letter · "+letterLabel(r.added).replace(/^Letter · /,""):letterLabel(r.added))} (${i+1}/${a.length})</div><button type="button" id="lvx" aria-label="Close viewer">✕</button></div><div class="lvst" id="lvst"><img id="lvimg" alt="${peg||need?"Photo":"Letter photo"} ${i+1} of ${a.length}" decoding="async" draggable="false" src="${lv.url}"></div><div class="lvzb" role="group" aria-label="Zoom"><button type="button" id="lvzo" aria-label="Zoom out">−</button><span id="lvzp" aria-live="polite">100%</span><button type="button" id="lvzf" aria-label="Fit to screen">Fit</button><button type="button" id="lvzi" aria-label="Zoom in">+</button></div><div class="bar">${a.length>1?'<button type="button" id="lvp">◀ Prev</button><button type="button" id="lvn">Next ▶</button>':""}<button type="button" id="lvs">Share</button>${a.length>1?'<button type="button" id="lvsa">Share all</button>':""}${r.grp?"":'<button type="button" id="lvr">Replace</button>'}<button type="button" id="lva">Add another</button><button type="button" id="lvd" class="d">${r.grp?"Hide":"Delete"}</button><button type="button" id="lvc">Close</button></div>`;
  document.body.appendChild(d);const c={k,vs,eta,etd};
  const zm=lvZoomer($("lvst"),$("lvimg"),$("lvzp"));lv.zm=zm;
  const onKey=e=>{if(e.key==="Escape")lvClose();else if(e.key==="+"||e.key==="=")zm.zin();else if(e.key==="-")zm.zout();else if(e.key==="0")zm.fit();else if(a.length>1&&e.key==="ArrowRight")$("lvn").click();else if(a.length>1&&e.key==="ArrowLeft")$("lvp").click();};
  document.addEventListener("keydown",onKey);lv.off=()=>{document.removeEventListener("keydown",onKey);zm.off();};
  $("lvzi").onclick=zm.zin;$("lvzo").onclick=zm.zout;$("lvzf").onclick=zm.fit;
  $("lvc").onclick=lvClose;$("lvx").onclick=lvClose;$("lvx").focus({preventScroll:true});
- $("lvs").onclick=()=>shareLetters([r.blob],vs,eta);if(a.length>1)$("lvsa").onclick=()=>shareLetters(a.map(x=>x.blob),vs,eta);
- $("lva").onclick=()=>pick(c);$("lvr").onclick=()=>pick({...c,replaceId:r.id});
- $("lvd").onclick=async()=>{if(!confirm("Delete this photo?"))return;try{await lDel(r.id);}catch(e){}await refreshLetters();viewer(k,vs,eta,etd,Math.max(0,i-1));};
+ $("lvs").onclick=()=>shareLetters([r.blob],vs,eta);if(a.length>1)$("lvsa").onclick=async()=>{try{for(const x of a)if(x.grp&&!x.blob)x.blob=await window.l19GlBlob(x.gl);}catch(e){alert("Couldn't load every shared letter. Check your connection and try again.");return;}shareLetters(a.map(x=>x.blob),vs,eta);};
+ $("lva").onclick=()=>pick(c);if(!r.grp)$("lvr").onclick=()=>pick({...c,replaceId:r.id});
+ $("lvd").onclick=async()=>{if(r.grp){if(!confirm("Hide this hall letter on this phone? Everyone else still sees it. To bring it back, tap Undo my ship choices in the Ship letters box."))return;window.l19GlHide(r.gl.id);await refreshLetters();viewer(k,vs,eta,etd,Math.max(0,i-1));return;}if(!confirm("Delete this photo?"))return;try{await lDel(r.id);}catch(e){}await refreshLetters();viewer(k,vs,eta,etd,Math.max(0,i-1));};
  if(a.length>1){$("lvp").onclick=()=>viewer(k,vs,eta,etd,(i+a.length-1)%a.length);$("lvn").onclick=()=>viewer(k,vs,eta,etd,(i+1)%a.length);}}
 $("shList").addEventListener("click",e=>{const el=e.target.closest(".ltr");if(!el)return;const c={k:el.dataset.k,vs:el.dataset.vs,eta:el.dataset.eta,etd:el.dataset.etd};
  if(e.target.closest(".la"))pick(c);else if(e.target.closest(".lo"))viewer(c.k,c.vs,c.eta,c.etd);});
@@ -4223,17 +4226,23 @@ function gearImgView(blob){const g=gearCur;if(!g)return;lvTeardown();lv.open=tru
    Each letter shows as a Letter button under its ship; other ships and unmatched letters are listed in the box at the bottom. Nothing is in the public repo.
    The list is fetched when the Ships tab opens (at most every 5 minutes, or Refresh); a picture downloads when you open it and is cached on this phone. ===== */
 const GL_TTL=300000,GL_PAGE=4,GLP="l19.glPick";
-let glList=[],glErr="",glAt=0,glBusy=false,glOth=GL_PAGE,glCode="",glOpening=false,glUnOpen=false,glSet=[],glA={by:{},other:[],unmatched:[]};
+let glList=[],glErr="",glAt=0,glBusy=false,glOth=GL_PAGE,glCode="",glOpening=false,glUnOpen=false,glSet=[],glSig="",glA={by:{},other:[],unmatched:[]};
 function glOn(){return curLocal()==="19";}
 function glMsg(t){const m=$("glM");if(m)m.textContent=t||"";}
 function glPicks(){const o=lsJson(GLP,{});return o&&typeof o==="object"&&!Array.isArray(o)?o:{};}
 function glPickSave(o){const k=Object.keys(o);if(k.length>300)k.slice(0,k.length-300).forEach(x=>delete o[x]);LSset(GLP,JSON.stringify(o));}
 function glShips(){return shRows.map(x=>({key:letterKey(x.vessel,x.eta),vessel:x.vessel,eta:x.eta,etd:x.etd,imo:x.imo}));}
+function glHide(id){const pk=glPicks();pk[id]={h:1};glPickSave(pk);glPaint();}
+function glShared(k){return (glA.by[k]||[]).map(l=>({id:"grp|"+l.id,grp:true,gl:l,added:new Date(l.t).toISOString(),blob:null,thumb:l.thumb||""}));}
+window.l19GlShared=glShared;window.l19GlBlob=function(l){return glBlob(l);};window.l19GlHide=glHide;
+async function glPrefetch(){if(typeof navigator!=="undefined"&&navigator.onLine===false)return;let n=0,got=false;
+ for(const k of Object.keys(glA.by)){const l=glA.by[k][0];if(!l||n>=10)continue;try{const a=await lByKey("grp|"+l.id);if(a&&a.length)continue;}catch(e){}n++;try{await glBlob(l);got=true;}catch(e){break;}}
+ if(got&&typeof refreshLetters==="function")refreshLetters();}
 function glBtnTxt(a){return "📄 Letter · "+new Date(a[0].t).toLocaleDateString([],{month:"short",day:"numeric"})+(a.length>1?" · "+a.length:"");}
-function glPaint(){const c=$("glCard");if(!c)return;const on=glOn();c.classList.toggle("hide",!on);if(!on)return;
+function glPaint(){const c=$("glCard");if(!c)return;const on=glOn();c.classList.toggle("hide",!on);if(!on){if(glSig!=="[]"){glA={by:{},other:[],unmatched:[]};glSig="[]";if(typeof refreshLetters==="function")refreshLetters();}return;}
  const F=window.l19Fb,joined=!!(F&&F.joined());
  glA=glAssign(glList,glShips(),glPicks());
- document.querySelectorAll("#shList .glx").forEach(el=>{const a=glA.by[el.dataset.lk];el.innerHTML=a&&a.length?`<button type="button" class="glb" data-glk="${esc(el.dataset.lk)}" aria-label="Open ship letter${a.length>1?"s":""} for this ship, ${a.length} in the last ${GL_DAYS} days">${esc(glBtnTxt(a))}</button>`:"";});
+ const sig=JSON.stringify(Object.keys(glA.by).sort().map(k=>[k,glA.by[k].map(x=>x.id)]));if(sig!==glSig){glSig=sig;if(typeof refreshLetters==="function")refreshLetters();}
  $("glChat").classList.toggle("hide",joined);$("glRf").classList.toggle("hide",!joined);
  const O=$("glO"),U=$("glU");
  if(!joined){O.innerHTML="";U.innerHTML="";glMsg("Join Chat (your name and the invite code) to see the ship letters.");return;}
@@ -4263,7 +4272,8 @@ async function glLoad(force){if(!glOn()||glBusy)return;const F=window.l19Fb;
    glList=glKeep(sn.docs.map(d=>glClean(Object.assign({},d.data()||{},{id:d.id}))),Date.now());glErr="";glAt=Date.now();
    lPut({id:"grpl|meta",k:"grpl|meta",vessel:"",eta:"",etd:"",added:new Date().toISOString(),code:code,list:glList}).catch(()=>{});glPrune();}
   catch(e){const c=String(e&&e.code||"");glErr=/permission/.test(c)?"rules":(c==="offline"||(typeof navigator!=="undefined"&&navigator.onLine===false))?"offline":"net";if(!glList.length)glList=await glCacheLoad(code);}
- }finally{glBusy=false;glPaint();}}
+ }finally{glBusy=false;glPaint();}
+ if(glAt&&!glErr)glPrefetch();}
 async function glBlob(it){const key="grp|"+it.id;try{const a=await lByKey(key);if(a&&a.length&&a[a.length-1].blob)return a[a.length-1].blob;}catch(e){}
  const F=window.l19Fb;await F.ready();const f=F.fs(),s=await f.getDoc(f.doc(F.db(),"rooms",F.code(),"letters",it.id,"img","full"));
  if(!s.exists())throw new Error("gone");const x=s.data()||{};if(!glImgOk(x.data))throw new Error("bad picture");const b=gearB64Blob(x.data);
@@ -4285,7 +4295,6 @@ async function glOpen(set,i){const it=set&&set[i];if(!it||glOpening)return;glOpe
  $("lvk").onclick=()=>{dlFiles([file()]);$("lvk").textContent="Saved ✓";};
  if(n>1){$("lvp").onclick=()=>glOpen(set,(i+n-1)%n);$("lvn").onclick=()=>glOpen(set,(i+1)%n);}}
 document.addEventListener("click",e=>{
- const b=e.target.closest&&e.target.closest("#shList .glb[data-glk]");if(b){const a=glA.by[b.dataset.glk];if(a&&a.length)glOpen(a,0);return;}
  const o=e.target.closest&&e.target.closest("#glO .glb[data-gok]");if(o){const x=glA.other[Number(o.dataset.gok)];if(x)glOpen(x.letters,0);return;}
  const u=e.target.closest&&e.target.closest("#glU .glr[data-gu]");if(u){const x=glA.unmatched.find(l=>l.id===u.dataset.gu);if(x)glOpen([x],0);return;}
  if(e.target.closest&&e.target.closest("#glMo")){glOth+=GL_PAGE*3;glPaint();return;}
