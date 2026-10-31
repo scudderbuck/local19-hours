@@ -495,7 +495,7 @@ body.gopen{overflow:hidden}
 #glCard .glr .glt span{font-size:.875rem;color:var(--mut,#5b6678)}
 #glCard select.gls{width:100%;min-height:48px;font-size:1rem}
 #glCard #glB{margin-top:8px;flex-wrap:wrap}#glCard #glB button{min-height:48px;white-space:nowrap;padding:0 8px}#glCard #glB button.hide{display:none}
-#lv .bar button.gln{flex:1 1 45%}#lv .bar button{white-space:nowrap;padding:0 6px}#lv .bar button{min-width:max-content}#lv .cap .ct{text-wrap:balance}
+#lv .bar button.gln{flex:1 1 45%}#lv .bar button{white-space:nowrap;padding:0 6px}#lv .bar button{min-width:max-content}#glTop{display:block;width:100%;min-height:44px;margin:8px 0;padding:8px 12px;text-align:center;line-height:1.3;text-wrap:balance}#glTop.hide{display:none}#lv .cap .ct{text-wrap:balance}
 #glCard #glB{margin-top:8px;flex-wrap:wrap}#glCard #glB #glMore{flex:1 1 100%;order:2}#glCard #glB button{min-height:48px;white-space:nowrap;padding:0 8px}#glCard #glB button.hide{display:none}
 #gear .gth{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
 #gear .gth button{padding:0;min-height:0;aspect-ratio:1/1;overflow:hidden;border:2px solid #8ea8d6;background:#001634;border-radius:8px}
@@ -702,6 +702,7 @@ body.gopen{overflow:hidden}
 <div class="card"><h3 style="margin-top:0">Ships coming</h3>
 <div id="shSum"></div><p id="shUp" class="mut"></p>
 <div class="row"><button id="shRef">Refresh</button><button id="clrL">Clear old letters</button></div><p id="clrM" class="mut"></p><p class="mut" style="margin-bottom:0">Your own letter photos stay on this device only (private, offline), auto-removed 30 days after the ship's ETD. Local 19: hall letters from the group show in the same spot (join Chat first); they are shared, so you can hide them on this phone but not delete them.</p></div>
+<button type="button" id="glTop" class="hide"></button>
 <div id="shList"></div>
 <div class="card hide" id="glCard" aria-labelledby="glT"><h3 style="margin-top:0" id="glT">Ship letters</h3>
 <p class="mut" id="glM" aria-live="polite" style="margin:0 0 8px"></p>
@@ -719,7 +720,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v124",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v125",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1266,7 +1267,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v124",CACHE_VERSION="l19hours-v124"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v125",CACHE_VERSION="l19hours-v125"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -4228,6 +4229,12 @@ function gearImgView(blob){const g=gearCur;if(!g)return;lvTeardown();lv.open=tru
 const GL_TTL=300000,GL_PAGE=4,GLP="l19.glPick";
 let glList=[],glErr="",glAt=0,glBusy=false,glOth=GL_PAGE,glCode="",glOpening=false,glUnOpen=false,glSet=[],glSig="",glA={by:{},other:[],unmatched:[]};
 function glOn(){return curLocal()==="19";}
+function glTopPaint(joined){const b=$("glTop");if(!b)return;const on=glOn();let t="",m="";
+ if(on&&!joined){t="📄 Join Chat to see hall letters on ships";m="join";}
+ else if(on&&joined&&!glErr){const n=Object.keys(glA.by).length;
+  if(glList.length){t="📄 Hall letters: "+(n?n+" here":"none here")+" · more below ▾";m="box";}
+  else if(glAt){const F=window.l19Fb;t="📄 No hall letters found for your Chat code"+(F&&F.code()?" ("+F.code()+")":"");m="box";}}
+ b.dataset.m=m;b.textContent=t;b.classList.toggle("hide",!t);}
 function glMsg(t){const m=$("glM");if(m)m.textContent=t||"";}
 function glPicks(){const o=lsJson(GLP,{});return o&&typeof o==="object"&&!Array.isArray(o)?o:{};}
 function glPickSave(o){const k=Object.keys(o);if(k.length>300)k.slice(0,k.length-300).forEach(x=>delete o[x]);LSset(GLP,JSON.stringify(o));}
@@ -4239,11 +4246,12 @@ async function glPrefetch(){if(typeof navigator!=="undefined"&&navigator.onLine=
  for(const k of Object.keys(glA.by)){const l=glA.by[k][0];if(!l||n>=10)continue;try{const a=await lByKey("grp|"+l.id);if(a&&a.length)continue;}catch(e){}n++;try{await glBlob(l);got=true;}catch(e){break;}}
  if(got&&typeof refreshLetters==="function")refreshLetters();}
 function glBtnTxt(a){return "📄 Letter · "+new Date(a[0].t).toLocaleDateString([],{month:"short",day:"numeric"})+(a.length>1?" · "+a.length:"");}
-function glPaint(){const c=$("glCard");if(!c)return;const on=glOn();c.classList.toggle("hide",!on);if(!on){if(glSig!=="[]"){glA={by:{},other:[],unmatched:[]};glSig="[]";if(typeof refreshLetters==="function")refreshLetters();}return;}
+function glPaint(){const c=$("glCard");if(!c)return;const on=glOn();c.classList.toggle("hide",!on);if(!on){if(glSig!=="[]"){glA={by:{},other:[],unmatched:[]};glSig="[]";if(typeof refreshLetters==="function")refreshLetters();}glTopPaint(false);return;}
  const F=window.l19Fb,joined=!!(F&&F.joined());
  glA=glAssign(glList,glShips(),glPicks());
  const sig=JSON.stringify(Object.keys(glA.by).sort().map(k=>[k,glA.by[k].map(x=>x.id)]));if(sig!==glSig){glSig=sig;if(typeof refreshLetters==="function")refreshLetters();}
  $("glChat").classList.toggle("hide",joined);$("glRf").classList.toggle("hide",!joined);
+ glTopPaint(joined);
  const O=$("glO"),U=$("glU");
  if(!joined){O.innerHTML="";U.innerHTML="";glMsg("Join Chat (your name and the invite code) to see the ship letters.");return;}
  const ot=glA.other,sh=ot.slice(0,glOth),un=glA.unmatched,pk=glPicks(),np=Object.keys(pk).length;
@@ -4253,7 +4261,7 @@ function glPaint(){const c=$("glCard");if(!c)return;const on=glOn();c.classList.
  U.innerHTML=(un.length?`<button type="button" class="glut" id="glUt" aria-expanded="${glUnOpen}">Unmatched letters (${un.length}) ${glUnOpen?"▴":"▾"}</button>`+(glUnOpen?un.map(x=>`<div class="glu"><button type="button" class="glr" data-gu="${esc(x.id)}" aria-label="Open unmatched letter, ${esc(glWhen(x.t))}">${x.thumb?`<img alt="" src="${x.thumb}">`:""}<span class="glt"><b>${esc(glDay(x.t))}</b><span>${esc(glTime(x.t))}</span></span></button><select class="gls" data-gp="${esc(x.id)}" aria-label="Choose the ship for the letter from ${esc(glWhen(x.t))}">${opts}</select></div>`).join(""):""):"")+(np?`<button type="button" class="glpr" id="glPr">Undo my ship choices (${np})</button>`:"");
  if(glBusy)return;
  const matched=glList.length-un.length;
- glMsg(glErr==="rules"?"Ship letters aren't switched on for this room yet (server rules). Ask an admin.":glErr==="offline"?(glList.length?"You're offline. Showing the letters saved on this phone.":"You're offline. Letters appear when you're back online."):glErr==="net"?(glList.length?"Couldn't reach the server. Showing saved letters.":"Couldn't reach the server. Try Refresh."):glList.length?glList.length+" letter"+(glList.length===1?"":"s")+" in the last "+GL_DAYS+" days · "+matched+" with a ship":glAt?"No letters in the last "+GL_DAYS+" days.":"");}
+ glMsg(glErr==="rules"?"Ship letters aren't switched on for this room yet (server rules). Ask an admin.":glErr==="offline"?(glList.length?"You're offline. Showing the letters saved on this phone.":"You're offline. Letters appear when you're back online."):glErr==="net"?(glList.length?"Couldn't reach the server. Showing saved letters.":"Couldn't reach the server. Try Refresh."):glList.length?glList.length+" letter"+(glList.length===1?"":"s")+" in the last "+GL_DAYS+" days · "+matched+" with a ship":glAt?"No letters for Chat code "+((window.l19Fb&&window.l19Fb.code())||"")+" in the last "+GL_DAYS+" days.":"");}
 async function glCacheLoad(code){try{const a=await lByKey("grpl|meta"),r=a&&a.length?a[a.length-1]:null;if(r&&r.code===code&&Array.isArray(r.list))return glKeep(r.list.map(glClean),Date.now());}catch(e){}return [];}
 function glStr(x,n){return typeof x==="string"?x.replace(/[\u0000-\u001f]/g," ").slice(0,n||60):"";}
 function glClean(x){x=x||{};return{id:x.id,t:Number(x.t),w:x.w,h:x.h,thumb:glImgOk(x.thumb,60000)?x.thumb:"",v:glStr(x.v),vk:glStr(x.vk).replace(/[^A-Z]/g,""),imo:/^\d{7}$/.test(x.imo||"")?x.imo:"",voy:glStr(x.voy),ld:glStr(x.ld,10),sh:/^(DAY|NIGHT)$/.test(x.sh||"")?x.sh:"",tm:/^T\d{1,3}$/.test(x.tm||"")?x.tm:""};}
@@ -4302,7 +4310,7 @@ document.addEventListener("click",e=>{
  if(e.target.closest&&e.target.closest("#glPr")){if(confirm("Undo the ship choices you made on this phone for unmatched letters?")){LSset(GLP,"{}");glPaint();}return;}});
 document.addEventListener("change",e=>{const sel=e.target.closest&&e.target.closest("#glU select[data-gp]");if(!sel||!sel.value)return;const pk=glPicks(),id=sel.dataset.gp;
  if(sel.value==="#hide")pk[id]={h:1};else pk[id]={vk:sel.value,v:sel.options[sel.selectedIndex].text};glPickSave(pk);glPaint();});
-$("glRf").onclick=()=>{glLoad(true);};$("glChat").onclick=()=>{show("chat");};
+$("glRf").onclick=()=>{glLoad(true);};$("glChat").onclick=()=>{show("chat");};$("glTop").onclick=()=>{const m=$("glTop").dataset.m;if(m==="join")show("chat");else if(m==="box"){const c=$("glCard");if(c)c.scrollIntoView({block:"start"});}};
 window.l19Gl=function(){glPaint();if(glOn()&&!$("v-ships").classList.contains("hide"))glLoad(false);};
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&glOn()&&!$("v-ships").classList.contains("hide"))glLoad(false);});
 window.addEventListener("online",()=>{if(glOn()&&!$("v-ships").classList.contains("hide"))glLoad(true);});
