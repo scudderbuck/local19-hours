@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-03T10:45:04-08:00",
+ "updated": "2026-11-03T13:45:05-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -124,7 +124,7 @@
    "terminal": "Blair",
    "agent": "Norton Lilly International",
    "eta": "2026-11-02T06:00",
-   "etd": "2026-11-02T17:00",
+   "etd": "2026-11-03T17:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9206011"
@@ -171,6 +171,16 @@
    "imo": "9330707"
   },
   {
+   "vessel": "ONE MAJESTY",
+   "service": "PN1",
+   "terminal": "WUT",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-03T20:00",
+   "etd": "2026-11-06T04:00",
+   "port": "Tacoma",
+   "imo": "9424912"
+  },
+  {
    "vessel": "R.J. PFEIFFER",
    "service": "Matson - AK",
    "terminal": "WST",
@@ -185,27 +195,17 @@
    "terminal": "EB1",
    "agent": "Norton Lilly International",
    "eta": "2026-11-04T06:00",
-   "etd": "2026-11-04T18:00",
+   "etd": "2026-11-05T02:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9383431"
-  },
-  {
-   "vessel": "ONE MAJESTY",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-04T06:00",
-   "etd": "2026-11-06T04:00",
-   "port": "Tacoma",
-   "imo": "9424912"
   },
   {
    "vessel": "MSC IVANA",
    "service": "Chinook",
    "terminal": "T5",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-04T07:00",
+   "eta": "2026-11-04T08:00",
    "etd": "2026-11-06T18:00",
    "port": "Seattle",
    "imo": "9398371"
@@ -234,10 +234,10 @@
   {
    "vessel": "MORNING LUCY",
    "service": "",
-   "terminal": "Blair",
+   "terminal": "T7",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-04T19:00",
-   "etd": "2026-11-05T18:00",
+   "eta": "2026-11-05T03:00",
+   "etd": "2026-11-05T19:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9383431"
@@ -722,16 +722,6 @@
    "imo": "9722302"
   },
   {
-   "vessel": "EVER MAGUS",
-   "service": "",
-   "terminal": "PCT",
-   "agent": "",
-   "eta": "2026-11-16T06:00",
-   "etd": "2026-11-18T06:00",
-   "port": "Tacoma",
-   "imo": "9935375"
-  },
-  {
    "vessel": "GLORIOUS ACE",
    "service": "",
    "terminal": "Blair",
@@ -827,6 +817,16 @@
    "etd": "2026-11-19T05:00",
    "port": "Seattle",
    "imo": "9456953"
+  },
+  {
+   "vessel": "EVER MAGUS",
+   "service": "",
+   "terminal": "PCT",
+   "agent": "BEN LINE",
+   "eta": "2026-11-18T05:00",
+   "etd": "2026-11-19T19:00",
+   "port": "Tacoma",
+   "imo": "9935375"
   },
   {
    "vessel": "MATSON KODIAK",
