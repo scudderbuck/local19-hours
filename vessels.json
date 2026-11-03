@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-03T04:45:06-08:00",
+ "updated": "2026-11-03T10:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -474,17 +474,6 @@
    "imo": "9300441"
   },
   {
-   "vessel": "PAVO LEADER",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Inchcape",
-   "eta": "2026-11-10T06:00",
-   "etd": "2026-11-10T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9181560"
-  },
-  {
    "vessel": "NOCC ADRIATIC",
    "service": "",
    "terminal": "EB1",
@@ -494,6 +483,17 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "1041843"
+  },
+  {
+   "vessel": "PAVO LEADER",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Inchcape",
+   "eta": "2026-11-10T06:00",
+   "etd": "2026-11-10T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9181560"
   },
   {
    "vessel": "MSC YUKTA X",
@@ -1014,6 +1014,16 @@
    "etd": "2026-11-25T03:00",
    "port": "Tacoma",
    "imo": "9485007"
+  },
+  {
+   "vessel": "PAGANELLA LEADER",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-22T06:00",
+   "etd": "2026-11-22T18:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier"
   },
   {
    "vessel": "EVER SIGMA",
