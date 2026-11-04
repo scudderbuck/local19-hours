@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-03T16:45:04-08:00",
+ "updated": "2026-11-03T19:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -269,7 +269,7 @@
    "terminal": "EB1",
    "agent": "Norton Lilly International",
    "eta": "2026-11-05T20:00",
-   "etd": "2026-11-06T04:00",
+   "etd": "2026-11-06T16:30",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9983152"
@@ -293,17 +293,6 @@
    "etd": "2026-11-06T22:00",
    "port": "Tacoma",
    "imo": "8419166"
-  },
-  {
-   "vessel": "GLOVIS TREASURE",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-06T05:00",
-   "etd": "2026-11-06T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9983152"
   },
   {
    "vessel": "OOCL SEATTLE",
@@ -345,6 +334,17 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "9978676"
+  },
+  {
+   "vessel": "GLOVIS TREASURE",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-06T17:30",
+   "etd": "2026-11-07T00:30",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9983152"
   },
   {
    "vessel": "Glovis Legend",
@@ -1145,17 +1145,6 @@
    "etd": "2026-11-28T03:18",
    "port": "Seattle",
    "imo": "9861897"
-  },
-  {
-   "vessel": "HORIZON HIGHWAY",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-27T06:00",
-   "etd": "2026-11-27T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9726700"
   },
   {
    "vessel": "MATSON KODIAK",
