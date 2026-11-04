@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-03T13:45:05-08:00",
+ "updated": "2026-11-03T16:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -320,7 +320,7 @@
    "service": "Matson - HI2",
    "terminal": "WST",
    "agent": "Matson",
-   "eta": "2026-11-06T10:00",
+   "eta": "2026-11-06T10:30",
    "etd": "2026-11-07T03:00",
    "port": "Tacoma",
    "imo": "9268538"
@@ -1066,16 +1066,6 @@
    "imo": "9395939"
   },
   {
-   "vessel": "YM TOPMOST",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-25T07:00",
-   "etd": "2026-11-29T08:00",
-   "port": "Tacoma",
-   "imo": "9878515"
-  },
-  {
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
@@ -1125,6 +1115,16 @@
    "etd": "2026-11-28T14:00",
    "port": "Tacoma",
    "imo": "9935363"
+  },
+  {
+   "vessel": "YM TOPMOST",
+   "service": "FP2",
+   "terminal": "Husky",
+   "agent": "",
+   "eta": "2026-11-26T17:30",
+   "etd": "2026-11-30T12:30",
+   "port": "Tacoma",
+   "imo": "9878515"
   },
   {
    "vessel": "OOCL NEW YORK",
