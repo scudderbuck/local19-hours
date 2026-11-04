@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-03T19:45:04-08:00",
+ "updated": "2026-11-03T22:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -61,7 +61,7 @@
    "terminal": "Husky",
    "agent": "Norton Lilly International",
    "eta": "2026-10-27T15:00",
-   "etd": "2026-11-03T18:00",
+   "etd": "2026-11-04T01:00",
    "port": "Tacoma",
    "imo": "9450442"
   },
@@ -254,16 +254,6 @@
    "imo": "9983140"
   },
   {
-   "vessel": "MSC FLORA",
-   "service": "CLX",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-05T17:00",
-   "etd": "2026-11-07T04:00",
-   "port": "Seattle",
-   "imo": "9978937"
-  },
-  {
    "vessel": "GLOVIS TREASURE",
    "service": "",
    "terminal": "EB1",
@@ -293,16 +283,6 @@
    "etd": "2026-11-06T22:00",
    "port": "Tacoma",
    "imo": "8419166"
-  },
-  {
-   "vessel": "OOCL SEATTLE",
-   "service": "PNW1",
-   "terminal": "T18",
-   "agent": "Inchcape",
-   "eta": "2026-11-06T06:00",
-   "etd": "2026-11-07T04:00",
-   "port": "Seattle",
-   "imo": "9984431"
   },
   {
    "vessel": "MAUNAWILI",
@@ -336,6 +316,16 @@
    "imo": "9978676"
   },
   {
+   "vessel": "MSC FLORA",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-06T17:00",
+   "etd": "2026-11-07T18:00",
+   "port": "Seattle",
+   "imo": "9978937"
+  },
+  {
    "vessel": "GLOVIS TREASURE",
    "service": "",
    "terminal": "Blair",
@@ -356,6 +346,16 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "1063281"
+  },
+  {
+   "vessel": "OOCL SEATTLE",
+   "service": "PNW1",
+   "terminal": "T18",
+   "agent": "Inchcape",
+   "eta": "2026-11-07T06:00",
+   "etd": "2026-11-08T04:00",
+   "port": "Seattle",
+   "imo": "9984431"
   },
   {
    "vessel": "TONGALA",
@@ -380,31 +380,11 @@
    "imo": "9278105"
   },
   {
-   "vessel": "ONE FANTASTIC",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-08T15:00",
-   "etd": "2026-11-13T18:00",
-   "port": "Tacoma",
-   "imo": "9936381"
-  },
-  {
-   "vessel": "BUDAPEST EXPRESS",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-08T15:00",
-   "etd": "2026-11-11T18:00",
-   "port": "Tacoma",
-   "imo": "9450430"
-  },
-  {
    "vessel": "MSC SABRINA",
    "service": "CLX",
    "terminal": "T5",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-08T17:00",
+   "eta": "2026-11-08T12:00",
    "etd": "2026-11-09T18:00",
    "port": "Seattle",
    "imo": "9979022"
@@ -419,6 +399,16 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "8767329"
+  },
+  {
+   "vessel": "BUDAPEST EXPRESS",
+   "service": "WC4/TP5",
+   "terminal": "Husky",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-09T00:01",
+   "etd": "2026-11-12T04:00",
+   "port": "Tacoma",
+   "imo": "9450430"
   },
   {
    "vessel": "GLOVIS LEGEND",
@@ -443,14 +433,14 @@
    "imo": "9610391"
   },
   {
-   "vessel": "MSC SOLA",
-   "service": "Chinook",
-   "terminal": "T5",
+   "vessel": "ONE FANTASTIC",
+   "service": "FP2",
+   "terminal": "Husky",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-09T17:00",
-   "etd": "2026-11-11T04:00",
-   "port": "Seattle",
-   "imo": "9401104"
+   "eta": "2026-11-09T15:00",
+   "etd": "2026-11-15T04:00",
+   "port": "Tacoma",
+   "imo": "9936381"
   },
   {
    "vessel": "GLOVIS LEGEND",
@@ -494,6 +484,16 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9181560"
+  },
+  {
+   "vessel": "MSC SOLA",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-10T07:00",
+   "etd": "2026-11-12T18:00",
+   "port": "Seattle",
+   "imo": "9401104"
   },
   {
    "vessel": "MSC YUKTA X",
@@ -558,16 +558,6 @@
    "imo": "7307110"
   },
   {
-   "vessel": "SANTA RITA",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-11T21:56",
-   "etd": "2026-11-15T04:56",
-   "port": "Tacoma",
-   "imo": "9619098"
-  },
-  {
    "vessel": "CORNEILLE",
    "service": "PN1",
    "terminal": "WUT",
@@ -598,16 +588,6 @@
    "imo": "9978951"
   },
   {
-   "vessel": "LOTUS A",
-   "service": "CPNW",
-   "terminal": "T18",
-   "agent": "Oceonix Services Ltd",
-   "eta": "2026-11-13T06:00",
-   "etd": "2026-11-15T04:00",
-   "port": "Seattle",
-   "imo": "9461465"
-  },
-  {
    "vessel": "OOCL OAKLAND",
    "service": "PNW1",
    "terminal": "T18",
@@ -626,6 +606,16 @@
    "etd": "2026-11-14T03:00",
    "port": "Tacoma",
    "imo": "9273674"
+  },
+  {
+   "vessel": "SANTA RITA MAERSK",
+   "service": "WC4/TP5",
+   "terminal": "Husky",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-13T15:00",
+   "etd": "2026-11-16T18:00",
+   "port": "Tacoma",
+   "imo": "9425382"
   },
   {
    "vessel": "NORTH STAR",
@@ -679,6 +669,16 @@
    "imo": "9745665"
   },
   {
+   "vessel": "SM SEOUL",
+   "service": "",
+   "terminal": "T18",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-15T15:00",
+   "etd": "2026-11-16T18:00",
+   "port": "Seattle",
+   "imo": "9456953"
+  },
+  {
    "vessel": "EVER SUMMIT",
    "service": "TPN",
    "terminal": "PCT",
@@ -720,6 +720,16 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9722302"
+  },
+  {
+   "vessel": "LOTUS A",
+   "service": "CPNW",
+   "terminal": "T18",
+   "agent": "Oceonix Services Ltd",
+   "eta": "2026-11-16T15:00",
+   "etd": "2026-11-18T18:00",
+   "port": "Seattle",
+   "imo": "9461465"
   },
   {
    "vessel": "GLORIOUS ACE",
@@ -807,16 +817,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9979084"
-  },
-  {
-   "vessel": "SM SEOUL",
-   "service": "",
-   "terminal": "T18",
-   "agent": "",
-   "eta": "2026-11-18T02:00",
-   "etd": "2026-11-19T05:00",
-   "port": "Seattle",
-   "imo": "9456953"
   },
   {
    "vessel": "EVER MAGUS",
