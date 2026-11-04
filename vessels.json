@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-04T04:45:05-08:00",
+ "updated": "2026-11-04T07:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -975,16 +975,6 @@
    "imo": "9446013"
   },
   {
-   "vessel": "YM TROPHY",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-21T07:00",
-   "etd": "2026-11-25T08:00",
-   "port": "Tacoma",
-   "imo": "9789996"
-  },
-  {
    "vessel": "MAUNAWILI",
    "service": "Matson - HI2",
    "terminal": "WST",
@@ -1044,6 +1034,16 @@
    "etd": "2026-11-27T15:00",
    "port": "Tacoma",
    "imo": "9430399"
+  },
+  {
+   "vessel": "YM TROPHY",
+   "service": "FP2",
+   "terminal": "Husky",
+   "agent": "",
+   "eta": "2026-11-24T16:00",
+   "etd": "2026-11-28T11:00",
+   "port": "Tacoma",
+   "imo": "9789996"
   },
   {
    "vessel": "CAPE SOUNIO",
@@ -1107,6 +1107,16 @@
    "imo": "9978975"
   },
   {
+   "vessel": "YM TOPMOST",
+   "service": "FP2",
+   "terminal": "Husky",
+   "agent": "",
+   "eta": "2026-11-26T07:00",
+   "etd": "2026-11-30T08:00",
+   "port": "Tacoma",
+   "imo": "9878515"
+  },
+  {
    "vessel": "EVER MAGIC",
    "service": "",
    "terminal": "PCT",
@@ -1115,16 +1125,6 @@
    "etd": "2026-11-28T14:00",
    "port": "Tacoma",
    "imo": "9935363"
-  },
-  {
-   "vessel": "YM TOPMOST",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-26T17:30",
-   "etd": "2026-11-30T12:30",
-   "port": "Tacoma",
-   "imo": "9878515"
   },
   {
    "vessel": "OOCL NEW YORK",
