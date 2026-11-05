@@ -521,7 +521,7 @@ body.gopen{overflow:hidden}
 /* v128: News card (headlines from news.json, refreshed by a GitHub Action) */
 #newsCard{padding:4px 12px}#newsCard .nwh{display:flex;align-items:center;gap:8px;width:100%;min-height:48px;background:none;border:0;color:var(--fg);font-weight:700;text-align:left;padding:0}#newsCard .nwh .nwc{margin-left:auto;font-weight:600;color:var(--mut);white-space:nowrap}#newsCard .nwh span{white-space:nowrap}#newsCard .nwh span:nth-child(2){min-width:0;overflow:hidden;text-overflow:ellipsis}
 #newsCard a.nwi{display:block;min-height:44px;padding:8px 0;border-top:1px solid var(--bd);color:var(--fg);text-decoration:none}#newsCard a.nwi b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-weight:600;line-height:1.25}#newsCard .nwm{display:flex;gap:8px;font-size:.8125rem;color:var(--mut);margin-top:2px;white-space:nowrap}#newsCard .nwm span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis}#newsCard .nwf{font-size:.8125rem;color:var(--mut);padding:6px 0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* v130: Shop button on Add (home); sheet shows shop.json merch */
+/* v131: Shop button on Add (home); sheet shows shop.json merch (Fourthwall) */
 .shopw{margin:12px 0 4px}#shopBtn.musb{font:inherit;font-size:1em;font-weight:700;cursor:pointer;background:#fff;color:#00214e;border:2px solid #ffd23f;border-radius:999px;min-height:48px;width:100%;padding:0 12px;gap:8px;display:flex;align-items:center;justify-content:center;white-space:nowrap}
 #shopSheet .shi{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--bd)}#shopSheet .shi img,#shopSheet .shph{width:72px;height:72px;flex:0 0 72px;border-radius:10px;object-fit:cover;background:var(--bd)}#shopSheet .shph{display:flex;align-items:center;justify-content:center;font-size:1.75rem}#shopSheet .shb{flex:1 1 auto;min-width:0}#shopSheet .shn{font-weight:700}#shopSheet .shr{display:flex;align-items:center;gap:10px;margin-top:4px}#shopSheet .shr b{white-space:nowrap}#shopSheet .shr a.bt{min-height:44px;padding:4px 18px;margin-left:auto;white-space:nowrap}#shopSheet #shopBody>a.bt{margin-top:8px;white-space:nowrap;display:flex}#shopSheet .shm{margin:6px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#shopSheet .shhd{display:flex;align-items:center;gap:8px;margin:0 0 4px}#shopSheet .shhd h3{margin:0;flex:1}
 @media(prefers-color-scheme:dark){#shopBtn.musb{background:#1a222c;color:var(--fg);border-color:#ffd23f}}
@@ -729,7 +729,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v130",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v131",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1298,7 +1298,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v130",CACHE_VERSION="l19hours-v130"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v131",CACHE_VERSION="l19hours-v131"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -4672,8 +4672,8 @@ async function loadNews(){if(newsData&&Date.now()-newsAt<9e5){newsPaint();return
  newsPaint();}
 if(typeof window!=="undefined")window.l19News=function(){if(!newsData)try{const c=JSON.parse(localStorage.getItem(NEWS_KEY));if(c&&Array.isArray(c.items)){newsData=c;newsStale=true;newsPaint();}}catch(e){}loadNews();};
 
-/* ===== v130: Shop. Button on Add (home) opens a sheet; products in shop.json (edit to add items). SHOP_DEF is the built-in copy until shop.json loads or when offline. Buy / See all open Shopify in the browser. ===== */
-const SHOP_KEY="l19.shop",SHOP_FULL="🛍️ Shop",SHOP_SHORT="🛍️ Shop",SHOP_DEF={all:"https://sctkc5-fc.myshopify.com/collections/all",items:[{name:"Longshore Life Sunset Tee",price:"$30",url:"https://sctkc5-fc.myshopify.com/products/men-s-cotton-crew-neck-t-shirt",img:"https://cdn.shopify.com/s/files/1/0820/5241/5524/files/all-over-print-mens-cotton-crew-neck-t-shirt-white-front-6aebf268599fb.jpg?v=1793849369"}]};
+/* ===== v131: Shop. Button on Add (home) opens a sheet; products in shop.json (edit to add items). SHOP_DEF is the built-in copy until shop.json loads or when offline. Buy / See all open the Fourthwall store in the browser. ===== */
+const SHOP_KEY="l19.shop",SHOP_FULL="🛍️ Shop",SHOP_SHORT="🛍️ Shop",SHOP_DEF={all:"https://longshore-life-shop.fourthwall.com",items:[{name:"Longshore Life Sunset Tee",price:"$30",url:"https://longshore-life-shop.fourthwall.com",img:"https://cdn.shopify.com/s/files/1/0820/5241/5524/files/all-over-print-mens-cotton-crew-neck-t-shirt-white-front-6aebf268599fb.jpg?v=1793849369"}]};
 let shopData=null,shopAt=0;
 function shopOk(x){return !!x&&typeof x.name==="string"&&x.name&&typeof x.url==="string"&&/^https:\/\//i.test(x.url);}
 function shopHtml(j,offline){j=j&&Array.isArray(j.items)?j:SHOP_DEF;const a=j.items.filter(shopOk).slice(0,24),all=/^https:\/\//i.test(j.all||"")?j.all:SHOP_DEF.all;
