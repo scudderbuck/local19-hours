@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-05T07:45:07-08:00",
+ "updated": "2026-11-05T10:45:05-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -190,23 +190,12 @@
    "imo": "9484376"
   },
   {
-   "vessel": "MIDNIGHT SUN",
-   "service": "",
-   "terminal": "TOTE",
-   "agent": "Tote Maritime Alaska Inc",
-   "eta": "2026-11-04T15:00",
-   "etd": "2026-11-05T01:00",
-   "port": "Tacoma",
-   "vessel_type": "Multipurpose",
-   "imo": "7307110"
-  },
-  {
    "vessel": "MORNING LUCY",
    "service": "",
    "terminal": "T7",
    "agent": "Norton Lilly International",
    "eta": "2026-11-05T03:00",
-   "etd": "2026-11-05T19:00",
+   "etd": "2026-11-06T04:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9383431"
