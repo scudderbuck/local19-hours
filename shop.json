@@ -2,10 +2,22 @@
 "all": "https://longshore-life-shop.fourthwall.com",
 "items": [
 {
-"name": "Longshore Life Sunset Tee",
-"price": "$30",
-"url": "https://longshore-life-shop.fourthwall.com",
-"img": "https://cdn.shopify.com/s/files/1/0820/5241/5524/files/all-over-print-mens-cotton-crew-neck-t-shirt-white-front-6aebf268599fb.jpg?v=1793849369"
+"name": "Longshore Life T-Shirt",
+"price": "$20",
+"url": "https://longshore-life-shop.fourthwall.com/products/longshore-life-t-shirt",
+"img": "https://imgproxy.fourthwall.dev/o5Vlv6SPxnPpCRO8E7PudH0Z68UxaJG5BA3fiWcf_Iw/w:1200/sm:1/enc/6b6P6QdEwcWg4fVU/IZiXhhbayecuQEqU/32mggeLh8EMMgPth/HzBRUO-Ek9sTuUoG/oLEa3qemkshX2MEr/zFhAwi5a4BAuFf2D/zw0UI6DLR07ueJuK/19U-a9bqJNukhaPN/iCmHBW3Nx7RhqnvE/N0EtDNBDJrJuWqnx/o1iJDlEvsY0muMD2/C_hvcu-8GDZhel-r/hw02sqpnwS-c2L-u/eoVzov1HaO4PKO55/eM5YrH_Ph70.png"
+},
+{
+"name": "Longshore Life embroidered hat",
+"price": "$25",
+"url": "https://longshore-life-shop.fourthwall.com/products/longshore-life-embroidered-hat",
+"img": "https://imgproxy.fourthwall.dev/6iSBtk-eDmuXT4fdKcbbxewYYK1I1qsw99HJmlNZang/w:1200/sm:1/enc/ZlLs6c7agDlU3jUW/sRXBG74AW2Upzwpi/rPTJImpBOpiSEFwP/2yQL3GI7KB98lOhP/MGaEsrLfx29Ekl3a/ZximMFqMBpjlEXPR/846f3t8oUqsVYmCJ/9eAtvSnQkNUOTfEy/zyJpYR_ZRU5PHQR1/pf9bxJF0jTZKCGIh/M_1RcObkrXptKM2d/KmPA2F7Ayp_hc4kJ/b1MfKH9QOoBdc7CF/UR4JeSgbSpHTICyL/ZIb7ux2z1Go.png"
+},
+{
+"name": "Longshore Life Coffee Mug",
+"price": "$8.95",
+"url": "https://longshore-life-shop.fourthwall.com/products/longshore-life-coffee-mug",
+"img": "https://imgproxy.fourthwall.dev/p9R1A9t-lNB9zwE5LONoNt03vmO_4Q45ZvFziMBq3ns/w:1200/sm:1/enc/h2QaIipNaZUkDIGm/BM_NDopn9-3ZxOXg/pJ6-A8D14q6MYGv3/-IS0H1abjrlZu34B/ZtaQ6rUVbXWIzlbC/dVu9fmvl1ucSbHwF/iP5Sb-I6rRYB-LZF/wedCzGw3Wm3a6LmK/BHQsJOR28B9yljwX/vzuvGDgxzKfCboU-/svQAOytHY1A9gmAS/6u_5SYJshYfWg525/G4E-n5PiVvETFVec/gRKh1AjL19pGOTMo/JXqtAVU94Dw.png"
 }
 ]
 }
