@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-06T10:45:04-08:00",
+ "updated": "2026-11-06T13:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -120,16 +120,6 @@
    "imo": "9423592"
   },
   {
-   "vessel": "EVER SMILE",
-   "service": "TPN",
-   "terminal": "PCT",
-   "agent": "BEN LINE",
-   "eta": "2026-11-03T04:30",
-   "etd": "2026-11-06T03:00",
-   "port": "Tacoma",
-   "imo": "9300415"
-  },
-  {
    "vessel": "HYUNDAI FORWARD",
    "service": "PN3",
    "terminal": "WUT",
@@ -138,16 +128,6 @@
    "etd": "2026-11-05T18:00",
    "port": "Tacoma",
    "imo": "9330707"
-  },
-  {
-   "vessel": "ONE MAJESTY",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-03T20:00",
-   "etd": "2026-11-06T04:00",
-   "port": "Tacoma",
-   "imo": "9424912"
   },
   {
    "vessel": "MORNING LUCY",
@@ -159,16 +139,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9383431"
-  },
-  {
-   "vessel": "MSC IVANA",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-04T08:00",
-   "etd": "2026-11-06T21:00",
-   "port": "Seattle",
-   "imo": "9398371"
   },
   {
    "vessel": "MORNING LUCY",
@@ -351,16 +321,6 @@
    "imo": "1063281"
   },
   {
-   "vessel": "ONE FANTASTIC",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-09T15:00",
-   "etd": "2026-11-15T11:00",
-   "port": "Tacoma",
-   "imo": "9936381"
-  },
-  {
    "vessel": "MSC SOLA",
    "service": "Chinook",
    "terminal": "T5",
@@ -380,6 +340,16 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "1063281"
+  },
+  {
+   "vessel": "ONE FANTASTIC",
+   "service": "FP2",
+   "terminal": "Husky",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-10T05:00",
+   "etd": "2026-11-15T11:00",
+   "port": "Tacoma",
+   "imo": "9936381"
   },
   {
    "vessel": "EVER STRONG",
@@ -407,7 +377,7 @@
    "terminal": "EB1",
    "agent": "Norton Lilly International",
    "eta": "2026-11-10T16:00",
-   "etd": "2026-11-11T03:00",
+   "etd": "2026-11-11T04:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "1041843"
@@ -448,7 +418,7 @@
    "service": "",
    "terminal": "T7",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-11T04:00",
+   "eta": "2026-11-11T05:00",
    "etd": "2026-11-11T19:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
