@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-06T01:45:05-08:00",
+ "updated": "2026-11-06T07:45:06-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -214,16 +214,6 @@
    "imo": "9983152"
   },
   {
-   "vessel": "WESTWOOD COLUMBIA",
-   "service": "EB Service 1",
-   "terminal": "T18",
-   "agent": "",
-   "eta": "2026-11-06T01:21",
-   "etd": "2026-11-06T14:21",
-   "port": "Seattle",
-   "imo": "9226047"
-  },
-  {
    "vessel": "MATSON KODIAK",
    "service": "Matson - AK",
    "terminal": "WST",
@@ -277,7 +267,7 @@
   },
   {
    "vessel": "MSC FLORA",
-   "service": "CLX",
+   "service": "Ad Hoc",
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-11-06T17:00",
