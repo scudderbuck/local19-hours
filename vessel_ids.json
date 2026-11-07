@@ -1,4 +1,8 @@
 {
+ "AMIS BRAVE": {
+  "checked": "2026-11-07",
+  "imo": "9667459"
+ },
  "ANAFI": {
   "checked": "2026-10-19",
   "imo": "9978602"
@@ -199,6 +203,10 @@
   "checked": "2026-10-19",
   "imo": "9330707"
  },
+ "IMOGEN": {
+  "checked": "2026-11-07",
+  "imo": "9884370"
+ },
  "IRIS ACE": {
   "checked": "2026-10-19",
   "imo": "9515474"
@@ -206,6 +214,10 @@
  "JOSCO NINGZHOU": {
   "checked": "2026-10-26",
   "imo": "1068853"
+ },
+ "KM VANCOUVER": {
+  "checked": "2026-11-07",
+  "imo": "9767560"
  },
  "LAUTOKA CHIEF": {
   "checked": "2026-10-17",
@@ -222,6 +234,10 @@
  "LIBERTY PEACE": {
   "checked": "2026-10-19",
   "imo": "9777890"
+ },
+ "LIBERTY PRIDE": {
+  "checked": "2026-11-07",
+  "imo": "9448114"
  },
  "LIBRA LEADER": {
   "checked": "2026-10-19",
@@ -263,6 +279,10 @@
   "checked": "2026-10-19",
   "imo": "9268538"
  },
+ "MEGHNA FREEDOM": {
+  "checked": "2026-11-07",
+  "imo": "9622813"
+ },
  "MIDNIGHT SUN": {
   "checked": "2026-10-19",
   "imo": "7307110"
@@ -274,6 +294,10 @@
  "MOL CHARISMA": {
   "checked": "2026-10-25",
   "imo": "9321249"
+ },
+ "MORNING LADY": {
+  "checked": "2026-11-07",
+  "imo": "9445980"
  },
  "MORNING LILY": {
   "checked": "2026-10-24",
@@ -418,6 +442,10 @@
  "POLARIS MILA": {
   "checked": "2026-10-19",
   "imo": "9289908"
+ },
+ "PRABHU MIHIKA": {
+  "checked": "2026-11-07",
+  "imo": null
  },
  "R.J. PFEIFFER": {
   "checked": "2026-11-02",
