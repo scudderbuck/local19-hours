@@ -83,6 +83,10 @@
   "checked": "2026-10-16",
   "imo": "9966764"
  },
+ "CMA CGM RIGOLETTO": {
+  "checked": "2026-11-07",
+  "imo": "9299654"
+ },
  "CORNEILLE": {
   "checked": "2026-10-19",
   "imo": "9409170"
@@ -127,6 +131,10 @@
   "checked": "2026-10-24",
   "imo": "9935375"
  },
+ "EVER MATCH": {
+  "checked": "2026-11-07",
+  "imo": "9935387"
+ },
  "EVER MODE": {
   "checked": "2026-10-19",
   "imo": "9935296"
@@ -167,6 +175,10 @@
   "checked": "2026-10-19",
   "imo": "9450442"
  },
+ "FREEDOM ACE": {
+  "checked": "2026-11-07",
+  "imo": "9293662"
+ },
  "GLORIOUS ACE": {
   "checked": "2026-10-24",
   "imo": "9561277"
@@ -202,6 +214,10 @@
  "HYUNDAI FORWARD": {
   "checked": "2026-10-19",
   "imo": "9330707"
+ },
+ "HYUNDAI SUPREME": {
+  "checked": "2026-11-07",
+  "imo": "9347619"
  },
  "IMOGEN": {
   "checked": "2026-11-07",
@@ -259,6 +275,10 @@
   "checked": "2026-10-19",
   "imo": "1040863"
  },
+ "MAERSK YOSEMITE": {
+  "checked": "2026-11-07",
+  "imo": "9943102"
+ },
  "MANULANI": {
   "checked": "2026-10-19",
   "imo": "9273674"
@@ -310,6 +330,10 @@
  "MSC BOSTON": {
   "checked": "2026-10-16",
   "imo": "9979010"
+ },
+ "MSC CARLOTTA": {
+  "checked": "2026-11-07",
+  "imo": "9756731"
  },
  "MSC DARLENE": {
   "checked": "2026-11-05",
@@ -386,6 +410,10 @@
  "ONE FANTASTIC": {
   "checked": "2026-10-19",
   "imo": "9936381"
+ },
+ "ONE FRONTIER": {
+  "checked": "2026-11-07",
+  "imo": "9934383"
  },
  "ONE MAESTRO": {
   "checked": "2026-10-31",
@@ -527,6 +555,10 @@
   "checked": "2026-10-19",
   "imo": "9338838"
  },
+ "THALATTA": {
+  "checked": "2026-11-07",
+  "imo": "9321720"
+ },
  "THEBEN": {
   "checked": "2026-10-24",
   "imo": "9722302"
@@ -547,6 +579,10 @@
   "checked": "2026-10-19",
   "imo": "9979084"
  },
+ "VENUS SPIRIT": {
+  "checked": "2026-11-07",
+  "imo": "9505900"
+ },
  "VIENNA EXPRESS": {
   "checked": "2026-10-19",
   "imo": "9450416"
@@ -562,6 +598,10 @@
  "WESTWOOD RAINIER": {
   "checked": "2026-10-16",
   "imo": "9226035"
+ },
+ "WESTWOOD VICTORIA": {
+  "checked": "2026-11-07",
+  "imo": "9226059"
  },
  "WISDOM ACE": {
   "checked": "2026-10-28",
