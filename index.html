@@ -730,7 +730,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v134",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v135",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -884,17 +884,25 @@ const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman
    [name shown, PMA code ("" = none), rate class ("Basic"|"Skill 1"|"Skill 2"|"Skill 3"|"" = NO default rate; only set when confirmed - user says there are only 3 pay scales, so mapping to PMA classes is not assumed), status, note]
    status: "direct" = name matches a code in the PMA occupation-code list; "inferred" = code is my best guess, check against your pay stub; "none" = no confident match (rate left for you); "user" = class stated by the user, no code.
    Rates autofill from the class (see RATES). Old PMA-list entries stay under "Other (PMA list)" in JOBS below. */
+/* v135: Flex jobs (Daniel): same job, class, code and rates as the base job, plus 1 flex hour (default hours = base + 1, 1st/2nd shift only).
+   The flex hour is counted once in the shift's total hours; auto OT already pays every hour past 8 at OT (PCLCD 2.4492 dock / 2.5 ship: the 1 flex hour is paid at OT). */
+const FLEX_JOBS=[["Flex stevedore","Stevedore"],["Flex semi","Semi"],["Flex top pick","Top pick"],["Flex crane","Crane op"]];
+function flexBase(j){const f=FLEX_JOBS.find(x=>x[0]===j);return f?f[1]:null;}
 const SEATTLE_JOBS=[
 ["Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned. Pier 66 cruise sheet lists Stevedore as 007 Basic, but PMA 0007 = Holdman, so no code is attached (ambiguous)"],
+["Flex stevedore","","Basic","user","v135: Flex = Stevedore + 1 flex hour (paid at OT via auto OT); same code/class/rates as Stevedore"],
 ["Sling man","0006","Basic","direct","0006 Frontman/Slingman"],
 ["Lasher","0009","Basic","direct","0009 Lasher"],
 ["Extra Stevedore","","Basic","user","User-stated Basic scale; no PMA code assigned"],
 ["Bull","0029","Skill 1","user","User-stated code 0029 Lift Truck Operator, Skill 1 (PMA list); rates from Skill 1 schedule"],
 ["Semi","0029","Skill 1","user","User-stated code 0029 Lift Truck Operator, Skill 1 (PMA list; same as Bull); rates from Skill 1 schedule"],
+["Flex semi","0029","Skill 1","user","v135: Flex = Semi + 1 flex hour (paid at OT via auto OT); same code/class/rates as Semi"],
 ["Top pick","0061","Skill 3","direct","v72: PCLCD 4.32 lists Tophandler Driver under Skill III (PMA 0061 Top Handler); was Skill 2 before v72"],
+["Flex top pick","0061","Skill 3","direct","v135: Flex = Top pick + 1 flex hour (paid at OT via auto OT); same code/class/rates as Top pick"],
 ["Mobile crane","0085","Skill 2","direct","v72: PCLCD 4.32 Skill II = Shore-based Whirley & Mobile Crane Operators (PMA 0085 Crane Mobile; Pier 66 cruise sheet: Mobile Crane 085 Skill II). Mobile harbor cranes over 60 metric tons are Skill III: pick Mobile harbor crane (over 60t)"],
 ["Mobile harbor crane (over 60t)","0065","Skill 3","direct","PCLCD 4.32 Skill III: Mobile Harbor Crane Operator (over 60 metric tons rated) (PMA 0065 Mobile Crane SK3)"],
 ["Crane op","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
+["Flex crane","","Skill 3","user","v135: Flex = Crane op + 1 flex hour (paid at OT via auto OT); same code/class/rates as Crane op"],
 ["RTG","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
 ["Bus","0055","Skill 2","user","User-stated code 0055 Lift Truck-Heavy, Skill 2 (PMA list); rates from Skill 2 schedule"],
 ["Sweeper","0037","Skill 1","user","T91/Pier 66 cruise sheets: Sweepers 037 Skill I (PMA 0037 Utility Lift Driver); Skill 1 rates"],
@@ -1106,7 +1114,7 @@ const PIER_HOURS={
  "P66":{"Sweeper":10,"Ramp":12,"Porter":9,"Dockman":9,"Sling man":9,"Button pusher":9,"Bull":9,"Skilled holdman":9,"Mobile crane":10,"Button pusher (conveyor)":9}};
 const PIER_HOURS_SRC={"P91":"Terminal 91 cruise sheet","P66":"Pier 66 cruise sheet"};
 function pierKey(p){const t=String(p||"");if(/\b(?:pier|terminal|t)\s*-?\s*91\b/i.test(t))return "P91";if(/\b(?:pier|terminal|t)\s*-?\s*66\b/i.test(t))return "P66";return "";}
-function pierHours(pier,job){const k=pierKey(pier),t=k&&PIER_HOURS[k];return t&&Object.prototype.hasOwnProperty.call(t,job)?t[job]:null;}
+function pierHours(pier,job){{const fb=flexBase(job);if(fb){const b=pierHours(pier,fb);return b==null?null:b+1;}}const k=pierKey(pier),t=k&&PIER_HOURS[k];return t&&Object.prototype.hasOwnProperty.call(t,job)?t[job]:null;}
 /* ===== v118: DEFAULT HOURS BY JOB (Daniel) — EDIT HERE =====
    Longshore: 8 h, except the 10-h jobs below. Top pick and crane jobs: 10 h + up to 2 OT h = 12-h max hint. Other longshore: 11-h dock max hint (not on cruise piers or Ship codes).
    Jib operator: cruise ship work, 11 h, OT on top, no max hint.
@@ -1120,6 +1128,7 @@ const DEFH_10=["Top pick","0061","Side pick","0062","Straddle carrier","0093","B
 function isClerkJob(j){return CLERK_SEATTLE.includes(j)||CLERK_JOBS.some(c=>c[0]===j);}
 function isFmJob(j){return jobClass(j)==="Foreman";}
 function jobHrs(j){if(!j||j==="__c"||isCwog(j))return null;
+ {const fb=flexBase(j);if(fb){const r=jobHrs(fb);if(!r)return null;return r.kind==="12"?{h:r.h+1,kind:"fc",max:DEFH_FC_MAX,flex:1,note:"Flex: 1 h before the shift (OT) + "+r.h+" h; up to 2 OT h after; max 13 h."}:{h:r.h+1,kind:r.kind,max:r.max,flex:1,note:"Flex: 1 h before the shift (OT) + "+r.h+" h."};}}
  if(j==="Jib operator")return{h:11,kind:"ship",max:0,note:""};
  if(isFmJob(j))return{h:10,kind:"fc",max:DEFH_FC_MAX,note:"Foreman: optional 1 flex h before shift (OT) + 10 h + up to 2 OT h; max 13 h."};
  if(isClerkJob(j)){if(j==="Supercargo")return{h:11,kind:"fc",max:DEFH_FC_MAX,note:"Supercargo: 1 flex h before shift (OT) + 10 h; up to 2 OT h after; max 13 h."};
@@ -1311,7 +1320,7 @@ function searchEntries(all,f){f=f||{};const q=String(f.q||"").trim().toLowerCase
  .sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(a.shift<b.shift?1:a.shift>b.shift?-1:0));}
 function searchActive(f){return !!(f&&(String(f.q||"").trim()||f.from||f.to));}
 const UP_JOBS=["Sling man","Stevedore","Extra Stevedore","Crane op"];
-function upApplies(job){return UP_JOBS.includes(job);}
+function upApplies(job){return UP_JOBS.includes(job)||UP_JOBS.includes(flexBase(job));}
 function upLabel(v){return v==="first"?"First up (AM)":v==="second"?"Second up (PM)":"";}
 function weekText(all,ws,opts){const nopay=!!(opts&&opts.noPay);const list=weekEntries(all,ws),t=summarize(list),we=addDays(ws,6);const pgw=pgpWeek(opts&&opts.pgp?opts.pgp:(pgpOn(curLocal())?pgpList():[]),ws);
  const L=["Longshore Life – Hours, week of "+ws+" to "+we,""];
@@ -1345,7 +1354,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v134",CACHE_VERSION="l19hours-v134"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v135",CACHE_VERSION="l19hours-v135"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
