@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-07T10:45:04-08:00",
+ "updated": "2026-11-07T13:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -1258,6 +1258,16 @@
    "etd": "2026-12-05T18:00",
    "port": "Tacoma",
    "imo": "9268538"
+  },
+  {
+   "vessel": "YM COSMOS",
+   "service": "PN1",
+   "terminal": "WUT",
+   "agent": "",
+   "eta": "2026-12-05T13:30",
+   "etd": "2026-12-08T19:30",
+   "port": "Tacoma",
+   "imo": "9198288"
   }
  ]
 }
