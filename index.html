@@ -1428,7 +1428,14 @@ function backupDue(last,today,hasData){if(!hasData)return false;if(!last)return 
  const d=daysBetween(l,today);return d>30||(l.slice(0,7)!==today.slice(0,7)&&d>=7);}
 function backupAgo(last,today){if(!last)return "never";const l=String(last).slice(0,10),d=daysBetween(l,today);return l+" ("+(d<=0?"today":d===1?"yesterday":d+" days ago")+")";}
 /* Pay stub check: stub totals vs logged week (Sat-Fri). noPay => compare hours only. */
-function stubCompare(all,ws,gh,gp,opts){const noPay=!!(opts&&opts.noPay),t=summarize(weekEntries(all,ws)),logH=rd2(t.hours),hasH=gh!=null&&gh!==""&&isFinite(parseFloat(gh)),dH=hasH?rd2(num(gh)-logH):0;
+/* v136 (Daniel: "paid hours, but guarantee hours lag a week" / same paycheck): the regular check for payroll week ws (Sat-Fri) =
+   this week's shifts (paid hours, incl. the Basic 8/5 h shift minimum) + weekday CWOG worked the PREVIOUS week (PAY_LATE_WEEKS).
+   This week's CWOG is on the next check; weekend CWOG/PGP is never paid. PGP is only an estimate, so it is never added – it is reported as not counted. */
+function stubParts(all,ws,pgp){const lw=addDays(ws,-7*PAY_LATE_WEEKS),cur=weekEntries(all||[],ws),work=cur.filter(e=>!isCwog(e)),cwNow=cur.filter(e=>isCwog(e)&&!wkxCwog(e)),cwPrev=weekEntries(all||[],lw).filter(e=>isCwog(e)&&!wkxCwog(e));
+ const sum=l=>{const t=summarize(l);return{n:l.length,hours:rd2(l.reduce((a,e)=>a+paidHours(e),0)),pay:t.anyPay?payTotal(t):null};};
+ const pg=(pgp||[]).filter(m=>!wkxPgp(m)),pgPrev=pgpWeek(pg,lw).length,pgNow=pgpWeek(pg,ws).length;
+ return{ws,prevWs:lw,work:sum(work),cwogPrev:sum(cwPrev),cwogNext:sum(cwNow),pgpPrevDays:pgPrev,pgpNextDays:pgNow,list:work.concat(cwPrev)};}
+function stubCompare(all,ws,gh,gp,opts){const noPay=!!(opts&&opts.noPay),parts=stubParts(all,ws,opts&&opts.pgp),t=summarize(parts.list),logH=rd2(parts.work.hours+parts.cwogPrev.hours),hasH=gh!=null&&gh!==""&&isFinite(parseFloat(gh)),dH=hasH?rd2(num(gh)-logH):0;
  /* v117: logged gross = shift pay + travel pay (what a stub's gross includes; mileage is not wages). Hours are optional (gross-only check). */
  const hasPay=!noPay&&gp!=null&&gp!==""&&isFinite(parseFloat(gp)),logP=t.anyPay?rd2(payTotal(t)):null,dP=hasPay&&logP!=null?rd2(num(gp)-logP):null;
  const hOk=Math.abs(dH)<0.01,pOk=dP!=null&&Math.abs(dP)<=0.5;
@@ -1437,7 +1444,15 @@ function stubCompare(all,ws,gh,gp,opts){const noPay=!!(opts&&opts.noPay),t=summa
  const status=(!hOk&&dH<0)||(dP!=null&&!pOk&&dP<0)?"short":(!hOk||(dP!=null&&!pOk))?"over":"match";
  const head=status==="match"?"Matches your log: ":status==="short"?"Short: ":"Different: ";
  const hint=status==="match"?"":hasH&&!hOk?(dH<0?"A shift you logged may be missing from the stub.":"A shift may not be logged here yet – add it."):dP!=null&&!pOk?(!t.count?"Nothing logged this week – missing shift?":hasH?"Hours agree – check rate, OT, job or travel.":"Hours not compared – check rate, OT, job or travel (add stub hours to compare hours too)."):"";
- return {logHours:logH,logPay:logP,dHours:dH,dPay:dP,status,hint,msg:head+[hm,pm].filter(Boolean).join("; ")+"."};}
+ return {logHours:logH,logPay:logP,dHours:dH,dPay:dP,status,hint,parts,msg:head+[hm,pm].filter(Boolean).join("; ")+"."};}
+/* v136: plain breakdown of what the log counts for this check (no estimated PGP money) */
+function stubPartsText(p,noPay){const md=d=>d.slice(5),m=x=>noPay||x==null?"":" · "+money(x),L=[];
+ L.push("Work "+md(p.ws)+"–"+md(addDays(p.ws,6))+": "+r2(p.work.hours)+" paid hrs"+m(p.work.pay));
+ if(p.cwogPrev.n)L.push("+ CWOG from week of "+md(p.prevWs)+": "+r2(p.cwogPrev.hours)+" hrs"+m(p.cwogPrev.pay));
+ const no=[];if(p.cwogNext.n)no.push("this week's CWOG ("+r2(p.cwogNext.hours)+" hrs, next check)");
+ if(p.pgpPrevDays)no.push("PGP for week of "+md(p.prevWs)+" ("+p.pgpPrevDays+" day"+(p.pgpPrevDays===1?"":"s")+" – amount is only an estimate; if your stub includes it, expect it to show as over)");
+ if(p.pgpNextDays)no.push("this week's PGP (next check)");
+ if(no.length)L.push("Not counted: "+no.join("; "));return L;}
 /* v117: one-line paycheck result for the week card */
 function stubLine(c){return c.status==="match"?"Paycheck: ✓ Match":c.dPay!=null&&Math.abs(c.dPay)>0.5?"Paycheck: "+money(Math.abs(c.dPay))+(c.dPay<0?" short":" over")+(c.dHours?" · "+r2(Math.abs(c.dHours))+" hrs":""):"Paycheck: "+r2(Math.abs(c.dHours))+" hrs "+(c.dHours<0?"short":"over");}
 /* Hours milestones (rate steps at 1,001 / 2,001 / 4,001 total hours) */
@@ -3145,23 +3160,25 @@ function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=toda
 const PMA_PORTAL_URL="https://selfservice.pmanet.org/";
 const PMA_PORTAL_HTML=`<a class="pmab" id="pmaPortal" href="${PMA_PORTAL_URL}" target="_blank" rel="noopener" aria-label="PMA Dockworker Portal log in (opens selfservice.pmanet.org in a new tab)"><b aria-hidden="true">🔐</b><span>PMA Dockworker Portal log in</span></a><p class="mut pmah">Official PMA site (selfservice.pmanet.org) – check your actual pay stub there. Only sign in at this address.</p>`;
 /* --- 2. pay stub check (Week tab) --- */
-function payChkHtml(ws){const s=stubsGet().find(x=>x.week===ws);let line="";if(s){const c=stubCompare(entries,ws,s.hours,s.pay,{noPay:hidePay});line=`<div class="ql1 pcl ${c.status}" id="pcRes">${esc(stubLine(c))}</div>${c.hint?`<div class="ql1 mut" id="pcHint">${esc(c.hint)}</div>`:""}`;}
+const stubPgp=()=>pgpOn(curLocal())?pgpList():[];
+function payChkHtml(ws){const s=stubsGet().find(x=>x.week===ws);let line="";if(s){const c=stubCompare(entries,ws,s.hours,s.pay,{noPay:hidePay,pgp:stubPgp()});line=`<div class="ql1 pcl ${c.status}" id="pcRes">${esc(stubLine(c))}</div>${c.hint?`<div class="ql1 mut" id="pcHint">${esc(c.hint)}</div>`:""}`;}
  return `<div class="pcw${s?" card":""}">${line}<div class="row"><button type="button" id="pcBtn">${s?"Edit paycheck check":"Check paycheck"}</button></div></div>`;}
 document.addEventListener("click",ev=>{if(ev.target&&ev.target.closest&&ev.target.closest("#pcBtn")){const b=$("stubBox");if(b){b.scrollIntoView({block:"start"});const f=$("sth_p")||$("sth_h");if(f)setTimeout(()=>f.focus(),300);}}});
 function renderStub(box){const stubs=stubsGet(),cur=stubs.find(s=>s.week===wk)||{},we=addDays(wk,6);
- const row=s=>{const c=stubCompare(entries,s.week,s.hours,s.pay,{noPay:hidePay});return `<div class="ent"><div><b>${s.week.slice(5)} → ${addDays(s.week,6).slice(5)}</b> · stub ${r2(num(s.hours))}h${!hidePay&&s.pay!==""&&s.pay!=null?" · "+money(num(s.pay)):""}<div class="mut">${esc(c.msg)}${c.hint?" "+esc(c.hint):""}</div></div><div class="acts"><button data-sx="${esc(s.week)}" class="d" aria-label="Delete stub check ${esc(s.week)}">🗑</button></div></div>`;};
+ const row=s=>{const c=stubCompare(entries,s.week,s.hours,s.pay,{noPay:hidePay,pgp:stubPgp()});return `<div class="ent"><div><b>${s.week.slice(5)} → ${addDays(s.week,6).slice(5)}</b> · stub ${r2(num(s.hours))}h${!hidePay&&s.pay!==""&&s.pay!=null?" · "+money(num(s.pay)):""}<div class="mut">${esc(c.msg)}${c.hint?" "+esc(c.hint):""}</div></div><div class="acts"><button data-sx="${esc(s.week)}" class="d" aria-label="Delete stub check ${esc(s.week)}">🗑</button></div></div>`;};
  const past=[...stubs].sort((a,b)=>a.week<b.week?1:-1);
- box.innerHTML=`<div class="card"><h3>Pay stub check</h3><p class="mut" style="margin:0 0 4px">Week ${wk.slice(5)} → ${we.slice(5)} (Sat–Fri, the week shown above). Enter the totals printed on your stub.</p>
+ box.innerHTML=`<div class="card"><h3>Pay stub check</h3><p class="mut" style="margin:0 0 4px">Week ${wk.slice(5)} → ${we.slice(5)} (Sat–Fri, the week shown above). Enter the totals printed on your stub. Compared with paid hours (shift minimums included) plus last week's CWOG, which is paid on this check.</p>
  <label for="sth_h">Gross hours on stub <span class="mut">(optional)</span></label><input type="number" id="sth_h" step="0.01" min="0" inputmode="decimal" value="${cur.hours!=null?esc(cur.hours):""}">
  ${hidePay?'<p class="mut" id="sthn">Hours only mode is on, so pay is not compared.</p>':`<label for="sth_p">Gross pay on stub ($)</label><input type="number" id="sth_p" step="0.01" min="0" inputmode="decimal" value="${cur.pay!=null?esc(cur.pay):""}">`}
  <div class="row" style="margin-top:12px"><button type="button" class="p" id="sthGo">Check and save</button></div>
  <div id="sthRes" class="mut" aria-live="polite" style="margin-top:10px;color:var(--fg);font-weight:600"></div>
+ <div id="sthParts" class="mut" style="margin-top:8px"><b>Your log for this check:</b>${stubPartsText(stubParts(entries,wk,stubPgp()),hidePay).map(x=>"<br>"+esc(x)).join("")}</div>
  ${hidePay?"":'<p class="mut" style="margin:8px 0 0">Your log\'s pay is an estimate from the rates you entered, so small differences are normal.</p>'}
  ${PMA_PORTAL_HTML}</div>
  ${past.length?`<div class="card"><h3>Past stub checks</h3>${past.map(row).join("")}</div>`:""}`;
  $("sthGo").onclick=()=>{const gh=$("sth_h").value,gp=$("sth_p")?$("sth_p").value:(cur.pay!=null?cur.pay:"");
   if((gh===""||!(parseFloat(gh)>=0))&&(gp===""||gp==null||!(parseFloat(gp)>=0))){$("sthRes").textContent="Enter the gross pay (or hours) from your stub.";return;}
-  const c=stubCompare(entries,wk,gh,gp,{noPay:hidePay});const a=stubsGet().filter(s=>s.week!==wk);a.push({id:uid(),week:wk,hours:gh,pay:gp,added:new Date().toISOString()});
+  const c=stubCompare(entries,wk,gh,gp,{noPay:hidePay,pgp:stubPgp()});const a=stubsGet().filter(s=>s.week!==wk);a.push({id:uid(),week:wk,hours:gh,pay:gp,added:new Date().toISOString()});
   /* v136: say "Saved" only if the write really happened; on failure nothing is changed and the typed values stay in the boxes */
   try{localStorage.setItem(STB,JSON.stringify(a));}catch(e){$("sthRes").textContent="Not saved: "+(e&&e.l19?e.message:"this browser blocked saving.")+" Result (not saved): "+c.msg+(c.hint?" "+c.hint:"");return;}
   renderStub(box);$("sthRes").textContent="Saved. "+c.msg+(c.hint?" "+c.hint:"");const pr=$("v-week").querySelector(".pcw");if(pr){pr.outerHTML=payChkHtml(wk);qlFit();}};
