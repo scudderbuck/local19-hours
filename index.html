@@ -525,7 +525,7 @@ body.gopen{overflow:hidden}
 .shopw{margin:12px 0 4px}#shopBtn.musb{font:inherit;font-size:1em;font-weight:700;cursor:pointer;background:#fff;color:#00214e;border:2px solid #ffd23f;border-radius:999px;min-height:48px;width:100%;padding:0 12px;gap:8px;display:flex;align-items:center;justify-content:center;white-space:nowrap}
 #shopSheet .shi{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--bd)}#shopSheet .shi img,#shopSheet .shph{width:72px;height:72px;flex:0 0 72px;border-radius:10px;object-fit:cover;background:var(--bd)}#shopSheet .shph{display:flex;align-items:center;justify-content:center;font-size:1.75rem}#shopSheet .shb{flex:1 1 auto;min-width:0}#shopSheet .shn{font-weight:700}#shopSheet .shr{display:flex;align-items:center;gap:10px;margin-top:4px}#shopSheet .shr b{white-space:nowrap}#shopSheet .shr a.bt{min-height:44px;padding:4px 18px;margin-left:auto;white-space:nowrap}#shopSheet #shopBody>a.bt{margin-top:8px;white-space:nowrap;display:flex}#shopSheet .shm{margin:6px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#shopSheet .shhd{display:flex;align-items:center;gap:8px;margin:0 0 4px}#shopSheet .shhd h3{margin:0;flex:1}
 @media(prefers-color-scheme:dark){#shopBtn.musb{background:#1a222c;color:var(--fg);border-color:#ffd23f}}
-#l19save{position:fixed;left:8px;right:8px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:9998;background:#7a1c1c;color:#fff;padding:10px 12px;border-radius:10px;font-size:15px;box-shadow:0 4px 16px #0006}#l19save button{min-height:44px;min-width:44px;margin-left:6px}#l19rec{position:fixed;inset:0;z-index:9997;background:#000a;display:flex;align-items:center;justify-content:center;padding:12px}
+#l19save{position:fixed;left:8px;right:8px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:9998;background:#7a1c1c;color:#fff;padding:10px 12px;border-radius:10px;font-size:15px;box-shadow:0 4px 16px #0006}#l19save button{min-height:44px;min-width:44px;margin-left:6px}#l19rec{position:fixed;inset:0;z-index:9997;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto}#l19rec .su{max-width:480px;width:100%;max-height:100%;overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;box-sizing:border-box}
 </style></head><body style="background:#00214e">
 <div id="splash" aria-hidden="true"><img src="img/splash.jpg" alt="Longshore Life" width="663" height="960" fetchpriority="high" decoding="sync"></div><div id="splash2" aria-hidden="true"><img src="img/bridges.jpg" alt="" width="1080" height="1449" decoding="async"></div>
 <header id="hdr"><span class="hdt"><img id="hdLogo" src="img/logo-header.png" alt="Longshore Life" width="76" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"></span> <button type="button" id="hdLoc" class="hdl" aria-haspopup="dialog" aria-label="Your local: Local 19. Change local"><span id="hdLn">Local 19</span> <span aria-hidden="true">▾</span></button><span class="hdmw"><button type="button" id="hdSkip" class="hdm" aria-label="Skip to next song">⏭</button><button type="button" id="hdMus" class="hdm" aria-pressed="true" aria-label="Background music on. Tap to mute">🔊</button></span></header><div id="musToast" role="status" aria-live="polite"></div><audio id="bgm" preload="none"></audio>
@@ -730,7 +730,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v135",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v136",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1354,7 +1354,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v135",CACHE_VERSION="l19hours-v135"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v136",CACHE_VERSION="l19hours-v136"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
@@ -1436,7 +1436,7 @@ function stubCompare(all,ws,gh,gp,opts){const noPay=!!(opts&&opts.noPay),t=summa
  let pm="";if(hasPay){pm=logP==null?"no pay estimate in your log to compare":pOk?"pay agrees (within $0.50)":dP<0?"stub is short "+money(-dP):"stub is "+money(dP)+" over your log";}
  const status=(!hOk&&dH<0)||(dP!=null&&!pOk&&dP<0)?"short":(!hOk||(dP!=null&&!pOk))?"over":"match";
  const head=status==="match"?"Matches your log: ":status==="short"?"Short: ":"Different: ";
- const hint=status==="match"?"":hasH&&!hOk?(dH<0?"A shift you logged may be missing from the stub.":"A shift may not be logged here yet – add it."):dP!=null&&!pOk?(t.count?"Hours agree – check rate, OT, job or travel.":"Nothing logged this week – missing shift?"):"";
+ const hint=status==="match"?"":hasH&&!hOk?(dH<0?"A shift you logged may be missing from the stub.":"A shift may not be logged here yet – add it."):dP!=null&&!pOk?(!t.count?"Nothing logged this week – missing shift?":hasH?"Hours agree – check rate, OT, job or travel.":"Hours not compared – check rate, OT, job or travel (add stub hours to compare hours too)."):"";
  return {logHours:logH,logPay:logP,dHours:dH,dPay:dP,status,hint,msg:head+[hm,pm].filter(Boolean).join("; ")+"."};}
 /* v117: one-line paycheck result for the week card */
 function stubLine(c){return c.status==="match"?"Paycheck: ✓ Match":c.dPay!=null&&Math.abs(c.dPay)>0.5?"Paycheck: "+money(Math.abs(c.dPay))+(c.dPay<0?" short":" over")+(c.dHours?" · "+r2(Math.abs(c.dHours))+" hrs":""):"Paycheck: "+r2(Math.abs(c.dHours))+" hrs "+(c.dHours<0?"short":"over");}
@@ -3002,14 +3002,20 @@ async function doBackup(){const m=$("msg");const r=await shareFile("local19-back
 $("exj").onclick=doBackup;
 /* ===== v100: safety copies (Backup tab) ===== */
 function safeSummary(d){let n=0,b=0;try{const e=JSON.parse(d["l19hours.v1"]||"[]");n=Array.isArray(e)?e.length:0;}catch(e){return "shift list unreadable";}try{const p=JSON.parse(d["l19.pegs"]||"{}");b=Object.values(p.boards||{}).reduce((a,x)=>a+Object.values((x&&x.pegs)||{}).filter(v=>v&&v.n).length,0);}catch(e){}return n+" shift"+(n===1?"":"s")+(b?" · "+b+" peg name"+(b===1?"":"s"):"");}
+/* v136: one check for every restore path. A copy is restorable only if its shift list is missing or a list; damaged copies stay as a record but can't be restored. */
+function copyInfo(d){d=d||{};const raw=d["l19hours.v1"];if(raw!=null){let a;try{a=JSON.parse(raw);}catch(e){return{ok:false,n:0,bad:0,hrs:0,range:""};}if(!Array.isArray(a))return{ok:false,n:0,bad:0,hrs:0,range:""};
+  const c=cleanEntries(a),ds=c.ok.map(x=>x.date).sort();return{ok:true,n:c.ok.length,bad:c.bad.length,hrs:Math.round(c.ok.reduce((t,x)=>t+num(x.hours),0)*100)/100,range:ds.length?ds[0]+" to "+ds[ds.length-1]:""};}
+ return{ok:true,n:0,bad:0,hrs:0,range:""};}
+function copyText(i){return i.ok?i.n+" shift"+(i.n===1?"":"s")+" · "+i.hrs+" hrs"+(i.range?" · "+i.range:"")+(i.bad?" · "+i.bad+" unreadable item"+(i.bad===1?"":"s")+" skipped":""):"damaged – can't be restored (kept as a record)";}
 function safeLabel(x){return x.why==="auto"?"Automatic save":x.why==="daily"?"Daily checkpoint":x.why==="before import"?"Before an import":x.why==="unreadable"?"Unreadable data (kept as found)":x.why==="recovered"?"On app start":x.why==="update"||!x.why?"Before "+x.to+(x.from&&x.from!=="older version"?" (from "+x.from+")":""):x.why==="before restore"?"Before a restore":"Saved by you";}
 function safeRender(){const el=$("safeList");if(!el)return;l19SafeList().then(list=>{
- el.innerHTML=list.length?list.map(x=>`<div class="rlg"><p><b>${esc(safeLabel(x))}</b><br><span class="mut">${esc(new Date(x.at).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))} · ${esc(safeSummary(x.data||{}))}</span></p><div class="row"><button type="button" class="p" data-rs="${x.id}">Restore this copy</button></div></div>`).join(""):'<p class="mut">No safety copies yet. One is made automatically at the next update, or tap below.</p>';
+ el.innerHTML=list.length?list.map(x=>`<div class="rlg"><p><b>${esc(safeLabel(x))}</b><br><span class="mut">${esc(new Date(x.at).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))} · ${esc(copyText(copyInfo(x.data)))}</span></p>${copyInfo(x.data).ok?`<div class="row"><button type="button" class="p" data-rs="${x.id}">Restore this copy</button></div>`:""}</div>`).join(""):'<p class="mut">No safety copies yet. One is made automatically at the next update, or tap below.</p>';
  el.querySelectorAll("[data-rs]").forEach(b=>b.onclick=()=>safeRestore(+b.dataset.rs,list));},()=>{el.innerHTML='<p class="mut">Safety copies aren\'t available in this browser. Use Back up now (JSON) instead.</p>';});}
-function safeRestore(id,list){const x=list.find(y=>y.id===id);if(!x||!x.data)return;
- if(!confirm("Replace the data on this phone with the safety copy from "+new Date(x.at).toLocaleString()+"? What's on the phone now is saved as another safety copy first."))return;
- const m=$("safeM");m.textContent="Restoring…";
- l19Protect("before restore").then(()=>{l19Guard.allow++;try{Object.keys(l19Keys()).forEach(k=>{if(!(k in x.data))localStorage.removeItem(k);});Object.keys(x.data).forEach(k=>localStorage.setItem(k,x.data[k]));localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);l19Guard.allow--;}catch(e){l19Guard.allow--;m.textContent="Restore failed (storage full?). Nothing was lost: your current data is in the newest safety copy.";return;}
+function safeRestore(id,list){const x=list.find(y=>y.id===id);const m=$("safeM");if(!x||!x.data)return;
+ const inf=copyInfo(x.data);if(!inf.ok){if(m)m.textContent="That copy is damaged, so it can't be restored. It is kept as a record.";return;}
+ if(!confirm("Restore the safety copy from "+new Date(x.at).toLocaleString()+"?\n\nCopy: "+copyText(inf)+"\nOn this phone now: "+entries.length+" shift"+(entries.length===1?"":"s")+"\n\nWhat's on the phone now is saved as another safety copy first."))return;
+ m.textContent="Restoring…";
+ l19Protect("before restore").then(()=>{const prev=l19Keys();l19Guard.allow++;try{Object.keys(l19Keys()).forEach(k=>{if(!(k in x.data))localStorage.removeItem(k);});Object.keys(x.data).forEach(k=>localStorage.setItem(k,x.data[k]));localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);l19Guard.allow--;}catch(e){/* v136: put the phone back exactly as it was before the failed restore */try{Object.keys(l19Keys()).forEach(k=>{if(!(k in prev))localStorage.removeItem(k);});Object.keys(prev).forEach(k=>localStorage.setItem(k,prev[k]));}catch(_){}l19Guard.allow--;m.textContent="Restore failed (storage full?). Your data was put back as it was, and it is also in the newest safety copy.";return;}
   m.textContent="Restored. Reloading…";setTimeout(()=>location.reload(),300);},()=>{m.textContent="Couldn't save the current data first, so nothing was changed. Use Back up now (JSON), then try again.";});}
 show=(f=>function(){const r=f.apply(this,arguments);if(curV==="data")safeRender();return r;})(show);
 function saveStatRender(){const el=$("saveStat");if(!el)return;const m=l19Meta(),f=t=>t?new Date(t).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}):"";
@@ -3024,14 +3030,16 @@ function recHours(d){try{return JSON.parse(d["l19hours.v1"]||"[]").reduce((a,x)=
 function recRange(d){try{const ds=JSON.parse(d["l19hours.v1"]||"[]").map(x=>x.date).filter(Boolean).sort();return ds.length?ds[0]+" to "+ds[ds.length-1]:"";}catch(e){return "";}}
 function recoverCheck(next){if(recState===2)return next();if(recState===1)return;recState=1;
  const done=()=>{recState=2;next();};
- l19SafeList().then(list=>{const best=list.find(x=>x.data&&recCount(x.data)>0);if(!best&&!l19Guard.corrupt)return done();
+ l19SafeList().then(list=>{const val=list.filter(x=>{const i=copyInfo(x.data);return i.ok&&i.n>0;}),best=val[0],big=val.reduce((a,x)=>!a||copyInfo(x.data).n>copyInfo(a.data).n?x:a,null),big2=big&&best&&big.id!==best.id&&copyInfo(big.data).n>copyInfo(best.data).n?big:null;if(!best&&!l19Guard.corrupt)return done();
   const d=document.createElement("div");d.id="l19rec";d.setAttribute("role","dialog");d.setAttribute("aria-modal","true");d.setAttribute("aria-labelledby","recT");
   d.innerHTML=`<div class="su"><h2 id="recT">We found your saved data</h2><p class="mut">${l19Guard.corrupt?"The shift list on this phone couldn't be read. It has been kept as it was. ":"This phone has no shifts right now, but a safety copy does. "}Check it before starting over.</p>`+
-   (best?`<div class="rlg"><p><b>${esc(safeLabel(best))}</b><br><span class="mut">${esc(new Date(best.at).toLocaleString())} · ${recCount(best.data)} shifts · ${Math.round(recHours(best.data)*100)/100} hrs · ${esc(recRange(best.data))}</span></p></div>
-   <div class="row"><button type="button" class="p" id="recYes" style="min-height:44px">Restore this copy</button></div>`:"")+
+   (best?`<div class="rlg"><p><b>Newest copy</b> · ${esc(safeLabel(best))}<br><span class="mut">${esc(new Date(best.at).toLocaleString())} · ${esc(copyText(copyInfo(best.data)))}</span></p></div>
+   <div class="row"><button type="button" class="p" id="recYes" style="min-height:44px">Restore newest</button></div>`:"")+
+   (big2?`<div class="rlg"><p><b>Most shifts</b> · ${esc(safeLabel(big2))}<br><span class="mut">${esc(new Date(big2.at).toLocaleString())} · ${esc(copyText(copyInfo(big2.data)))}</span><br><span class="mut">Most shifts isn't always the right one – check the dates.</span></p></div>
+   <div class="row"><button type="button" class="p" id="recBig" style="min-height:44px">Restore most shifts</button></div>`:"")+
    `<div class="row"><button type="button" id="recList" style="min-height:44px">See all copies</button>${l19Guard.corrupt?"":`<button type="button" id="recNo" style="min-height:44px">Start fresh</button>`}</div></div>`;
   document.body.appendChild(d);
-  if(best)$("recYes").onclick=()=>{d.remove();recState=2;show("data");safeRestore(best.id,list);};
+  if(best)$("recYes").onclick=()=>{d.remove();recState=2;show("data");safeRestore(best.id,list);};if(big2)$("recBig").onclick=()=>{d.remove();recState=2;show("data");safeRestore(big2.id,list);};
   $("recList").onclick=()=>{d.remove();recState=2;show("data");};
   if($("recNo"))$("recNo").onclick=()=>{if(!confirm("Start fresh? The safety copies stay in Backup > Restore previous data."))return;d.remove();done();};
  },done);}
@@ -3153,9 +3161,11 @@ function renderStub(box){const stubs=stubsGet(),cur=stubs.find(s=>s.week===wk)||
  ${past.length?`<div class="card"><h3>Past stub checks</h3>${past.map(row).join("")}</div>`:""}`;
  $("sthGo").onclick=()=>{const gh=$("sth_h").value,gp=$("sth_p")?$("sth_p").value:(cur.pay!=null?cur.pay:"");
   if((gh===""||!(parseFloat(gh)>=0))&&(gp===""||gp==null||!(parseFloat(gp)>=0))){$("sthRes").textContent="Enter the gross pay (or hours) from your stub.";return;}
-  const c=stubCompare(entries,wk,gh,gp,{noPay:hidePay});const a=stubsGet().filter(s=>s.week!==wk);a.push({id:uid(),week:wk,hours:gh,pay:gp,added:new Date().toISOString()});LSset(STB,JSON.stringify(a));
-  renderStub(box);$("sthRes").textContent=c.msg+(c.hint?" "+c.hint:"");const pr=$("v-week").querySelector(".pcw");if(pr){pr.outerHTML=payChkHtml(wk);qlFit();}};
- box.querySelectorAll("[data-sx]").forEach(b=>b.onclick=()=>{if(confirm("Delete this stub check?")){LSset(STB,JSON.stringify(stubsGet().filter(s=>s.week!==b.dataset.sx)));renderStub(box);}});}
+  const c=stubCompare(entries,wk,gh,gp,{noPay:hidePay});const a=stubsGet().filter(s=>s.week!==wk);a.push({id:uid(),week:wk,hours:gh,pay:gp,added:new Date().toISOString()});
+  /* v136: say "Saved" only if the write really happened; on failure nothing is changed and the typed values stay in the boxes */
+  try{localStorage.setItem(STB,JSON.stringify(a));}catch(e){$("sthRes").textContent="Not saved: "+(e&&e.l19?e.message:"this browser blocked saving.")+" Result (not saved): "+c.msg+(c.hint?" "+c.hint:"");return;}
+  renderStub(box);$("sthRes").textContent="Saved. "+c.msg+(c.hint?" "+c.hint:"");const pr=$("v-week").querySelector(".pcw");if(pr){pr.outerHTML=payChkHtml(wk);qlFit();}};
+ box.querySelectorAll("[data-sx]").forEach(b=>b.onclick=()=>{if(confirm("Delete this stub check?")){try{localStorage.setItem(STB,JSON.stringify(stubsGet().filter(s=>s.week!==b.dataset.sx)));}catch(e){$("sthRes").textContent="Not deleted: "+(e&&e.l19?e.message:"this browser blocked saving.");return;}renderStub(box);}});}
 {const _rw=renderWeek;renderWeek=function(){_rw();const st=$("v-week").querySelector(".pcw")||$("v-week").querySelector(".stats");if(st)st.insertAdjacentHTML("afterend",milestoneCard()+qualCard());const sb=document.createElement("div");sb.id="stubBox";$("v-week").appendChild(sb);renderStub(sb);setTimeout(qlFit,0);};}
 /* --- 4. milestones --- */
 /* v116: qualifying hours card (Week + History) */
