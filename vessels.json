@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-07T22:45:05-08:00",
+ "updated": "2026-11-08T01:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -64,6 +64,16 @@
    "etd": "2026-11-08T12:00",
    "port": "Tacoma",
    "imo": "9976197"
+  },
+  {
+   "vessel": "MSC FLORA",
+   "service": "Ad Hoc",
+   "terminal": "T5",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-06T17:00",
+   "etd": "2026-11-07T18:00",
+   "port": "Seattle",
+   "imo": "9978937"
   },
   {
    "vessel": "EVER MOST",
@@ -1238,36 +1248,6 @@
    "etd": "2026-12-05T04:55",
    "port": "Tacoma",
    "imo": "9002037"
-  },
-  {
-   "vessel": "MAUNAWILI",
-   "service": "Matson - HI2",
-   "terminal": "WST",
-   "agent": "",
-   "eta": "2026-12-05T10:00",
-   "etd": "2026-12-05T18:00",
-   "port": "Tacoma",
-   "imo": "9268538"
-  },
-  {
-   "vessel": "YM COSMOS",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-12-05T13:30",
-   "etd": "2026-12-08T19:30",
-   "port": "Tacoma",
-   "imo": "9198288"
-  },
-  {
-   "vessel": "SM PORTLAND",
-   "service": "",
-   "terminal": "T18",
-   "agent": "",
-   "eta": "2026-12-05T19:00",
-   "etd": "2026-12-06T22:00",
-   "port": "Seattle",
-   "imo": "9409027"
   }
  ]
 }
