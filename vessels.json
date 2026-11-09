@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-09T04:45:06-08:00",
+ "updated": "2026-11-09T07:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -76,16 +76,6 @@
    "imo": "9978937"
   },
   {
-   "vessel": "EVER MOST",
-   "service": "",
-   "terminal": "PCT",
-   "agent": "BEN LINE",
-   "eta": "2026-11-06T18:00",
-   "etd": "2026-11-08T05:00",
-   "port": "Tacoma",
-   "imo": "9935337"
-  },
-  {
    "vessel": "Glovis Legend",
    "service": "",
    "terminal": "T4",
@@ -95,16 +85,6 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "1063281"
-  },
-  {
-   "vessel": "OOCL SEATTLE",
-   "service": "PNW1",
-   "terminal": "T18",
-   "agent": "Inchcape",
-   "eta": "2026-11-07T15:00",
-   "etd": "2026-11-08T18:00",
-   "port": "Seattle",
-   "imo": "9984431"
   },
   {
    "vessel": "TONGALA",
@@ -202,7 +182,7 @@
   },
   {
    "vessel": "MSC SABRINA",
-   "service": "CLX",
+   "service": "Ad Hoc",
    "terminal": "T5",
    "agent": "Norton Lilly International",
    "eta": "2026-11-10T17:00",
@@ -339,16 +319,6 @@
    "imo": "9181560"
   },
   {
-   "vessel": "MSC HORTENSE",
-   "service": "CLX",
-   "terminal": "T5",
-   "agent": "",
-   "eta": "2026-11-12T17:01",
-   "etd": "2026-11-13T14:01",
-   "port": "Seattle",
-   "imo": "9978951"
-  },
-  {
    "vessel": "LAUTOKA CHIEF",
    "service": "EB Service 2",
    "terminal": "T18",
@@ -409,6 +379,16 @@
    "imo": "9978676"
   },
   {
+   "vessel": "MSC HORTENSE",
+   "service": "CLX",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-11-14T09:55",
+   "etd": "2026-11-15T06:55",
+   "port": "Seattle",
+   "imo": "9978951"
+  },
+  {
    "vessel": "CAPE SAN JUAN",
    "service": "",
    "terminal": "T7",
@@ -438,26 +418,6 @@
    "etd": "2026-11-17T17:00",
    "port": "Tacoma",
    "imo": "9438523"
-  },
-  {
-   "vessel": "MSC LISBON IX",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "",
-   "eta": "2026-11-15T07:15",
-   "etd": "2026-11-17T07:15",
-   "port": "Seattle",
-   "imo": "9304459"
-  },
-  {
-   "vessel": "MSC DESIREE",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "",
-   "eta": "2026-11-15T08:00",
-   "etd": "2026-11-16T08:00",
-   "port": "Seattle",
-   "imo": "9745665"
   },
   {
    "vessel": "SM SEOUL",
@@ -566,6 +526,16 @@
    "imo": "9293595"
   },
   {
+   "vessel": "MSC LISBON IX",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-11-17T07:00",
+   "etd": "2026-11-19T04:00",
+   "port": "Seattle",
+   "imo": "9304459"
+  },
+  {
    "vessel": "TOURMALINE ACE",
    "service": "",
    "terminal": "Blair",
@@ -650,14 +620,14 @@
    "imo": "9174490"
   },
   {
-   "vessel": "MSC ELISABETTA",
-   "service": "CLX",
+   "vessel": "MSC DESIREE",
+   "service": "Chinook",
    "terminal": "T5",
    "agent": "",
    "eta": "2026-11-19T07:00",
-   "etd": "2026-11-20T04:00",
+   "etd": "2026-11-21T04:00",
    "port": "Seattle",
-   "imo": "9954747"
+   "imo": "9745665"
   },
   {
    "vessel": "WESTWOOD OLYMPIA",
@@ -720,16 +690,6 @@
    "etd": "2026-11-20T20:00",
    "port": "Tacoma",
    "imo": "8419142"
-  },
-  {
-   "vessel": "XIN ZHAN JIANG",
-   "service": "CPV",
-   "terminal": "T18",
-   "agent": "",
-   "eta": "2026-11-20T09:30",
-   "etd": "2026-11-21T14:30",
-   "port": "Seattle",
-   "imo": "9378814"
   },
   {
    "vessel": "NORTH STAR",
@@ -795,6 +755,16 @@
    "etd": "2026-11-25T03:00",
    "port": "Tacoma",
    "imo": "9485007"
+  },
+  {
+   "vessel": "XIN ZHAN JIANG",
+   "service": "CPV",
+   "terminal": "T18",
+   "agent": "",
+   "eta": "2026-11-21T22:50",
+   "etd": "2026-11-23T03:50",
+   "port": "Seattle",
+   "imo": "9378814"
   },
   {
    "vessel": "PAGANELLA LEADER",
@@ -880,16 +850,6 @@
    "imo": "9789996"
   },
   {
-   "vessel": "CAPE SOUNIO",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "",
-   "eta": "2026-11-24T18:00",
-   "etd": "2026-11-26T18:00",
-   "port": "Seattle",
-   "imo": "9727625"
-  },
-  {
    "vessel": "LIBERTY PRIDE",
    "service": "",
    "terminal": "Blair",
@@ -942,14 +902,14 @@
    "imo": "9978975"
   },
   {
-   "vessel": "YM TOPMOST",
-   "service": "FP2",
-   "terminal": "Husky",
+   "vessel": "MSC ELISABETTA",
+   "service": "CLX",
+   "terminal": "T5",
    "agent": "",
-   "eta": "2026-11-26T07:00",
-   "etd": "2026-11-30T08:00",
-   "port": "Tacoma",
-   "imo": "9878515"
+   "eta": "2026-11-26T09:58",
+   "etd": "2026-11-27T01:00",
+   "port": "Seattle",
+   "imo": "9954747"
   },
   {
    "vessel": "EVER MAGIC",
@@ -1034,6 +994,16 @@
    "imo": "9726700"
   },
   {
+   "vessel": "CAPE SOUNIO",
+   "service": "Chinook",
+   "terminal": "T5",
+   "agent": "",
+   "eta": "2026-11-28T09:07",
+   "etd": "2026-11-30T09:07",
+   "port": "Seattle",
+   "imo": "9727625"
+  },
+  {
    "vessel": "MANULANI",
    "service": "Matson - HI2",
    "terminal": "WST",
@@ -1042,6 +1012,16 @@
    "etd": "2026-11-28T18:00",
    "port": "Tacoma",
    "imo": "9273674"
+  },
+  {
+   "vessel": "YM TOPMOST",
+   "service": "FP2",
+   "terminal": "Husky",
+   "agent": "",
+   "eta": "2026-11-28T15:00",
+   "etd": "2026-12-02T17:00",
+   "port": "Tacoma",
+   "imo": "9878515"
   },
   {
    "vessel": "HORIZON HIGHWAY",
@@ -1090,8 +1070,8 @@
    "service": "PN3",
    "terminal": "WUT",
    "agent": "",
-   "eta": "2026-11-30T05:00",
-   "etd": "2026-12-02T17:00",
+   "eta": "2026-11-30T03:00",
+   "etd": "2026-12-03T17:00",
    "port": "Tacoma",
    "imo": "9347619"
   },
