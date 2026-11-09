@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-09T07:45:04-08:00",
+ "updated": "2026-11-09T10:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -56,16 +56,6 @@
  },
  "vessels": [
   {
-   "vessel": "ONE SYNERGY",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-01T15:00",
-   "etd": "2026-11-08T12:00",
-   "port": "Tacoma",
-   "imo": "9976197"
-  },
-  {
    "vessel": "MSC FLORA",
    "service": "Ad Hoc",
    "terminal": "T5",
@@ -85,17 +75,6 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "1063281"
-  },
-  {
-   "vessel": "TONGALA",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-08T05:00",
-   "etd": "2026-11-08T22:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9278105"
   },
   {
    "vessel": "BUDAPEST EXPRESS",
