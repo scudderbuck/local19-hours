@@ -75,6 +75,10 @@
   "checked": "2026-10-16",
   "imo": "9977725"
  },
+ "CMA CGM CORNEILLE": {
+  "checked": "2026-11-10",
+  "imo": null
+ },
  "CMA CGM DUTCH HARBOR": {
   "checked": "2026-10-16",
   "imo": "9389409"
@@ -295,6 +299,10 @@
   "checked": "2026-10-28",
   "imo": "9334143"
  },
+ "MATSON TACOMA": {
+  "checked": "2026-11-10",
+  "imo": "8419154"
+ },
  "MAUNAWILI": {
   "checked": "2026-10-19",
   "imo": "9268538"
@@ -456,7 +464,7 @@
   "imo": "9316141"
  },
  "PAGANELLA LEADER": {
-  "checked": "2026-11-03",
+  "checked": "2026-11-10",
   "imo": null
  },
  "PATARA": {
