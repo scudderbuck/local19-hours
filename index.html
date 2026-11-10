@@ -1197,7 +1197,7 @@ const HOL_DEFS=[ /* [key, name, rule, paid (5.3), work schedule (5.2)]; rule: [m
  ["mem","Memorial Day",["nth",5,1,-1],true,HOL_NW],
  ["jun","Juneteenth",[6,19],true,"No work on the first shift (07:00-17:00); work resumes on the second shift."+HOL_EXC],
  ["ind","Independence Day",[7,4],true,HOL_NW],
- ["bt","Bloody Thursday",[7,5],true,"No work 8 a.m. July 5 to 7 a.m. July 6."],
+ ["bt","Bloody Thursday",[7,5],false,"No work 8 a.m. July 5 to 7 a.m. July 6."],
  ["hb","Harry Bridges' Birthday",[7,28],true,HOL_NW],
  ["lab","Labor Day",["nth",9,1,1],true,"No work 8 a.m. Labor Day to 7 a.m. the next day."+HOL_EXC],
  ["vet","Veterans' Day",[11,11],true,HOL_NW],
@@ -1431,12 +1431,11 @@ function daysBetween(a,b){return Math.round((parseDate(b)-parseDate(a))/864e5);}
 function backupDue(last,today,hasData){if(!hasData)return false;if(!last)return true;const l=String(last).slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(l))return true;
  const d=daysBetween(l,today);return d>30||(l.slice(0,7)!==today.slice(0,7)&&d>=7);}
 function backupAgo(last,today){if(!last)return "never";const l=String(last).slice(0,10),d=daysBetween(l,today);return l+" ("+(d<=0?"today":d===1?"yesterday":d+" days ago")+")";}
-/* v138: paid holiday pay (Daniel). Paid holidays = HOL_DEFS with paid:true: the 14 in Daniel's Nov 2026 list
-   (MLK Day, Presidents' Day / Washington's Birthday, Cesar Chavez, Memorial Day, Juneteenth, Bloody Thursday,
-   Harry Bridges, Labor Day, Veterans Day, Thanksgiving, Christmas Eve, Christmas Day, New Year's Eve, New Year's Day)
-   plus Independence Day, which was not on that list and is kept as a paid holiday (told him so).
-   Lincoln's Birthday stays unpaid (no bonus); it is still a recognized Agreement Holiday, so a shift saved on
-   that day (or its observed Monday) still gets all-hours OT unless weekend, CWOG, or a manual OT override — unchanged.
+/* v138: paid holiday pay (Daniel). Paid holidays = HOL_DEFS with paid:true: MLK Day, Presidents' Day / Washington's Birthday,
+   Cesar Chavez, Memorial Day, Juneteenth, Independence Day (kept as paid even though it was not on Daniel's Nov 2026 list),
+   Harry Bridges, Labor Day, Veterans Day, Thanksgiving, Christmas Eve, Christmas Day, New Year's Eve, New Year's Day.
+   Lincoln's Birthday and Bloody Thursday are not paid holidays (no bonus). They are still recognized Agreement Holidays,
+   so a shift saved on that day (or its observed Monday) still gets all-hours OT unless weekend, CWOG, or a manual OT override.
    Weekend holidays use the observed Monday (5.21) to pick the payroll week (Sat–Fri). Amount is 8h (longshore) or 10h (clerk locals) at basicST(tier, holiday calendar date) — clerk Basic is the same Basic table.
    Clerk vs longshore is the user's local kind (LOCALS[n].kind==="clerk", including Local 52); foremen and mixed locals use the 8h stevedore amount.
    Qualification: 2 distinct days with a worked (non-CWOG) shift in that payroll week, OR settings flag l19.holQual1300
