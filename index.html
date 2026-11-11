@@ -59,9 +59,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
 html.l19new #hdr .hdt{flex-direction:column;align-items:center;justify-content:center;gap:2px;margin:clamp(-6px,calc(env(safe-area-inset-top,0px) - 6px),0px) 0 -6px}
 html.l19new #hdLogo{height:80px;width:80px;margin:0;border-radius:0;flex:0 0 auto}
 html.l19new .hdName{display:block;width:80px;text-align:center;color:#f7f1e6;font-weight:800;font-size:12px;line-height:1.1;letter-spacing:.01em;text-wrap:balance}
-#hdr .hdName .tm,#ftc .tm,#aboutOwn .tm{font-size:.65em;line-height:0;vertical-align:super;font-weight:700;margin-left:.06em;letter-spacing:0}
-html:not(.l19new) #hdr .hdt{flex-direction:column;align-items:center;justify-content:center;gap:1px;line-height:0}
-html:not(.l19new) .hdName{display:block;width:76px;text-align:center;color:#f7f1e6;font-weight:800;font-size:clamp(9px,2.9vw,11px);line-height:1.15;letter-spacing:.01em;text-wrap:balance;margin-top:1px}
+html.l19new .hdName .tm{font-size:.65em;line-height:0;vertical-align:super;font-weight:700;margin-left:.06em;letter-spacing:0}
 .locseg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:6px 0 4px}
 .locseg button{min-height:56px;padding:4px 2px;border-radius:12px;border:2px solid var(--bd);background:var(--bg);color:var(--fg);font-weight:800;font-size:1.25rem;line-height:1.1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0}
 .locseg button small{font-size:max(12px,.75rem);font-weight:600;color:var(--mut);overflow-wrap:anywhere;text-align:center;max-width:100%}
@@ -600,7 +598,7 @@ body.gopen{overflow:hidden}
   if(neu){
     document.write('<img id="hdLogo" src="img/logo-header-new.png" alt="" width="80" height="80" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"><span class="hdName">Longshore Life<span class="tm" aria-hidden="true">™</span></span>');
   }else{
-    document.write('<img id="hdLogo" src="img/logo-header.png" alt="Longshore Life" width="76" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"><span class="hdName">Longshore Life<span class="tm" aria-hidden="true">™</span></span>');
+    document.write('<img id="hdLogo" src="img/logo-header.png" alt="Longshore Life" width="76" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()">');
   }
 })();
 </script></span> <button type="button" id="hdLoc" class="hdl" aria-haspopup="dialog" aria-label="Your local: Local 19. Change local"><span id="hdLn">Local 19</span> <span aria-hidden="true">▾</span></button><span class="hdmw"><button type="button" id="hdSkip" class="hdm" aria-label="Skip to next song">⏭</button><button type="button" id="hdMus" class="hdm" aria-pressed="true" aria-label="Background music on. Tap to mute">🔊</button></span></header><div id="musToast" role="status" aria-live="polite"></div><audio id="bgm" preload="none"></audio>
@@ -2956,10 +2954,9 @@ document.addEventListener("click",e=>{if(!e.target.closest||!e.target.closest("#
 setTimeout(()=>{try{if(musOn()){const a=musEl();if(a&&a.paused&&a.preload==="none"){a.preload="auto";a.load();}}}catch(e){}},2500);
 document.addEventListener("visibilitychange",()=>{const a=musEl();if(!a)return;if(document.hidden){musWas=!a.paused;if(musWas)a.pause();}else if(musWas&&musOn()){musWas=false;a.play().catch(()=>{});}});
 /* keep the header row count the same as without the 🔊 button: shrink title + Local pill a little if the button would wrap */
-function hdrFit(){const h=document.getElementById("hdr"),m=h&&h.querySelector(".hdmw"),t=h&&h.querySelector(".hdt"),l=document.getElementById("hdLoc"),logo=document.getElementById("hdLogo")||t;if(!h||!m||!t||!l||!h.offsetHeight)return;
+function hdrFit(){const h=document.getElementById("hdr"),m=h&&h.querySelector(".hdmw"),t=h&&h.querySelector(".hdt"),l=document.getElementById("hdLoc");if(!h||!m||!t||!l||!h.offsetHeight)return;
  /* v93: keep the whole header on ONE row (title, Local pill, ⏭ and 🔊): shrink title and pill text, then tighten gaps */
- /* v140: align to the logo, not the whole .hdt, so the Longshore Life™ wordmark under the mark does not throw the one-row check */
- h.classList.remove("tight","tight2");h.style.removeProperty("--hb");t.style.fontSize="";l.style.fontSize="";const mid=e=>{const r=e.getBoundingClientRect();return (r.top+r.bottom)/2;},one=()=>Math.abs(mid(logo)-mid(l))<4&&Math.abs(mid(l)-mid(m))<4&&h.scrollWidth<=h.clientWidth&&l.getBoundingClientRect().height<=m.getBoundingClientRect().height+0.5;/* v104: the Local pill may not be taller than the 44px music buttons, so the bar keeps its height now the logo leaves the pill more room */
+ h.classList.remove("tight","tight2");h.style.removeProperty("--hb");t.style.fontSize="";l.style.fontSize="";const mid=e=>{const r=e.getBoundingClientRect();return (r.top+r.bottom)/2;},one=()=>Math.abs(mid(t)-mid(l))<4&&Math.abs(mid(l)-mid(m))<4&&h.scrollWidth<=h.clientWidth&&l.getBoundingClientRect().height<=m.getBoundingClientRect().height+0.5;/* v104: the Local pill may not be taller than the 44px music buttons, so the bar keeps its height now the logo leaves the pill more room */
  let ft=parseFloat(getComputedStyle(t).fontSize),fl=parseFloat(getComputedStyle(l).fontSize),n=0;
  /* v105: big 60px buttons: tighten spacing first, then shrink the Local text a little, then the button size (never under 44px), then the text to 12px */
  if(!one())h.classList.add("tight");if(!one())h.classList.add("tight2");let hb=60;

@@ -154,7 +154,7 @@ t("new-domain header uses the v8 mark plus visible Longshore Life text; old site
   A.ok(hdrNeu.includes("img/logo-header-new.png") && hdrNeu.includes("hdName") && hdrNeu.includes("Longshore Life"), hdrNeu);
   A.ok(!hdrNeu.includes("img/logo-header.png"));
   A.ok(hdrOld.includes("img/logo-header.png") && hdrOld.includes('width="76"') && hdrOld.includes('height="112"'), hdrOld);
-  A.ok(!hdrOld.includes("logo-header-new.png") && hdrOld.includes("logo-header.png") && hdrOld.includes("hdName") && hdrOld.includes("Longshore Life"), hdrOld);
+  A.ok(!hdrOld.includes("logo-header-new.png") && !hdrOld.includes("hdName") && hdrOld.includes("logo-header.png"), hdrOld);
   A.ok(fs.existsSync(path.join(root,"img/logo-header-new.png")));
   const s=pngSize(read("img/logo-header-new.png"));
   A.deepStrictEqual([s.w,s.h],[240,240],"logo-header-new.png should be 80 CSS px at 3x");

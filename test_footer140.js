@@ -38,14 +38,17 @@ t("visible footer and about copyright are Longshore Life™, not a personal name
   A.ok(!/Daniel|White/.test(ftcText+aboutText), ftcText+" | "+aboutText);
 });
 
-t("header wordmark on both hosts is Longshore Life with a superscript ™",()=>{
+t("new-host header wordmark is Longshore Life with a superscript ™; old-host header is the v139 badge only",()=>{
   const neuStart=html.indexOf('src="img/logo-header-new.png"');
   const oldStart=html.indexOf('src="img/logo-header.png"');
   A.ok(neuStart>0 && oldStart>neuStart);
-  const neu=html.slice(neuStart, neuStart+500);
-  const old=html.slice(oldStart, oldStart+500);
+  const neu=html.slice(neuStart, html.indexOf("}else{", neuStart));
+  const oldWrite=(()=>{const a=html.indexOf('src="img/logo-header.png"'); const s=html.lastIndexOf("document.write", a); const e=html.indexOf("');", a)+3; return html.slice(s,e);})();
   A.ok(neu.includes("hdName") && neu.includes("Longshore Life") && neu.includes('class="tm"') && neu.includes("™"), neu);
-  A.ok(old.includes("hdName") && old.includes("Longshore Life") && old.includes('class="tm"') && old.includes("™"), old);
+  A.ok(oldWrite.includes('src="img/logo-header.png"') && oldWrite.includes('alt="Longshore Life"') && oldWrite.includes('width="76"') && oldWrite.includes('height="112"'), oldWrite);
+  A.ok(!oldWrite.includes("hdName") && !oldWrite.includes("™") && !oldWrite.includes("logo-header-new.png"), oldWrite);
+  A.strictEqual(oldWrite, `document.write('<img id="hdLogo" src="img/logo-header.png" alt="Longshore Life" width="76" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()">');`);
+  A.ok(!html.includes("html:not(.l19new) .hdName") && !html.includes("html:not(.l19new) #hdr .hdt"));
 });
 
 t("™ is not added to the document title, manifests, or splash lettering",()=>{
