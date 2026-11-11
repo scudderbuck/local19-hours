@@ -43,7 +43,8 @@ t("new-site markup branch has the video and poster, not the shield splash",()=>{
   A.ok(i>0);
   const neu=html.slice(i, html.indexOf("}else{", i));
   const old=html.slice(html.indexOf("}else{", i), html.indexOf("})();", i));
-  A.ok(neu.includes("splashVid") && neu.includes("img/bridges-turn.mp4") && neu.includes("img/bridges-turn-poster.jpg") && neu.includes("muted") && neu.includes("playsinline") && neu.includes("autoplay") && neu.includes('preload="auto"'), neu);
+  A.ok(neu.includes("splashVid") && neu.includes("img/bridges-turn.mp4") && neu.includes("img/bridges-turn.webm") && neu.includes("img/bridges-turn-poster.jpg") && neu.includes("muted") && neu.includes("playsinline") && neu.includes("autoplay") && neu.includes('preload="auto"'), neu);
+  A.ok(neu.indexOf("img/bridges-turn.mp4") < neu.indexOf("img/bridges-turn.webm"), "mp4 source must come first for Safari");
   A.ok(!neu.includes("img/splash.jpg") && !neu.includes("img/bridges.jpg"));
   A.ok(old.includes('id="splash"') && old.includes("img/splash.jpg") && old.includes("img/bridges.jpg"));
   A.ok(!old.includes("bridges-turn.mp4"));
@@ -54,16 +55,17 @@ t("new-site markup branch has the video and poster, not the shield splash",()=>{
 t("service worker does not precache the mp4 and lets Range requests pass through",()=>{
   const sw=fs.readFileSync(path.join(root,"sw.js"),"utf8");
   const list=sw.match(/const C="l19hours-v139",F=\[([\s\S]*?)\];/)[1];
-  A.ok(!list.includes("bridges-turn.mp4"), list);
+  A.ok(!list.includes("bridges-turn.mp4") && !list.includes("bridges-turn.webm"), list);
   A.ok(list.includes("img/bridges-turn-poster.jpg"));
-  A.ok(sw.includes("Range requests") || /\\.mp4/.test(sw));
-  A.ok(/\\.mp4\$/.test(sw) || /\\.mp4\$\/i/.test(sw) || sw.includes(".mp4"));
+  A.ok(sw.includes("Range requests"));
+  A.ok(sw.includes("mp4|webm") || /\.(mp4|webm)\$/.test(sw));
 });
 
 t("old splash images are unchanged on disk",()=>{
   const out=require("child_process").execSync("git status --porcelain -- img/splash.jpg img/bridges.jpg",{cwd:root,encoding:"utf8"}).trim();
   A.strictEqual(out,"",out);
   A.ok(fs.existsSync(path.join(root,"img/bridges-turn.mp4")));
+  A.ok(fs.existsSync(path.join(root,"img/bridges-turn.webm")));
   A.ok(fs.existsSync(path.join(root,"img/bridges-turn-poster.jpg")));
 });
 

@@ -1,11 +1,49 @@
 #!/usr/bin/env python3
-import http.server, threading, socketserver, json, traceback
+import http.server, threading, socketserver, json, traceback, os, re, shutil
 from playwright.sync_api import sync_playwright
 
 ROOT = "/workspace/longshore-domain-v139"
 class H(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*a,**k): super().__init__(*a,directory=ROOT,**k)
     def log_message(self,*a): pass
+    def do_GET(self):
+        path=self.translate_path(self.path)
+        if os.path.isfile(path):
+            size=os.path.getsize(path)
+            ctype=self.guess_type(path)
+            rng=self.headers.get("Range")
+            if rng:
+                m=re.match(r"bytes=(\d*)-(\d*)", rng)
+                if m:
+                    start=int(m.group(1) or 0)
+                    end=int(m.group(2)) if m.group(2) else size-1
+                    end=min(end, size-1)
+                    if 0<=start<=end:
+                        length=end-start+1
+                        self.send_response(206)
+                        self.send_header("Content-Type", ctype)
+                        self.send_header("Accept-Ranges", "bytes")
+                        self.send_header("Content-Range", "bytes %d-%d/%d"%(start,end,size))
+                        self.send_header("Content-Length", str(length))
+                        self.end_headers()
+                        with open(path,"rb") as f:
+                            f.seek(start)
+                            remaining=length
+                            while remaining:
+                                chunk=f.read(min(65536, remaining))
+                                if not chunk: break
+                                self.wfile.write(chunk)
+                                remaining-=len(chunk)
+                        return
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Content-Length", str(size))
+            self.end_headers()
+            with open(path,"rb") as f:
+                shutil.copyfileobj(f, self.wfile)
+            return
+        super().do_GET()
 S=type("S",(socketserver.ThreadingTCPServer,),{"allow_reuse_address":True})
 old=S(("127.0.0.1",8570),H); new=S(("127.0.0.1",8571),H)
 threading.Thread(target=old.serve_forever,daemon=True).start()
@@ -148,9 +186,10 @@ with sync_playwright() as p:
     try:
         page.wait_for_selector("#splashVid", timeout=5000)
         has_old=page.evaluate("() => !!(document.getElementById('splash')||document.getElementById('splash2'))")
-        src=page.evaluate("() => document.querySelector('#splashVideo source')?.getAttribute('src')")
+        srcs=page.evaluate("() => [...document.querySelectorAll('#splashVideo source')].map(s=>s.getAttribute('src')+'|'+s.getAttribute('type'))")
+        src=srcs[0].split("|")[0] if srcs else None
         title=page.evaluate("() => (document.querySelector('#splashVid .splashTitle')?.textContent||'').replace(/\\s+/g,' ').trim()")
-        t("new site shows only the Bridges video splash", (not has_old) and src=="img/bridges-turn.mp4" and page.query_selector("#splashVid") is not None, {"old":has_old,"src":src})
+        t("new site shows only the Bridges video splash", (not has_old) and src=="img/bridges-turn.mp4" and srcs==["img/bridges-turn.mp4|video/mp4","img/bridges-turn.webm|video/webm"] and page.query_selector("#splashVid") is not None, {"old":has_old,"srcs":srcs})
         t("new-site splash shows LONGSHORE LIFE and WORK THE WATERFRONT over the video", title.startswith("LONGSHORE LIFE") and "WORK THE WATERFRONT" in title, title)
         fit=page.evaluate("""() => {
           const ev=document.getElementById('splashVid');
@@ -192,7 +231,13 @@ with sync_playwright() as p:
     ctx.close()
 
     ctx,page,logs=ctx_page(ready())
-    page.route("**/*bridges-turn.mp4", lambda r: r.abort())
+    def _abort_clip(r):
+        u=r.request.url
+        if "bridges-turn.mp4" in u or "bridges-turn.webm" in u:
+            r.abort()
+        else:
+            r.continue_()
+    page.route("**/*bridges-turn*", _abort_clip)
     page.goto("http://127.0.0.1:8571/index.html?l19site=new", wait_until="domcontentloaded")
     try:
         page.wait_for_selector("#splashVid", timeout=5000)
@@ -200,6 +245,50 @@ with sync_playwright() as p:
         t("new-site splash falls back by 3.4s if the video cannot play", True)
     except Exception as e:
         t("new-site splash falls back by 3.4s if the video cannot play", False, str(e)+" | logs="+"; ".join(logs))
+    ctx.close()
+
+    # Decoded-frame test: sample the playing <video> via canvas during real
+    # playback (not by seeking). Seeking can silently snap to t=0 when the
+    # static server lacks HTTP Range, which is how the previous preview
+    # captured the poster/first frame on every shot.
+    ctx,page,logs=ctx_page(ready())
+    page.goto("http://127.0.0.1:8571/index.html?l19site=new", wait_until="domcontentloaded")
+    try:
+        page.wait_for_selector("#splashVideo", timeout=5000)
+        page.wait_for_function("""() => {
+          const v=document.getElementById('splashVideo');
+          return !!(v && v.readyState>=2 && v.videoWidth>0 && !v.paused);
+        }""", timeout=4000)
+        def snap_at(min_t):
+            page.wait_for_function(
+                """(minT) => { const v=document.getElementById('splashVideo'); return !!(v && v.currentTime>=minT && v.videoWidth>0); }""",
+                arg=min_t, timeout=4000)
+            return page.evaluate("""() => {
+              const v=document.getElementById('splashVideo');
+              const w=48, h=64;
+              const c=document.createElement('canvas');
+              c.width=w; c.height=h;
+              c.getContext('2d').drawImage(v,0,0,w,h);
+              const d=c.getContext('2d').getImageData(0,0,w,h).data;
+              const vis=getComputedStyle(v);
+              return {
+                t:v.currentTime, rs:v.readyState, paused:v.paused, ended:v.ended,
+                w:v.videoWidth, h:v.videoHeight, src:v.currentSrc,
+                display:vis.display, visibility:vis.visibility, opacity:vis.opacity,
+                rgba:Array.from(d)
+              };
+            }""")
+        a=snap_at(0.2)
+        b=snap_at(2.8)
+        n=min(len(a["rgba"]), len(b["rgba"]))
+        mae=sum(abs(a["rgba"][i]-b["rgba"][i]) for i in range(n))/(n or 1)
+        visible=(a.get("display")!="none" and a.get("visibility")!="hidden" and float(a.get("opacity") or 0)>0
+                 and a.get("w",0)>=480 and "bridges-turn." in (a.get("src") or ""))
+        t("new-site splash decoded frames differ between t=0.2 and t=2.8 (head turn is painted, not a still poster)",
+          visible and mae>=8 and a["t"]>=0.2 and b["t"]>=2.8 and a["t"]<1.2,
+          {"mae":round(mae,2),"t0":a["t"],"t1":b["t"],"src":a.get("src"),"w":a.get("w"),"vis":(a.get("display"),a.get("visibility"),a.get("opacity"))})
+    except Exception as e:
+        t("new-site splash decoded frames differ between t=0.2 and t=2.8 (head turn is painted, not a still poster)", False, str(e)+" | logs="+"; ".join(logs))
     ctx.close()
 
     ctx,page,logs=ctx_page(ready())

@@ -10,7 +10,7 @@ self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;
  if(u.hostname==="gc.zgo.at"||u.hostname==="goatcounter.com"||u.hostname.endsWith(".goatcounter.com"))return; /* v137: GoatCounter visit counts go to the network only, never cached. A blocked or offline count must not stop the app from opening. */
  if(u.origin!==self.location.origin&&u.hostname!=="www.gstatic.com")return; /* Firebase/Firestore/Auth network calls are never cached or intercepted; only the pinned SDK scripts on gstatic use network-first */
  if(u.origin===self.location.origin&&u.pathname.includes("/music/"))return; /* v85: music streams straight from the network (range requests/seeking), never cached */
- if(u.origin===self.location.origin&&(/\.mp4$/i.test(u.pathname)||u.pathname.indexOf("bridges-turn")>=0))return; /* v139: splash video is not intercepted or cached, so Safari can use Range requests */
+ if(u.origin===self.location.origin&&(/\.(mp4|webm)$/i.test(u.pathname)||u.pathname.indexOf("bridges-turn")>=0))return; /* v139: splash video (mp4/webm) is not intercepted or cached, so Safari can use Range requests */
  e.respondWith(fetch(e.request,{cache:"no-cache"}).then(r=>{if(r&&r.ok&&r.type!=="opaque"){const cp=r.clone();caches.open(C).then(c=>c.put(e.request,cp)).catch(()=>{});}return r;}).catch(()=>caches.match(e.request,{ignoreSearch:e.request.mode==="navigate"}).then(m=>m||(e.request.mode==="navigate"||e.request.destination==="document"?caches.match("index.html"):m))));});
 
 /* v119: tapping a local reminder notification opens / focuses the app (no push, no server) */
