@@ -406,6 +406,7 @@ body.pgfo #hdr{display:none}
 #lv .bar button{flex:1 1 22%;min-width:0;min-height:44px;color:#fff;background:#0b3170;border-color:#5d7bb5}#lv .bar button.d{color:#ffb4ab}
 #pgWrap.side .bbph img{cursor:zoom-in}
 .ban{background:var(--card);border:2px solid var(--acc);border-radius:var(--r);padding:12px 16px;margin-bottom:var(--s)}
+.moveban{border-color:var(--acc);background:var(--card)}.moveban b{color:var(--fg)}.card.moveban{border-width:2px;border-color:var(--acc)}
 .pg{height:14px;border-radius:7px;background:var(--bd);border:1px solid var(--mut);overflow:hidden;margin:8px 0}.pg>i{display:block;height:100%;background:var(--acc)}
 .chk.hide{display:none}#hrsHint,#hrsRule{text-wrap:pretty}.dcal{width:100%;margin-top:8px;min-height:44px}.cpop .dii{padding:8px 0;border-bottom:1px solid var(--bd)}.cpop .dii .l1,.cpop .dit{display:flex;justify-content:space-between;gap:8px}.cpop .dit{padding-top:8px}.cpop .pf>b{display:block;margin-bottom:2px}#hrsRule b{font-weight:700}
 .pcw{margin:0 0 12px}.pcw.card .row{margin-top:6px}.pcw .row button{flex:1 1 auto;min-height:48px;white-space:nowrap}.pcl{font-weight:800}.pcl.short{color:var(--dan)}
@@ -530,6 +531,7 @@ body.gopen{overflow:hidden}
 <div id="splash" aria-hidden="true"><img src="img/splash.jpg" alt="Longshore Life" width="663" height="960" fetchpriority="high" decoding="sync"></div><div id="splash2" aria-hidden="true"><img src="img/bridges.jpg" alt="" width="1080" height="1449" decoding="async"></div>
 <header id="hdr"><span class="hdt"><img id="hdLogo" src="img/logo-header.png" alt="Longshore Life" width="76" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"></span> <button type="button" id="hdLoc" class="hdl" aria-haspopup="dialog" aria-label="Your local: Local 19. Change local"><span id="hdLn">Local 19</span> <span aria-hidden="true">▾</span></button><span class="hdmw"><button type="button" id="hdSkip" class="hdm" aria-label="Skip to next song">⏭</button><button type="button" id="hdMus" class="hdm" aria-pressed="true" aria-label="Background music on. Tap to mute">🔊</button></span></header><div id="musToast" role="status" aria-live="polite"></div><audio id="bgm" preload="none"></audio>
 <main>
+<div id="moveInHost"></div>
 <div id="banners"></div>
 <section id="v-add">
 <form id="f" class="card" autocomplete="off">
@@ -579,6 +581,7 @@ body.gopen{overflow:hidden}
 <section id="v-week" class="hide"></section>
 <section id="v-hist" class="hide"></section>
 <section id="v-data" class="hide">
+<div id="moveCard"></div>
 <div class="card" id="locCard"><h3 style="margin-top:0">Your local</h3><div id="locSegD"></div><p class="mut" style="margin:6px 0 0">Changes the job list, pay rates, contract link, hall phone, home port for Ships/Needs, and which chat room you are in. Saved shifts keep what they were saved with.<span class="waonly"> Peg, equipment boards and ship gear cards stay shared (Local 19 boards).</span></p></div>
 <div class="card"><h3>Text size</h3><div class="row" id="tsz"><button type="button" data-ts="normal" aria-pressed="false">Normal</button><button type="button" data-ts="large" aria-pressed="false">Large</button><button type="button" data-ts="xl" aria-pressed="false">Extra large</button></div></div>
 <div class="card"><h3>Travel &amp; mileage</h3>
@@ -732,7 +735,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v138",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v139",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -751,7 +754,7 @@ if(l19Boot.snap){l19SafePut(l19Boot.snap,l19Boot.prev||"older version","update")
    Failed writes are never silent: a visible banner says what was NOT saved. If the shift list on the phone is unreadable it is kept
    (l19hours.v1.bad + an "unreadable" copy) and the app refuses to save an empty list over it. If another tab changes data, this tab
    stops writing shifts until reloaded, so neither tab overwrites the other. This is on-phone only: it does NOT survive clearing site data or losing the phone. */
-var L19_VOLATILE=/^(l19\.appVer|l19\.lastBackup|l19\.bkSnooze|l19\.remSnooze|l19\.saveMeta|l19ships\.v1|l19\.hidepay)$/;
+var L19_VOLATILE=/^(l19\.appVer|l19\.lastBackup|l19\.bkSnooze|l19\.remSnooze|l19\.saveMeta|l19ships\.v1|l19\.hidepay|l19\.moveSnooze|l19\.moveDismissed)$/;
 var l19Guard={corrupt:false,stale:false,allow:0,err:null,pend:null,lastSnapAt:null,lastSnapErr:null,lastHash:null,timer:0};
 function l19ShiftsRaw(){try{return localStorage.getItem("l19hours.v1");}catch(e){return null;}}
 function l19ShiftsOk(raw){if(raw==null)return true;try{return Array.isArray(JSON.parse(raw));}catch(e){return false;}}
@@ -1358,8 +1361,130 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v138",CACHE_VERSION="l19hours-v138"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v139",CACHE_VERSION="l19hours-v139"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
+/* v139: move saved data to https://longshorelife.app without putting a custom domain on this project repo.
+   Pure helpers below are unit-tested in node. */
+const L19_NEW_ORIGIN="https://longshorelife.app";
+const L19_NEW_HOSTS=["longshorelife.app","www.longshorelife.app"];
+const L19_OLD_ORIGIN="https://scudderbuck.github.io";
+const L19_MOVE_MARK="l19move";
+const L19_HASH_MAX=40000;
+const L19_MSG_READY="l19-move-ready";
+const L19_MSG_PAYLOAD="l19-move-payload";
+const L19_MSG_ACK="l19-move-ack";
+function l19Esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function l19SafeHref(s){try{const u=new URL(String(s||""),L19_NEW_ORIGIN);if(u.protocol!=="https:"&&u.protocol!=="http:")return L19_NEW_ORIGIN+"/";return l19Esc(u.toString());}catch(e){return L19_NEW_ORIGIN+"/";}}
+function l19MoveRole(loc){loc=loc||(typeof location!=="undefined"?location:null);if(!loc)return"old";
+ let search=loc.search||"";try{if(typeof loc.searchParams!=="undefined"&&loc.searchParams&&loc.searchParams.get){const ov=loc.searchParams.get("l19site");if(ov==="old"||ov==="new")return ov;}}catch(e){}
+ try{const q=String(search).replace(/^\?/,"");const ov=new URLSearchParams(q).get("l19site");if(ov==="old"||ov==="new")return ov;}catch(e){}
+ const host=String(loc.hostname||"").toLowerCase();return L19_NEW_HOSTS.indexOf(host)>=0?"new":"old";}
+function l19IsLoopback(host){host=String(host||"").toLowerCase();return host==="localhost"||host==="127.0.0.1"||host==="[::1]"||host==="::1";}
+function l19ParseOrigin(o){try{return new URL(String(o));}catch(e){return null;}}
+function l19TrustedMoveSource(origin){const u=l19ParseOrigin(origin);if(!u)return false;
+ if(u.protocol==="https:"&&u.hostname==="scudderbuck.github.io")return true;
+ if((u.protocol==="http:"||u.protocol==="https:")&&l19IsLoopback(u.hostname))return true;
+ return false;}
+function l19TrustedMoveDest(origin){const u=l19ParseOrigin(origin);if(!u)return false;
+ if(u.protocol==="https:"&&L19_NEW_HOSTS.indexOf(u.hostname.toLowerCase())>=0)return true;
+ if((u.protocol==="http:"||u.protocol==="https:")&&l19IsLoopback(u.hostname))return true;
+ return false;}
+function l19ToBase64Url(str){let b64;if(typeof Buffer!=="undefined")b64=Buffer.from(String(str),"utf8").toString("base64");
+ else{const bytes=new TextEncoder().encode(String(str));let bin="";for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);b64=btoa(bin);}
+ return b64.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function l19FromBase64Url(s){s=String(s||"").replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";
+ if(typeof Buffer!=="undefined")return Buffer.from(s,"base64").toString("utf8");
+ const bin=atob(s);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+ return new TextDecoder().decode(bytes);}
+function l19BytesToBase64Url(bytes){if(typeof Buffer!=="undefined")return Buffer.from(bytes).toString("base64").replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+ let bin="";for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function l19Base64UrlToBytes(s){s=String(s||"").replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";
+ if(typeof Buffer!=="undefined")return new Uint8Array(Buffer.from(s,"base64"));
+ const bin=atob(s);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return bytes;}
+function l19BackupObject(parts){parts=parts||{};
+ const o={app:"local19-hours",version:1,entries:Array.isArray(parts.entries)?parts.entries:[],stubs:Array.isArray(parts.stubs)?parts.stubs:[],startHours:num(parts.startHours||0),setupDone:parts.setupDone===true,tierMode:parts.tierMode==="auto"?"auto":(parts.tierMode||"manual"),tier:parts.tier||"",defPier:parts.defPier||"",defJob:parts.defJob||"",needs:parts.needs,pegs:parts.pegs,equip:parts.equip,gear:parts.gear,ba:parts.ba||"",mileRate:parts.mileRate,tourDone:parts.tourDone===true,ratesSeen:parts.ratesSeen||"",pgp:parts.pgp,pgpFiled:parts.pgpFiled,settings:parts.settings&&typeof parts.settings==="object"?parts.settings:{},appVersion:parts.appVersion||APP_VERSION,ratesVersion:parts.ratesVersion||(RATES_VERSION&&RATES_VERSION.id)||""};
+ if(parts.pegsNight!=null)o.pegsNight=parts.pegsNight;
+ if(parts.move)o.move=parts.move;
+ return o;}
+function l19StubOk(x){return !!(x&&/^\d{4}-\d{2}-\d{2}$/.test(x.week||""));}
+function l19PeggIsUserData(p){if(!p||typeof p!=="object")return false;
+ const log=p.glog||p.log, trades=p.trades, custom=p.custom;
+ const hasLog=Array.isArray(log)?log.length:!!(log&&typeof log==="object"&&Object.keys(log).length);
+ const hasTrades=Array.isArray(trades)?trades.length:!!(trades&&typeof trades==="object"&&Object.keys(trades).length);
+ const hasCustom=!!(custom&&typeof custom==="object"&&Object.keys(custom).length);
+ if(p.seeded&&!hasLog&&!hasTrades&&!hasCustom)return false;
+ return !!(hasLog||hasTrades||hasCustom||(p.boards&&typeof p.boards==="object"&&Object.keys(p.boards).length));}
+function l19EquipIsUserData(e){if(!e||typeof e!=="object")return false;if(e.seeded)return false;return !!(e.rows&&e.rows.length);}
+function l19DestHasUserData(s){s=s||{};
+ if(Array.isArray(s.entries)&&s.entries.length)return true;
+ if(Array.isArray(s.stubs)&&s.stubs.length)return true;
+ if(num(s.startHours)>0)return true;
+ if(Array.isArray(s.needs)&&s.needs.length)return true;
+ if(Array.isArray(s.pgp)&&s.pgp.length)return true;
+ if(s.ba&&String(s.ba).trim())return true;
+ if(l19PeggIsUserData(s.pegs)||l19PeggIsUserData(s.pegsNight))return true;
+ if(l19EquipIsUserData(s.equip))return true;
+ if(s.gear&&typeof s.gear==="object"&&((Array.isArray(s.gear)&&s.gear.length)||Object.keys(s.gear).length))return true;
+ if(s.settings&&s.settings["l19.pin"])return true;
+ return false;}
+function l19ValidateMovePayload(o){if(o==null||typeof o!=="object")return{ok:false,error:"that transfer is not a Longshore Life backup"};
+ const inc=validImport(o);if(!inc)return{ok:false,error:"that transfer is not a valid backup file"};
+ const parts=l19PartsFromPayload(o,inc);
+ if(!inc.length&&!l19DestHasUserData(parts))return{ok:false,error:"that backup has no shifts or settings to move"};
+ return{ok:true,entries:inc,parts:parts,count:inc.length,payload:o};}
+function l19PartsFromPayload(o,inc){o=o||{};inc=inc||validImport(o)||[];
+ return{entries:inc,stubs:Array.isArray(o.stubs)?o.stubs.filter(l19StubOk):[],startHours:num(o.startHours||0),setupDone:o.setupDone===true||inc.length>0,tierMode:o.tierMode==="auto"?"auto":(o.tierMode==="manual"?"manual":""),tier:o.tier||"",defPier:o.defPier||"",defJob:typeof o.defJob==="string"?o.defJob:"",needs:Array.isArray(o.needs)?o.needs:[],pegs:o.pegs&&typeof o.pegs==="object"?o.pegs:null,pegsNight:o.pegsNight&&typeof o.pegsNight==="object"?o.pegsNight:undefined,equip:o.equip&&typeof o.equip==="object"?o.equip:null,gear:o.gear&&typeof o.gear==="object"?o.gear:null,ba:o.ba||"",mileRate:o.mileRate,tourDone:o.tourDone===true,ratesSeen:typeof o.ratesSeen==="string"?o.ratesSeen:"",pgp:Array.isArray(o.pgp)?o.pgp:[],pgpFiled:o.pgpFiled&&typeof o.pgpFiled==="object"&&!Array.isArray(o.pgpFiled)?o.pgpFiled:{},settings:o.settings&&typeof o.settings==="object"&&!Array.isArray(o.settings)?o.settings:{},appVersion:o.appVersion,ratesVersion:o.ratesVersion,move:o.move};}
+function l19MovePlan(destParts,payload){const v=l19ValidateMovePayload(payload);if(!v.ok)return{ok:false,error:v.error};
+ const has=l19DestHasUserData(destParts);
+ return{ok:true,needsConfirm:true,replaceWarning:has,destCount:Array.isArray(destParts&&destParts.entries)?destParts.entries.length:0,incCount:v.count,parts:v.parts,payload:v.payload};}
+function l19MoveApply(destParts,payload,confirmed){const plan=l19MovePlan(destParts,payload);if(!plan.ok)return plan;
+ if(!confirmed)return{ok:false,error:"not confirmed",plan:plan};
+ return{ok:true,parts:plan.parts,replaced:!!plan.replaceWarning};}
+function l19EncodeMoveHash(payloadObj){let json;try{json=JSON.stringify(payloadObj);}catch(e){return{ok:false,reason:"unserializable"};}
+ const enc=l19ToBase64Url(json);if(enc.length>L19_HASH_MAX)return{ok:false,reason:"too large",size:enc.length,json:json};
+ return{ok:true,hash:"#"+L19_MOVE_MARK+"="+enc,size:enc.length,json:json};}
+var l19GunzipSyncFn=null;
+function l19SetGunzip(fn){l19GunzipSyncFn=typeof fn==="function"?fn:null;}
+function l19GunzipToString(bytes){if(l19GunzipSyncFn)return l19GunzipSyncFn(bytes);
+ try{if(typeof process!=="undefined"&&typeof process.getBuiltinModule==="function"){const z=process.getBuiltinModule("zlib");if(z&&z.gunzipSync)return z.gunzipSync(Buffer.from(bytes)).toString("utf8");}}catch(e){}
+ try{if(typeof require==="function")return require("zlib").gunzipSync(Buffer.from(bytes)).toString("utf8");}catch(e){}
+ throw new Error("compressed transfer needs a unzip step");}
+function l19DecodeMoveBytes(raw){if(!raw)throw new Error("empty");
+ if(raw.indexOf("z.")===0){const bytes=l19Base64UrlToBytes(raw.slice(2));return l19GunzipToString(bytes);}
+ return l19FromBase64Url(raw);}
+function l19ParseMoveHash(hash){const h=String(hash||"").replace(/^#/,"");if(!h)return{kind:"none"};
+ const first=h.split("&")[0];
+ if(first===L19_MOVE_MARK||first==="l19handoff")return{kind:"handoff"};
+ if(first.indexOf(L19_MOVE_MARK+"=")!==0)return{kind:"none"};
+ const raw=first.slice(L19_MOVE_MARK.length+1);if(!raw)return{kind:"corrupt",error:"that transfer link is empty"};
+ try{let json;try{json=l19DecodeMoveBytes(decodeURIComponent(raw));}catch(e1){json=l19DecodeMoveBytes(raw);}
+  const o=JSON.parse(json);const v=l19ValidateMovePayload(o);if(!v.ok)return{kind:"corrupt",error:v.error};
+  return{kind:"payload",entries:v.entries,parts:v.parts,count:v.count,payload:v.payload};}
+ catch(e){return{kind:"corrupt",error:"that transfer link is damaged or incomplete"};}}
+function l19ParseMoveMessage(data,origin,role){if(!l19TrustedMoveSource(origin)&&role==="new")return{kind:"reject",error:"unexpected sender"};
+ if(!l19TrustedMoveDest(origin)&&role==="old")return{kind:"reject",error:"unexpected sender"};
+ if(!data||typeof data!=="object")return{kind:"none"};
+ if(data.type===L19_MSG_READY)return{kind:"ready"};
+ if(data.type===L19_MSG_ACK)return{kind:"ack",ok:data.ok!==false,error:data.error||""};
+ if(data.type===L19_MSG_PAYLOAD){const v=l19ValidateMovePayload(data.payload);if(!v.ok)return{kind:"corrupt",error:v.error};
+  return{kind:"payload",entries:v.entries,parts:v.parts,count:v.count,payload:v.payload};}
+ return{kind:"none"};}
+function l19MoveNoticeHtml(opts){opts=opts||{};
+ const n=num(opts.count||0),has=!!opts.hasData,href=l19SafeHref(opts.href||L19_NEW_ORIGIN);
+ const countLine=n===1?"This phone has 1 saved shift.":n>0?"This phone has "+n+" saved shifts.":"No shifts are saved on this address yet.";
+ if(!has)return`<div class="ban moveban" id="moveBan" role="status"><b>Longshore Life has a new address</b><div class="mut" style="margin:4px 0 10px">The app now lives at <b>longshorelife.app</b>. ${countLine} Open the new address and add it to your Home Screen. This old page will stay up.</div><div class="row"><a class="p" id="moveOpen" href="${href}" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">Open longshorelife.app</a><button type="button" id="moveLater">Later</button></div></div>`;
+ return`<div class="ban moveban" id="moveBan" role="status"><b>Longshore Life has a new address</b><div class="mut" style="margin:4px 0 10px">The app now lives at <b>longshorelife.app</b>. ${countLine} One tap sends your shifts, pay stubs, settings and notes to the new site. Ship letter photos, Today's needs photos, peg board photos and ship gear photos stay on this old address and are not moved. If you added the app to your Home Screen, add it again from the new address after you move. Data on this old page stays here until you delete it.</div><div class="row"><button type="button" class="p" id="moveGo">Move my data to longshorelife.app</button><button type="button" id="moveLater">Later</button></div></div>`;}
+function l19MoveCardHtml(opts){opts=opts||{};
+ const n=num(opts.count||0),has=!!opts.hasData,href=l19SafeHref(opts.href||L19_NEW_ORIGIN);
+ if(opts.role==="new")return`<div class="card moveban" id="moveCardIn"><h3 style="margin-top:0">You're on the new address</h3><p class="mut" style="margin-top:0">This is <b>longshorelife.app</b>. If you still have shifts on the old page, open that page and tap <b>Move my data to longshorelife.app</b>. Then add this new address to your Home Screen (the old icon still opens the old site). On iPhone, a Home Screen icon can keep its own copy of your data, separate from Safari — use the same icon you always used to move the data, then add a new icon from this page.</p><p class="mut" style="margin-bottom:0">You can also import a JSON backup in the Backup card below.</p></div>`;
+ return`<div class="card moveban" id="moveCardIn"><h3 style="margin-top:0">Move to longshorelife.app</h3><p class="mut" style="margin-top:0">The app has a new address that does not use the old github.io link. ${has?(n===1?"This phone has 1 saved shift to move.":"This phone has "+n+" saved shifts to move."):"No shifts are saved here yet."} One tap sends your full JSON backup (shifts, stubs, settings, notes, pegs). Photos are not included. This old page stays up so you can come back if you need to.</p><div class="row"><button type="button" class="p" id="moveGo2"${has?"":" disabled"}>Move my data to longshorelife.app</button><a id="moveOpen2" href="${href}" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">Open new site</a></div><p class="mut" style="margin:8px 0 0">Already moved? <button type="button" class="link" id="moveDismiss">Hide this notice</button></p></div>`;}
+function l19MoveRestoreHtml(plan){if(!plan||!plan.ok)return`<div class="ban moveban" id="moveIn" role="alert"><b>Couldn't move that data</b><div class="mut" style="margin:4px 0 10px">${l19Esc(plan&&plan.error||"that transfer is damaged or incomplete")}. Nothing on this phone was changed. You can still import a JSON backup in the Backup tab.</div><div class="row"><button type="button" class="p" id="moveInX">OK</button></div></div>`;
+ if(plan.replaceWarning)return`<div class="ban moveban" id="moveIn" role="status"><b>This address already has Longshore Life data</b><div class="mut" style="margin:4px 0 10px">This phone already has <b>${num(plan.destCount)}</b> shift${num(plan.destCount)===1?"":"s"} at the new address. Replace it with the incoming copy (<b>${num(plan.incCount)}</b> shift${num(plan.incCount)===1?"":"s"})? A safety copy will be saved first. This cannot be undone except from Restore previous data or a JSON backup. Photos are not in the incoming copy.</div><div class="row"><button type="button" class="p" id="moveInYes">Replace with incoming data</button><button type="button" id="moveInNo">Keep what's here</button></div></div>`;
+ return`<div class="ban moveban" id="moveIn" role="status"><b>Move your data here</b><div class="mut" style="margin:4px 0 10px">A backup from the old Longshore Life site is ready: <b>${num(plan.incCount)}</b> shift${num(plan.incCount)===1?"":"s"}, plus stubs, settings and notes. Photos are not included. Nothing is saved until you confirm.</div><div class="row"><button type="button" class="p" id="moveInYes">Move my data here</button><button type="button" id="moveInNo">Not now</button></div></div>`;}
+function l19MoveSuccessHtml(){return`<div class="ban moveban" id="moveIn" role="status"><b>Your data is here</b><div class="mut" style="margin:4px 0 10px">Shifts, stubs, settings and notes are now saved on <b>longshorelife.app</b>. Add Longshore Life to your Home Screen from this new address (Share → Add to Home Screen on iPhone, or the browser's install prompt on Android). The old Home Screen icon still opens the old site.</div><div class="row"><button type="button" class="p" id="moveInX">OK</button></div></div>`;}
+function l19PreviewKind(loc){loc=loc||(typeof location!=="undefined"?location:null);if(!loc)return"";
+ try{return new URLSearchParams(String(loc.search||"").replace(/^\?/,"")).get("l19preview")||"";}catch(e){return"";}}
+
 const MILE_DEFAULT=0.76;
 const CFG={tier:"4001+",mileRate:MILE_DEFAULT}; /* fallback only for shifts saved without their own rates */
 const r4=x=>Math.round(x*10000)/10000,nz=x=>x==null?"":x;
@@ -2344,6 +2469,7 @@ ${gearFig("tb")}${gearLinksHtml("tb")}`],
  ["hatch","Hatch covers",`<p><b>Pontoon / lift-away:</b> separate lids that the crane lifts off and sets aside. <b>Folding / hydraulic:</b> hinged panels that fold open.</p>${gearFig("hatch")}<p><b>Hatchless bays:</b> no lids. Cell guides run up above the deck, so boxes are held by the guides and usually aren't lashed. <b>Cell guides in the hold:</b> steel rails at the box corners; boxes inside guides don't need lashing.</p>${gearFig("cells")}${gearLinksHtml("hatch")}`]];
 function gearGuideHtml(){return GEAR_GUIDE.map(([id,t,h])=>`<section class="gsec gg" id="gg-${id}"><h3>${t}</h3>${h}</section>`).join("")+
  `<section class="gsec gg"><h3>Please note</h3><p>This is general background, not instructions. Always go by the ship's lashing plan and Cargo Securing Manual, your foreman or walking boss, and the safety code.</p><p class="gmut">Drawings made for Longshore Life. Photos from Wikimedia Commons under the open licences shown under each one. "All sets" (single pull) / "double pull" cones and "standard / Chinese" lashing are Local 19 longshore usage. Background from public guides: MacGregor container securing catalogue (semi-automatic twistlocks, midlocks, Equalash, turnbuckles); Standard Club / IIMS "Container securing"; CR Classification container securing guidelines (cross lashing); ClassNK container stowage and securing guidelines (lashing bridges, cell guides); TT Club "Cargo integrity at sea"; Wärtsilä encyclopedia (twistlock).</p></section>`;}
+
 if(typeof document!=="undefined"){
 const $=id=>document.getElementById(id),KEY="l19hours.v1";
 let entries=[];try{const raw=localStorage.getItem(KEY)||"[]",c=cleanEntries(JSON.parse(raw));entries=c.ok;if(!c.bad.length&&(cwogMigrate(entries)+hootMigrate(entries)))localStorage.setItem(KEY,JSON.stringify(entries));
@@ -3066,7 +3192,7 @@ function renderLastBk(){const el=$("lastBk");if(el)el.innerHTML="Last backup: <b
 const L19_SET_SKIP=/^(l19hours\.v1|l19\.stubs|l19\.pegs|l19\.pegs\.night|l19\.equip|l19\.gear|l19\.needs|l19\.pin|l19ships\.v1|l19\.shared|l19\.eqSlots|l19\.appVer|l19\.lastBackup|l19\.pegs\.v45raw|l19\.pegs\.v51raw|l19\.pegs\.bullbak|l19-bull-names)$|\.bad$|raw$/;
 function l19SettingsExport(){const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&!L19_SET_SKIP.test(k)){const v=localStorage.getItem(k);if(v!=null&&v.length<20000)o[k]=v;}}}catch(e){}return o;}
 function l19SettingsImport(set,replace){let n=0;if(!set||typeof set!=="object"||Array.isArray(set))return 0;for(const k of Object.keys(set)){if(typeof k!=="string"||k.indexOf("l19")!==0||L19_SET_SKIP.test(k)||typeof set[k]!=="string")continue;if(!replace&&LS(k,null)!=null){if(k===CHAT_BLOCK_KEY){try{LSset(k,JSON.stringify(chatBlockClean(JSON.parse(LS(k,"[]")).concat(JSON.parse(set[k])))));n++;}catch(e){}}continue;}LSset(k,set[k]);n++;}return n;}
-async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify({app:"local19-hours",version:1,entries,stubs:stubsGet(),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson(PGK,null)),pegsNight:lsJson(PGKN,null)?pegsClean(lsJson(PGKN,null)):undefined,equip:eqClean(lsJson(EQK,null)),gear:gearStoreClean((lsJson("l19.gear",null)||{}).cards),ba:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),pgp:pgpList(),pgpFiled:pgpFiledMap(),settings:l19SettingsExport(),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id},null,1));
+async function doBackup(){const m=$("msg");const r=await shareFile("local19-backup-"+todayS()+".json","application/json",JSON.stringify(l19BackupObject(l19LiveBackupParts()),null,1));
  if(r==="cancel"){if(m)m.textContent="Backup cancelled – nothing was recorded.";return;}setLastBackup();if(m)m.textContent=r==="shared"?"Backup shared. Save it somewhere safe (Files, iCloud, email to yourself).":"Backup downloaded to this device's Downloads/Files. Keep a copy somewhere safe.";}
 $("exj").onclick=doBackup;
 /* ===== v100: safety copies (Backup tab) ===== */
@@ -3194,6 +3320,8 @@ ndRestore();renderNeeds();renderDispatch();
 /* --- banners (backup + shift reminder) --- */
 function remCfg(){const c=lsJson(REM,{});return {on:!!c.on,time:/^\d{2}:\d{2}$/.test(c.time||"")?c.time:"18:00"};}
 function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=todayS();
+ if(typeof l19PaintMoveCard==="function")l19PaintMoveCard();
+ {const prev=l19PreviewKind(location);if(prev==="notice"){h+=l19MoveNoticeHtml({hasData:true,count:24,href:l19MoveHref()});}else if(prev==="notice-empty"){h+=l19MoveNoticeHtml({hasData:false,count:0,href:l19MoveHref()});}else if(l19MoveRole(location)==="old"&&LS(MV_HIDE,"")!=="1"&&LS(MV_SNZ,"")<t){const dp=l19LiveDestParts();h+=l19MoveNoticeHtml({hasData:l19DestHasUserData(dp),count:(dp.entries||[]).length,href:l19MoveHref()});}}
  if(backupDue(LS(BK,""),t,entries.length>0)&&LS(BKS,"")<t){h+=`<div class="ban" role="status"><b>Time to back up your hours</b><div class="mut" style="margin:4px 0 10px">Last backup: ${esc(backupAgo(LS(BK,""),t))}. Your data lives only on this phone.</div><div class="row"><button type="button" class="p" id="bkNow">Back up now</button><button type="button" id="bkLater">Later</button></div></div>`;}
  {const seen=LS(RSEEN,""),existing=entries.length>0||LS(SUD,"")==="1";
   if(!seen&&!existing){/* brand-new install: nothing to announce */LSset(RSEEN,RATES_VERSION.id);}
@@ -3208,7 +3336,8 @@ function renderBanners(){const b=$("banners");if(!b)return;let h="";const t=toda
  if($("remX"))$("remX").onclick=()=>{LSset(REMS,todayS());renderBanners();};
  if($("prF"))$("prF").onclick=()=>{const pr=pgpRemNow();if(pr.ws){const o=pgpFiledMap();o[pr.ws]=true;try{localStorage.setItem(PGPF_KEY,JSON.stringify(o));}catch(e){}}renderBanners();if(curV==="week")renderWeek();};
  if($("prX"))$("prX").onclick=()=>{LSset(PGPR_SNZ,todayS());renderBanners();};
- if($("rvX"))$("rvX").onclick=()=>{LSset(RSEEN,RATES_VERSION.id);renderBanners();};}
+ if($("rvX"))$("rvX").onclick=()=>{LSset(RSEEN,RATES_VERSION.id);renderBanners();};
+ if(typeof l19MoveBindNotice==="function")l19MoveBindNotice();}
 /* v70: official PMA Dockworker Self-Service Portal (pay stubs) under the stub check. Exact domain only (PMA warns of phishing);
    opens in a new tab and the service worker never touches other origins. */
 const PMA_PORTAL_URL="https://selfservice.pmanet.org/";
@@ -3535,7 +3664,111 @@ $("tourBtn").onclick=()=>{if($("lock")||$("setup"))return;tourOpen();};
 /* --- wiring --- */
 document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();}else{if(shouldLock(hiddenAt,Date.now(),!!pinCfg()))lockNow();hiddenAt=null;renderBanners();scheduleRem();firePgpRem();}});
 renderLastBk();renderPin();renderRem();cxInfo();
-lockNow();setupShow();renderBanners();scheduleRem();setTimeout(firePgpRem,1500);tourMaybe();
+/* v139: live helpers for the domain move. Pure planning stays in l19Move* above. */
+const MV_SNZ="l19.moveSnooze",MV_HIDE="l19.moveDismissed";
+function l19LiveBackupParts(){return{entries:entries,stubs:stubsGet(),startHours:num(LS(STH,"0")),setupDone:LS(SUD,"")==="1",tierMode:LS(TMODE,"manual"),tier:LS("l19hours.tier",""),defPier:LS(DPIER,""),defJob:LS(DJOB,""),needs:needsList(),pegs:pegsClean(lsJson("l19.pegs",null)),pegsNight:lsJson("l19.pegs.night",null)?pegsClean(lsJson("l19.pegs.night",null)):undefined,equip:eqClean(lsJson("l19.equip",null)),gear:gearStoreClean((lsJson("l19.gear",null)||{}).cards),ba:cleanPhone(LS(DSP,"")),mileRate:CFG.mileRate,tourDone:LS(TOURK,"")==="1",ratesSeen:LS(RSEEN,""),pgp:pgpList(),pgpFiled:pgpFiledMap(),settings:l19SettingsExport(),appVersion:APP_VERSION,ratesVersion:RATES_VERSION.id};}
+function l19LiveDestParts(){return{entries:entries,stubs:stubsGet(),startHours:num(LS(STH,"0")),needs:needsList(),pgp:pgpList(),ba:cleanPhone(LS(DSP,"")),pegs:lsJson("l19.pegs",null),pegsNight:lsJson("l19.pegs.night",null),equip:lsJson("l19.equip",null),gear:(lsJson("l19.gear",null)||{}).cards,settings:{"l19.pin":LS(PINK,"")||undefined}};}
+function l19MoveHref(){try{const q=new URLSearchParams(location.search||"");if(q.get("l19site")==="old"){const u=new URL(location.href);u.searchParams.set("l19site","new");u.hash="";return u.toString();}}catch(e){}
+ return L19_NEW_ORIGIN+"/";}
+async function l19EncodeMoveHashMaybeZip(obj){const plain=l19EncodeMoveHash(obj);if(plain.ok)return plain;
+ const json=typeof plain.json==="string"?plain.json:JSON.stringify(obj);
+ if(typeof CompressionStream==="function"){try{const stream=new Blob([json]).stream().pipeThrough(new CompressionStream("gzip"));const buf=await new Response(stream).arrayBuffer();const enc="z."+l19BytesToBase64Url(new Uint8Array(buf));if(enc.length<=L19_HASH_MAX)return{ok:true,hash:"#"+L19_MOVE_MARK+"="+enc,size:enc.length};return{ok:false,reason:"too large",size:enc.length,json:json};}catch(e){}}
+ return plain;}
+async function l19DecodeMoveHashAsync(hash){const h=String(hash||"").replace(/^#/,"");const first=h.split("&")[0];
+ if(first.indexOf(L19_MOVE_MARK+"=")!==0)return l19ParseMoveHash(hash);
+ const raw0=first.slice(L19_MOVE_MARK.length+1);let raw;try{raw=decodeURIComponent(raw0);}catch(e){raw=raw0;}
+ if(raw.indexOf("z.")!==0)return l19ParseMoveHash(hash);
+ try{const bytes=l19Base64UrlToBytes(raw.slice(2));let json;
+  if(typeof DecompressionStream==="function"){const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));json=await new Response(stream).text();}
+  else if(typeof require==="function"){json=require("zlib").gunzipSync(Buffer.from(bytes)).toString("utf8");}
+  else return{kind:"corrupt",error:"that transfer link could not be unzipped"};
+  const o=JSON.parse(json);const v=l19ValidateMovePayload(o);if(!v.ok)return{kind:"corrupt",error:v.error};
+  return{kind:"payload",entries:v.entries,parts:v.parts,count:v.count,payload:v.payload};}
+ catch(e){return{kind:"corrupt",error:"that transfer link is damaged or incomplete"};}}
+function l19MoveBindNotice(){if($("moveLater"))$("moveLater").onclick=()=>{LSset(MV_SNZ,addDays(todayS(),3));renderBanners();};
+ if($("moveGo"))$("moveGo").onclick=()=>l19StartMove();
+ if($("moveGo2"))$("moveGo2").onclick=()=>l19StartMove();
+ if($("moveDismiss"))$("moveDismiss").onclick=()=>{LSset(MV_HIDE,"1");l19PaintMoveCard();renderBanners();};}
+function l19PaintMoveCard(){const box=$("moveCard");if(!box)return;const role=l19MoveRole(location),prev=l19PreviewKind(location);
+ if(role==="old"&&LS(MV_HIDE,"")==="1"&&!prev){box.innerHTML="";return;}
+ if(prev==="notice"){box.innerHTML=l19MoveCardHtml({role:"old",hasData:true,count:24,href:l19MoveHref()});l19MoveBindNotice();return;}
+ if(prev==="notice-empty"){box.innerHTML=l19MoveCardHtml({role:"old",hasData:false,count:0,href:l19MoveHref()});l19MoveBindNotice();return;}
+ const parts=l19LiveDestParts();box.innerHTML=l19MoveCardHtml({role:role,hasData:l19DestHasUserData(parts),count:(parts.entries||[]).length,href:l19MoveHref()});
+ l19MoveBindNotice();}
+async function l19CommitMovePayload(payload){const inc=validImport(payload);if(!inc)throw new Error("not a valid backup file");
+ try{await l19Protect("before import");}catch(pe){throw new Error("Couldn't save a safety copy first, so nothing was imported.");}
+ const parts=l19PartsFromPayload(payload,inc);
+ l19Guard.allow++;try{
+  LSset(STB,JSON.stringify(parts.stubs||[]));
+  LSset(STH,String(num(parts.startHours||0)));if($("sth"))$("sth").value=num(parts.startHours||0);
+  if(parts.setupDone||inc.length)LSset(SUD,"1");
+  if(parts.tierMode==="auto"||parts.tierMode==="manual")LSset(TMODE,parts.tierMode);
+  if(parts.tier)LSset("l19hours.tier",parts.tier);
+  if(parts.defPier)LSset(DPIER,parts.defPier);
+  if(typeof parts.defJob==="string")LSset(DJOB,parts.defJob);
+  LSset(NDK,JSON.stringify(needsClean(parts.needs||[])));
+  if(parts.ba)LSset(DSP,cleanPhone(parts.ba));
+  if(hasV(parts.mileRate)){LSset(MRK,String(num(parts.mileRate)));if(typeof loadMileRate==="function")loadMileRate();}
+  if(parts.tourDone)LSset(TOURK,"1");
+  if(parts.settings)l19SettingsImport(parts.settings,true);
+  if(Array.isArray(parts.pgp))pgpSave(parts.pgp);
+  if(parts.pgpFiled)try{localStorage.setItem(PGPF_KEY,JSON.stringify(parts.pgpFiled));}catch(e){}
+  if(parts.ratesSeen)LSset(RSEEN,parts.ratesSeen);
+  if(parts.pegs&&typeof parts.pegs==="object"){LSset("l19.pegs",JSON.stringify(pegsClean(parts.pegs)));if(parts.pegsNight&&typeof parts.pegsNight==="object")LSset("l19.pegs.night",JSON.stringify(pegsClean(parts.pegsNight)));if(typeof pgD!=="undefined"){pgD=pegsLoad();pgClose();pgRender();}}
+  if(parts.equip&&typeof parts.equip==="object"){LSset("l19.equip",JSON.stringify(eqClean(parts.equip)));if(typeof eqB!=="undefined"){eqB=eqLoad();pgRender();}}
+  if(parts.gear&&typeof parts.gear==="object"){try{localStorage.setItem("l19.gear",JSON.stringify({v:1,cards:gearStoreClean(parts.gear)}));}catch(_){}}
+  if(typeof renderNeeds==="function"){renderNeeds();renderDispatch();}
+  if(typeof tierUI==="function")tierUI();
+  entries=inc;cwogMigrate(entries);hootMigrate(entries);save();if(typeof refreshEmp==="function")refreshEmp();
+  if($("msg"))$("msg").textContent="Moved "+inc.length+" entries to this address.";
+ }finally{l19Guard.allow--;}}
+function l19ClearMoveHash(){try{if(l19ParseMoveHash(location.hash).kind!=="none")history.replaceState(null,"",location.pathname+location.search);}catch(e){}}
+let l19PendingMove=null,l19MoveIncoming=null;
+function l19ShowIncoming(plan,payload){l19PendingMove={plan:plan,payload:payload};const b=$("moveInHost")||$("banners");if(!b)return;
+ const extra=document.getElementById("moveIn");if(extra)extra.remove();
+ const wrap=document.createElement("div");wrap.innerHTML=l19MoveRestoreHtml(plan);
+ const el=wrap.firstElementChild;if(el)b.insertAdjacentElement("afterbegin",el);
+ if(typeof fitBox==="function")requestAnimationFrame(()=>fitBox("banners"));
+ if($("moveInYes"))$("moveInYes").onclick=async()=>{const p=l19PendingMove;if(!p)return;try{await l19CommitMovePayload(p.payload);l19PendingMove=null;l19ClearMoveHash();const el=$("moveIn");if(el)el.outerHTML=l19MoveSuccessHtml();if($("moveInX"))$("moveInX").onclick=()=>{const x=$("moveIn");if(x)x.remove();renderBanners();};if(typeof renderWeek==="function")renderWeek();if(typeof renderHist==="function")renderHist();l19PaintMoveCard();}catch(e){const el=$("moveIn");if(el)el.outerHTML=l19MoveRestoreHtml({ok:false,error:e&&e.message||"import failed"});if($("moveInX"))$("moveInX").onclick=()=>{const x=$("moveIn");if(x)x.remove();};}};
+ if($("moveInNo"))$("moveInNo").onclick=()=>{l19PendingMove=null;l19ClearMoveHash();const x=$("moveIn");if(x)x.remove();};
+ if($("moveInX"))$("moveInX").onclick=()=>{l19ClearMoveHash();const x=$("moveIn");if(x)x.remove();};}
+async function l19StartMove(){const parts=l19LiveBackupParts();if(!l19DestHasUserData(parts)){alert("No shifts or settings to move on this phone.");return;}
+ const payload=l19BackupObject({...parts,move:{v:1,from:location.origin,at:new Date().toISOString()}});
+ const dest=l19MoveHref();
+ const handoff=dest.split("#")[0]+(dest.indexOf("?")>=0?"&":"?")+"l19handoff=1#"+L19_MOVE_MARK;
+ let child=null;try{child=window.open(handoff,"l19move");}catch(e){child=null;}
+ const encoded=await l19EncodeMoveHashMaybeZip(payload);
+ let done=false;
+ const finish=(ok,msg)=>{if(done)return;done=true;window.removeEventListener("message",onMsg);if($("msg"))$("msg").textContent=msg;};
+ function onMsg(ev){const got=l19ParseMoveMessage(ev.data,ev.origin,"old");if(got.kind==="ready"&&child&&ev.source===child){try{child.postMessage({type:L19_MSG_PAYLOAD,payload:payload,v:1},ev.origin);}catch(e){}}
+  if(got.kind==="ack"){finish(true,got.ok?"Your data was sent. Confirm the import on the new site, then add longshorelife.app to your Home Screen. This old page still has its own copy.":(got.error||"The new site could not read that transfer."));}}
+ window.addEventListener("message",onMsg);
+ setTimeout(async()=>{if(done)return;if(encoded.ok){const hashUrl=dest.split("#")[0]+encoded.hash;
+   if(child&&!child.closed){try{child.location=hashUrl;finish(true,"Your data was sent in the new tab. Confirm the import there, then add longshorelife.app to your Home Screen.");return;}catch(e){}}
+   if(confirm("The new site will open in this window with your backup in the link (it is not sent to a server). This phone still has a copy here. Continue?")){finish(true,"Opening the new site…");location.assign(hashUrl);return;}
+   finish(false,"Move cancelled.");return;}
+  try{await shareFile("longshore-life-move-"+todayS()+".json","application/json",JSON.stringify(payload,null,1));}catch(e){}
+  finish(false,"This backup is too large to send in one tap. A JSON file was saved — open longshorelife.app and use Import JSON backup. You can also use Back up now (JSON).");
+  try{window.open(dest.split("#")[0],"_blank");}catch(e){}
+ },4500);}
+async function l19MoveBoot(){l19PaintMoveCard();
+ const role=l19MoveRole(location);
+ const preview=l19PreviewKind(location);
+ if(preview&&role==="new"){if(preview==="restore"){l19ShowIncoming({ok:true,needsConfirm:true,replaceWarning:false,destCount:0,incCount:24,parts:{},payload:null},null);const y=$("moveInYes");if(y)y.onclick=()=>{};const n=$("moveInNo");if(n)n.onclick=()=>{};return;}
+  if(preview==="replace"){l19ShowIncoming({ok:true,needsConfirm:true,replaceWarning:true,destCount:7,incCount:24,parts:{},payload:null},null);const y=$("moveInYes");if(y)y.onclick=()=>{};const n=$("moveInNo");if(n)n.onclick=()=>{};return;}
+  if(preview==="corrupt"){l19ShowIncoming({ok:false,error:"that transfer link is damaged or incomplete"},null);return;}}
+ if(role!=="new")return;
+ window.addEventListener("message",ev=>{const got=l19ParseMoveMessage(ev.data,ev.origin,"new");
+  if(got.kind==="payload"){try{ev.source&&ev.source.postMessage({type:L19_MSG_ACK,ok:true,v:1},ev.origin);}catch(e){}
+   const plan=l19MovePlan(l19LiveDestParts(),got.payload);l19ShowIncoming(plan,got.payload);}
+  else if(got.kind==="corrupt"){try{ev.source&&ev.source.postMessage({type:L19_MSG_ACK,ok:false,error:got.error,v:1},ev.origin);}catch(e){}
+   l19ShowIncoming({ok:false,error:got.error},null);}});
+ const hashWait=location.hash||"";
+ const q=new URLSearchParams(location.search||"");
+ if(q.get("l19handoff")==="1"||l19ParseMoveHash(hashWait).kind==="handoff"){try{if(window.opener)window.opener.postMessage({type:L19_MSG_READY,v:1},"*");}catch(e){}}
+ const parsed=await l19DecodeMoveHashAsync(location.hash);if(parsed.kind==="payload"){const plan=l19MovePlan(l19LiveDestParts(),parsed.payload);l19ShowIncoming(plan,parsed.payload);}
+ else if(parsed.kind==="corrupt")l19ShowIncoming({ok:false,error:parsed.error},null);}
+lockNow();setupShow();renderBanners();scheduleRem();setTimeout(firePgpRem,1500);tourMaybe();l19MoveBoot();
 
 resetForm();refreshEmp();
 /* v100: updates apply in place - never uninstall/reinstall. A new version installs in the background (sw.js: network-first, skipWaiting + clients.claim);
@@ -4862,6 +5095,7 @@ if(typeof window!=="undefined"){window.l19Shop=function(){shopFit();};window.add
  setTimeout(()=>{if(typeof show==="function")show=(f=>function(){const r=f.apply(this,arguments);if(typeof curV!=="undefined"&&curV==="add")shopFit();return r;})(show);},0);}
 
 if(typeof module!=="undefined")module.exports={dayInfo,reminderStatus,pgpRemStatus,jobHrs,jobDefHours,hrsMaxHint,DEFH_10,DEFH_CRANE,stubLine,PGP_EST,prevQuarter,earnOf,pgpEstimate,qLabel,QUAL,QY_KEY,pyEnd,payrollYear,qualHours,vacBasic,vacWeeks,qualStats,cwogMigrate,hootMigrate,hootOldPay,wkndRate,PGP_KEY,PGPF_KEY,PGP_LABEL,PGP_REMIND,PGP_JOB,pgpOn,pgpSh,pgpConflict,pgpWeek,pgpClean,pgpMerge,pgpDay,NL_X,NL_KEY,nlApplies,CWOG_JOB,CWOG_HRS,CWOG_RATE,CWOG_RATE2,CWOG_PAY,cwogPayFor,isCwog,cwogSplit,l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,secondThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,stubParts,stubPartsText,isClerkLocal,holPayHours,holPayDate,holPayOpts,workedDaysInWeek,holidaysPaidInWeek,holidayQualifies,holidayPayItem,holidayPaysForWeek,holidayPaysOnCheck,holidayPayLine,holNiceName,holAvailId,holAvailStored,holAvailSet,holAvailOn,HOL_SHORT,HOL_QUAL_KEY,HOL_AVAIL_KEY,HOL_PAY_LS,HOL_PAY_CLERK,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
+if(typeof module!=="undefined")Object.assign(module.exports,{L19_NEW_ORIGIN,L19_NEW_HOSTS,L19_OLD_ORIGIN,L19_MOVE_MARK,L19_HASH_MAX,L19_MSG_READY,L19_MSG_PAYLOAD,L19_MSG_ACK,l19Esc,l19SafeHref,l19SetGunzip,l19PeggIsUserData,l19EquipIsUserData,l19MoveRole,l19IsLoopback,l19TrustedMoveSource,l19TrustedMoveDest,l19ToBase64Url,l19FromBase64Url,l19BackupObject,l19StubOk,l19DestHasUserData,l19ValidateMovePayload,l19PartsFromPayload,l19MovePlan,l19MoveApply,l19EncodeMoveHash,l19DecodeMoveBytes,l19ParseMoveHash,l19ParseMoveMessage,l19MoveNoticeHtml,l19MoveCardHtml,l19MoveRestoreHtml,l19MoveSuccessHtml,l19PreviewKind});
 if(typeof module!=="undefined")Object.assign(module.exports,{shopHtml,shopOk,SHOP_DEF,newsHtml,newsDate,newsOk,wkxCwog,wkxPgp,pgpTrack,curQuarter,payCheckLate,chkLabel,cwogDays,cwogSummary,pgpChecks,CWOG_STALE,glVk,glBestName,glInWin,glAssign,glKeep,glImgOk,glFileName,CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,chatNorm,chatSlurHits,chatThreat,chatLinks,chatCheck,chatShow,chatReason,chatReasonSplit,CHAT_REASONS,CHAT_BLOCK_KEY,chatBlockClean,contactHtml,APP_CONTACT,MERCH,merchItems,merchOn,merchHtml,merchResDoc,merchResOk,merchSlug,MERCH_STATUS,MERCH_RES_COL,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
