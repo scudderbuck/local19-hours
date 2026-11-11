@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Longshore Life (formerly KING of the DOCKS). Copyright (c) 2026 Daniel White. All rights reserved. No permission is granted to copy, modify, distribute, or use this software or its source code, in whole or in part, without prior written permission from the copyright holder. See LICENSE. -->
+<!-- Longshore Life (formerly KING of the DOCKS). Copyright (c) 2026 Longshore Life. All rights reserved. No permission is granted to copy, modify, distribute, or use this software or its source code, in whole or in part, without prior written permission from the copyright holder. See LICENSE. -->
 <html lang="en" style="background:#00214e"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -59,6 +59,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
 html.l19new #hdr .hdt{flex-direction:column;align-items:center;justify-content:center;gap:2px;margin:clamp(-6px,calc(env(safe-area-inset-top,0px) - 6px),0px) 0 -6px}
 html.l19new #hdLogo{height:80px;width:80px;margin:0;border-radius:0;flex:0 0 auto}
 html.l19new .hdName{display:block;width:80px;text-align:center;color:#f7f1e6;font-weight:800;font-size:12px;line-height:1.1;letter-spacing:.01em;text-wrap:balance}
+html.l19new .hdName .tm{font-size:.65em;line-height:0;vertical-align:super;font-weight:700;margin-left:.06em;letter-spacing:0}
 .locseg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:6px 0 4px}
 .locseg button{min-height:56px;padding:4px 2px;border-radius:12px;border:2px solid var(--bd);background:var(--bg);color:var(--fg);font-weight:800;font-size:1.25rem;line-height:1.1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0}
 .locseg button small{font-size:max(12px,.75rem);font-weight:600;color:var(--mut);overflow-wrap:anywhere;text-align:center;max-width:100%}
@@ -595,7 +596,7 @@ body.gopen{overflow:hidden}
 (function(){
   var neu=document.documentElement.classList.contains("l19new");
   if(neu){
-    document.write('<img id="hdLogo" src="img/logo-header-new.png" alt="" width="80" height="80" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"><span class="hdName">Longshore Life</span>');
+    document.write('<img id="hdLogo" src="img/logo-header-new.png" alt="" width="80" height="80" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()"><span class="hdName">Longshore Life<span class="tm" aria-hidden="true">™</span></span>');
   }else{
     document.write('<img id="hdLogo" src="img/logo-header.png" alt="Longshore Life" width="76" height="112" decoding="async" onload="if(window.l19HdrFit)l19HdrFit()">');
   }
@@ -661,7 +662,7 @@ body.gopen{overflow:hidden}
 <p class="mut" style="margin-bottom:0">Travel time is paid at one-half the basic straight-time hourly rate for your rate tier (Supp. IV 5.11, same rule as the Time Book workbook). Mileage is a reimbursement and is always shown apart from wages.</p></div>
 <div class="card"><h3>Rates &amp; app</h3>
 <p class="mut" id="verInfo" style="margin-top:0"></p>
-<p class="mut" id="aboutOwn">Longshore Life is an independent app by Daniel White. Not affiliated with or endorsed by the ILWU or PMA.<br><b id="notOff">Not an official ILWU or PMA app.</b><br>© 2026 Daniel White. All rights reserved.</p>
+<p class="mut" id="aboutOwn">Longshore Life is an independent app. Not affiliated with or endorsed by the ILWU or PMA.<br><b id="notOff">Not an official ILWU or PMA app.</b><br>© 2026 Longshore Life™. All rights reserved.</p>
 <p class="mut" id="chatRules"><b>Chat rules:</b> be respectful. No harassment, hate, threats or spam. Tap <b>Report</b> on a message that breaks the rules, or <b>Block</b> to hide someone. Admins review every report.</p>
 <p class="mut" id="contactLn"><b>Report a problem / contact:</b> <span id="contactV"></span></p>
 <div class="musw"><a id="musicBtn" class="musb" href="https://suno.com/s/weM2IQiWNmoNdTu9" target="_blank" rel="noopener">🎵 Longshore — the playlist</a></div>
@@ -798,7 +799,7 @@ body.gopen{overflow:hidden}
 <div class="card waonly"><p class="mut" style="margin:0"><b>Heads up:</b> vessel schedules change often (delays, early arrivals, cancellations) and this list can lag by hours. It does not show labor needs. Shift/labor needs come from ILWU dispatch. "Track" opens a VesselFinder name search in a new tab (no login or app popups); open the vessel there for live position and delays (free positions can lag). <b>Ships coming</b> lists Seattle container terminals only (T5, T18); T91 is cruise, no container calls. The Needs <b>At berth now</b> box covers more ports. <b>⚙️ Gear</b> opens a lashing/cone/catwalk card for that ship, filled in by coworkers and shared in your chat room (photos stay on your phone).</p>
 <p class="mut" style="margin:8px 0 0"><b>Sources:</b> Seattle and Tacoma: Northwest Seaport Alliance Vessel Schedule Forecast (Tacoma includes car ships and breakbulk). Aberdeen: Port of Grays Harbor vessel schedule (dates only). Olympia: Port of Olympia vessel announcements (dates only). Everett: Port of Everett shipping schedule. Port Angeles: Port of Port Angeles ship schedule. Longview and Vancouver WA: no public schedule; Columbia River Pilots dispatch is used only when it is current. "leaves ?" means the source gives no departure time.</p></div>
 </section>
-<footer id="ft">Longshore Life <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button><small id="ftc">© 2026 Daniel White. All rights reserved.</small></footer>
+<footer id="ft">Longshore Life <span id="ftv"></span> · <button type="button" class="link" id="rpFt">Report a problem</button><small id="ftc">© 2026 Longshore Life™. All rights reserved.</small></footer>
 </main>
 <div id="bbar"><nav class="tabs" aria-label="Main"><button type="button" data-v="add" class="on" aria-label="Add shift"><span class="ti" aria-hidden="true">➕</span><span class="tl">Add</span></button><button type="button" data-v="ships" aria-label="Ships"><span class="ti" aria-hidden="true">🚢</span><span class="tl">Ships</span></button><button type="button" data-v="pegs" aria-label="Pegs"><span class="ti" aria-hidden="true">📌</span><span class="tl">Pegs</span></button><button type="button" data-v="chat" aria-label="Chat"><span class="ti" aria-hidden="true">💬</span><span class="tl">Chat</span></button><button type="button" data-v="week" aria-label="Week"><span class="ti" aria-hidden="true">📅</span><span class="tl">Week</span></button><button type="button" data-v="hist" aria-label="History"><span class="ti" aria-hidden="true">🕘</span><span class="tl lg">History</span><span class="ts" aria-hidden="true">Hist.</span></button><button type="button" data-v="data" aria-label="Backup"><span class="ti" aria-hidden="true">💾</span><span class="tl lg">Backup</span><span class="ts" aria-hidden="true">Bkup</span></button></nav><nav class="docs" aria-label="Documents"><a id="docSafety" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Marine_Safety_Code_2022.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Marine Safety Code, 2022 Revision (PDF on pmanet.org)" aria-label="ILWU Safety Handbook: Pacific Coast Marine Safety Code, 2022 Revision, PDF, opens in a new tab"><b aria-hidden="true">⛑️</b><span>ILWU Safety Handbook</span></a><a id="docContract" href="https://www.pmanet.org/wp-content/uploads/2025/03/Pacific_Coast_Longshore_Contract_Document_2022-2028.pdf" target="_blank" rel="noopener" title="ILWU-PMA Pacific Coast Longshore Contract Document, July 1, 2022 – July 1, 2028 (PDF on pmanet.org)" aria-label="Current Contract: Pacific Coast Longshore Contract Document 2022 to 2028, PDF, opens in a new tab"><b aria-hidden="true">📄</b><span>Current Contract</span></a></nav></div>
 <script>
@@ -806,7 +807,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v139",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v140",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1067,7 +1068,7 @@ function cwogMigrate(list){let n=0;for(const e of list||[]){if(!e||e.job!=="CWOG
 function cwogNight(s){return s==="2nd"||s==="3rd";}
 function cwogPayFor(s){const n=cwogNight(s);return{...((n?CWOG_PAY.night:CWOG_PAY.day)||CWOG_PAY.night),night:n,set:n||!!CWOG_PAY.day};}
 const CWOG_RATE=CWOG_PAY.night.r,CWOG_RATE2=CWOG_PAY.night.o;
-const CWOG_JOB="CWOG (10-hr guarantee)",CWOG_HRS=10,CWOG_BASE_H=8,CWOG_JOBS=[[CWOG_JOB,"","Clerk Supervisor","user","Local 52 CWOG: 10-hour guarantee for days the company cannot supply work (Daniel; local rule, not in the coastwise PCCCD). Night 8 h at $84.69 + 2 h at $95.28 = $868.08 (paycheck; PCCCD 4.312/4.313 K/T/C 2nd shift + OT); day = night / 1.3: 8 h at $65.15 + 2 h at $73.29 = $667.78."]];
+const CWOG_JOB="CWOG (10-hr guarantee)",CWOG_HRS=10,CWOG_BASE_H=8,CWOG_JOBS=[[CWOG_JOB,"","Clerk Supervisor","user","Local 52 CWOG: 10-hour guarantee for days the company cannot supply work (local rule, not in the coastwise PCCCD). Night 8 h at $84.69 + 2 h at $95.28 = $868.08 (paycheck; PCCCD 4.312/4.313 K/T/C 2nd shift + OT); day = night / 1.3: 8 h at $65.15 + 2 h at $73.29 = $667.78."]];
 function isCwog(e){return !!e&&(typeof e==="string"?e:e.job)===CWOG_JOB;}
 /* v109: Local 52 "Night list" (Daniel): when ON, weekday (Mon-Fri, non-holiday) 2nd-shift (night) entries get straight time = 1st-shift day rate x 1.3.
    Weekend/holiday nights keep the existing all-OT logic (PCCCD 4.152). 3rd shift keeps its contract rate. Stored in l19.nightList (in backups). */
@@ -1456,7 +1457,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v139",CACHE_VERSION="l19hours-v139"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v140",CACHE_VERSION="l19hours-v140"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 /* v139: move saved data to https://longshorelife.app without putting a custom domain on this project repo.
    Pure helpers below are unit-tested in node. */
@@ -2992,7 +2993,7 @@ let mcView="list",mcItem=null,mcMsg="",mcData=null,mcErr="",mcOnReg=0;
 const mcE=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function mcVis(){return merchItems(MERCH,curLocal());}
 function mcFb(){return window.l19Fb||null;}
-function mcErrText(e){if(/permission/.test(e&&e.code||""))return"Reservations aren't open yet (the server hasn't been set up for them). Nothing was saved. Try again later or ask Daniel at the hall.";const F=mcFb();return F&&F.friendly?F.friendly(e):"Couldn't reach the server. Try again.";}
+function mcErrText(e){if(/permission/.test(e&&e.code||""))return"Reservations aren't open yet (the server hasn't been set up for them). Nothing was saved. Try again later or ask at the hall.";const F=mcFb();return F&&F.friendly?F.friendly(e):"Couldn't reach the server. Try again.";}
 function mcWhen(ms){if(!ms)return"just now";const d=new Date(ms);return d.toLocaleDateString([],{month:"short",day:"numeric"})+" "+d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});}
 function mcRow(r,admin){const st=MERCH_STATUS[r.status]||r.status;return '<div class="mcr" data-rid="'+mcE(r.id)+'"><div class="mcn">'+mcE(r.item)+'</div><div>'+(r.size?"Size "+mcE(r.size)+" · ":"")+"Qty "+mcE(r.qty)+(admin?" · <b>"+mcE(r.name)+"</b>":"")+'</div><div class="mut">'+mcE(mcWhen(r.ms))+' · <span class="mcst mcst-'+mcE(r.status)+'">'+mcE(st)+'</span></div>'+(r.note?'<div class="mut mcno">Note: '+mcE(r.note)+'</div>':'')+
  (r.status==="reserved"?'<div class="row">'+(admin?'<button type="button" class="p" data-ra="picked">Picked up</button>':'')+'<button type="button" class="d" data-ra="cancelled">Cancel</button></div>':'')+'</div>';}
@@ -3010,7 +3011,7 @@ function mcPaint(){const box=document.getElementById("mcBody");if(!box)return;co
    (joined?(x.sizes.length?'<label for="mcSz">Size</label><select id="mcSz"><option value="">Choose a size</option>'+x.sizes.map(z=>'<option>'+mcE(z)+'</option>').join("")+'</select>':'')+
    '<label for="mcQ">Quantity</label><select id="mcQ">'+[1,2,3,4,5].map(n=>'<option>'+n+'</option>').join("")+'</select><label for="mcN">Note (optional)</label><input id="mcN" maxlength="150" autocomplete="off" placeholder="e.g. hold until Friday">'+
    '<p class="mut" style="margin:4px 0 0">Reserving as <b>'+mcE(F.name())+'</b> (your Chat name). Pay and pick up at the hall.</p><p id="mcM" class="mcerr" aria-live="polite">'+mcE(mcErr)+'</p><div class="row mcrow"><button type="button" class="p" id="mcGo">Reserve</button><button type="button" id="mcBk">Back</button></div>'
-   :'<p>To reserve, set up Chat first: your Chat name tells Daniel who the item is for.</p><div class="row mcrow"><button type="button" class="p" id="mcChat">Open Chat setup</button><button type="button" id="mcBk">Back</button></div>');}
+   :'<p>To reserve, set up Chat first: your Chat name tells us who the item is for.</p><div class="row mcrow"><button type="button" class="p" id="mcChat">Open Chat setup</button><button type="button" id="mcBk">Back</button></div>');}
  else{const adm=mcView==="admin";h='<h4 class="mch4">'+(adm?"Reservations (admin)":"My reservations")+'</h4>'+(mcMsg?'<p class="mcok" role="status">'+mcE(mcMsg)+'</p>':'')+(mcErr?'<p class="mcerr" role="alert">'+mcE(mcErr)+'</p>':'')+
    (mcData===null?'<p class="mut">Loading…</p>':mcData.length?'<div class="mcl">'+mcData.map(r=>mcRow(r,adm)).join("")+'</div>':(mcErr?'':'<p class="mut">'+(adm?"No reservations yet.":"You have no reservations.")+'</p>'))+
    '<div class="row mcrow"><button type="button" id="mcBk">Back</button>'+(adm?'<button type="button" id="mcRf">Refresh</button>':'')+'</div>';}
@@ -4940,7 +4941,7 @@ const CHAT_REASONS=["Harassment","Hate","Threat","Spam","Other"];
 /* v114: Longshore Life merch. Every local can see Square items; "reserve" items are hall pick-up items for the listed locals only.
    TO ADD AN ITEM: put the photo in img/merch/ and add an object to MERCH, e.g.
      Square (pay online):  {id:"tshirt", name:"Longshore Life T-shirt", price:"$25", img:"img/merch/tshirt.jpg", mode:"square", url:"https://square.link/u/XXXXXXX", note:"Sizes S–3XL"}
-     Reserve at the hall:  {id:"hoodie", name:"Longshore Life Hoodie", price:"$45 – pay at the hall", img:"img/merch/hoodie.jpg", mode:"reserve", locals:["19"], sizes:["S","M","L","XL","2XL"], note:"Made by Daniel"}
+     Reserve at the hall:  {id:"hoodie", name:"Longshore Life Hoodie", price:"$45 – pay at the hall", img:"img/merch/hoodie.jpg", mode:"reserve", locals:["19"], sizes:["S","M","L","XL","2XL"], note:"Made by Longshore Life"}
    name is required; Square items need an https url; reserve items need no url. locals (e.g. ["19"]) limits who sees the item (default: every local).
    price, img (must be under img/merch/, else the logo is shown), sizes (up to 12, each up to 10 chars), note and id (letters/numbers/-) are optional.
    If no item is visible for the user's local the Merch button and section stay completely hidden. */

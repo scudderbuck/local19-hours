@@ -129,8 +129,8 @@ t("index.html serves new icons only on the new domain, and still references the 
   A.ok(html.includes('l19site'));
 });
 
-t("service worker cache lists both the old and the new icon files under l19hours-v139",()=>{
-  A.ok(sw.includes('const C="l19hours-v139"'));
+t("service worker cache lists both the old and the new icon files under l19hours-v140",()=>{
+  A.ok(sw.includes('const C="l19hours-v140"'));
   for(const f of ["manifest.json","icon-192.png","icon-512.png","img/icon-512-maskable.png","img/apple-touch-icon.png","favicon.ico",
                   "manifest-new.json","icons/icon-192.png","icons/icon-512.png","icons/maskable-192.png","icons/maskable-512.png",
                   "icons/apple-touch-icon.png","icons/favicon-32.png","icons/favicon-16.png","icons/favicon.ico"]){
@@ -145,7 +145,7 @@ t("new-domain header uses the v8 mark plus visible Longshore Life text; old site
   A.ok(neuStart>0);
   // There are two if(neu) blocks (splash and header). Check both branches include the right logo.
   A.ok(html.includes('src="img/logo-header-new.png"'));
-  A.ok(html.includes('class="hdName">Longshore Life</span>'));
+  A.ok(html.includes('class="hdName">Longshore Life<span class="tm" aria-hidden="true">™</span></span>'));
   A.ok(html.includes('src="img/logo-header.png" alt="Longshore Life" width="76" height="112"'));
   // The new-domain header write includes the wordmark and new art, not the old badge
   const hdr=html.slice(html.indexOf('<header id="hdr">'), html.indexOf("</header>"));
@@ -154,7 +154,7 @@ t("new-domain header uses the v8 mark plus visible Longshore Life text; old site
   A.ok(hdrNeu.includes("img/logo-header-new.png") && hdrNeu.includes("hdName") && hdrNeu.includes("Longshore Life"), hdrNeu);
   A.ok(!hdrNeu.includes("img/logo-header.png"));
   A.ok(hdrOld.includes("img/logo-header.png") && hdrOld.includes('width="76"') && hdrOld.includes('height="112"'), hdrOld);
-  A.ok(!hdrOld.includes("logo-header-new.png") && !hdrOld.includes("hdName"));
+  A.ok(!hdrOld.includes("logo-header-new.png") && !hdrOld.includes("hdName") && hdrOld.includes("logo-header.png"), hdrOld);
   A.ok(fs.existsSync(path.join(root,"img/logo-header-new.png")));
   const s=pngSize(read("img/logo-header-new.png"));
   A.deepStrictEqual([s.w,s.h],[240,240],"logo-header-new.png should be 80 CSS px at 3x");
