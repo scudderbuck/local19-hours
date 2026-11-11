@@ -151,7 +151,27 @@ with sync_playwright() as p:
         src=page.evaluate("() => document.querySelector('#splashVideo source')?.getAttribute('src')")
         title=page.evaluate("() => (document.querySelector('#splashVid .splashTitle')?.textContent||'').replace(/\\s+/g,' ').trim()")
         t("new site shows only the Bridges video splash", (not has_old) and src=="img/bridges-turn.mp4" and page.query_selector("#splashVid") is not None, {"old":has_old,"src":src})
-        t("new-site splash shows LONGSHORE LIFE as HTML text over the video", title=="LONGSHORE LIFE", title)
+        t("new-site splash shows LONGSHORE LIFE and WORK THE WATERFRONT over the video", title.startswith("LONGSHORE LIFE") and "WORK THE WATERFRONT" in title, title)
+        fit=page.evaluate("""() => {
+          const ev=document.getElementById('splashVid');
+          const lock=document.querySelector('.splashLockup');
+          const svg=document.querySelector('.splashTitleSvg');
+          const tag=document.querySelector('.splashTag');
+          const vid=document.getElementById('splashVideo');
+          const vw=innerWidth, vh=innerHeight;
+          const r=el=>el?(()=>{const b=el.getBoundingClientRect();return {t:b.top,l:b.left,r:b.right,b:b.bottom,w:b.width,h:b.height};})():null;
+          const L=r(lock), S=r(svg), T=r(tag), V=r(vid);
+          const pad=1;
+          const inView=b=>b && b.t>=-pad && b.l>=-pad && b.r<=vw+pad && b.b<=vh+pad;
+          const faceY=V?V.t+V.h*0.105:0;
+          return {
+            inView: !!(inView(L)&&inView(S)&&inView(T)&&inView(V)),
+            lock:L, svg:S, tag:T, video:V, vw, vh, faceY,
+            faceClear: !!(T && V && T.b <= faceY + 2),
+            title: (lock?.textContent||'').replace(/\\s+/g,' ').trim()
+          };
+        }""")
+        t("new-site splash lockup and Harry fit on screen without covering his face", fit.get("inView") and fit.get("faceClear") and fit["video"]["h"]>100, fit)
         page.click("#splashVid")
         page.wait_for_timeout(250)
         gone=page.evaluate("() => !document.getElementById('splashVid') && document.documentElement.classList.contains('spdone')")

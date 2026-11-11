@@ -111,24 +111,27 @@ runRangeTest().then(()=>{
   fail++; console.log("FAIL mp4 Range request returns 206 when the SW does not intercept it :: "+e.message);
 }).finally(()=>{
   
-t("new-site splash overlays LONGSHORE LIFE as merch-style HTML/SVG lettering, old site does not",()=>{
+t("new-site splash overlays merch-style LONGSHORE LIFE lockup, old site does not",()=>{
   const i=html.indexOf('if(neu)');
   A.ok(i>0);
   const neu=html.slice(i, html.indexOf("}else{", i));
   const old=html.slice(html.indexOf("}else{", i), html.indexOf("})();", i));
-  A.ok(neu.includes('class="splashTitle"') && neu.includes("LONGSHORE") && neu.includes("LIFE"), neu);
-  A.ok(neu.includes("textPath") && neu.includes("splashTitleLife"), neu);
+  A.ok(neu.includes('class="splashLockup splashTitle"') && neu.includes("LONGSHORE LIFE"), neu);
+  A.ok(neu.includes("textPath") && neu.includes("WORK THE WATERFRONT") && neu.includes("splashTag"), neu);
+  A.ok(neu.includes("img/splash-grunge.png") && neu.includes("splashGrunge"), neu);
   A.ok(!neu.includes("img/splash.jpg"));
-  A.ok(!old.includes("splashTitle") && !old.includes("LONGSHORE") && !old.includes("textPath"));
-  A.ok(html.includes("color:#eed6a0") && html.includes("fill:#eed6a0"));
-  A.ok(html.includes('font-family:"Alfa Slab One"') || html.includes("Alfa Slab One"));
+  A.ok(!old.includes("splashTitle") && !old.includes("LONGSHORE LIFE") && !old.includes("textPath") && !old.includes("WORK THE WATERFRONT"));
+  A.ok(html.includes("#ff3b00") && (html.includes("fill=\"url(#splashGrunge)\"") || html.includes('fill="url(#splashGrunge)"')));
+  A.ok(html.includes("font-family:Anton") || html.includes("font-family: Anton") || html.includes("@font-face{font-family:Anton"));
   A.ok(html.includes("@keyframes splashTitleIn"));
-  A.ok(html.includes("prefers-reduced-motion:reduce") && html.includes("html.l19new .splashTitle{animation:none;opacity:1}"));
-  A.ok(fs.existsSync(path.join(root,"fonts/alfa-slab-one-subset.woff2")));
-  A.ok(fs.existsSync(path.join(root,"fonts/alfa-slab-one-subset.woff")));
+  A.ok(html.includes("prefers-reduced-motion:reduce") && html.includes("html.l19new .splashLockup{animation:none;opacity:1}"));
+  A.ok(fs.existsSync(path.join(root,"fonts/anton-regular-subset.woff2")));
+  A.ok(fs.existsSync(path.join(root,"fonts/anton-regular-subset.woff")));
+  A.ok(fs.existsSync(path.join(root,"img/splash-grunge.png")));
   const sw=fs.readFileSync(path.join(root,"sw.js"),"utf8");
-  A.ok(sw.includes("fonts/alfa-slab-one-subset.woff2"));
-  A.ok(!sw.includes("oswald-bold-subset"));
+  A.ok(sw.includes("fonts/anton-regular-subset.woff2"));
+  A.ok(sw.includes("img/splash-grunge.png"));
+  A.ok(!sw.includes("alfa-slab") && !sw.includes("oswald-bold-subset"));
   A.ok(!sw.includes("bridges-turn.mp4") || !sw.match(/const C="l19hours-v139",F=\[[\s\S]*bridges-turn\.mp4/));
 });
 
