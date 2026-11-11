@@ -40,7 +40,7 @@ with sync_playwright() as p:
         return ctx,page,logs
     def clean(page):
         page.wait_for_selector("#bbar", state="attached", timeout=20000)
-        page.evaluate("""() => {['splash','splash2','setup','tour','lock'].forEach(id=>document.getElementById(id)?.remove());}""")
+        page.evaluate("""() => {['splash','splash2','splashVid','setup','tour','lock'].forEach(id=>document.getElementById(id)?.remove());document.documentElement.classList.add('spdone');}""")
         page.wait_for_timeout(200)
 
     # 1. old builds hash
@@ -112,6 +112,80 @@ with sync_playwright() as p:
         t("corrupt payload leaves dest unchanged", "Couldn't move that data" in banner and [e["id"] for e in state]==["keep1"], banner)
     except Exception as e:
         t("corrupt payload leaves dest unchanged", False, str(e)+" | logs="+"; ".join(logs))
+    ctx.close()
+
+    # 6. icon wiring by site role
+    ctx,page,logs=ctx_page(ready())
+    page.goto("http://127.0.0.1:8570/index.html?l19site=old", wait_until="domcontentloaded")
+    icons=page.evaluate("""() => ({
+      manifest: document.querySelector('link[rel="manifest"]')?.getAttribute('href'),
+      apple: document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href'),
+      icons: [...document.querySelectorAll('link[rel="icon"]')].map(l=>l.getAttribute('href'))
+    })""")
+    t("old site still uses the original icons", icons.get("manifest")=="manifest.json" and icons.get("apple")=="img/apple-touch-icon.png" and "icon-192.png" in icons.get("icons",[]) and "icons/icon-192.png" not in icons.get("icons",[]), icons)
+    ctx.close()
+
+    ctx,page,logs=ctx_page(ready())
+    page.goto("http://127.0.0.1:8571/index.html?l19site=new", wait_until="domcontentloaded")
+    icons=page.evaluate("""() => ({
+      manifest: document.querySelector('link[rel="manifest"]')?.getAttribute('href'),
+      apple: document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href'),
+      icons: [...document.querySelectorAll('link[rel="icon"]')].map(l=>l.getAttribute('href'))
+    })""")
+    t("new site uses v8 icons and manifest-new.json", icons.get("manifest")=="manifest-new.json" and icons.get("apple")=="icons/apple-touch-icon.png" and "icons/icon-192.png" in icons.get("icons",[]) and "icons/favicon-32.png" in icons.get("icons",[]), icons)
+    ctx.close()
+
+    # 7. new-domain video splash: skip, ended+fade, fallback timing
+    ctx,page,logs=ctx_page(ready())
+    page.goto("http://127.0.0.1:8571/index.html?l19site=new", wait_until="domcontentloaded")
+    try:
+        page.wait_for_selector("#splashVid", timeout=5000)
+        has_old=page.evaluate("() => !!(document.getElementById('splash')||document.getElementById('splash2'))")
+        src=page.evaluate("() => document.querySelector('#splashVideo source')?.getAttribute('src')")
+        t("new site shows only the Bridges video splash", (not has_old) and src=="img/bridges-turn.mp4" and page.query_selector("#splashVid") is not None, {"old":has_old,"src":src})
+        page.click("#splashVid")
+        page.wait_for_timeout(250)
+        gone=page.evaluate("() => !document.getElementById('splashVid') && document.documentElement.classList.contains('spdone')")
+        t("tap skips the new-site splash immediately", gone, page.evaluate("() => ({vid:!!document.getElementById('splashVid'),spdone:document.documentElement.classList.contains('spdone')})"))
+    except Exception as e:
+        t("new site shows only the Bridges video splash", False, str(e)+" | logs="+"; ".join(logs))
+        t("tap skips the new-site splash immediately", False, str(e))
+    ctx.close()
+
+    ctx,page,logs=ctx_page(ready())
+    page.goto("http://127.0.0.1:8571/index.html?l19site=new", wait_until="domcontentloaded")
+    try:
+        page.wait_for_selector("#splashVid", timeout=5000)
+        page.wait_for_function("() => !document.getElementById('splashVid') && document.documentElement.classList.contains('spdone')", timeout=4000)
+        t("new-site splash hides after the video ends plus a short fade (under the 3.4s fallback)", True)
+    except Exception as e:
+        t("new-site splash hides after the video ends plus a short fade (under the 3.4s fallback)", False, str(e)+" | logs="+"; ".join(logs))
+    ctx.close()
+
+    ctx,page,logs=ctx_page(ready())
+    page.route("**/*bridges-turn.mp4", lambda r: r.abort())
+    page.goto("http://127.0.0.1:8571/index.html?l19site=new", wait_until="domcontentloaded")
+    try:
+        page.wait_for_selector("#splashVid", timeout=5000)
+        page.wait_for_function("() => !document.getElementById('splashVid') && document.documentElement.classList.contains('spdone')", timeout=4500)
+        t("new-site splash falls back by 3.4s if the video cannot play", True)
+    except Exception as e:
+        t("new-site splash falls back by 3.4s if the video cannot play", False, str(e)+" | logs="+"; ".join(logs))
+    ctx.close()
+
+    ctx,page,logs=ctx_page(ready())
+    page.goto("http://127.0.0.1:8570/index.html?l19site=old", wait_until="domcontentloaded")
+    try:
+        page.wait_for_selector("#splash", timeout=5000)
+        state=page.evaluate("""() => ({
+          splash:!!document.getElementById('splash'),
+          splash2:!!document.getElementById('splash2'),
+          vid:!!document.getElementById('splashVid'),
+          src:document.querySelector('#splash img')?.getAttribute('src')
+        })""")
+        t("old site still uses the two-image splash and does not load the video", state.get("splash") and state.get("splash2") and not state.get("vid") and state.get("src")=="img/splash.jpg", state)
+    except Exception as e:
+        t("old site still uses the two-image splash and does not load the video", False, str(e)+" | logs="+"; ".join(logs))
     ctx.close()
     browser.close()
 

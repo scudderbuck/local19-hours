@@ -46,6 +46,13 @@ Canonical host is the apex `longshorelife.app`. GitHub will redirect `www.longsh
 
 10. **Do not turn off the old site** until people have had time to move. Installed Home Screen icons keep opening the old origin, which is what lets them transfer.
 
+
+## Icons
+
+The new v8 crane-at-sunset icon is only for `longshorelife.app`. It lives in `icons/` and `manifest-new.json`. The shared `index.html` picks those files when the host is longshorelife.app (or when testing with `?l19site=new`).
+
+Leave the existing root files alone when you publish the old address: `icon-192.png`, `icon-512.png`, `favicon.ico`, `img/apple-touch-icon.png`, `img/icon-512-maskable.png`, and `manifest.json`. `https://scudderbuck.github.io/local19-hours/` should keep the current logo. A 512 px store upload file is at `icons/store-512.png`. The new address also uses a single Harry Bridges video splash (`img/bridges-turn.mp4`); the old address keeps the two still images (`img/splash.jpg` then `img/bridges.jpg`).
+
 ## After publish, tell users
 
 - Open the old address once, tap **Move my data to longshorelife.app**, and confirm on the new site.

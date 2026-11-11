@@ -1,6 +1,6 @@
 const fs=require("fs"),A=require("assert"),zlib=require("zlib"),path=require("path");
 const file=process.argv[2]||path.join(__dirname,"index.html");
-const js=fs.readFileSync(file,"utf8").match(/<script>([\s\S]*?)<\/script>/)[1];
+const html=fs.readFileSync(file,"utf8"); const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<script>/,"").replace(/<\/script>$/,"")).sort((a,b)=>b.length-a.length)[0];
 const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
 let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
 
