@@ -111,22 +111,24 @@ runRangeTest().then(()=>{
   fail++; console.log("FAIL mp4 Range request returns 206 when the SW does not intercept it :: "+e.message);
 }).finally(()=>{
   
-t("new-site splash overlays LONGSHORE LIFE as HTML text in cream, old site does not",()=>{
+t("new-site splash overlays LONGSHORE LIFE as merch-style HTML/SVG lettering, old site does not",()=>{
   const i=html.indexOf('if(neu)');
   A.ok(i>0);
   const neu=html.slice(i, html.indexOf("}else{", i));
   const old=html.slice(html.indexOf("}else{", i), html.indexOf("})();", i));
-  A.ok(neu.includes('class="splashTitle"') && neu.includes("LONGSHORE LIFE"), neu);
+  A.ok(neu.includes('class="splashTitle"') && neu.includes("LONGSHORE") && neu.includes("LIFE"), neu);
+  A.ok(neu.includes("textPath") && neu.includes("splashTitleLife"), neu);
   A.ok(!neu.includes("img/splash.jpg"));
-  A.ok(!old.includes("splashTitle") && !old.includes("LONGSHORE LIFE"));
-  A.ok(html.includes("color:#f5ecd7"));
-  A.ok(html.includes('font-family:"Oswald Splash"') || html.includes("font-family:\\\"Oswald Splash\\\"") || html.includes("Oswald Splash"));
+  A.ok(!old.includes("splashTitle") && !old.includes("LONGSHORE") && !old.includes("textPath"));
+  A.ok(html.includes("color:#eed6a0") && html.includes("fill:#eed6a0"));
+  A.ok(html.includes('font-family:"Alfa Slab One"') || html.includes("Alfa Slab One"));
   A.ok(html.includes("@keyframes splashTitleIn"));
   A.ok(html.includes("prefers-reduced-motion:reduce") && html.includes("html.l19new .splashTitle{animation:none;opacity:1}"));
-  A.ok(fs.existsSync(path.join(root,"fonts/oswald-bold-subset.woff2")));
-  A.ok(fs.existsSync(path.join(root,"fonts/oswald-bold-subset.woff")));
+  A.ok(fs.existsSync(path.join(root,"fonts/alfa-slab-one-subset.woff2")));
+  A.ok(fs.existsSync(path.join(root,"fonts/alfa-slab-one-subset.woff")));
   const sw=fs.readFileSync(path.join(root,"sw.js"),"utf8");
-  A.ok(sw.includes("fonts/oswald-bold-subset.woff2"));
+  A.ok(sw.includes("fonts/alfa-slab-one-subset.woff2"));
+  A.ok(!sw.includes("oswald-bold-subset"));
   A.ok(!sw.includes("bridges-turn.mp4") || !sw.match(/const C="l19hours-v139",F=\[[\s\S]*bridges-turn\.mp4/));
 });
 

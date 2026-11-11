@@ -149,7 +149,7 @@ with sync_playwright() as p:
         page.wait_for_selector("#splashVid", timeout=5000)
         has_old=page.evaluate("() => !!(document.getElementById('splash')||document.getElementById('splash2'))")
         src=page.evaluate("() => document.querySelector('#splashVideo source')?.getAttribute('src')")
-        title=page.evaluate("() => (document.querySelector('#splashVid .splashTitle')?.textContent||'').trim()")
+        title=page.evaluate("() => (document.querySelector('#splashVid .splashTitle')?.textContent||'').replace(/\\s+/g,' ').trim()")
         t("new site shows only the Bridges video splash", (not has_old) and src=="img/bridges-turn.mp4" and page.query_selector("#splashVid") is not None, {"old":has_old,"src":src})
         t("new-site splash shows LONGSHORE LIFE as HTML text over the video", title=="LONGSHORE LIFE", title)
         page.click("#splashVid")
