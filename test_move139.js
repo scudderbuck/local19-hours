@@ -30,10 +30,10 @@ const srcParts={
   ratesVersion:"2026-07-04"
 };
 
-t("version is v139 and cache/boot match",()=>{
-  A.strictEqual(L.APP_VERSION,"v139");
-  A.strictEqual(L.CACHE_VERSION,"l19hours-v139");
-  A.strictEqual(L.L19_BOOT_VER,"v139");
+t("version is v140 and cache/boot match",()=>{
+  A.strictEqual(L.APP_VERSION,"v140");
+  A.strictEqual(L.CACHE_VERSION,"l19hours-v140");
+  A.strictEqual(L.L19_BOOT_VER,"v140");
   A.strictEqual(L.CACHE_VERSION,"l19hours-"+L.APP_VERSION);
 });
 

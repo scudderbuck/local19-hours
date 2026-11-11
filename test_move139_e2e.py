@@ -2,7 +2,7 @@
 import http.server, threading, socketserver, json, traceback, os, re, shutil
 from playwright.sync_api import sync_playwright
 
-ROOT = "/workspace/longshore-domain-v139"
+ROOT = "/workspace/local19-hours-v140"
 class H(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*a,**k): super().__init__(*a,directory=ROOT,**k)
     def log_message(self,*a): pass
@@ -163,7 +163,7 @@ with sync_playwright() as p:
       name: document.querySelector('#hdr .hdName')?.textContent||null
     })""")
     t("old site still uses the original icons", icons.get("manifest")=="manifest.json" and icons.get("apple")=="img/apple-touch-icon.png" and "icon-192.png" in icons.get("icons",[]) and "icons/icon-192.png" not in icons.get("icons",[]), icons)
-    t("old site header still uses the original badge and has no extra title text", icons.get("logo")=="img/logo-header.png" and not icons.get("name"), icons)
+    t("old site header still uses the original badge and shows Longshore Life as text", icons.get("logo")=="img/logo-header.png" and icons.get("name") and "Longshore Life" in icons.get("name"), icons)
     ctx.close()
 
     ctx,page,logs=ctx_page(ready())
