@@ -138,5 +138,35 @@ t("service worker cache lists both the old and the new icon files under l19hours
   }
 });
 
+
+t("new-domain header uses the v8 mark plus visible Longshore Life text; old site keeps the original badge",()=>{
+  gitClean("img/logo-header.png");
+  const neuStart=html.indexOf('if(neu)');
+  A.ok(neuStart>0);
+  // There are two if(neu) blocks (splash and header). Check both branches include the right logo.
+  A.ok(html.includes('src="img/logo-header-new.png"'));
+  A.ok(html.includes('class="hdName">Longshore Life</span>'));
+  A.ok(html.includes('src="img/logo-header.png" alt="Longshore Life" width="76" height="112"'));
+  // The new-domain header write includes the wordmark and new art, not the old badge
+  const hdr=html.slice(html.indexOf('<header id="hdr">'), html.indexOf("</header>"));
+  const hdrNeu=hdr.slice(hdr.indexOf("if(neu)"), hdr.indexOf("}else{"));
+  const hdrOld=hdr.slice(hdr.indexOf("}else{"), hdr.indexOf("})();"));
+  A.ok(hdrNeu.includes("img/logo-header-new.png") && hdrNeu.includes("hdName") && hdrNeu.includes("Longshore Life"), hdrNeu);
+  A.ok(!hdrNeu.includes("img/logo-header.png"));
+  A.ok(hdrOld.includes("img/logo-header.png") && hdrOld.includes('width="76"') && hdrOld.includes('height="112"'), hdrOld);
+  A.ok(!hdrOld.includes("logo-header-new.png") && !hdrOld.includes("hdName"));
+  A.ok(fs.existsSync(path.join(root,"img/logo-header-new.png")));
+  const s=pngSize(read("img/logo-header-new.png"));
+  A.deepStrictEqual([s.w,s.h],[240,240],"logo-header-new.png should be 80 CSS px at 3x");
+  // merch still uses the original badge
+  A.ok(html.includes('const MERCH_LOGO="img/logo-header.png"'));
+});
+
+t("service worker cache includes the new header mark and still lists the old badge",()=>{
+  const sw=fs.readFileSync(path.join(root,"sw.js"),"utf8");
+  A.ok(sw.includes('"img/logo-header.png"'));
+  A.ok(sw.includes('"img/logo-header-new.png"'));
+});
+
 console.log("\n"+pass+" passed, "+fail+" failed");
 if(fail) process.exit(1);

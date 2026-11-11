@@ -120,9 +120,12 @@ with sync_playwright() as p:
     icons=page.evaluate("""() => ({
       manifest: document.querySelector('link[rel="manifest"]')?.getAttribute('href'),
       apple: document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href'),
-      icons: [...document.querySelectorAll('link[rel="icon"]')].map(l=>l.getAttribute('href'))
+      icons: [...document.querySelectorAll('link[rel="icon"]')].map(l=>l.getAttribute('href')),
+      logo: document.getElementById('hdLogo')?.getAttribute('src'),
+      name: document.querySelector('#hdr .hdName')?.textContent||null
     })""")
     t("old site still uses the original icons", icons.get("manifest")=="manifest.json" and icons.get("apple")=="img/apple-touch-icon.png" and "icon-192.png" in icons.get("icons",[]) and "icons/icon-192.png" not in icons.get("icons",[]), icons)
+    t("old site header still uses the original badge and has no extra title text", icons.get("logo")=="img/logo-header.png" and not icons.get("name"), icons)
     ctx.close()
 
     ctx,page,logs=ctx_page(ready())
@@ -130,9 +133,13 @@ with sync_playwright() as p:
     icons=page.evaluate("""() => ({
       manifest: document.querySelector('link[rel="manifest"]')?.getAttribute('href'),
       apple: document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href'),
-      icons: [...document.querySelectorAll('link[rel="icon"]')].map(l=>l.getAttribute('href'))
+      icons: [...document.querySelectorAll('link[rel="icon"]')].map(l=>l.getAttribute('href')),
+      logo: document.getElementById('hdLogo')?.getAttribute('src'),
+      name: document.querySelector('#hdr .hdName')?.textContent||null,
+      nameVisible: !!(document.querySelector('#hdr .hdName') && getComputedStyle(document.querySelector('#hdr .hdName')).display!=='none' && (document.querySelector('#hdr .hdName').textContent||'').includes('Longshore Life'))
     })""")
     t("new site uses v8 icons and manifest-new.json", icons.get("manifest")=="manifest-new.json" and icons.get("apple")=="icons/apple-touch-icon.png" and "icons/icon-192.png" in icons.get("icons",[]) and "icons/favicon-32.png" in icons.get("icons",[]), icons)
+    t("new site header uses the v8 crane mark and shows Longshore Life as text", icons.get("logo")=="img/logo-header-new.png" and icons.get("nameVisible") and icons.get("name") and "Longshore Life" in icons.get("name"), icons)
     ctx.close()
 
     # 7. new-domain video splash: skip, ended+fade, fallback timing
@@ -142,7 +149,9 @@ with sync_playwright() as p:
         page.wait_for_selector("#splashVid", timeout=5000)
         has_old=page.evaluate("() => !!(document.getElementById('splash')||document.getElementById('splash2'))")
         src=page.evaluate("() => document.querySelector('#splashVideo source')?.getAttribute('src')")
+        title=page.evaluate("() => (document.querySelector('#splashVid .splashTitle')?.textContent||'').trim()")
         t("new site shows only the Bridges video splash", (not has_old) and src=="img/bridges-turn.mp4" and page.query_selector("#splashVid") is not None, {"old":has_old,"src":src})
+        t("new-site splash shows LONGSHORE LIFE as HTML text over the video", title=="LONGSHORE LIFE", title)
         page.click("#splashVid")
         page.wait_for_timeout(250)
         gone=page.evaluate("() => !document.getElementById('splashVid') && document.documentElement.classList.contains('spdone')")

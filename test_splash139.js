@@ -110,6 +110,26 @@ runRangeTest().then(()=>{
 }).catch(e=>{
   fail++; console.log("FAIL mp4 Range request returns 206 when the SW does not intercept it :: "+e.message);
 }).finally(()=>{
-  console.log("\n"+pass+" passed, "+fail+" failed");
+  
+t("new-site splash overlays LONGSHORE LIFE as HTML text in cream, old site does not",()=>{
+  const i=html.indexOf('if(neu)');
+  A.ok(i>0);
+  const neu=html.slice(i, html.indexOf("}else{", i));
+  const old=html.slice(html.indexOf("}else{", i), html.indexOf("})();", i));
+  A.ok(neu.includes('class="splashTitle"') && neu.includes("LONGSHORE LIFE"), neu);
+  A.ok(!neu.includes("img/splash.jpg"));
+  A.ok(!old.includes("splashTitle") && !old.includes("LONGSHORE LIFE"));
+  A.ok(html.includes("color:#f5ecd7"));
+  A.ok(html.includes('font-family:"Oswald Splash"') || html.includes("font-family:\\\"Oswald Splash\\\"") || html.includes("Oswald Splash"));
+  A.ok(html.includes("@keyframes splashTitleIn"));
+  A.ok(html.includes("prefers-reduced-motion:reduce") && html.includes("html.l19new .splashTitle{animation:none;opacity:1}"));
+  A.ok(fs.existsSync(path.join(root,"fonts/oswald-bold-subset.woff2")));
+  A.ok(fs.existsSync(path.join(root,"fonts/oswald-bold-subset.woff")));
+  const sw=fs.readFileSync(path.join(root,"sw.js"),"utf8");
+  A.ok(sw.includes("fonts/oswald-bold-subset.woff2"));
+  A.ok(!sw.includes("bridges-turn.mp4") || !sw.match(/const C="l19hours-v139",F=\[[\s\S]*bridges-turn\.mp4/));
+});
+
+console.log("\n"+pass+" passed, "+fail+" failed");
   if(fail) process.exit(1);
 });

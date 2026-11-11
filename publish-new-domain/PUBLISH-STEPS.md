@@ -49,9 +49,9 @@ Canonical host is the apex `longshorelife.app`. GitHub will redirect `www.longsh
 
 ## Icons
 
-The new v8 crane-at-sunset icon is only for `longshorelife.app`. It lives in `icons/` and `manifest-new.json`. The shared `index.html` picks those files when the host is longshorelife.app (or when testing with `?l19site=new`).
+The new v8 crane-at-sunset icon is only for `longshorelife.app`. It lives in `icons/` and `manifest-new.json`. The shared `index.html` picks those files when the host is longshorelife.app (or when testing with `?l19site=new`). The new-domain header also uses `img/logo-header-new.png` with a visible Longshore Life wordmark; the old address keeps `img/logo-header.png`.
 
-Leave the existing root files alone when you publish the old address: `icon-192.png`, `icon-512.png`, `favicon.ico`, `img/apple-touch-icon.png`, `img/icon-512-maskable.png`, and `manifest.json`. `https://scudderbuck.github.io/local19-hours/` should keep the current logo. A 512 px store upload file is at `icons/store-512.png`. The new address also uses a single Harry Bridges video splash (`img/bridges-turn.mp4`); the old address keeps the two still images (`img/splash.jpg` then `img/bridges.jpg`).
+Leave the existing root files alone when you publish the old address: `icon-192.png`, `icon-512.png`, `favicon.ico`, `img/apple-touch-icon.png`, `img/icon-512-maskable.png`, and `manifest.json`. `https://scudderbuck.github.io/local19-hours/` should keep the current logo. A 512 px store upload file is at `icons/store-512.png`. The new address also uses a single Harry Bridges video splash (`img/bridges-turn.mp4`) with a LONGSHORE LIFE title over the navy above his head; the old address keeps the two still images (`img/splash.jpg` then `img/bridges.jpg`).
 
 ## After publish, tell users
 
