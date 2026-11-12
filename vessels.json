@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-12T04:45:06-08:00",
+ "updated": "2026-11-12T07:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -126,16 +126,6 @@
    "port": "Aberdeen",
    "eta_time": false,
    "imo": "1068853"
-  },
-  {
-   "vessel": "SM MUMBAI",
-   "service": "",
-   "terminal": "T18",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-11T05:00",
-   "etd": "2026-11-11T18:00",
-   "port": "Seattle",
-   "imo": "9401051"
   },
   {
    "vessel": "NOCC ADRIATIC",
@@ -325,16 +315,6 @@
    "imo": "9367190"
   },
   {
-   "vessel": "YM MANDATE",
-   "service": "PN1",
-   "terminal": "WUT",
-   "agent": "",
-   "eta": "2026-11-15T05:00",
-   "etd": "2026-11-17T17:00",
-   "port": "Tacoma",
-   "imo": "9438523"
-  },
-  {
    "vessel": "MSC YUKTA X",
    "service": "Chinook",
    "terminal": "T5",
@@ -459,6 +439,16 @@
    "etd": "2026-11-19T19:00",
    "port": "Tacoma",
    "imo": "9935375"
+  },
+  {
+   "vessel": "YM MANDATE",
+   "service": "PN1",
+   "terminal": "WUT",
+   "agent": "",
+   "eta": "2026-11-18T05:00",
+   "etd": "2026-11-20T18:00",
+   "port": "Tacoma",
+   "imo": "9438523"
   },
   {
    "vessel": "LOTUS A",
