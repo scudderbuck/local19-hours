@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-11T19:45:05-08:00",
+ "updated": "2026-11-11T22:45:06-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -218,7 +218,7 @@
    "terminal": "EB1",
    "agent": "Inchcape",
    "eta": "2026-11-12T06:00",
-   "etd": "2026-11-12T12:00",
+   "etd": "2026-11-12T13:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9181560"
@@ -234,17 +234,6 @@
    "imo": "9930959"
   },
   {
-   "vessel": "GLOVIS LEGEND",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-12T13:00",
-   "etd": "2026-11-13T04:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "1063281"
-  },
-  {
    "vessel": "SANTA RITA MAERSK",
    "service": "WC4/TP5",
    "terminal": "Husky",
@@ -253,6 +242,17 @@
    "etd": "2026-11-16T04:00",
    "port": "Tacoma",
    "imo": "9425382"
+  },
+  {
+   "vessel": "GLOVIS LEGEND",
+   "service": "",
+   "terminal": "Blair",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-12T20:00",
+   "etd": "2026-11-13T16:30",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "1063281"
   },
   {
    "vessel": "LAUTOKA CHIEF",
@@ -272,17 +272,6 @@
    "eta": "2026-11-13T02:30",
    "etd": "2026-11-13T22:00",
    "port": "Tacoma"
-  },
-  {
-   "vessel": "GLOVIS LEGEND",
-   "service": "",
-   "terminal": "Blair",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-13T05:00",
-   "etd": "2026-11-13T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "1063281"
   },
   {
    "vessel": "CMA CGM CORNEILLE",
@@ -313,6 +302,17 @@
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "9978676"
+  },
+  {
+   "vessel": "GLOVIS LEGEND",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-13T17:30",
+   "etd": "2026-11-14T04:00",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "1063281"
   },
   {
    "vessel": "OOCL OAKLAND",
