@@ -807,7 +807,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v140",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v142",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -979,7 +979,7 @@ let PIERS=localPiers(curLocal());
 const JOBS={"Basic":[["0001","Auto Driver"],["0002","Boardman"],["0005","Dockman"],["0006","Frontman/Slingman"],["0007","Holdman"],["0008","Jitney Driver"],["0009","Lasher"],["0012","Car Man"],["0150","CFS Utility Man"],["0011","PMA Training (L/S)"]],
 "Skill 1":[["0023","Button Pusher"],["0025","Combo Lift/Jitney"],["0026","Crane Chaser"],["0028","Hatch Tender"],["0029","Lift Truck Operator"],["0031","Rail Car Pusher"],["0033","Skilled Holdman"],["0036","Tractor-Semi-Dock"],["0037","Utility Lift Driver"],["0038","Winch Driver"],["0052","Gang Boss"],["0054","Hatch Boss Tender"],["0003","Boatman"],["0030","Payloader Operator"],["0070","Bulldozer/Caterpillar"],["0071","D.O.T. Truck Driver"],["0047","UTR Ro/Ro Ship (WA)"]],
 "Skill 2":[["0055","Lift Truck-Heavy"],["0085","Crane Mobile"],["0087","Crane Shipboard"],["0088","Crane Whirley"],["0053","Payloader Over 15 Tons"],["0057","Utility Lift Driver - Work"],["0058","Utility Lift Driver - Guarantee"],["0080","Bulkloader Operator"],["0086","Crane Sheer Leg / Stiff Leg"],["0091","Excavator/Coverhoist"],["0092","Log Loader - Snapper"],["0094","Loci Operator"]],
-"Skill 3":[["0061","Top Handler"],["0062","Side Pick"],["0063","Reach Stacker"],["0065","Mobile Crane SK3"],["0083","Transtainer Operator"],["0084","Crane Container Gantry"],["0093","Straddle Carrier"],["0095","Port Packer"],["0067","Hall Crane Rated Equipment"],["0079","Mthly/Wkly UTR/ULD Work"],["0185","9.43 Terminal Worker - Terminal"],["0186","9.43 Terminal Worker - Guarantee"],["0187","9.43 Terminal Worker - Ship"],["0195","9.43 Ship Worker - Ship"],["0196","9.43 Ship Worker - Guarantee"],["0197","9.43 Ship Worker - Terminal"]],
+"Skill 3":[["0061","Top Handler"],["0062","Side Pick"],["0063","Reach Stacker"],["0065","Mobile Crane SK3"],["0083","Transtainer Operator"],["0084","Crane Container Gantry"],["0093","Straddle Carrier"],["0095","Port Packer"],["0067","Hall Crane Rated Equipment"],["0079","Mthly/Wkly UTR/ULD Work"],["0185","9.43 Terminal Worker - Terminal"],["0186","9.43 Terminal Worker - Guarantee"],["0187","9.43 Terminal Worker - Ship"],["0195","9.43 Ship Worker - Ship"],["0196","9.43 Ship Worker - Guarantee"],["0197","9.43 Ship Worker - Terminal"],["0331","L/S Dispatcher (WA)"]],
 "Foreman":[["0128","30% Foreman W/B Ship"],["0129","30% Foreman W/B Dock"],["0136","30% Foreman Guarantee"],["0138","30% Foreman (Elevated) Ship"],["0139","30% Foreman (Elevated) Dock"],["0140","30% Foreman (Steady) Ship"],["0141","30% Foreman (Steady) Dock"],["0142","30% Foreman (Steady From...)"],["0143","30% Foreman (Steady From...)"],["0180","CFS Foreman Day Shift"]]};
 /* ===== SEATTLE JOB LIST (main dropdown) — EDIT HERE =====
    [name shown, PMA code ("" = none), rate class ("Basic"|"Skill 1"|"Skill 2"|"Skill 3"|"" = NO default rate; only set when confirmed - user says there are only 3 pay scales, so mapping to PMA classes is not assumed), status, note]
@@ -1005,6 +1005,7 @@ const SEATTLE_JOBS=[
 ["Crane op","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
 ["Flex crane","","Skill 3","user","v135: Flex = Crane op + 1 flex hour (paid at OT via auto OT); same code/class/rates as Crane op"],
 ["RTG","","Skill 3","user","User-stated Skill 3 pay rates (all crane jobs are Skill 3); no occupation code assigned"],
+["Dispatcher","0331","Skill 3","user","v142: 0331 per Daniel (Nov 13 2026), Skill 3 rates. PMA Occupation Codes and Rates 2026 (pmpr1007, wk ending 10-Jul-2026, group D01 JPLRC Rates): 0331 L/S DISPATCHERS, WA row 64.65 / 86.20 / 103.44 ST = the Skill III rate. Other areas pay 0331 differently (SC = Skill II rate), so the JOBS entry is tagged (WA)"],
 ["Bus","0055","Skill 2","user","User-stated code 0055 Lift Truck-Heavy, Skill 2 (PMA list); rates from Skill 2 schedule"],
 ["Sweeper","0037","Skill 1","user","T91/Pier 66 cruise sheets: Sweepers 037 Skill I (PMA 0037 Utility Lift Driver); Skill 1 rates"],
 ["Millwright","","","none","No matching PMA code; enter yourself"],
@@ -1222,8 +1223,9 @@ function pierHours(pier,job){{const fb=flexBase(job);if(fb){const b=pierHours(pi
    Flex structure ONLY for clerks (Local 52 / PCCCD clerk jobs) and foremen (Walking boss / Foreman, PMA 30% foreman codes, any local):
    flex = hour(s) worked BEFORE the shift start, paid at OT; 10-h shift; up to 2 OT h after; 13-h max hint. Clerks 10 h, Supercargo 11 h (1 flex + 10), Chief 10 h (+ up to 2 flex).
    Hours are one total: auto OT counts every hour past 8 (5 on 3rd shift) once, so a flex hour is never paid twice.
-   Defaults fill only on 1st/2nd shift (3rd shift = hoot owl, 5-h standard: you enter the hours). Pier cruise-sheet hours (P91/P66) win over these. CWOG keeps its own 10 h. */
-const DEFH_10=["Top pick","0061","Side pick","0062","Straddle carrier","0093","Bus","Bus driver (dock)","Sweeper"],
+   Defaults fill only on 1st/2nd shift (3rd shift = hoot owl, 5-h standard: you enter the hours). Pier cruise-sheet hours (P91/P66) win over these. CWOG keeps its own 10 h.
+   v142: Dispatcher (0331) = 10 h (Daniel, Nov 13 2026). */
+const DEFH_10=["Top pick","0061","Side pick","0062","Straddle carrier","0093","Bus","Bus driver (dock)","Sweeper","Dispatcher","0331"],
  DEFH_CRANE=["Crane op","Mobile crane","Mobile harbor crane (over 60t)","0084","0085","0086","0087","0088","0065","0067","Shipboard Munck crane operator"],
  DEFH_12=["Top pick","0061",...DEFH_CRANE],DEFH_FC_MAX=13,DEFH_12_MAX=12,DEFH_DOCK_MAX=11;
 function isClerkJob(j){return CLERK_SEATTLE.includes(j)||CLERK_JOBS.some(c=>c[0]===j);}
@@ -1457,7 +1459,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v140",CACHE_VERSION="l19hours-v140"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v142",CACHE_VERSION="l19hours-v142"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 /* v139: move saved data to https://longshorelife.app without putting a custom domain on this project repo.
    Pure helpers below are unit-tested in node. */
