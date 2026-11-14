@@ -95,6 +95,10 @@
   "checked": "2026-10-19",
   "imo": "9409170"
  },
+ "COSCO JEDDAH": {
+  "checked": "2026-11-14",
+  "imo": "9484352"
+ },
  "COSCO SANTOS": {
   "checked": "2026-10-17",
   "imo": "9484376"
@@ -138,6 +142,10 @@
  "EVER MATCH": {
   "checked": "2026-11-07",
   "imo": "9935387"
+ },
+ "EVER MEMO": {
+  "checked": "2026-11-14",
+  "imo": "9935272"
  },
  "EVER MODE": {
   "checked": "2026-10-19",
@@ -331,9 +339,17 @@
   "checked": "2026-10-25",
   "imo": "9321249"
  },
+ "MOL COURAGE": {
+  "checked": "2026-11-14",
+  "imo": "9321263"
+ },
  "MORNING LADY": {
   "checked": "2026-11-07",
   "imo": "9445980"
+ },
+ "MORNING LAURA": {
+  "checked": "2026-11-14",
+  "imo": "9445992"
  },
  "MORNING LILY": {
   "checked": "2026-10-24",
@@ -375,6 +391,10 @@
   "checked": "2026-10-31",
   "imo": "9978975"
  },
+ "MSC GAYANE": {
+  "checked": "2026-11-14",
+  "imo": "9770763"
+ },
  "MSC HORTENSE": {
   "checked": "2026-10-17",
   "imo": "9978951"
@@ -390,6 +410,10 @@
  "MSC NITYA B": {
   "checked": "2026-10-16",
   "imo": "9778117"
+ },
+ "MSC PISA": {
+  "checked": "2026-11-14",
+  "imo": "9978999"
  },
  "MSC SABRINA": {
   "checked": "2026-10-16",
@@ -439,6 +463,10 @@
   "checked": "2026-10-19",
   "imo": "9424912"
  },
+ "ONE MANHATTAN": {
+  "checked": "2026-11-14",
+  "imo": "9689615"
+ },
  "ONE MODERN": {
   "checked": "2026-10-19",
   "imo": "9475636"
@@ -474,6 +502,10 @@
  "PAGANELLA LEADER": {
   "checked": "2026-11-10",
   "imo": null
+ },
+ "PARANA": {
+  "checked": "2026-11-14",
+  "imo": "9427964"
  },
  "PATARA": {
   "checked": "2026-10-19",
@@ -603,6 +635,10 @@
   "checked": "2026-10-19",
   "imo": "9450416"
  },
+ "WALRUS ACE": {
+  "checked": "2026-11-14",
+  "imo": "9777826"
+ },
  "WESTWOOD COLUMBIA": {
   "checked": "2026-10-16",
   "imo": "9226047"
@@ -626,6 +662,10 @@
  "XIN DAN DONG": {
   "checked": "2026-11-01",
   "imo": "9312597"
+ },
+ "XIN SHAN TOU": {
+  "checked": "2026-11-14",
+  "imo": "9309942"
  },
  "XIN YING KOU": {
   "checked": "2026-10-16",
