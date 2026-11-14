@@ -23,7 +23,7 @@ URL = "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf"
 TZ = ZoneInfo("America/Los_Angeles")
 DATE = re.compile(r"^\d{1,2}/\d{1,2}/\d{4}$")
 TIME = re.compile(r"^\d{1,2}:\d{2}$")
-UA = "local19-hours-vessel-fetch/1.0 (+https://github.com/scudderbuck/local19-hours)"
+UA = "LongshoreLife/1.0 (+https://longshorelife.app)"
 
 def iso(d, t):
     m, dd, y = map(int, d.split("/")); h, mi = map(int, t.split(":"))
@@ -101,7 +101,7 @@ def parse(pdf_bytes):
 
 # --------------------------------------------------------------------------- IMO lookup (unchanged)
 VF = "https://www.vesselfinder.com/vessels?name="
-VF_UA = "Mozilla/5.0 (compatible; local19-hours-vessel-fetch/1.0; +https://github.com/scudderbuck/local19-hours)"
+VF_UA = "LongshoreLife/1.0 (+https://longshorelife.app)"
 ROW = re.compile(r'href="/vessels/details/(\d{7})".*?class="slna">([^<]*)<', re.S)
 
 def norm(n):
@@ -471,7 +471,7 @@ def main():
     if len(sys.argv) > 2:
         data = open(sys.argv[2], "rb").read()
     else:
-        req = urllib.request.Request(URL, headers={"User-Agent": "local19-hours-vessel-fetch/1.0"})
+        req = urllib.request.Request(URL, headers={"User-Agent": UA})
         data = urllib.request.urlopen(req, timeout=60).read()
     rows, updated = parse(data)
     if not any(r["port"] == "Seattle" for r in rows) or not updated:

@@ -54,7 +54,7 @@ t("new-site markup branch has the video and poster, not the shield splash",()=>{
 
 t("service worker does not precache the mp4 and lets Range requests pass through",()=>{
   const sw=fs.readFileSync(path.join(root,"sw.js"),"utf8");
-  const list=sw.match(/const C="l19hours-v145",F=\[([\s\S]*?)\];/)[1];
+  const list=sw.match(/const C="l19hours-v146",F=\[([\s\S]*?)\];/)[1];
   A.ok(!list.includes("bridges-turn.mp4") && !list.includes("bridges-turn.webm"), list);
   A.ok(list.includes("img/bridges-turn-poster.jpg"));
   A.ok(sw.includes("Range requests"));
@@ -134,7 +134,7 @@ t("new-site splash overlays merch-style LONGSHORE LIFE lockup, old site does not
   A.ok(sw.includes("fonts/anton-regular-subset.woff2"));
   A.ok(sw.includes("img/splash-grunge.png"));
   A.ok(!sw.includes("alfa-slab") && !sw.includes("oswald-bold-subset"));
-  A.ok(!sw.includes("bridges-turn.mp4") || !sw.match(/const C="l19hours-v145",F=\[[\s\S]*bridges-turn\.mp4/));
+  A.ok(!sw.includes("bridges-turn.mp4") || !sw.match(/const C="l19hours-v146",F=\[[\s\S]*bridges-turn\.mp4/));
 });
 
 console.log("\n"+pass+" passed, "+fail+" failed");
