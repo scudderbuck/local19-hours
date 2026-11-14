@@ -6,7 +6,7 @@ Usage: fetch_news.py [out.json]"""
 import email.utils, html, json, os, re, sys, urllib.parse, urllib.request, datetime as dt
 import xml.etree.ElementTree as ET
 
-UA = "Mozilla/5.0 (compatible; LongshoreLifeNews/1.0; +https://github.com/scudderbuck/local19-hours)"
+UA = "LongshoreLife/1.0 (+https://longshorelife.app)"
 G = "https://news.google.com/rss/search?hl=en-US&gl=US&ceid=US:en&q="
 # (label, url, mode)  mode: "all" = official union/employer feed, keep everything; "rel" = keep only relevant items
 FEEDS = [
