@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-13T19:45:05-08:00",
+ "updated": "2026-11-13T22:45:06-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -293,6 +293,16 @@
    "imo": "9463085"
   },
   {
+   "vessel": "MAERSK SARNIA",
+   "service": "WC4/TP5",
+   "terminal": "Husky",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-17T21:00",
+   "etd": "2026-11-20T18:00",
+   "port": "Tacoma",
+   "imo": "9289946"
+  },
+  {
    "vessel": "MATSON KODIAK",
    "service": "Matson - AK",
    "terminal": "WST",
@@ -342,16 +352,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9641833"
-  },
-  {
-   "vessel": "MAERSK SARNIA",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-18T06:00",
-   "etd": "2026-11-20T18:00",
-   "port": "Tacoma",
-   "imo": "9289946"
   },
   {
    "vessel": "CAPE SAN JUAN",
@@ -647,6 +647,16 @@
    "imo": "9979084"
   },
   {
+   "vessel": "YM TROPHY",
+   "service": "FP2",
+   "terminal": "Husky",
+   "agent": "Inchcape",
+   "eta": "2026-11-24T06:00",
+   "etd": "2026-11-29T04:00",
+   "port": "Tacoma",
+   "imo": "9789996"
+  },
+  {
    "vessel": "MATSON TACOMA",
    "service": "Ad Hoc",
    "terminal": "WST",
@@ -655,16 +665,6 @@
    "etd": "2026-11-24T17:00",
    "port": "Tacoma",
    "imo": "8419154"
-  },
-  {
-   "vessel": "YM TROPHY",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-11-24T16:00",
-   "etd": "2026-11-26T17:00",
-   "port": "Tacoma",
-   "imo": "9789996"
   },
   {
    "vessel": "R.J. PFEIFFER",
