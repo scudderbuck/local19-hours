@@ -129,8 +129,8 @@ t("index.html serves new icons only on the new domain, and still references the 
   A.ok(html.includes('l19site'));
 });
 
-t("service worker cache lists both the old and the new icon files under l19hours-v144",()=>{
-  A.ok(sw.includes('const C="l19hours-v144"'));
+t("service worker cache lists both the old and the new icon files under l19hours-v145",()=>{
+  A.ok(sw.includes('const C="l19hours-v145"'));
   for(const f of ["manifest.json","icon-192.png","icon-512.png","img/icon-512-maskable.png","img/apple-touch-icon.png","favicon.ico",
                   "manifest-new.json","icons/icon-192.png","icons/icon-512.png","icons/maskable-192.png","icons/maskable-512.png",
                   "icons/apple-touch-icon.png","icons/favicon-32.png","icons/favicon-16.png","icons/favicon.ico"]){

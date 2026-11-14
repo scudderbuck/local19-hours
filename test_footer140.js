@@ -19,10 +19,10 @@ function visibleChunks(src){
   return parts.join("\n");
 }
 
-t("version is v144 and the service worker cache name matches",()=>{
-  A.ok(html.includes('var L19_BOOT_VER="v144"'));
-  A.ok(html.includes('const APP_VERSION="v144",CACHE_VERSION="l19hours-v144"'));
-  A.ok(sw.includes('const C="l19hours-v144"'));
+t("version is v145 and the service worker cache name matches",()=>{
+  A.ok(html.includes('var L19_BOOT_VER="v145"'));
+  A.ok(html.includes('const APP_VERSION="v145",CACHE_VERSION="l19hours-v145"'));
+  A.ok(sw.includes('const C="l19hours-v145"'));
   A.ok(!sw.includes('const C="l19hours-v139"'));
 });
 

@@ -1,0 +1,38 @@
+/* v145: Google Play user-generated-content requirements for Chat: rules accepted before the first post, report a message
+   or a person, block/unblock (local, in backups), Blocked people list, "Delete my chat data". Run: node test_ugc145.js [index.html] */
+const fs=require("fs"),A=require("assert"),path=require("path");
+const file=process.argv[2]||path.join(__dirname,"index.html");
+const html=fs.readFileSync(file,"utf8"),sw=fs.readFileSync(path.join(path.dirname(file),"sw.js"),"utf8");
+const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<script>/,"").replace(/<\/script>$/,"")).sort((a,b)=>b.length-a.length)[0];
+const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
+let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
+const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+t("version is v145 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v145");A.strictEqual(L.L19_BOOT_VER,"v145");A.strictEqual(L.CACHE_VERSION,"l19hours-v145");A.ok(sw.includes('const C="l19hours-v145"'));});
+t("chat rules name every kind of objectionable content",()=>{const r=L.CHAT_RULES.join(" ").toLowerCase();for(const w of ["harassment","hate","threat","sexual","spam","illegal","private information"])A.ok(r.includes(w),w);});
+t("rules html: zero tolerance, contact, independent-app disclaimer, escaped",()=>{const h=L.chatTermsHtml(E);A.ok(/Zero tolerance/.test(h));A.ok(h.includes("kingofthedocks.app@gmail.com"));A.ok(/not affiliated with or endorsed by the ILWU or the PMA/.test(h));A.ok(!h.includes("don't"));A.strictEqual((h.match(/<li>/g)||[]).length,L.CHAT_RULES.length);});
+t("termsOk only for the current rules version",()=>{A.strictEqual(L.termsOk(L.CHAT_TERMS_VER),true);for(const v of ["","1",null,undefined,"2026-01-01"])A.strictEqual(L.termsOk(v),false);A.strictEqual(L.CHAT_TERMS_KEY,"l19.chatTerms");});
+t("rules + delete-data URLs are on longshorelife.app",()=>{A.strictEqual(L.CHAT_TERMS_URL,"https://longshorelife.app/terms.html");A.strictEqual(L.CHAT_DELETE_URL,"https://longshorelife.app/delete-data.html");});
+t("send() asks for the rules before anything is posted",()=>{const s=js.slice(js.indexOf("async function send()"),js.indexOf("f.addDoc(f.collection(FB.db,\"rooms\",cc(),\"messages\")"));A.ok(s.includes('if(!termsOk(ls(CHAT_TERMS_KEY,""))){termsSheet(()=>send());return;}'));});
+t("gear sharing (cards + diagram) is gated on the rules too",()=>{A.ok(js.includes("Accept the chat rules to share it with the room."));A.ok(js.includes("if(window.l19Terms&&!window.l19Terms.ok())return;"));A.ok(js.includes("Accept the chat rules first, then add the picture again."));A.ok(js.includes("window.l19Terms={ok:"));});
+t("terms sheet needs the checkbox and saves the version",()=>{A.ok(js.includes('if(!g("trC").checked)'));A.ok(js.includes("lss(CHAT_TERMS_KEY,CHAT_TERMS_VER)"));});
+t("⋯ menu on someone else's message: report message, report person, block",()=>{A.deepStrictEqual(L.menuActions({me:"a",uid:"b",role:""}),["report","reportUser","block"]);});
+t("blocked person: menu offers unblock",()=>{A.deepStrictEqual(L.menuActions({me:"a",uid:"b",blocked:true}),["report","reportUser","unblock"]);});
+t("own message: no report/block in the menu",()=>{A.deepStrictEqual(L.menuActions({me:"a",uid:"a"}).filter(x=>/report|block/i.test(x)),[]);});
+t("moderation actions still follow report/block for staff",()=>{const a=L.menuActions({me:"a",uid:"b",role:"admin"});A.deepStrictEqual(a.slice(0,3),["report","reportUser","block"]);A.ok(a.includes("mute"));A.ok(a.includes("pin"));});
+t("every menu action has a label",()=>{for(const k of ["report","reportUser","block","unblock"])A.ok(L.MOD_LABEL[k],k);});
+t("reports: message vs person, Sexual reason, 200-char cap",()=>{A.strictEqual(L.chatReason("Hate","x"),"Hate: x");A.strictEqual(L.chatReason("Sexual","",true),"User · Sexual");A.ok(L.CHAT_REASONS.includes("Sexual"));
+  A.deepStrictEqual(L.chatReasonSplit("User · Threat: said he'd wait"),{cat:"Threat",note:"said he'd wait",user:true});A.deepStrictEqual(L.chatReasonSplit("Spam"),{cat:"Spam",note:"",user:false});A.deepStrictEqual(L.chatReasonSplit("weird"),{cat:"",note:"weird",user:false});
+  A.ok(L.chatReason("Other","x".repeat(500),true).length<=200);});
+t("report-a-person sheet + PERSON tag in the moderators' list",()=>{A.ok(js.includes('function repSheet(id,user)'));A.ok(js.includes('repSheet(id,x==="reportUser")'));A.ok(js.includes("PERSON</span>"));});
+t("people panel has Block/Unblock",()=>{A.ok(js.includes('data-bk="'));A.ok(js.includes('.chp button[data-bk]'));});
+t("main chat links to rules, Blocked people and Delete my chat data",()=>{for(const s of ['data-sub="rules"','data-sub="blocked"','data-sub="delete"'])A.ok(js.includes(s),s);});
+t("block list is still part of the settings backup",()=>{A.ok(js.includes('const CHAT_BLOCK_KEY="l19.chatBlocked"'));A.ok(/CHAT_BLOCK_KEY/.test(js.slice(js.indexOf("lsJson=")-200,js.indexOf("lsJson=")+3000)));});
+t("chatRooms: saved codes + the 4 locals + Coastwide, no dupes, cleaned",()=>{A.deepStrictEqual(L.chatRooms(["my crew","LOCAL19",""," ",null]),["MYCREW","LOCAL19","LOCAL23","LOCAL52","LOCAL98","COASTWIDE"]);A.deepStrictEqual(L.chatRooms(),["LOCAL19","LOCAL23","LOCAL52","LOCAL98","COASTWIDE"]);});
+t("chatLocalKeys: only l19.chat* keys",()=>{A.deepStrictEqual(L.chatLocalKeys(["l19.chatName","l19.chatCode.23","l19.chatBlocked","l19.chatTerms","l19.entries","l19.settings","chat"]),["l19.chatName","l19.chatCode.23","l19.chatBlocked","l19.chatTerms"]);});
+t("wipe deletes own messages, pins, reports; scrubs gear names; deletes the anonymous account",()=>{const w=js.slice(js.indexOf("async function wipe("),js.indexOf("/* v112: report sheet:"));
+  for(const s of ['"messages"),f.where("uid","==",me)','"pins"),f.where("uid","==",me)','"reports"),f.where("reporter","==",me)','delete y.updatedByName','"img","diagram"','FB.au.deleteUser(FB.auth.currentUser)','FB.au.signOut(FB.auth)','chatLocalKeys(Object.keys(localStorage))'])A.ok(w.includes(s),s);
+  A.ok(!/deleteDoc\([^)]*muted|banned"\)?,me/.test(w),"mute/ban records are kept");A.ok(js.includes("FB={fs,db,auth,au};"));});
+t("delete screen says what is deleted and links the web page",()=>{A.ok(js.includes("Every message you posted from this phone"));A.ok(js.includes("CHAT_DELETE_URL"));A.ok(js.includes("This can’t be undone."));});
+t("owner how-to on the setup screen is collapsed",()=>{A.ok(!js.includes("<details open><summary>Owner: make the first admin"));A.ok(js.includes("<details><summary>Owner: make the first admin"));});
+t("no personal name, username or owner uid in the v145 code",()=>{const seg=js.slice(js.indexOf("/* v145: chat rules"),js.indexOf("function chatLocalKeys"))+js.slice(js.indexOf("/* v145: rules sheet"),js.indexOf("/* v112: report sheet:"));A.ok(seg.length>3000);A.ok(!/daniel|scudder|IuAjd5/i.test(seg));});
+console.log("\n"+pass+" passed, "+fail+" failed");process.exit(fail?1:0);

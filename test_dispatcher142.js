@@ -8,10 +8,10 @@ const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<s
 const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
 let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
 
-t("version is v144 and the service worker cache name matches",()=>{
-  A.strictEqual(L.L19_BOOT_VER,"v144");
-  A.ok(html.includes('const APP_VERSION="v144",CACHE_VERSION="l19hours-v144"'));
-  A.ok(sw.includes('const C="l19hours-v144"'));
+t("version is v145 and the service worker cache name matches",()=>{
+  A.strictEqual(L.L19_BOOT_VER,"v145");
+  A.ok(html.includes('const APP_VERSION="v145",CACHE_VERSION="l19hours-v145"'));
+  A.ok(sw.includes('const C="l19hours-v145"'));
 });
 t("0331 is in the PMA Skill 3 group (tagged WA) and nowhere else",()=>{
   A.ok(L.JOBS["Skill 3"].some(([c,n])=>c==="0331"&&n==="L/S Dispatcher (WA)"));
