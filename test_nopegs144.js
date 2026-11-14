@@ -6,7 +6,7 @@ const html=fs.readFileSync(file,"utf8"),sw=fs.readFileSync(path.join(path.dirnam
 const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<script>/,"").replace(/<\/script>$/,"")).sort((a,b)=>b.length-a.length)[0];
 const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
 let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
-t("version is v145 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v145");A.strictEqual(L.L19_BOOT_VER,"v145");A.strictEqual(L.CACHE_VERSION,"l19hours-v145");A.ok(sw.includes('const C="l19hours-v145"'));});
+t("version is v146 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v146");A.strictEqual(L.L19_BOOT_VER,"v146");A.strictEqual(L.CACHE_VERSION,"l19hours-v146");A.ok(sw.includes('const C="l19hours-v146"'));});
 t("PEGS_ENABLED is false and pegsOn() is off for every local",()=>{A.strictEqual(L.PEGS_ENABLED,false);for(const n of ["19","23","52","98",undefined])A.strictEqual(L.pegsOn(n),false,String(n));A.ok(js.includes("const PEGS_ENABLED=false;"));});
 t("flip the flag and Pegs comes back for Local 19 only",()=>{const j2=js.replace("const PEGS_ENABLED=false;","const PEGS_ENABLED=true;"),m2={exports:{}};new Function("module",j2)(m2);A.strictEqual(m2.exports.pegsOn("19"),true);A.strictEqual(m2.exports.pegsOn("23"),false);});
 t("bottom bar: Pegs button is in the markup but hidden; the nav starts in equal-width mode",()=>{A.ok(html.includes('<nav class="tabs nopg" aria-label="Main">'));A.ok(html.includes('<button type="button" data-v="pegs" aria-label="Pegs" hidden>'));
