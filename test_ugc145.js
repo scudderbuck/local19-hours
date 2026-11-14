@@ -7,7 +7,7 @@ const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<s
 const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
 let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
 const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-t("version is v146 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v146");A.strictEqual(L.L19_BOOT_VER,"v146");A.strictEqual(L.CACHE_VERSION,"l19hours-v146");A.ok(sw.includes('const C="l19hours-v146"'));});
+t("version is v147 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v147");A.strictEqual(L.L19_BOOT_VER,"v147");A.strictEqual(L.CACHE_VERSION,"l19hours-v147");A.ok(sw.includes('const C="l19hours-v147"'));});
 t("chat rules name every kind of objectionable content",()=>{const r=L.CHAT_RULES.join(" ").toLowerCase();for(const w of ["harassment","hate","threat","sexual","spam","illegal","private information"])A.ok(r.includes(w),w);});
 t("rules html: zero tolerance, contact, independent-app disclaimer, escaped",()=>{const h=L.chatTermsHtml(E);A.ok(/Zero tolerance/.test(h));A.ok(h.includes("kingofthedocks.app@gmail.com"));A.ok(/not affiliated with or endorsed by the ILWU or the PMA/.test(h));A.ok(!h.includes("don't"));A.strictEqual((h.match(/<li>/g)||[]).length,L.CHAT_RULES.length);});
 t("termsOk only for the current rules version",()=>{A.strictEqual(L.termsOk(L.CHAT_TERMS_VER),true);for(const v of ["","1",null,undefined,"2026-01-01"])A.strictEqual(L.termsOk(v),false);A.strictEqual(L.CHAT_TERMS_KEY,"l19.chatTerms");});
