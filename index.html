@@ -181,6 +181,11 @@ button,input,select{font-size:1rem}
 
 /* v53: chat roles + shared boards */
 .rb{display:inline-block;font-size:.75rem;line-height:1;padding:3px 6px;border-radius:6px;margin-left:6px;font-weight:800;background:#ffd23f;color:#00214e;vertical-align:middle}.rb.m{background:#9fd8ff;color:#00214e}
+/* v143: owner badge, pinned banner, muted notice, message menu */
+.rb.o{background:#ff7a1a;color:#00214e}.rb.x{background:#ff8a80;color:#3a1020}.chm.me .rb.o{background:#00214e;color:#ff9a4a}
+.chpin{display:flex;gap:8px;align-items:flex-start;border:1px solid #ffd23f;border-left:6px solid #ffd23f;background:#0a2f66;border-radius:10px;padding:8px 10px;margin:8px 0;font-weight:700}.chpin .pt{flex:1;min-width:0;cursor:pointer}.chpin .pn{font-size:.875rem;color:#ffd23f;font-weight:800}.chpin .tx{white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.chpin button{min-height:44px;white-space:nowrap}
+.chmute{border-left:4px solid #9fd8ff;padding:6px 10px;margin:8px 0;background:#0a2f66;border-radius:6px;font-weight:700}.chm.pinned{outline:2px solid #ffd23f;outline-offset:1px}
+.mdg{display:grid;gap:6px}.mdg button{min-height:48px;text-align:left;padding:0 14px;font-weight:700}.mdg button.d{color:#b3261e}.mdq{margin:0;padding:8px 10px;border-left:4px solid #3b5a8c;background:#eef3fa;color:#00214e;border-radius:6px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:30vh;overflow:auto}
 .chm.me .rb{background:#00214e;color:#ffd23f}.chm.me .rb.m{background:#17407f;color:#fff}
 .chat code{display:block;word-break:break-all;background:#001a3d;border:1px solid #ffd23f;border-radius:8px;padding:10px;color:#fff;font-weight:700;font-size:1rem;user-select:all;-webkit-user-select:all}
 .chat details{margin:8px 0}.chat summary{min-height:44px;display:flex;align-items:center;color:#ffd23f;cursor:pointer}.chat ol{margin:6px 0;padding-left:22px}.chat li{margin:4px 0}
@@ -807,7 +812,7 @@ body.gopen{overflow:hidden}
    Before any version's migration code below touches storage, every app key (all localStorage keys starting "l19") is copied in memory;
    on a version change that copy is saved to a separate IndexedDB database ("l19safety", last 6 kept) so Backup > "Restore previous data" can bring it back.
    Nothing here ever deletes or renames an app key. */
-var L19_BOOT_VER="v142",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
+var L19_BOOT_VER="v143",L19_VER_KEY="l19.appVer",L19_SAFE_DB="l19safety",L19_SAFE_KEEP=6;
 function l19Keys(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);}}catch(e){}return o;}
 var l19Boot={prev:null,snap:null,err:null};
 try{if(typeof localStorage!=="undefined"){l19Boot.prev=localStorage.getItem(L19_VER_KEY);if(l19Boot.prev!==L19_BOOT_VER){var s0=l19Keys();if(Object.keys(s0).length)l19Boot.snap=s0;else{try{localStorage.setItem(L19_VER_KEY,L19_BOOT_VER);}catch(e){}}}}}catch(e){}
@@ -1459,7 +1464,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 /* ===== v30 features: pure logic (tested in node) ===== */
 const rd2=x=>Math.round(x*100)/100;
 /* ===== v35: travel/mileage, report, rates version, year summary, tour (pure, tested in node) ===== */
-const APP_VERSION="v142",CACHE_VERSION="l19hours-v142"; /* keep CACHE_VERSION equal to the cache name in sw.js */
+const APP_VERSION="v143",CACHE_VERSION="l19hours-v143"; /* keep CACHE_VERSION equal to the cache name in sw.js */
 const RATES_VERSION={id:"2026-07-04",label:"2026-27 PCL schedule"};
 /* v139: move saved data to https://longshorelife.app without putting a custom domain on this project repo.
    Pure helpers below are unit-tested in node. */
@@ -4998,6 +5003,22 @@ function shareWhere(sh,key){const p=sh.pl[key];if(!p)return"not placed";const m=
 function roleLabel(r){return r==="admin"?"ADMIN":r==="moderator"?"MOD":"";}
 function roleCanDelete(role,msgUid,myUid){return !!myUid&&(msgUid===myUid||role==="admin"||role==="moderator");}
 function roleCanChange(role,targetUid,myUid){return role==="admin"&&!!targetUid&&targetUid!==myUid;}
+/* v143: app owner = admin in every room (owners/{uid} in Firestore, set in the console only; the server rules enforce it, the app only mirrors it).
+   Pins: rooms/{room}/pins/{msgId} (admins). Mute: rooms/{room}/muted/{uid} (staff, this room). Ban: banned/{uid} (owner, every room). */
+const OWNER_BADGE="ADMIN · Longshore Life",PIN_MAX=3;
+function modRole(role,owner){return owner?"admin":(role==="admin"||role==="moderator"?role:"member");}
+function pinsFor(pins,chan){return (Array.isArray(pins)?pins:[]).filter(p=>p&&p.id&&p.channel===chan&&p.text).slice().sort((a,b)=>(b.ms||0)-(a.ms||0)).slice(0,PIN_MAX);}
+function pinDocOf(m,me){return {text:chatText(m&&m.text).slice(0,500)||"…",name:chatName(m&&m.name)||"?",uid:String(m&&m.uid||"").slice(0,128),channel:CHAT_CHANNELS.includes(m&&m.channel)?m.channel:CHAT_CHANNELS[0],by:String(me||"")};}
+function modDocOf(name,me){return {name:chatName(chatSplitTag(name).name)||"?",by:String(me||"")};}
+/* which moderation actions the menu offers. o = {role, owner, me, uid (author), targetOwner, pinned, muted, banned} */
+function modActions(o){o=o||{};const r=modRole(o.role,o.owner),adm=r==="admin",staff=adm||r==="moderator",other=!!o.uid&&o.uid!==o.me&&!o.targetOwner,a=[];
+ if(adm)a.push(o.pinned?"unpin":"pin");
+ if(staff&&other)a.push(o.muted?"unmute":"mute");
+ if(o.owner&&other)a.push(o.banned?"unban":"ban");
+ return a;}
+const MOD_LABEL={pin:"📌 Pin to top of channel",unpin:"Unpin",mute:"🔇 Mute in this room",unmute:"🔈 Unmute in this room",ban:"⛔ Ban from posting in all chats",unban:"Unban (allow posting again)"};
+function muteNotice(muted,banned){return banned?"Posting is paused for this phone in all chat rooms. You can still read. If you think this is a mistake, use the contact in About."
+ :muted?"A moderator has muted you in this room for now, so you can read but not post here. If you think this is a mistake, use the contact in About.":"";}
 function rolePeople(msgs,roles){const seen=new Map();for(const m of (msgs||[]).slice().reverse()){if(m&&m.uid&&!seen.has(m.uid))seen.set(m.uid,String(m.name||"?"));}for(const id of Object.keys(roles||{}))if(!seen.has(id))seen.set(id,String(roles[id].name||"(no name)"));
  return[...seen].map(([uid,name])=>({uid:uid,name:name,role:roles&&roles[uid]?roles[uid].role:""}));}
 
@@ -5013,20 +5034,37 @@ let FB=null,fbP=null,unsub=null,msgs=[],chan=CHAT_CHANNELS.includes(ls(KH,""))?l
 let panel="",roles={},rolesUnsub=null,rolesCode="",rolesErr="",reps=null,repErr="",pnote="";const lis=[];
 /* v112: block list + this phone's recent sends (for the repeat/rate checks) */
 let sendHist=[],repMsgs={};
+/* v143: owner + pins + mute/ban state */
+let owner=false,ownerOf={},pins=[],pinsErr="",mutedMe=false,bannedMe=false,mutedMap={},bannedMap={},roomCode="",roomSubs=[],stfSub=null,banSub=null,banAllSub=null;
 function blocked(){try{return chatBlockClean(JSON.parse(localStorage.getItem(CHAT_BLOCK_KEY)||"[]"));}catch(e){return [];}}
 function blockSave(a){lss(CHAT_BLOCK_KEY,JSON.stringify(chatBlockClean(a)));}
 function isBlocked(u){return !!u&&blocked().some(x=>x.uid===u);}
 function load(){if(fbP)return fbP;fbP=(async()=>{const app=await import(CHAT_SDK+"firebase-app.js"),au=await import(CHAT_SDK+"firebase-auth.js"),fs=await import(CHAT_SDK+"firebase-firestore.js");
  const a=app.getApps().length?app.getApp():app.initializeApp(CHAT_CFG),auth=au.getAuth(a),db=fs.getFirestore(a);
  if(!auth.currentUser)await au.signInAnonymously(auth);
- FB={fs,db,auth};return FB;})().catch(e=>{fbP=null;throw e;});return fbP;}
+ FB={fs,db,auth};
+ /* v143: read owners/{uid} once per load; any error (rules not published yet, offline) = not owner */
+ const me=auth.currentUser.uid;try{const d=await fs.getDoc(fs.doc(db,"owners",me));owner=d.exists();}catch(e){owner=false;}ownerOf[me]=owner;
+ try{banSub=fs.onSnapshot(fs.doc(db,"banned",me),d=>{bannedMe=d.exists();fire();},()=>{bannedMe=false;});}catch(e){}
+ if(owner){try{banAllSub=fs.onSnapshot(fs.collection(db,"banned"),s=>{const m={};s.docs.forEach(d=>{m[d.id]=String(d.data().name||"");});bannedMap=m;fire();},()=>{});}catch(e){}}
+ return FB;})().catch(e=>{fbP=null;throw e;});return fbP;}
 function stop(){if(unsub){try{unsub();}catch(e){}unsub=null;}}
 function uid(){return FB&&FB.auth.currentUser?FB.auth.currentUser.uid:"";}
-function role(){const r=roles[uid()];return r?r.role:"member";}
+function role(){const r=roles[uid()];return modRole(r?r.role:"member",owner);}
 function staff(){return roleCanDelete(role(),"",uid())||role()==="admin"||role()==="moderator";}
 function isAdm(){return role()==="admin";}
-function badge(u){const r=roles[u];return r?'<span class="rb'+(r.role==="admin"?"":" m")+'">'+roleLabel(r.role)+'</span>':"";}
+function badge(u){if(ownerOf[u]===true)return '<span class="rb o">'+OWNER_BADGE+'</span>';const r=roles[u];return r?'<span class="rb'+(r.role==="admin"?"":" m")+'">'+roleLabel(r.role)+'</span>':"";}
 function fire(){lis.forEach(f=>{try{f();}catch(e){}});const v=g("v-chat");if(v&&!v.classList.contains("hide")&&!settings&&ls(KN,"")&&cc()){if(panel)paintPanel();else if(g("chL"))paintMain();}else if(settings&&g("chRl"))fillId();}
+/* v143: per-room listeners: pins (everyone), my own muted doc (notice), the room's muted list (staff only) */
+function roomStop(){roomSubs.forEach(f=>{try{f();}catch(e){}});roomSubs=[];if(stfSub){try{stfSub();}catch(e){}stfSub=null;}roomCode="";pins=[];pinsErr="";mutedMe=false;mutedMap={};}
+function roomWatch(){if(!FB)return;const code=cc();if(!code){roomStop();return;}const f=FB.fs,me=uid();
+ if(code!==roomCode){roomStop();roomCode=code;
+  try{roomSubs.push(f.onSnapshot(f.collection(FB.db,"rooms",code,"pins"),s=>{if(code!==roomCode)return;pins=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,text:String(x.text||""),name:String(x.name||"?"),uid:String(x.uid||""),channel:x.channel,ms:x.at&&x.at.toMillis?x.at.toMillis():0};});pinsErr="";fire();},()=>{pins=[];pinsErr="x";}));}catch(e){}
+  try{roomSubs.push(f.onSnapshot(f.doc(FB.db,"rooms",code,"muted",me),d=>{if(code!==roomCode)return;mutedMe=d.exists();fire();},()=>{mutedMe=false;}));}catch(e){}}
+ if(staff()&&!stfSub){try{stfSub=f.onSnapshot(f.collection(FB.db,"rooms",code,"muted"),s=>{if(code!==roomCode)return;const m={};s.docs.forEach(d=>{m[d.id]=String(d.data().name||"");});mutedMap=m;fire();},()=>{});}catch(e){}}}
+/* owner badge: look up each new sender once (owners/{uid} single-doc get; the collection can't be listed) */
+function ownerLook(list){if(!FB)return;const f=FB.fs;for(const u of new Set(list)){if(!u||ownerOf[u]!==undefined)continue;ownerOf[u]=false;
+ f.getDoc(f.doc(FB.db,"owners",u)).then(d=>{if(d.exists()){ownerOf[u]=true;fire();}}).catch(()=>{});}}
 function rolesStop(){for(const k of Object.keys(roleSubs)){try{roleSubs[k]();}catch(e){}}roleSubs={};roleMaps={};roleErrs={};rolesCode="";roles={};rolesErr="";}
 function syncRoles(){rolesCode=cc();roles=roleMaps[rolesCode]||{};rolesErr=roleErrs[rolesCode]||"";}
 /* roles are per room: one listener for this local's chat room and one for the Local 19 board room (if different) */
@@ -5044,7 +5082,7 @@ function who(nm){if(cc()!==CHAT_COAST)return E(nm);const t=chatSplitTag(nm);retu
 /* v78: Local NN | Coastwide toggle (remembered); switching drops the listener and messages like a local switch */
 document.addEventListener("click",ev=>{const b=ev.target&&ev.target.closest&&ev.target.closest("#chCard [data-sc]");if(!b)return;const v=b.dataset.sc==="coast"?"coast":"local";
  if((v==="coast")===coast())return;lss(CHAT_SCOPE_KEY,v);window.l19ChatLocal();toTop();});
-function fillId(){const u=uid(),el=g("chUid");if(!el)return;el.textContent=u||"Loading…";const r=g("chRl");if(r)r.textContent=u?"Your role in this room: "+(roleLabel(role())||"MEMBER")+(rolesErr?" ("+rolesErr+")":""):"";}
+function fillId(){const u=uid(),el=g("chUid");if(!el)return;el.textContent=u||"Loading…";const r=g("chRl");if(r)r.textContent=u?"Your role in this room: "+(owner?OWNER_BADGE+" (all rooms)":roleLabel(role())||"MEMBER")+(rolesErr?" ("+rolesErr+")":""):"";}
 function paintSetup(){const c=g("chCard");c.innerHTML=head()+'<label for="chN">Your display name (shown to coworkers)</label><input id="chN" maxlength="30" autocomplete="off" value="'+E(ls(KN,""))+'" placeholder="e.g. Sam B.">'+
  '<label for="chC">Coworker invite code</label><input id="chC" maxlength="30" autocomplete="off" autocapitalize="characters" value="'+E(lc()||defCode())+'" placeholder="Invite code">'+
  '<p class="mut">Ask a Local '+curLocal()+' coworker for the code (each local has its own room). Letters, numbers, - and _ only (3–30).</p><div class="row"><button type="button" class="p" id="chGo">Join chat</button>'+(ls(KN,"")&&cc()?'<button type="button" id="chBk">Cancel</button>':"")+'</div><p id="chSt" aria-live="polite">'+E(note)+'</p>'+
@@ -5062,14 +5100,21 @@ function fmt(ms){if(!ms)return"sending…";const d=new Date(ms),n=new Date(),t=d
 function paintMain(){const c=g("chCard");if(!g("chL")){
  c.innerHTML=head()+'<p class="mut" style="margin:0">Room: <b id="chRm"></b> · You: <b id="chMe"></b> · <button type="button" class="link" id="chSet">Change name / code / My ID</button></p><div class="row" id="chRb"></div>'+
  '<div class="chtabs" role="group" aria-label="Chat channels">'+CHAT_CHANNELS.map(x=>'<button type="button" data-c="'+x+'">'+x+'</button>').join("")+'</div>'+
- '<p id="chSt" aria-live="polite"></p><div class="chlist" id="chL" role="log" aria-live="polite" tabindex="0"></div>'+
+ '<p id="chSt" aria-live="polite"></p><p class="chmute hide" id="chMu" role="status"></p><div id="chPins" aria-label="Pinned messages"></div><div class="chlist" id="chL" role="log" aria-live="polite" tabindex="0"></div>'+
  '<form class="chsend" id="chF" autocomplete="off"><textarea id="chT" maxlength="500" rows="2" aria-label="Message" placeholder="Message to #'+E(chan)+'"></textarea><button type="submit" class="p" id="chS">Send</button></form>'+
  '<p class="mut" id="chRules" style="margin:6px 0 0"><b>Chat rules:</b> no harassment, hate, threats or spam. Tap Report or Block on any message.</p>';
  g("chSet").onclick=()=>{settings=true;stop();paint();toTop();};
  c.querySelectorAll(".chtabs button").forEach(b=>b.onclick=()=>{chan=b.dataset.c;lss(KH,chan);const L0=g("chL");if(L0)delete L0.dataset.s;paintMain();toTop();});
  g("chF").onsubmit=ev=>{ev.preventDefault();send();};
  g("chT").onkeydown=ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();send();}};}
- g("chRm").textContent=cc();g("chMe").textContent=ls(KN,"")+(roleLabel(role())?" ("+roleLabel(role())+")":"");
+ g("chRm").textContent=cc();g("chMe").textContent=ls(KN,"")+(owner?" ("+OWNER_BADGE+")":roleLabel(role())?" ("+roleLabel(role())+")":"");
+ roomWatch();ownerLook(msgs.map(m=>m.uid));
+ /* v143: pinned banner for this channel (newest first, up to 3) */
+ const pv=pinsFor(pins,chan),PB=g("chPins");PB.innerHTML=pv.map(p=>{const sh=chatShow(p.text);return '<div class="chpin" data-pid="'+E(p.id)+'"><span aria-hidden="true">📌</span><div class="pt" role="button" tabindex="0" aria-label="Pinned message from '+E(chatSplitTag(p.name).name)+'. Show it in the chat"><div class="pn">Pinned · '+who(p.name)+'</div><div class="tx">'+E(sh.text)+'</div></div>'+(isAdm()?'<button type="button" data-up="'+E(p.id)+'">Unpin</button>':'')+'</div>';}).join("");
+ PB.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>modDo("unpin",b.dataset.up));
+ PB.querySelectorAll(".pt").forEach(t=>{const go=()=>{const id=t.closest(".chpin").dataset.pid,el=g("chL").querySelector('.chm[data-id="'+(window.CSS&&CSS.escape?CSS.escape(id):id)+'"]');if(el){el.scrollIntoView({block:"center",behavior:"smooth"});}else{err="That pinned message is older than the last 100 shown here.";g("chSt").textContent=err;}};t.onclick=go;t.onkeydown=ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();go();}};});
+ /* v143: muted / banned: polite notice, send box off */
+ const mn=muteNotice(mutedMe,bannedMe),MU=g("chMu");MU.textContent=mn;MU.classList.toggle("hide",!mn);g("chT").disabled=!!mn;g("chS").disabled=!!mn;
  const rb=g("chRb"),bt=[];if(staff())bt.push('<button type="button" id="chRp">Reports</button>');if(isAdm())bt.push('<button type="button" id="chPp">People</button>');
  rb.innerHTML=bt.join("");rb.classList.toggle("hide",!bt.length);
  if(g("chRp"))g("chRp").onclick=()=>{panel="reports";reps=null;repErr="";repsLoad();paint();toTop();};
@@ -5077,7 +5122,8 @@ function paintMain(){const c=g("chCard");if(!g("chL")){
  document.querySelectorAll(".chtabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===chan)));
  g("chT").placeholder="Message to #"+chan;g("chSt").textContent=err;
  const me=uid(),L=g("chL"),near=L.scrollHeight-L.scrollTop-L.clientHeight<80,all=msgs.filter(m=>m.channel===chan),bl=new Set(blocked().map(x=>x.uid)),list=all.filter(m=>m.uid===me||!bl.has(m.uid)),nh=all.length-list.length,rl=role();
- L.innerHTML=(list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me),sh=mine?{text:m.text}:chatShow(m.text);return'<div class="chm'+(mine?" me":"")+'" data-id="'+E(m.id)+'"><div class="who">'+who(m.name)+badge(m.uid)+'</div><div class="tx'+(sh.hidden?" flt":"")+'">'+E(sh.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep" aria-label="Report this message">Report</button><button type="button" data-a="blk" aria-label="Block '+E(chatSplitTag(m.name).name)+'">Block</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>')+(nh?'<p class="mut chblk">'+nh+' message'+(nh===1?"":"s")+' hidden from blocked people. Manage in Change name / code / My ID.</p>':"");
+ const pinIds=new Set(pins.map(p=>p.id));
+ L.innerHTML=(list.length?list.map(m=>{const mine=m.uid===me,del=roleCanDelete(rl,m.uid,me),sh=mine?{text:m.text}:chatShow(m.text),ma=modActs(m);return'<div class="chm'+(mine?" me":"")+(pinIds.has(m.id)?" pinned":"")+'" data-id="'+E(m.id)+'"><div class="who">'+who(m.name)+badge(m.uid)+'</div><div class="tx'+(sh.hidden?" flt":"")+'">'+E(sh.text)+'</div><div class="mt">'+fmt(m.ms)+(mine?"":'<button type="button" data-a="rep" aria-label="Report this message">Report</button><button type="button" data-a="blk" aria-label="Block '+E(chatSplitTag(m.name).name)+'">Block</button>')+(del?'<button type="button" data-a="del">Delete</button>':"")+(ma.length?'<button type="button" data-a="more" aria-haspopup="dialog" aria-label="More actions for this message">⋯ More</button>':"")+'</div></div>';}).join(""):'<p class="mut" style="margin:auto;text-align:center">No messages in '+E(chan)+' yet. Say hello!</p>')+(nh?'<p class="mut chblk">'+nh+' message'+(nh===1?"":"s")+' hidden from blocked people. Manage in Change name / code / My ID.</p>':"");
  L.querySelectorAll("button[data-a]").forEach(b=>b.onclick=()=>act(b.dataset.a,b.closest(".chm").dataset.id));
  if(near||!L.dataset.s){L.scrollTop=L.scrollHeight;L.dataset.s="1";}}
 function back(){panel="";pnote="";open();toTop();}
@@ -5097,14 +5143,16 @@ function paintPanel(){const c=g("chCard");
    '<p style="margin:4px 0"><span class="rcat">Reason: '+E(rs.cat||"Other")+'</span>'+(rs.note?' – '+E(rs.note):"")+'</p><p class="mut" style="margin:0 0 4px">Reported by '+E(repName(r.reporter))+' · '+E(fmt(r.ms))+'</p><div class="row"><button type="button" data-x="res">Dismiss</button><button type="button" class="d" data-x="delm"'+(m?"":" disabled")+'>Remove message</button></div></div>';}).join(""):(repErr?"":'<p class="mut">No open reports. Good.</p>'));
   g("chBk2").onclick=back;g("chRf").onclick=()=>{reps=null;repErr="";pnote="";paintPanel();repsLoad();};
   c.querySelectorAll(".chr button[data-x]").forEach(b=>b.onclick=async()=>{const box=b.closest(".chr"),rid=box.dataset.r,mid=box.dataset.m,f=FB.fs;
-   try{if(b.dataset.x==="delm"){if(!confirm("Remove this message for everyone? The report is closed too."))return;if(mid)await f.deleteDoc(f.doc(FB.db,"rooms",cc(),"messages",mid));}
+   try{if(b.dataset.x==="delm"){if(!confirm("Remove this message for everyone? The report is closed too."))return;if(mid){await f.deleteDoc(f.doc(FB.db,"rooms",cc(),"messages",mid));pinGone(mid);}}
     else if(!confirm("Dismiss this report? The message stays."))return;
     await f.deleteDoc(f.doc(FB.db,"reports",rid));reps=reps.filter(x=>x.id!==rid);pnote=b.dataset.x==="delm"?"Message removed.":"Report dismissed.";}catch(e){pnote="Couldn't do that. "+(/permission/.test(e&&e.code||"")?"Not allowed (rules not updated, or you aren't a moderator).":friendly(e));}
    paintPanel();});return;}
  if(panel==="people"){const me=uid(),ppl=rolePeople(msgs,roles);
   c.innerHTML=head()+'<h4>People (admins only)</h4><div class="row"><button type="button" id="chBk2">Back to chat</button></div><div class="chwarn" role="note">Roles belong to a phone/browser ID. Only another admin can remove or change an admin, and you can’t change your own role: keep at least two admins so the room is never left without one.</div><p id="chSt" aria-live="polite">'+E(pnote)+'</p>'+
-   (ppl.length?ppl.map(u=>{const self=u.uid===me,can=roleCanChange(role(),u.uid,me);return'<div class="chp" data-u="'+E(u.uid)+'" data-n="'+E(u.name)+'"><div class="who">'+E(u.name)+badge(u.uid)+(self?" (you)":"")+' <small>ID …'+E(u.uid.slice(-6))+'</small></div><div class="row"><button type="button" data-x="moderator"'+(!can||u.role==="moderator"?" disabled":"")+'>Make moderator</button><button type="button" data-x="admin"'+(!can||u.role==="admin"?" disabled":"")+'>Make admin</button><button type="button" class="d" data-x="remove"'+(!can||!u.role?" disabled":"")+'>Remove role</button></div>'+(self?'<p class="mut" style="margin:4px 0 0">Another admin must change your role.</p>':"")+'</div>';}).join(""):'<p class="mut">Nobody has chatted yet. People appear here once they post a message.</p>');
-  g("chBk2").onclick=back;
+   (ppl.length?ppl.map(u=>{const self=u.uid===me,can=roleCanChange(role(),u.uid,me);const tOwn=ownerOf[u.uid]===true,mu=!!mutedMap[u.uid],bn=!!bannedMap[u.uid],ma=modActions({role:role(),owner,me,uid:u.uid,targetOwner:tOwn,muted:mu,banned:bn}).filter(a=>a!=="pin"&&a!=="unpin");
+   return'<div class="chp" data-u="'+E(u.uid)+'" data-n="'+E(u.name)+'"><div class="who">'+E(u.name)+badge(u.uid)+(mu?'<span class="rb x">MUTED</span>':'')+(bn?'<span class="rb x">BANNED</span>':'')+(self?" (you)":"")+' <small>ID …'+E(u.uid.slice(-6))+'</small></div>'+(ma.length?'<div class="row">'+ma.map(a=>'<button type="button" data-mx="'+a+'"'+(a==="ban"||a==="mute"?' class="d"':'')+'>'+E(MOD_LABEL[a].replace(/^\W+\s/,""))+'</button>').join("")+'</div>':'')+'<div class="row"><button type="button" data-x="moderator"'+(!can||u.role==="moderator"?" disabled":"")+'>Make moderator</button><button type="button" data-x="admin"'+(!can||u.role==="admin"?" disabled":"")+'>Make admin</button><button type="button" class="d" data-x="remove"'+(!can||!u.role?" disabled":"")+'>Remove role</button></div>'+(self?'<p class="mut" style="margin:4px 0 0">Another admin must change your role.</p>':"")+'</div>';}).join(""):'<p class="mut">Nobody has chatted yet. People appear here once they post a message.</p>');
+  g("chBk2").onclick=back;ownerLook(ppl.map(u=>u.uid));
+  c.querySelectorAll(".chp button[data-mx]").forEach(b=>b.onclick=async()=>{const box=b.closest(".chp");b.disabled=true;const r=await modDo(b.dataset.mx,"",{uid:box.dataset.u,name:box.dataset.n});if(r)pnote=r;paintPanel();});
   c.querySelectorAll(".chp button[data-x]").forEach(b=>b.onclick=async()=>{const box=b.closest(".chp"),u=box.dataset.u,n=chatName(box.dataset.n)||"?",x=b.dataset.x,f=FB.fs,ref=f.doc(FB.db,"rooms",cc(),"roles",u);
    if(!roleCanChange(role(),u,uid()))return;
    if(x==="admin"&&!confirm("Make "+n+" an admin? Admins manage roles and shared boards, and can only be removed by another admin."))return;
@@ -5113,7 +5161,7 @@ function paintPanel(){const c=g("chCard");
    catch(e){pnote="Couldn't change the role. "+(/permission/.test(e&&e.code||"")?"Not allowed (rules not updated, or you aren't an admin).":friendly(e));}
    paintPanel();});return;}}
 function paint(){if(settings||!ls(KN,"")||!cc())paintSetup();else if(panel)paintPanel();else paintMain();}
-async function send(){const t=chatText(g("chT").value),now=Date.now();if(!t)return;if(!chatCanSend(lastSend,now)){err="Slow down a little: one message every 2 seconds.";g("chSt").textContent=err;return;}
+async function send(){const t=chatText(g("chT").value),now=Date.now();if(!t)return;if(mutedMe||bannedMe){err=muteNotice(mutedMe,bannedMe);g("chSt").textContent=err;return;}if(!chatCanSend(lastSend,now)){err="Slow down a little: one message every 2 seconds.";g("chSt").textContent=err;return;}
  if(!FB){err="Not connected yet.";g("chSt").textContent=err;return;}
  const me=uid(),hist=sendHist.concat(msgs.filter(m=>m.uid===me).map(m=>({t:m.text,ms:m.ms||now}))),ck=chatCheck(t,hist,now);
  if(!ck.ok){err=ck.msg;g("chSt").textContent=err;return;}
@@ -5124,12 +5172,30 @@ async function send(){const t=chatText(g("chT").value),now=Date.now();if(!t)retu
  catch(e){err="Message not sent. "+friendly(e);}
  if(g("chS"))g("chS").disabled=false;if(g("chSt"))g("chSt").textContent=err;}
 async function act(a,id){if(!FB)return;const f=FB.fs;try{
- if(a==="del"){if(!confirm("Delete this message for everyone?"))return;await f.deleteDoc(f.doc(FB.db,"rooms",cc(),"messages",id));err="";}
+ if(a==="more"){modSheet(id);return;}
+ if(a==="del"){if(!confirm("Delete this message for everyone?"))return;await f.deleteDoc(f.doc(FB.db,"rooms",cc(),"messages",id));err="";pinGone(id);}
  else if(a==="blk"){const m=msgs.find(x=>x.id===id);if(!m||!m.uid||m.uid===uid())return;const n=chatSplitTag(m.name).name||"this person";
   if(!confirm("Block "+n+"? Their messages are hidden on this phone. They aren't told. Unblock any time in Change name / code / My ID."))return;blockSave(blocked().concat([{uid:m.uid,name:n,at:new Date().toISOString().slice(0,10)}]));err=n+" is blocked. Their messages are hidden on this phone.";paintMain();}
  else{repSheet(id);return;}
  }catch(e){err=(a==="del"?"Couldn't delete. ":"Couldn't send the report. ")+friendly(e);}
  if(g("chSt"))g("chSt").textContent=err;}
+/* v143: moderation */
+function modActs(m){if(!m||!FB)return [];return modActions({role:role(),owner,me:uid(),uid:m.uid,targetOwner:ownerOf[m.uid]===true,pinned:pins.some(p=>p.id===m.id),muted:!!mutedMap[m.uid],banned:!!bannedMap[m.uid]});}
+function pinGone(id){if(!FB||!isAdm()||!pins.some(p=>p.id===id))return;const f=FB.fs;f.deleteDoc(f.doc(FB.db,"rooms",cc(),"pins",id)).catch(()=>{});}
+async function modDo(x,id,tgt){if(!FB)return "";const f=FB.fs,me=uid(),code=cc();let m=msgs.find(y=>y.id===id);const t=tgt||(m?{uid:m.uid,name:m.name}:null),nm=t?chatSplitTag(t.name).name||"this person":"";
+ try{if(x==="pin"){if(!m)return "That message isn't loaded.";await f.setDoc(f.doc(FB.db,"rooms",code,"pins",id),Object.assign(pinDocOf(m,me),{at:f.serverTimestamp()}));return "Pinned to the top of #"+(CHAT_CHANNELS.includes(m.channel)?m.channel:chan)+".";}
+  if(x==="unpin"){await f.deleteDoc(f.doc(FB.db,"rooms",code,"pins",id));return "Unpinned.";}
+  if(!t||!t.uid)return "";
+  if(x==="mute"){if(!confirm("Mute "+nm+" in this room? They can still read but can't post here until you unmute them."))return "";await f.setDoc(f.doc(FB.db,"rooms",code,"muted",t.uid),Object.assign(modDocOf(t.name,me),{at:f.serverTimestamp()}));return nm+" is muted in this room.";}
+  if(x==="unmute"){await f.deleteDoc(f.doc(FB.db,"rooms",code,"muted",t.uid));return nm+" can post here again.";}
+  if(x==="ban"){if(!confirm("Ban "+nm+" from posting in ALL chat rooms? They can still read. You can unban later."))return "";await f.setDoc(f.doc(FB.db,"banned",t.uid),Object.assign(modDocOf(t.name,me),{at:f.serverTimestamp()}));return nm+" is banned from posting in all chats.";}
+  if(x==="unban"){await f.deleteDoc(f.doc(FB.db,"banned",t.uid));return nm+" can post again.";}}
+ catch(e){return "Couldn't do that. "+(/permission/.test(e&&e.code||"")?"Not allowed (server rules not updated yet, or you don't have that role).":friendly(e));}return "";}
+function modSheet(id){if(g("mdSheet"))return;const m=msgs.find(x=>x.id===id);if(!m)return;const acts=modActs(m);if(!acts.length)return;const o=document.createElement("div");o.className="sheet";o.id="mdSheet";
+ o.innerHTML='<div role="dialog" aria-modal="true" aria-labelledby="mdT"><h3 id="mdT" style="margin:0">Message from '+E(chatSplitTag(m.name).name)+'</h3><p class="mdq">'+E(chatShow(m.text).text)+'</p><div class="mdg">'+acts.map(a=>'<button type="button" data-md="'+a+'"'+(a==="ban"||a==="mute"?' class="d"':'')+'>'+E(MOD_LABEL[a])+'</button>').join("")+'</div><p id="mdM" class="mut" aria-live="polite" style="margin:0"></p><div class="row"><button type="button" id="mdX">Close</button></div></div>';
+ document.body.appendChild(o);const close=()=>{o.remove();};o.onclick=ev=>{if(ev.target===o)close();};g("mdX").onclick=close;o.addEventListener("keydown",ev=>{if(ev.key==="Escape")close();});
+ o.querySelectorAll("[data-md]").forEach(b=>b.onclick=async()=>{b.disabled=true;const r=await modDo(b.dataset.md,id);if(!r){b.disabled=false;return;}close();err=r;if(g("chSt"))g("chSt").textContent=err;if(g("chL"))paintMain();});
+ setTimeout(()=>{const b=o.querySelector("[data-md]");if(b)b.focus();},0);}
 /* v112: report sheet: reason (Harassment, Hate, Threat, Spam, Other) + optional note. Category rides in the existing 'reason' field. */
 function repSheet(id){if(g("crSheet"))return;const o=document.createElement("div");o.className="sheet";o.id="crSheet";let cat="";
  o.innerHTML='<div role="dialog" aria-modal="true" aria-labelledby="crT"><h3 id="crT" style="margin:0">Report message</h3><p class="mut" style="margin:0">Why are you reporting it?</p><div class="crg" role="group" aria-label="Reason">'+CHAT_REASONS.map(r=>'<button type="button" data-cr="'+r+'" aria-pressed="false">'+r+'</button>').join("")+'</div>'+
@@ -5143,15 +5209,15 @@ function repSheet(id){if(g("crSheet"))return;const o=document.createElement("div
 async function open(){panel="";const my=++gen;if(settings||!ls(KN,"")||!cc()){paint();return;}
  paintMain();err="Connecting…";g("chSt").textContent=err;
  try{await load();}catch(e){err=friendly(e);if(g("chSt"))g("chSt").textContent=err;return;}
- if(my!==gen)return;rolesStart();paintMain();
+ if(my!==gen)return;rolesStart();roomWatch();paintMain();
  if(!g("chL")||unsub)return;err="";const code=cc(),f=FB.fs,q=f.query(f.collection(FB.db,"rooms",code,"messages"),f.orderBy("createdAt","desc"),f.limit(100));
  unsub=f.onSnapshot(q,s=>{if(code!==cc()||my!==gen)return;msgs=s.docs.map(d=>{const x=d.data({serverTimestamps:"estimate"});return{id:d.id,text:String(x.text||""),name:String(x.name||"?"),uid:x.uid,channel:x.channel,ms:x.createdAt&&x.createdAt.toMillis?x.createdAt.toMillis():0};}).reverse();err=s.metadata.fromCache&&navigator.onLine===false?"Offline: showing saved messages.":/^(Offline|Connecting)/.test(err)?"":err;if(g("chL"))paintMain();},
   e=>{err=friendly(e);stop();if(g("chSt"))g("chSt").textContent=err;});}
 window.l19Chat=function(v){if(v==="chat"){note="";open();}else stop();};
 /* v74: switching local = switching chat room: drop the old listener and messages, repaint the header, re-attach for the new room */
-window.l19ChatLocal=function(){gen++;stop();msgs=[];panel="";reps=null;repErr="";pnote="";err="";note="";settings=false;const cd=g("chCard");if(cd)cd.innerHTML="";
+window.l19ChatLocal=function(){gen++;stop();roomStop();msgs=[];panel="";reps=null;repErr="";pnote="";err="";note="";settings=false;const cd=g("chCard");if(cd)cd.innerHTML="";
  if(FB)rolesStart();const v=g("v-chat");if(v&&!v.classList.contains("hide"))open();};
-window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chatRoom:cc,name:()=>ls(KN,""),joined:()=>!!(ls(KN,"")&&bc()),uid:uid,role:()=>{const r=(roleMaps[bc()]||{})[uid()];return r?r.role:"member";},isAdmin:()=>{const r=(roleMaps[bc()]||{})[uid()];return !!r&&r.role==="admin";},fs:()=>FB&&FB.fs,db:()=>FB&&FB.db,on:f=>{lis.push(f);},friendly:friendly};
+window.l19Fb={ready:async()=>{await load();rolesStart();return FB;},code:bc,chatRoom:cc,name:()=>ls(KN,""),joined:()=>!!(ls(KN,"")&&bc()),uid:uid,role:()=>{const r=(roleMaps[bc()]||{})[uid()];return modRole(r?r.role:"member",owner);},isAdmin:()=>{const r=(roleMaps[bc()]||{})[uid()];return owner||(!!r&&r.role==="admin");},owner:()=>owner,fs:()=>FB&&FB.fs,db:()=>FB&&FB.db,on:f=>{lis.push(f);},friendly:friendly};
 window.addEventListener("online",()=>{if(!g("v-chat").classList.contains("hide")&&!unsub&&!settings)open();});
 })();}
 
@@ -5194,7 +5260,7 @@ if(typeof window!=="undefined"){window.l19Shop=function(){shopFit();};window.add
 
 if(typeof module!=="undefined")module.exports={dayInfo,reminderStatus,pgpRemStatus,jobHrs,jobDefHours,hrsMaxHint,DEFH_10,DEFH_CRANE,stubLine,PGP_EST,prevQuarter,earnOf,pgpEstimate,qLabel,QUAL,QY_KEY,pyEnd,payrollYear,qualHours,vacBasic,vacWeeks,qualStats,cwogMigrate,hootMigrate,hootOldPay,wkndRate,PGP_KEY,PGPF_KEY,PGP_LABEL,PGP_REMIND,PGP_JOB,pgpOn,pgpSh,pgpConflict,pgpWeek,pgpClean,pgpMerge,pgpDay,NL_X,NL_KEY,nlApplies,CWOG_JOB,CWOG_HRS,CWOG_RATE,CWOG_RATE2,CWOG_PAY,cwogPayFor,isCwog,cwogSplit,l19Keys,L19_BOOT_VER,pegsOn,LOCAL_REGIONS,localRegion,MAIN_LOCALS,OUT_LOCALS,OUT_PIERS,OUT_EXTRA,TAC_JOBS,isStopWork,firstThursday,secondThursday,nextStopWork,SW_LOCALS,SW_LABEL,SW_WARN,HOL_DEFS,HOL_TERM,HOL_CHAVEZ,holidaysInYear,holidaysOn,isHol,holLabel,holShort,holAuto,upcomingHolidays,holRuleDate,LOCALS,LOCAL_IDS,LOCAL_KEY,localId,curLocal,localPiers,localTitle,SEA_PIERS,TAC_PIERS,localJobGroups,jobSelectHtml,CLERK_JOBS,WBF_JOBS,WBF_RATES,HOME_TERMS,shipGroups,travelRateOf,RATE_PERIODS,ratePeriod,PCL_JOBS,rateForDate,GEAR_IMG_MAX,GEAR_MAX,GEAR_LISTS,GEAR_SUB,GEAR_ONE,GEAR_KEY_RE,GEAR_GUIDE,GEAR_PHOTOS,GEAR_PULL,gearHidden,gearMigrate,gearLinkList,gearNorm,gearKey,gearTxt,gearClean,gearEmpty,gearDoc,gearSummary,gearWhen,gearImgOk,gearStoreClean,gearStoreMerge,gearGuideHtml,PIER_HOURS,PIER_HOURS_SRC,pierKey,pierHours,ndDraftClean,ndDraftEmpty,needOrphans,needPhotoName,pegSnapName,pegSnapModel,PEG_BOARDS,PEG_MAX,pegDim,pegKey,pegNum,pegBoardNew,pegBoardClean,pegsClean,pegDropped,pegResize,pegsMerge,pegWhen,pegText,PEG_DEF,PEG_COLORS,PEG_JOBS,PEG_UNDO,PEG_GLOBAL_DEFAULT,PEG_GLOBALS,PEG_PRESET,PEG_PRESET_NEW,PEG_PRESET_COLOR,PEG_PRESET_ID,pegPresetMissing,pegPresetAdd,pegFlexRemove,pegFlexBoardsRemove,PEG_FLEX_GONE,pegBoardPegsSeed,PEG_BOARD_PEGS,pegJobLink,PEG_CHIP_SHORT,pegHint,pegTakePrefill,pegsSeed,pegBoardOrder,BULL_ROWS,BULL_COLS,BULL_SEED,bullSeedPegs,bullSeedBoard,bullNamesParse,bullNamesExport,bullStats,bullZoomClamp,bullFitScale,bullZoomPref,pegBullMigrate,pegAbbr,pegPlaceTake,pegColOp,pegSlipMove,pegSlipUndo,pegTradeNew,pegTradeEnd,pegTradeAt,pegTradeMarkText,pegSwapSlips,pegDayAdd,pegDayDiff,pegGlobalPlaceTake,pegSeq,pegKeyNum,pegGlobalNext,pegGlobalAdvance,pegGlobalPlace,pegGlobalTake,pegGlobalUndo,pegGlobalAdd,pegGlobalRename,pegGlobalRemove,pegGlobalDeleteTake,pegGlobalDays,pegGlobalsOn,pegBoardDeleted,pegOrder,pegNext,pegJobAdd,pegJobEdit,pegJobRemove,pegAdvance,pegPlace,pegTake,pegUndo,pegTakeEdit,pegTakeDelete,pegTakeDays,pegDateLong,pegBoardText,EQ_NAME,EQ_ID,EQ_MAX,EQ_MARK,EQ_KIND,EQ_SEED,EQ_V60_SEED,pegSwipeDir,pegSwipeTarget,pegNavLabel,eqSlot,eqUnseed,eqUnitKey,eqSlotId,eqSlotDoc,eqSlotFromDoc,eqWithSlots,eqStructKey,eqDiff,eqRevert,eqSeed,eqClean,eqSections,eqSet,eqClearSlot,eqRestore,eqClear,eqCount,eqRowAdd,eqRowEdit,eqRowRemove,eqRowMove,eqStamp,eqShareBuild,eqIsDoc,eqFromDoc,eqMerge,eqText,eqSnapModel,splashMs,L19_SPLASH,l19SplashTiming,RATES,defaultRates,jobClass,OT_RATIO,calcHours,weekStart,addDays,summarize,weekText,toCSV,validImport,mergeEntries,entryPay,paidHours,guarMin,guarNote,autoOT,effOT,isWknd,OT_THRESH,jobLabel,weekEntries,periodRange,shiftPeriod,periodLabel,periodEntries,periodTotals,histGroups,monthGrid,dayTotals,searchEntries,searchActive,JOBS,SEATTLE_JOBS,seattleJob,jobCode,upApplies,upLabel,letterKey,letterExpired,telHref,cleanPhone,needText,needsClean,needsMerge,needsGroups,needDateLong,NEED_PORTS,vesselPort,needRef,needShips,needBerth,needPierNote,NEED_SHIP_DAYS,shipWin,shipDedupe,shipTag,portNote,PORT_STAY,PORT_SRC,NO_PUBLIC_SCHED,TERM_NAMES,letterLabel,letterTitle,fitSize,lvFitScale,lvMaxScale,lvClampScale,lvClampPan,lvZoomAt,lvDoubleTap,LETTER_KEEP_DAYS,shipsOnDay,shipSummary,shipGroups,trackUrl,backupDue,backupAgo,stubCompare,stubParts,stubPartsText,isClerkLocal,holPayHours,holPayDate,holPayOpts,workedDaysInWeek,holidaysPaidInWeek,holidayQualifies,holidayPayItem,holidayPaysForWeek,holidayPaysOnCheck,holidayPayLine,holNiceName,holAvailId,holAvailStored,holAvailSet,holAvailOn,HOL_SHORT,HOL_QUAL_KEY,HOL_AVAIL_KEY,HOL_PAY_LS,HOL_PAY_CLERK,milestones,MILESTONES,tierFromHours,effectiveTier,setupNeeded,TIERS,topCombos,lastShift,repeatDefaultDate,repeatCopy,csvForExport,validPin,genSalt,hashPin,verifyPin,shouldLock,reminderStatus,msUntil,daysBetween,cleanEntries,histMonths,histYears,monthLabel,APP_VERSION,CACHE_VERSION,RATES_VERSION,shareId,shareBuild,shareFromDoc,shareToBoard,shareWhere,roleLabel,roleCanDelete,roleCanChange,rolePeople,SHARE_TAKES,MILE_DEFAULT,CFG,travelRateFor,basicST,travelPay,mileagePay,payTotal,reportText,ratesBannerDue,TOUR_CARDS,tourCards,weekShareOn,tourDue,yearSummary,yearText,yearCSV};
 if(typeof module!=="undefined")Object.assign(module.exports,{L19_NEW_ORIGIN,L19_NEW_HOSTS,L19_OLD_ORIGIN,L19_MOVE_MARK,L19_HASH_MAX,L19_MSG_READY,L19_MSG_PAYLOAD,L19_MSG_ACK,l19Esc,l19SafeHref,l19SetGunzip,l19PeggIsUserData,l19EquipIsUserData,l19MoveRole,l19IsLoopback,l19TrustedMoveSource,l19TrustedMoveDest,l19ToBase64Url,l19FromBase64Url,l19BackupObject,l19StubOk,l19DestHasUserData,l19ValidateMovePayload,l19PartsFromPayload,l19MovePlan,l19MoveApply,l19EncodeMoveHash,l19DecodeMoveBytes,l19ParseMoveHash,l19ParseMoveMessage,l19MoveNoticeHtml,l19MoveCardHtml,l19MoveRestoreHtml,l19MoveSuccessHtml,l19PreviewKind});
-if(typeof module!=="undefined")Object.assign(module.exports,{shopHtml,shopOk,SHOP_DEF,newsHtml,newsDate,newsOk,wkxCwog,wkxPgp,pgpTrack,curQuarter,payCheckLate,chkLabel,cwogDays,cwogSummary,pgpChecks,CWOG_STALE,glVk,glBestName,glInWin,glAssign,glKeep,glImgOk,glFileName,CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,chatNorm,chatSlurHits,chatThreat,chatLinks,chatCheck,chatShow,chatReason,chatReasonSplit,CHAT_REASONS,CHAT_BLOCK_KEY,chatBlockClean,contactHtml,APP_CONTACT,MERCH,merchItems,merchOn,merchHtml,merchResDoc,merchResOk,merchSlug,MERCH_STATUS,MERCH_RES_COL,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag});
+if(typeof module!=="undefined")Object.assign(module.exports,{shopHtml,shopOk,SHOP_DEF,newsHtml,newsDate,newsOk,wkxCwog,wkxPgp,pgpTrack,curQuarter,payCheckLate,chkLabel,cwogDays,cwogSummary,pgpChecks,CWOG_STALE,glVk,glBestName,glInWin,glAssign,glKeep,glImgOk,glFileName,CA_PIERS,localPierGroups,pierOptsHtml,localSt,pensCfg,PENS_RH,PENS_L13,PENS_PCPA,cuCfg,CU_CFG,WF_CFG,CA_JOBS,OUT_EXTRA,CA_SHIP_LINKS,CA_SHIP_OF,caShipLinks,caShipsHtml,pmaName,pegsNightSeed,pegsHallSeed,PEG_HALL,PEG_HALL_SEED,pegBoardNew,CALLBACK_FIELDS,callbackDate,callbackDraft,callbackLine,chatCode,chatName,chatText,chatCanSend,chatNorm,chatSlurHits,chatThreat,chatLinks,chatCheck,chatShow,chatReason,chatReasonSplit,CHAT_REASONS,CHAT_BLOCK_KEY,chatBlockClean,contactHtml,APP_CONTACT,MERCH,merchItems,merchOn,merchHtml,merchResDoc,merchResOk,merchSlug,MERCH_STATUS,MERCH_RES_COL,CHAT_DEFAULT_CODE,CHAT_CHANNELS,CHAT_COAST,CHAT_SCOPE_KEY,chatTagName,chatSplitTag,OWNER_BADGE,PIN_MAX,modRole,pinsFor,pinDocOf,modDocOf,modActions,MOD_LABEL,muteNotice});
 if(typeof document!=="undefined"&&document.getElementById("tsz")){(function(){var K="l19TextSize",d=document.documentElement;function ap(v){if(v==="normal")d.removeAttribute("data-ts");else d.setAttribute("data-ts",v);document.querySelectorAll("#tsz button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.ts===v))})}
 var v="normal";try{v=localStorage.getItem(K)||"normal"}catch(e){}ap(v);
 document.querySelectorAll("#tsz button").forEach(function(b){b.onclick=function(){try{localStorage.setItem(K,b.dataset.ts)}catch(e){}ap(b.dataset.ts)}});})();}
