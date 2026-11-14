@@ -1,0 +1,21 @@
+/* v144: Pegs switched off (Daniel, Nov 14 2026: "too time consuming to keep updated"). Code kept behind PEGS_ENABLED;
+   the remaining bottom tabs share the width equally and are bigger; saved peg data is untouched. */
+const fs=require("fs"),A=require("assert"),path=require("path");
+const file=process.argv[2]||path.join(__dirname,"index.html");
+const html=fs.readFileSync(file,"utf8"),sw=fs.readFileSync(path.join(path.dirname(file),"sw.js"),"utf8");
+const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<script>/,"").replace(/<\/script>$/,"")).sort((a,b)=>b.length-a.length)[0];
+const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
+let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
+t("version is v144 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v144");A.strictEqual(L.L19_BOOT_VER,"v144");A.strictEqual(L.CACHE_VERSION,"l19hours-v144");A.ok(sw.includes('const C="l19hours-v144"'));});
+t("PEGS_ENABLED is false and pegsOn() is off for every local",()=>{A.strictEqual(L.PEGS_ENABLED,false);for(const n of ["19","23","52","98",undefined])A.strictEqual(L.pegsOn(n),false,String(n));A.ok(js.includes("const PEGS_ENABLED=false;"));});
+t("flip the flag and Pegs comes back for Local 19 only",()=>{const j2=js.replace("const PEGS_ENABLED=false;","const PEGS_ENABLED=true;"),m2={exports:{}};new Function("module",j2)(m2);A.strictEqual(m2.exports.pegsOn("19"),true);A.strictEqual(m2.exports.pegsOn("23"),false);});
+t("bottom bar: Pegs button is in the markup but hidden; the nav starts in equal-width mode",()=>{A.ok(html.includes('<nav class="tabs nopg" aria-label="Main">'));A.ok(html.includes('<button type="button" data-v="pegs" aria-label="Pegs" hidden>'));
+  const tabs=[...html.match(/<nav class="tabs[\s\S]*?<\/nav>/)[0].matchAll(/data-v="(\w+)"[^>]*?( hidden)?>/g)].filter(x=>!x[2]).map(x=>x[1]);A.deepStrictEqual(tabs,["add","ships","chat","week","hist","data"]);});
+t("the 6 remaining tabs are bigger: equal flex, 60px tall, larger icon and label",()=>{A.ok(html.includes(".tabs.nopg button{flex:1 1 0}"));A.ok(html.includes(".tabs.nopg button{min-height:60px;font-size:max(12px,min(.875rem,3.6vw))}.tabs.nopg .ti{font-size:max(20px,min(1.375rem,6vw))}"));
+  A.ok(/body\{[^}]*padding-bottom:calc\(140px/.test(html),"page bottom padding still clears the taller bar");});
+t("peg code is all still here (view, renderer, board helpers, sync guards)",()=>{A.ok(html.includes('<section id="v-pegs" class="hide">'));for(const f of ["function pgRender()","function shOpen()","window.l19Pegs=function","function eqSlStart()"])A.ok(js.includes(f),f);
+  for(const k of ["pegBoardNew","pegBoardClean","pegsMerge","eqClean","PEG_BOARDS"])A.ok(L[k]!==undefined,k);});
+t("show('pegs') falls back to Add and leaving pegs off doesn't delete anything",()=>{A.ok(js.includes('function show(v,how){if(v==="pegs"&&!pegsOn())v="add";'));
+  const i0=js.indexOf("window.l19Pegs=function"),off=js.slice(i0,js.indexOf("else pgRender();};",i0));A.ok(off.length>50);A.ok(!/removeItem|LSset\(|localStorage\.setItem|clear\(/.test(off),"pegs-off path writes no storage");});
+t("backups still carry every l19.* key, so peg boards/logs stay in backups",()=>{A.ok(js.includes('if(k&&k.indexOf("l19")===0&&k!==L19_VER_KEY)o[k]=localStorage.getItem(k);'));});
+console.log(pass+" passed, "+fail+" failed");process.exit(fail?1:0);
