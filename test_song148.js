@@ -6,8 +6,8 @@ const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<s
 const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
 let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
 const PL=eval((js.match(/const PLAYLIST=(\[[^\]]*\]);/)||[])[1]);
-t("version is v148 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v148");A.strictEqual(L.L19_BOOT_VER,"v148");A.strictEqual(L.CACHE_VERSION,"l19hours-v148");A.ok(sw.includes('const C="l19hours-v148"'));A.ok(!sw.includes('const C="l19hours-v'+'147"'));});
-t("music files are not precached",()=>{A.ok(sw.includes("pathname.includes(\"/music/\")"));A.ok(!/music\/[a-z0-9-]+\.mp3/.test(sw.match(/const C="l19hours-v148",F=\[([\s\S]*?)\];/)[1]));});
+t("version is v149 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v149");A.strictEqual(L.L19_BOOT_VER,"v149");A.strictEqual(L.CACHE_VERSION,"l19hours-v149");A.ok(sw.includes('const C="l19hours-v149"'));A.ok(!sw.includes('const C="l19hours-v'+'148"'));});
+t("music files are not precached",()=>{A.ok(sw.includes("pathname.includes(\"/music/\")"));A.ok(!/music\/[a-z0-9-]+\.mp3/.test(sw.match(/const C="l19hours-v149",F=\[([\s\S]*?)\];/)[1]));});
 t("Nooner or Sooner sits just before King of the Docks",()=>{
   const titles=PL.map(s=>s.title);
   A.deepStrictEqual(titles,["Longshore Life","Waterfront Woman","Breakin my bones","Velvet Umbrella","Cold Coffee","Rust Coffee Shift","Bloody Thursday Sirens","Nooner or Sooner","King of the Docks"]);
