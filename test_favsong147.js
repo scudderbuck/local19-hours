@@ -6,7 +6,7 @@ const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<s
 const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
 let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
 const PL=eval((js.match(/const PLAYLIST=(\[[^\]]*\]);/)||[])[1]);
-t("version is v148 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v148");A.strictEqual(L.L19_BOOT_VER,"v148");A.strictEqual(L.CACHE_VERSION,"l19hours-v148");A.ok(sw.includes('const C="l19hours-v148"'));});
+t("version is v149 and the service worker cache name matches",()=>{A.strictEqual(L.APP_VERSION,"v149");A.strictEqual(L.L19_BOOT_VER,"v149");A.strictEqual(L.CACHE_VERSION,"l19hours-v149");A.ok(sw.includes('const C="l19hours-v149"'));});
 t("Waterfront Woman is in the playlist and its file exists",()=>{const w=PL.find(s=>s.title==="Waterfront Woman");A.ok(w);A.strictEqual(w.src,"music/waterfront-woman.mp3");A.ok(fs.statSync(path.join(dir,w.src)).size>1e6);});
 t("every playlist file exists",()=>{for(const s of PL)A.ok(fs.existsSync(path.join(dir,s.src)),s.src);});
 t("favorite index: found, missing, empty, junk",()=>{A.strictEqual(L.musFavIdx(PL,"music/waterfront-woman.mp3"),1);A.strictEqual(L.musFavIdx(PL,"music/king-of-the-docks.mp3"),PL.length-1);

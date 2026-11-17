@@ -8,9 +8,9 @@ const js=(html.match(/<script>([\s\S]*?)<\/script>/g)||[]).map(s=>s.replace(/^<s
 const m={exports:{}}; new Function("module",js)(m); const L=m.exports;
 let pass=0,fail=0; const t=(n,f)=>{try{f();pass++;console.log("PASS "+n);}catch(e){fail++;console.log("FAIL "+n+" :: "+e.message);}};
 
-t("version is v148 and the service worker cache name matches",()=>{
-  A.strictEqual(L.APP_VERSION,"v148"); A.strictEqual(L.L19_BOOT_VER,"v148"); A.strictEqual(L.CACHE_VERSION,"l19hours-v148");
-  A.ok(sw.includes('const C="l19hours-v148"')); A.ok(!sw.includes('const C="l19hours-v'+'147"'));
+t("version is v149 and the service worker cache name matches",()=>{
+  A.strictEqual(L.APP_VERSION,"v149"); A.strictEqual(L.L19_BOOT_VER,"v149"); A.strictEqual(L.CACHE_VERSION,"l19hours-v149");
+  A.ok(sw.includes('const C="l19hours-v149"')); A.ok(!sw.includes('const C="l19hours-v'+'148"'));
 });
 t("owner badge reads ADMIN · Longshore Life",()=>{A.strictEqual(L.OWNER_BADGE,"ADMIN · Longshore Life");A.ok(js.includes('<span class="rb o">\'+OWNER_BADGE+\'</span>'));});
 t("modRole: owner is admin in every room, whatever the room role",()=>{
