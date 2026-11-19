@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-19T03:45:05-08:00",
+ "updated": "2026-11-19T11:45:05-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -87,7 +87,7 @@
   },
   {
    "vessel": "SANTA RITA MAERSK",
-   "service": "WC4/TP5",
+   "service": "Ad Hoc",
    "terminal": "Husky",
    "agent": "Norton Lilly International",
    "eta": "2026-11-12T15:00",
@@ -149,16 +149,6 @@
    "imo": "9463085"
   },
   {
-   "vessel": "MSC YUKTA X",
-   "service": "Chinook",
-   "terminal": "T5",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-17T07:00",
-   "etd": "2026-11-18T18:00",
-   "port": "Seattle",
-   "imo": "9146467"
-  },
-  {
    "vessel": "MAERSK SARNIA",
    "service": "WC4/TP5",
    "terminal": "Husky",
@@ -167,37 +157,6 @@
    "etd": "2026-11-22T03:00",
    "port": "Tacoma",
    "imo": "9289946"
-  },
-  {
-   "vessel": "MATSON KODIAK",
-   "service": "Matson - AK",
-   "terminal": "WST",
-   "agent": "Matson",
-   "eta": "2026-11-17T22:00",
-   "etd": "2026-11-18T22:00",
-   "port": "Tacoma",
-   "imo": "8419166"
-  },
-  {
-   "vessel": "LOTUS A",
-   "service": "CPNW",
-   "terminal": "T18",
-   "agent": "Oceonix Services Ltd",
-   "eta": "2026-11-18T06:00",
-   "etd": "2026-11-20T04:00",
-   "port": "Seattle",
-   "imo": "9461465"
-  },
-  {
-   "vessel": "MIDNIGHT SUN",
-   "service": "",
-   "terminal": "TOTE",
-   "agent": "Tote Maritime Alaska Inc",
-   "eta": "2026-11-18T15:00",
-   "etd": "2026-11-19T01:00",
-   "port": "Tacoma",
-   "vessel_type": "Multipurpose",
-   "imo": "7307110"
   },
   {
    "vessel": "Libra Leader",
@@ -1134,16 +1093,6 @@
    "etd": "2026-12-11T15:00",
    "port": "Tacoma",
    "imo": "9450416"
-  },
-  {
-   "vessel": "ONE MANHATTAN",
-   "service": "FP2",
-   "terminal": "Husky",
-   "agent": "",
-   "eta": "2026-12-08T11:00",
-   "etd": "2026-12-12T06:00",
-   "port": "Tacoma",
-   "imo": "9689615"
   },
   {
    "vessel": "EVER STEADY",
