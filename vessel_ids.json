@@ -7,6 +7,10 @@
   "checked": "2026-10-19",
   "imo": "9978602"
  },
+ "AQUAMARINE ACE": {
+  "checked": "2026-11-21",
+  "imo": "9397987"
+ },
  "ARC ENDEAVOR": {
   "checked": "2026-10-19",
   "imo": "9505065"
@@ -66,6 +70,10 @@
  "CHIP BARGE": {
   "checked": "2026-11-18",
   "imo": null
+ },
+ "CIELO ACE": {
+  "checked": "2026-11-21",
+  "imo": "9999383"
  },
  "CMA CGM ALMAVIVA": {
   "checked": "2026-10-16",
@@ -151,6 +159,10 @@
   "checked": "2026-11-14",
   "imo": "9935272"
  },
+ "EVER MILD": {
+  "checked": "2026-11-21",
+  "imo": "9935284"
+ },
  "EVER MODE": {
   "checked": "2026-10-19",
   "imo": "9935296"
@@ -211,6 +223,10 @@
   "checked": "2026-10-19",
   "imo": "1063281"
  },
+ "GLOVIS NOBLE": {
+  "checked": "2026-11-21",
+  "imo": "1044352"
+ },
  "GLOVIS SPLENDOR": {
   "checked": "2026-11-18",
   "imo": "9702431"
@@ -231,6 +247,10 @@
   "checked": "2026-10-19",
   "imo": "9983140"
  },
+ "GRAND DUKE": {
+  "checked": "2026-11-21",
+  "imo": "9303170"
+ },
  "GRAND PACE": {
   "checked": "2026-11-13",
   "imo": "9169328"
@@ -238,6 +258,14 @@
  "GREEN CENTURY HIGHWAY": {
   "checked": "2026-11-18",
   "imo": null
+ },
+ "GREEN OCEAN": {
+  "checked": "2026-11-21",
+  "imo": "9301665"
+ },
+ "GREENFIELD": {
+  "checked": "2026-11-21",
+  "imo": "9970026"
  },
  "HMM VANCOUVER": {
   "checked": "2026-10-24",
@@ -271,6 +299,10 @@
   "checked": "2026-10-26",
   "imo": "1068853"
  },
+ "JUPITER SPIRIT": {
+  "checked": "2026-11-21",
+  "imo": "9509401"
+ },
  "KIMOLOS": {
   "checked": "2026-11-21",
   "imo": "9791145"
@@ -278,6 +310,10 @@
  "KM VANCOUVER": {
   "checked": "2026-11-07",
   "imo": "9767560"
+ },
+ "LAKE TAZAWA": {
+  "checked": "2026-11-21",
+  "imo": "9953810"
  },
  "LAUTOKA CHIEF": {
   "checked": "2026-10-17",
@@ -326,6 +362,10 @@
  "MANULANI": {
   "checked": "2026-10-19",
   "imo": "9273674"
+ },
+ "MATE": {
+  "checked": "2026-11-21",
+  "imo": "9644990"
  },
  "MATSON ANCHORAGE": {
   "checked": "2026-10-19",
@@ -414,6 +454,10 @@
  "MSC ELISABETTA": {
   "checked": "2026-10-24",
   "imo": "9954747"
+ },
+ "MSC FIRENZE": {
+  "checked": "2026-11-21",
+  "imo": "9978987"
  },
  "MSC FLORA": {
   "checked": "2026-10-16",
