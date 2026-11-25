@@ -27,6 +27,10 @@
   "checked": "2026-10-26",
   "imo": null
  },
+ "BARGE CENTERLINE": {
+  "checked": "2026-11-25",
+  "imo": null
+ },
  "BERGAMOT ACE": {
   "checked": "2026-10-24",
   "imo": "9403281"
@@ -256,7 +260,7 @@
   "imo": "9169328"
  },
  "GREEN CENTURY HIGHWAY": {
-  "checked": "2026-11-18",
+  "checked": "2026-11-25",
   "imo": null
  },
  "GREEN OCEAN": {
@@ -630,6 +634,10 @@
  "RJ PFEIFFER": {
   "checked": "2026-10-19",
   "imo": "9002037"
+ },
+ "RJ PFEIFFER MATSON KODIAK": {
+  "checked": "2026-11-25",
+  "imo": null
  },
  "SALVIA ACE": {
   "checked": "2026-10-19",
