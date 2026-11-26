@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-25T18:45:05-08:00",
+ "updated": "2026-11-26T08:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -9,7 +9,7 @@
    "credit": "Port of Grays Harbor vessel schedule",
    "source": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTpAomeTT0eQnICFNJZD2-7wMPnOBeK_3wGTR_Uf2FOr7UibmUqkliQyL2A9QuzSC_VvbBS7rVo3dpD/pub?output=csv",
    "parsed": 12,
-   "current": 10,
+   "current": 9,
    "latest": "2026-12-11"
   },
   "Olympia": {
@@ -65,27 +65,6 @@
    "port": "Tacoma",
    "vessel_type": "Unspecified",
    "imo": "9578971"
-  },
-  {
-   "vessel": "Amis Brave",
-   "service": "",
-   "terminal": "T2",
-   "agent": "",
-   "eta": "2026-11-22T00:00",
-   "etd": null,
-   "port": "Aberdeen",
-   "eta_time": false,
-   "imo": "9667459"
-  },
-  {
-   "vessel": "SANTA BARBARA",
-   "service": "WC4/TP5",
-   "terminal": "Husky",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-22T05:00",
-   "etd": "2026-11-25T18:00",
-   "port": "Tacoma",
-   "imo": "9430399"
   },
   {
    "vessel": "Prabhu Mihika",
@@ -158,15 +137,6 @@
    "etd": "2026-11-25T18:00",
    "port": "Tacoma",
    "vessel_type": "Barge"
-  },
-  {
-   "vessel": "R.J. PFEIFFER",
-   "service": "Matson - AK",
-   "terminal": "WST",
-   "agent": "Matson",
-   "eta": "2026-11-25T00:01",
-   "etd": "2026-11-25T22:00",
-   "port": "Tacoma"
   },
   {
    "vessel": "MSC HORTENSE",
@@ -1218,13 +1188,14 @@
    "imo": "7307110"
   },
   {
-   "vessel": "RJ PFEIFFER MATSON KODIAK",
-   "service": "Matson - AK M t AK",
+   "vessel": "RJ PFEIFFER",
+   "service": "Matson - AK",
    "terminal": "WST",
    "agent": "",
    "eta": "2026-12-16T16:55",
    "etd": "2026-12-17T04:55",
-   "port": "Tacoma"
+   "port": "Tacoma",
+   "imo": "9002037"
   },
   {
    "vessel": "CIELO ACE",
@@ -1298,6 +1269,16 @@
    "etd": "2026-12-20T06:00",
    "port": "Seattle",
    "imo": "9970026"
+  },
+  {
+   "vessel": "MATSON KODIAK",
+   "service": "Matson - AK",
+   "terminal": "WST",
+   "agent": "",
+   "eta": "2026-12-18T07:00",
+   "etd": "2026-12-18T19:00",
+   "port": "Tacoma",
+   "imo": "8419166"
   },
   {
    "vessel": "SM MUMBAI",
