@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-27T03:45:03-08:00",
+ "updated": "2026-11-27T14:45:04-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -99,16 +99,6 @@
    "imo": "9979084"
   },
   {
-   "vessel": "CMA CGM ARKANSAS",
-   "service": "CPNW",
-   "terminal": "T18",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-24T05:00",
-   "etd": "2026-11-26T04:00",
-   "port": "Seattle",
-   "imo": "9722651"
-  },
-  {
    "vessel": "YM MASCULINITY",
    "service": "PN1",
    "terminal": "WUT",
@@ -145,7 +135,7 @@
    "terminal": "EB1",
    "agent": "Norton Lilly International",
    "eta": "2026-11-26T20:00",
-   "etd": "2026-11-27T19:00",
+   "etd": "2026-11-27T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9445980"
@@ -233,17 +223,6 @@
    "imo": "9935363"
   },
   {
-   "vessel": "HORIZON HIGHWAY",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-11-28T05:30",
-   "etd": "2026-11-28T21:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9726700"
-  },
-  {
    "vessel": "OOCL NEW YORK",
    "service": "PNW1",
    "terminal": "T18",
@@ -264,6 +243,17 @@
    "imo": "8419166"
   },
   {
+   "vessel": "HORIZON HIGHWAY",
+   "service": "",
+   "terminal": "EB1",
+   "agent": "Norton Lilly International",
+   "eta": "2026-11-28T16:30",
+   "etd": "2026-11-28T22:30",
+   "port": "Tacoma",
+   "vessel_type": "Car Carrier",
+   "imo": "9726700"
+  },
+  {
    "vessel": "MOL CHARISMA",
    "service": "PN3",
    "terminal": "WUT",
@@ -278,7 +268,7 @@
    "service": "",
    "terminal": "Blair",
    "agent": "Norton Lilly International",
-   "eta": "2026-11-28T21:30",
+   "eta": "2026-11-28T23:30",
    "etd": "2026-11-29T18:00",
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
