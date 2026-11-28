@@ -1,7 +1,7 @@
 {
  "source": "https://docs.nwseaportalliance.com/Vessel/Schedule.pdf",
  "timezone": "America/Los_Angeles",
- "updated": "2026-11-27T14:45:04-08:00",
+ "updated": "2026-11-27T23:45:05-08:00",
  "note": "Times are Pacific local. Schedule subject to change; T91 is cruise (no container calls). Outport rows with eta_time=false carry a date only (time shown as 00:00).",
  "outports": {
   "Aberdeen": {
@@ -485,9 +485,9 @@
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
-   "agent": "",
+   "agent": "Tote Maritime Alaska Inc",
    "eta": "2026-12-02T15:00",
-   "etd": "2026-12-03T03:00",
+   "etd": "2026-12-03T01:00",
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
@@ -587,12 +587,13 @@
   },
   {
    "vessel": "NORTH STAR",
-   "service": "Tote - AK2",
+   "service": "",
    "terminal": "TOTE",
-   "agent": "",
-   "eta": "2026-12-04T13:00",
+   "agent": "Tote Maritime Alaska Inc",
+   "eta": "2026-12-04T15:00",
    "etd": "2026-12-05T01:00",
    "port": "Tacoma",
+   "vessel_type": "Multipurpose",
    "imo": "9978676"
   },
   {
@@ -817,9 +818,9 @@
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
-   "agent": "",
+   "agent": "Tote Maritime Alaska Inc",
    "eta": "2026-12-09T15:00",
-   "etd": "2026-12-10T03:00",
+   "etd": "2026-12-10T01:00",
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
@@ -918,12 +919,13 @@
   },
   {
    "vessel": "NORTH STAR",
-   "service": "Tote - AK2",
+   "service": "",
    "terminal": "TOTE",
-   "agent": "",
-   "eta": "2026-12-11T13:00",
+   "agent": "Tote Maritime Alaska Inc",
+   "eta": "2026-12-11T15:00",
    "etd": "2026-12-12T01:00",
    "port": "Tacoma",
+   "vessel_type": "Multipurpose",
    "imo": "9978676"
   },
   {
@@ -1139,9 +1141,9 @@
    "vessel": "MIDNIGHT SUN",
    "service": "",
    "terminal": "TOTE",
-   "agent": "",
+   "agent": "Tote Maritime Alaska Inc",
    "eta": "2026-12-16T15:00",
-   "etd": "2026-12-17T03:00",
+   "etd": "2026-12-17T01:00",
    "port": "Tacoma",
    "vessel_type": "Multipurpose",
    "imo": "7307110"
@@ -1177,17 +1179,6 @@
    "port": "Tacoma",
    "vessel_type": "Car Carrier",
    "imo": "9983140"
-  },
-  {
-   "vessel": "MORNING CREST",
-   "service": "",
-   "terminal": "EB1",
-   "agent": "Norton Lilly International",
-   "eta": "2026-12-17T06:00",
-   "etd": "2026-12-17T18:00",
-   "port": "Tacoma",
-   "vessel_type": "Car Carrier",
-   "imo": "9252204"
   },
   {
    "vessel": "MATE",
